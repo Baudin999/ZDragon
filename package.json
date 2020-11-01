@@ -1,0 +1,13 @@
+{
+  "name": "Woezel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "cli": "dotnet run --project ./CLI/CLI.csproj",
+    "build": "dotnet build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

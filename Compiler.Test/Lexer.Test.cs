@@ -1,10 +1,12 @@
+using Compiler;
 using Compiler.Symbols;
+using Compiler.Test;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace Compiler.Test {
+namespace Lexer {
     public class Lexer : BaseTest
     {
 
@@ -22,6 +24,8 @@ namespace Compiler.Test {
             tokens
                 .ForEach(p =>
                 {
+                    if (p.kind == SyntaxKind.EndBlock) return;
+
                     if (p.lineStart == p.lineEnd) {
                         var val = p.value;
                         var snippet = sourceCode.Code[p.indexStart..p.indexEnd];
@@ -60,8 +64,8 @@ namespace Compiler.Test {
         [Fact(DisplayName ="Lex Lambda Token")]
         public void LambdaSymbolParser() {
             var code = @"=>";
-            var compiler = new Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile(ContextType.FunctionDef);
 
 
             verifyTokens(
@@ -73,10 +77,10 @@ namespace Compiler.Test {
             Assert.True(compilerResult.Tokens.First().kind == SyntaxKind.LambdaToken);
         }
 
-        [Fact]
+        [Fact(DisplayName = "Lex - Two Words")]
         public void TwoWords() {
-            var code = @"a b";
-            var compiler = new Compiler(code);
+            var code = @"two words";
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
 
@@ -85,14 +89,14 @@ namespace Compiler.Test {
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() == 3);
+            Assert.True(compilerResult.Tokens.Count() == 2);
         }
 
 
         [Fact(DisplayName = "Lex Parameter - Non Contextual Generic Parameter")]
         public void NonContextualGenericParameter() {
             var code = @"a 'b";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
 
@@ -101,14 +105,23 @@ namespace Compiler.Test {
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() == 4);
+            var tokens = compilerResult.Tokens.ToList();
+            Assert.True(tokens.Count == 3);
+            
+            var p0 = tokens[0];
+            var p1 = tokens[1];
+            var p2 = tokens[2];
+            Assert.Equal("a", p0.value);
+            Assert.Equal("'", p1.value);
+            Assert.Equal("b", p2.value);
         }
 
-        [Fact]
+
+        [Fact(DisplayName = "Lex - Word on new line")]
         public void WordOnNewLine() {
             var code = @"
 Peter";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
 
@@ -126,7 +139,7 @@ Peter";
             var code = @"
 add x y => x + y;
 ";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
   
@@ -141,7 +154,7 @@ add x y => x + y;
         [Fact(DisplayName = "Lex String")]
         public void LexString() {
             var code = @"""Peter""";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
 
@@ -156,7 +169,7 @@ add x y => x + y;
         public void LexStringMultiline() {
             var code = @"""Peter
 Pan""";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
             verifyTokens(
@@ -173,7 +186,7 @@ stringCombine :: string -> string -> string
 stringCombine s1 s2 =>
     ""{s1} {s2}""
 ";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
             verifyTokens(
@@ -195,7 +208,7 @@ stringCombine s1 s2 =>
     </p>
 </div>
 ";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
             verifyTokens(
@@ -203,14 +216,14 @@ stringCombine s1 s2 =>
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() == 41);
+            Assert.True(compilerResult.Tokens.Count() > 10);
         }
 
         [Fact(DisplayName = "Lex Large Example")]
         public void BiggerExample() {
             var code = @"
 
-type add = Number -> Number -> Number;
+alias add = Number -> Number -> Number;
 let add x y => x + y;
 
 type extra = String;
@@ -241,7 +254,7 @@ outputting your documenation for you.
 let main () =>
     bar();
 ";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
 
@@ -291,7 +304,7 @@ bind::onChange peterPan.Age >> ...params =>
     print ""Age changed"";
 
 ";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
             verifyTokens(
                 compiler.SourceCode,

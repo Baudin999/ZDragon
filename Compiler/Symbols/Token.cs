@@ -46,9 +46,11 @@ namespace Compiler.Symbols {
 
         public int indentLevel { get; set; } = 0;
 
+        public ContextType context { get; set; } = ContextType.None;
+
         public Token(string value, SyntaxKind kind, int indexStart, int indexEnd, int columnStart, int columnEnd, int line, int indentLevel = 0) {
-            this.kind = kind;
             this.value = value;
+            this.kind = kind;
             this.indexStart = indexStart;
             this.indexEnd = indexEnd;
             this.columnStart = columnStart;
@@ -60,8 +62,8 @@ namespace Compiler.Symbols {
         }
 
         public Token(string value, SyntaxKind kind, int indexStart, int indexEnd, int columnStart, int columnEnd, int lineStart, int lineEnd, int indentLevel = 0) {
-            this.kind = kind;
             this.value = value;
+            this.kind = kind;
             this.indexStart = indexStart;
             this.indexEnd = indexEnd;
             this.columnStart = columnStart;
@@ -72,9 +74,22 @@ namespace Compiler.Symbols {
             this.indentLevel = indentLevel;
         }
 
+        public Token(string value, SyntaxKind kind, ISourceSegment position, int indentLevel = 0) {
+            this.value = value;
+            this.kind = kind;
+            this.indexStart = position.indexStart;
+            this.indexEnd = position.indexEnd;
+            this.columnStart = position.columnStart;
+            this.columnEnd = position.columnEnd;
+            this.line = position.lineStart;
+            this.lineStart = position.lineStart;
+            this.lineEnd = position.lineEnd;
+            this.indentLevel = indentLevel;
+        }
+
         public Token(Token original, ISourceSegment from, ISourceSegment to) {
-            this.kind = original.kind;
             this.value = original.value;
+            this.kind = original.kind;
             this.indexStart = from.indexStart;
             this.indexEnd = to.indexEnd;
             this.columnStart = from.columnStart;
@@ -86,8 +101,8 @@ namespace Compiler.Symbols {
         }
 
         public Token(string value, SyntaxKind kind, ISourceSegment from, ISourceSegment to, int indentLevel = 0) {
-            this.kind = kind;
             this.value = value;
+            this.kind = kind;
             this.indexStart = from.indexStart;
             this.indexEnd = to.indexEnd;
             this.columnStart = from.columnStart;

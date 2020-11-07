@@ -15,11 +15,11 @@ namespace Compiler {
             this.SourceCode = new SourceCode(code);
         }
 
-        public CompilationResult Compile()
+        public CompilationResult Compile(ContextType initialContext = ContextType.None)
         {
             var errorSink = new ErrorSink();
-            var tokens = new Lexer(this.SourceCode, errorSink).Tokenize().ToList();
-            var contextualTokens = new ContextualTokenizer(tokens, errorSink).Tokenize().ToList();
+            var tokens = new Lexer(this.SourceCode, errorSink).Tokenize(initialContext).ToList();
+            var contextualTokens = new ContextualTokenizer(tokens, errorSink).Tokenize(initialContext).ToList();
             var ast = new Parser(contextualTokens, errorSink).Parse().ToList();
 
             return new CompilationResult(ast, contextualTokens, errorSink);

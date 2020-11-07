@@ -19,17 +19,20 @@ namespace Compiler.Language {
         private Token? Current => TokenAt(0);
         private Token? Next => TokenAt(1);
         private Token? Previous => TokenAt(-1);
+
+        public ContextType? CurrentContext { get; private set; }
+
         private Token Take() {
             var c = Current;
             index++;
             return c;
         }
-        private Token Take(SyntaxKind kind) {
+        private Token Take(SyntaxKind kind, string? message = null) {
             var c = Current;
-            if (c.kind != kind) {
+            if (c?.kind != kind) {
                 ErrorSink.AddError(new Error(
-                    $"Expected '{kind}' but received '{Current?.kind}'",
-                    Current
+                    message ?? $"Expected '{kind}' but received '{Current?.kind}'",
+                    c
                 ));
                 index++;
             }
@@ -63,11 +66,28 @@ namespace Compiler.Language {
         public IEnumerable<AstNode> Parse() {
 
             while (index < max) {
-                if (Current?.kind == SyntaxKind.MarkdownStartBlockToken) {
+                CurrentContext = Current?.context ?? ContextType.None;
+
+                if (Current?.kind == SyntaxKind.NewLineToken) {
+                    Take();
+                    // do nothing
+                }
+                else if (Current?.kind == SyntaxKind.EndBlock) {
+                    Take();
+                    // do nothing
+                }
+                else if (Current?.kind == SyntaxKind.SemiColonToken) {
+                    Take();
+                    // do nothing
+                }
+                else if (Current?.kind == SyntaxKind.MarkdownStartBlockToken) {
                     yield return ParseMarkdown();
                 }
-                else if (Current?.kind == SyntaxKind.TypeDeclarationToken) {
+                else if (Current?.kind == SyntaxKind.RecordDeclarationToken) {
                     yield return ParseTypeDefinition();
+                }
+                else if (Current?.kind == SyntaxKind.TypeDefinitionToken) {
+                    yield return ParseAliasDefinition();
                 }
                 else {
                     yield return ParseExpression();

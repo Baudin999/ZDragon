@@ -7,10 +7,24 @@ namespace Compiler.Language {
             if (Current is null) {
                 throw new System.Exception("Can't parse a null token");
             }
-            else {
-                return new ExpressionNode(Take());
+            else if (Current.kind == SyntaxKind.IdentifierToken) {
+                return ParseIdentifier();
             }
-            
+            else if (Current?.kind == SyntaxKind.ParanOpenToken) {
+                Take(SyntaxKind.ParanOpenToken);
+                var expression = ParseExpression();
+                Take(SyntaxKind.ParanCloseToken);
+                return expression;
+            }
+            else {
+                var token = Take();
+                return new ExpressionNode(token, ExpressionKind.None);
+            }
+        }
+
+        private IdentifierNode ParseIdentifier() {
+            var id = Take(SyntaxKind.IdentifierToken);
+            return new IdentifierNode(id, id);
         }
 
     }

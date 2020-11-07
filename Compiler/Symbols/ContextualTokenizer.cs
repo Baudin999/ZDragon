@@ -23,6 +23,7 @@ namespace Compiler.Symbols {
             var c = Current;
             index++;
             c.indentLevel = indentLevel;
+            c.context = CurrentContext;
             return c;
         }
         private Token Take(SyntaxKind kind) {
@@ -64,28 +65,46 @@ namespace Compiler.Symbols {
             return new Token(tokens, SyntaxKind.AnnotationToken, indentLevel);
         }
 
-        internal IEnumerable<Token> Tokenize() {
+        internal IEnumerable<Token> Tokenize(ContextType contextType = ContextType.None) {
+            
+            CurrentContext = contextType;
 
             while (index < max) {
-                if (Current.kind == SyntaxKind.DoubleQuoteToken) {
+                if (Current.kind == SyntaxKind.WhiteSpaceToken) {
+                    // do nothing and ignore whitespace
+                    Take();
+                }
+                else if (Current.kind == SyntaxKind.DoubleQuoteToken) {
                     yield return AggregateStringLiteralToken();
                 }
-                else if (Current.kind == SyntaxKind.EqualsToken && Next?.kind == SyntaxKind.GreaterThenToken) {
+                else if (
+                    CurrentContext == ContextType.FunctionDef && 
+                    Current.kind == SyntaxKind.EqualsToken && 
+                    Next?.kind == SyntaxKind.GreaterThenToken) {
                     yield return new Token(new List<Token> { Take(), Take() }, SyntaxKind.LambdaToken, indentLevel);
+                }
+                else if (
+                    CurrentContext == ContextType.LanguageDeclaration && 
+                    Current.kind == SyntaxKind.MinusToken && 
+                    Next?.kind == SyntaxKind.GreaterThenToken) {
+                    yield return new Token(new List<Token> { Take(), Take() }, SyntaxKind.NextParameterToken, indentLevel);
                 }
                 else if (Current.kind == SyntaxKind.AmpersandToken) {
                     yield return ParseAnnotation();
                 }
-                else if (Current.kind == SyntaxKind.TypeDeclarationToken) {
-                    CurrentContext = ContextType.TypeDef;
+                else if (Current.kind == SyntaxKind.RecordDeclarationToken) {
+                    CurrentContext = ContextType.LanguageDeclaration;
                     yield return Take();
+                }
+                else if (Current.kind == SyntaxKind.TypeDefinitionToken) {
+                    CurrentContext = ContextType.LanguageDeclaration;
+                    yield return Take();
+                }
+                else if (CurrentContext == ContextType.LanguageDeclaration && Current.kind == SyntaxKind.ColonToken && Next?.kind == SyntaxKind.ColonToken) {
+                    yield return new Token(new List<Token>() { Take(), Take() }, SyntaxKind.TypeDefToken, indentLevel);
                     indentLevel++;
                 }
-                else if (Current.kind == SyntaxKind.EqualsToken && CurrentContext == ContextType.TypeDef) {
-                    yield return Take();
-                    indentLevel++;
-                }
-                else if (Current.kind == SyntaxKind.SingleQuoteToken && CurrentContext == ContextType.TypeDef) {
+                else if (Current.kind == SyntaxKind.SingleQuoteToken && CurrentContext == ContextType.LanguageDeclaration) {
                     if (Next?.kind != SyntaxKind.IdentifierToken) {
                         ErrorSink.AddError(new Error(
                             @"Expected an Identifier after a ' as a ' signifies a generic parameter within the context of a type definition.",
@@ -102,6 +121,10 @@ namespace Compiler.Symbols {
                     indentLevel--;
                 }
                 else if (Current.kind == SyntaxKind.NewLineToken && Next?.kind != SyntaxKind.IndentToken) {
+                    if (CurrentContext == ContextType.LanguageDeclaration) {
+                        CurrentContext = ContextType.None;
+                        yield return new Token("", SyntaxKind.EndBlock, Current);
+                    }
                     yield return Take();
                     indentLevel = 0;
                 }
@@ -115,7 +138,7 @@ namespace Compiler.Symbols {
 
     public enum ContextType {
         None,
-        TypeDef,
+        LanguageDeclaration,
         Markdown,
         VariableDef,
         FunctionDef

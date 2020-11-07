@@ -1,16 +1,17 @@
 ﻿using System.Linq;
 using Xunit;
+using Compiler;
 
-namespace Compiler.Test {
-    public class Type {
+namespace Expressions {
+    public class Records {
 
-        [Fact]
+        [Fact(DisplayName = "Expression - parse person record")]
         public void ParseType() {
             var code = @"
 
-@ The person type
+@ The person record
 @ extends the Mammal
-type Person 'a 'b extends Mammal ::
+record Person 'a 'b extends Mammal ::
     FirstName: String;
 
     @ The last name
@@ -21,7 +22,7 @@ type Person 'a 'b extends Mammal ::
         @ might have to be larger
         & max 100
 ";
-            var compiler = new Compiler(code);
+            var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
             Assert.True(compilerResult.Tokens.Count() > 10);

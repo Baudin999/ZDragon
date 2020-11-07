@@ -160,7 +160,7 @@ namespace Compiler.Symbols
             return Mappings.Operators.Contains(c);
         }
 
-        public IEnumerable<Token> Tokenize() {
+        public IEnumerable<Token> Tokenize(ContextType contextType) {
             while (index < max) {
                 if (isWhiteSpace(current)) {
                     yield return parseWhiteSpace();
@@ -187,57 +187,7 @@ namespace Compiler.Symbols
             }
         }
 
-        //public IEnumerable<Token> Tokenize()
-        //{
-        //    var tokens = SplitInTokens().ToList();
-        //    var max = tokens.Count;
-        //    var i = 0;
-        //    while (i < max) {
-        //        // wrap string literal values 
-        //        if (tokens[i].kind == SyntaxKind.StringWrapToken) {
-        //            var start = tokens[i];
-        //            Token? end = null;
-        //            var _value = start.value;
-        //            i++;
-        //            while (i < max && tokens[i].kind != SyntaxKind.StringWrapToken) {
-        //                end = tokens[i];
-        //                _value += end.value;
-        //                i++;
-        //            }
-        //            if (tokens[i].kind == SyntaxKind.StringWrapToken) {
-        //                end = tokens[i];
-        //                _value += end?.value;
-        //                i++;
-        //            }
-        //            yield return new Token(_value, SyntaxKind.StringLiteralToken, start.indexStart, end.indexEnd, start.columnStart, end.columnEnd, start.lineStart, end.lineEnd);
-        //        }
-        //        else {
-        //            yield return tokens[i];
-        //        }
-        //        i++;
-        //    }
-
-        //}
-
-
-        //private Token pushToken(SyntaxKind kind, int startLine, int endLine) {
-        //    var token = new Token(
-        //        value: value,
-        //        kind: kind,
-        //        indexStart: tokenStartIndex,
-        //        indexEnd: index,
-        //        columnStart: lineTokenStartIndex,
-        //        columnEnd: lineTokenIndex,
-        //        lineStart: startLine,
-        //        lineEnd: endLine
-        //    );
-
-        //    tokenStartIndex = index;
-        //    lineTokenStartIndex = lineTokenIndex;
-        //    value = "";
-
-        //    return token;
-        //}
+       
 
 
     }

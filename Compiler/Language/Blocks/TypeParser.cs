@@ -9,7 +9,7 @@ namespace Compiler.Language {
 
 
 
-            var typeDeclaration = Take(SyntaxKind.TypeDeclarationToken);
+            var typeDeclaration = Take(SyntaxKind.RecordDeclarationToken);
             var id = Take(SyntaxKind.IdentifierToken);
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken);
 

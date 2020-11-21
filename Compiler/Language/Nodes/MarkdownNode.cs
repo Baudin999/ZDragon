@@ -5,7 +5,7 @@ namespace Compiler.Language.Nodes {
         public string Markdown { get; }
 
         public MarkdownNode(string markdown, ISourceSegment sourceSegment) : base(sourceSegment) {
-            this.Markdown = markdown;
+            this.Markdown = markdown.Trim();
         }
 
     }

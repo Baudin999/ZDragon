@@ -1,4 +1,5 @@
 using Compiler;
+using Compiler.Language.Nodes;
 using Compiler.Symbols;
 using Compiler.Test;
 using System.Collections.Generic;
@@ -77,7 +78,8 @@ namespace Lexer {
 
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
-            Assert.Equal(ContextType.Markdown, compilerResult.Tokens.First().Context);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
 
@@ -93,15 +95,10 @@ namespace Lexer {
                 compilerResult.Tokens.ToList(),
                 false);
 
-            var tokens = compilerResult.Tokens.ToList();
-            Assert.True(tokens.Count == 3);
-            
-            var p0 = tokens[0];
-            var p1 = tokens[1];
-            var p2 = tokens[2];
-            Assert.Equal("a", p0.Tokens.First().Value);
-            Assert.Equal("'", p1.Tokens.First().Value);
-            Assert.Equal("b", p2.Tokens.First().Value);
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
 
@@ -118,7 +115,10 @@ Peter";
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() == 1);
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
         [Fact]
@@ -136,10 +136,13 @@ add x y => x + y;
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() > 8);
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
-        [Fact(DisplayName = "Lex String")]
+        [Fact(DisplayName = "Lex - String Literal")]
         public void LexString() {
             var code = @"""Peter""";
             var compiler = new Compiler.Compiler(code);
@@ -151,6 +154,9 @@ add x y => x + y;
                 compilerResult.Tokens.ToList(),
                 false);
             Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
         [Fact(DisplayName = "Lex String - Multiline")]
@@ -164,7 +170,11 @@ Pan""";
                 compiler.SourceCode,
                 compilerResult.Tokens.ToList(),
                 false);
+
             Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
         [Fact(DisplayName = "Lex Indent - Multiple Indents")]
@@ -182,7 +192,10 @@ stringCombine s1 s2 =>
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() > 10);
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
 
@@ -204,10 +217,13 @@ stringCombine s1 s2 =>
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() > 10);
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
+            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
-        [Fact(DisplayName = "Lex Large Example")]
+        [Fact(DisplayName = "Lex - Large Example")]
         public void BiggerExample() {
             var code = @"
 
@@ -298,7 +314,7 @@ bind::onChange peterPan.Age >> ...params =>
                 compiler.SourceCode,
                 compilerResult.Tokens.ToList(),
                 false);
-            Assert.True(compilerResult.Tokens.Count() > 10);
+            Assert.True(compilerResult.Tokens.Count() > 1);
         }
 
         public Lexer(ITestOutputHelper output) : base(output) { }

@@ -69,18 +69,6 @@ namespace Compiler.Symbols {
             return annotationToken;
         }
 
-        //private IEnumerable<Token> GroupTokens() {
-        //    while (index < max) {
-        //        if (Current?.Kind == SyntaxKind.AmpersandToken) {
-        //            yield return ParseAnnotation();
-        //        }
-        //        else {
-        //            // We are probably in a markdown block and will interpert it like so...
-        //            yield return Take();
-        //        }
-        //    }
-        //}
-
         internal IEnumerable<TokenBlock> Tokenize(ContextType contextType = ContextType.None) {
             List<Token> annotations = new List<Token>();
             while (index < max) {
@@ -100,7 +88,7 @@ namespace Compiler.Symbols {
                 }
                 else {
                     // We are probably in a markdown block and will interpert it like so...
-                    yield return Markdown();
+                    yield return ParseMarkdown();
                 }
             }
         }
@@ -195,7 +183,7 @@ namespace Compiler.Symbols {
         TypeDeclaration,
         RecordDeclaration,
         FunctionDeclaration,
-        Markdown,
+        MarkdownDeclaration,
         VariableDef
     }
 }

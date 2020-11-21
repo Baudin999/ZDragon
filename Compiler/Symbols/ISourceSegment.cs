@@ -1,24 +1,24 @@
 ﻿namespace Compiler.Symbols {
     public interface ISourceSegment {
-        int columnEnd { get; }
-        int columnStart { get; }
-        int indexEnd { get; }
-        int indexStart { get; }
-        int lineStart { get; }
-        int lineEnd { get;  }
+        int ColumnEnd { get; }
+        int ColumnStart { get; }
+        int IndexEnd { get; }
+        int IndexStart { get; }
+        int LineStart { get; }
+        int LineEnd { get;  }
     }
 
     public class SourceSegment : ISourceSegment {
-        public int columnEnd { get; set; }
+        public int ColumnEnd { get; set; }
 
-        public int columnStart { get; set; }
+        public int ColumnStart { get; set; }
 
-        public int indexEnd { get; set; }
+        public int IndexEnd { get; set; }
 
-        public int indexStart { get; set; }
+        public int IndexStart { get; set; }
 
-        public int lineStart { get; set; }
+        public int LineStart { get; set; }
 
-        public int lineEnd { get; set; }
+        public int LineEnd { get; set; }
     }
 }

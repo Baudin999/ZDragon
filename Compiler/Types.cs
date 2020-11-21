@@ -91,6 +91,7 @@ namespace Compiler {
                 { "where", SyntaxKind.WhereToken },
                 { "let", SyntaxKind.LetToken },
                 { "extends", SyntaxKind.ExtendsToken },
+                { "end", SyntaxKind.EndKeywordToken },
             };
 
         public static List<int> Letters = new List<int> {
@@ -182,6 +183,9 @@ namespace Compiler {
 
         // dual operator Tokens
         OperatorToken,          // The default operator token
+        /// <summary>
+        /// =>
+        /// </summary>
         LambdaToken,
         NextParameterToken,
 
@@ -224,13 +228,25 @@ namespace Compiler {
         // Keywords
         WhereToken,
         RecordDeclarationToken,
+        /// <summary>
+        /// type
+        /// </summary>
         TypeDefinitionToken,
         DataDeclarationToken,
         ChoiceDeclarationToken,
+        EndKeywordToken,
+        /// <summary>
+        /// func
+        /// </summary>
+        FuncDefinitionToken,
         IfToken,
         ElseToken,
         LetToken,
         ExtendsToken,
+        /// <summary>
+        /// 'a 
+        /// :apos:letters:
+        /// </summary>
         GenericParameterToken,
 
         // literals
@@ -241,11 +257,11 @@ namespace Compiler {
 
 
     public class CompilationResult {
-        public IEnumerable<Token> Tokens { get; }
+        public IEnumerable<TokenBlock> Tokens { get; }
         public List<AstNode> Ast { get; }
         public ErrorSink ErrorSink { get; }
 
-        public CompilationResult(List<AstNode> ast, IEnumerable<Token> tokens, ErrorSink errorSink) {
+        public CompilationResult(List<AstNode> ast, IEnumerable<TokenBlock> tokens, ErrorSink errorSink) {
             this.Tokens = tokens.ToList();
             this.Ast = ast;
             this.ErrorSink = errorSink;

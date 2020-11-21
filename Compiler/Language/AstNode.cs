@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Compiler.Language {
     public class AstNode {
-        public ISourceSegment Segment { get; }
+        public ISourceSegment Segment { get; protected set; }
         public AstNode(ISourceSegment segment) {
             this.Segment = segment;
         }

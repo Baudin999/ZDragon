@@ -20,9 +20,12 @@ namespace Compiler {
             var errorSink = new ErrorSink();
             var tokens = new Lexer(this.SourceCode, errorSink).Tokenize(initialContext).ToList();
             var contextualTokens = new ContextualTokenizer(tokens, errorSink).Tokenize(initialContext).ToList();
-            var ast = new Parser(contextualTokens, errorSink).Parse().ToList();
+
+            var ast = new TokenBlockParser(contextualTokens, errorSink).Parse().ToList();
 
             return new CompilationResult(ast, contextualTokens, errorSink);
+
+            //return new CompilationResult(new List<AstNode>(), contextualTokens, errorSink);
         }
 
     }

@@ -14,7 +14,7 @@ namespace Compiler.Language.Nodes {
         }
 
         public override string ToString() {
-            return $"alias {Id.value}";
+            return $"alias {Id.Value}";
         }
     }
 }

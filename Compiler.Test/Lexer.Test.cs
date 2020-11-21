@@ -18,45 +18,47 @@ namespace Lexer {
         /// <param name="sourceCode">The Source code</param>
         /// <param name="tokens">A list of tokens to check</param>
         /// <param name="show">Print the check to the console</param>
-        private void verifyTokens(SourceCode sourceCode, List<Token> tokens, bool show = false)
+        private void verifyTokens(SourceCode sourceCode, List<TokenBlock> tokenBlocks, bool show = false)
         {
+
+            var tokens = tokenBlocks.SelectMany(t => t.Tokens).ToList();
             var lines = sourceCode.Code.Split('\n').Select(s => s + "\n").ToArray();
             tokens
                 .ForEach(p =>
                 {
-                    if (p.kind == SyntaxKind.EndBlock) return;
+                    if (p.Kind == SyntaxKind.EndBlock) return;
 
-                    if (p.lineStart == p.lineEnd) {
-                        var val = p.value;
-                        var snippet = sourceCode.Code[p.indexStart..p.indexEnd];
+                    if (p.LineStart == p.LineEnd) {
+                        var val = p.Value;
+                        var snippet = sourceCode.Code[p.IndexStart..p.IndexEnd];
                         var equals = val == snippet;
 
-                        var lineSnippet = lines[p.lineStart][p.columnStart..p.columnEnd];
+                        var lineSnippet = lines[p.LineStart][p.ColumnStart..p.ColumnEnd];
                         var lineEqual = val == lineSnippet;// lineSnippet;
 
                         if (show) {
                             Log($"({val}) -> ({snippet})({lineSnippet})");
                         }
 
-                        Assert.True(equals, $"1: Token is '{p.value}' but range in text results in '{snippet}'");
-                        Assert.True(lineEqual, $"2: Token is '{p.value}' but range in line results in '{lineSnippet}'");
-                        Assert.True(p.kind != SyntaxKind.Unknown, $"Unknown token found with value: '{p.value}'");
+                        Assert.True(equals, $"1: Token is '{p.Value}' but range in text results in '{snippet}'");
+                        Assert.True(lineEqual, $"2: Token is '{p.Value}' but range in line results in '{lineSnippet}'");
+                        Assert.True(p.Kind != SyntaxKind.Unknown, $"Unknown token found with value: '{p.Value}'");
                     }
-                    else if (p.lineStart < p.lineEnd) {
+                    else if (p.LineStart < p.LineEnd) {
                         // if multiline
-                        var val = p.value;
+                        var val = p.Value;
 
-                        var snippet = sourceCode.Code[p.indexStart..p.indexEnd];
+                        var snippet = sourceCode.Code[p.IndexStart..p.IndexEnd];
                         var equals = val == snippet;
 
-                        var _lns = lines[p.lineStart..(p.lineEnd + 1)];
+                        var _lns = lines[p.LineStart..(p.LineEnd + 1)];
                         var _str = string.Join("", _lns);
-                        var lineSnippet = _str[p.columnStart..^(lines[p.lineEnd].Length - p.columnEnd)];
+                        var lineSnippet = _str[p.ColumnStart..^(lines[p.LineEnd].Length - p.ColumnEnd)];
                         var lineEqual = val == lineSnippet;
 
-                        Assert.True(equals, $"1: Token is '{p.value}' but range in text results in '{snippet}'");
-                        Assert.True(lineEqual, $"2: Token is '{p.value}' but range in line results in '{lineSnippet}'");
-                        Assert.True(p.kind != SyntaxKind.Unknown, $"Unknown token found with value: '{p.value}'");
+                        Assert.True(equals, $"1: Token is '{p.Value}' but range in text results in '{snippet}'");
+                        Assert.True(lineEqual, $"2: Token is '{p.Value}' but range in line results in '{lineSnippet}'");
+                        Assert.True(p.Kind != SyntaxKind.Unknown, $"Unknown token found with value: '{p.Value}'");
                     }
                 });
         }
@@ -65,7 +67,7 @@ namespace Lexer {
         public void LambdaSymbolParser() {
             var code = @"=>";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile(ContextType.FunctionDef);
+            var compilerResult = compiler.Compile(ContextType.FunctionDeclaration);
 
 
             verifyTokens(
@@ -74,7 +76,8 @@ namespace Lexer {
                 false);
 
             Assert.Single(compilerResult.Tokens);
-            Assert.True(compilerResult.Tokens.First().kind == SyntaxKind.LambdaToken);
+            Assert.True(compilerResult.Tokens.First().Context == ContextType.None);
+            Assert.True(compilerResult.Tokens.First().Tokens.First().Kind == SyntaxKind.LambdaToken);
         }
 
         [Fact(DisplayName = "Lex - Two Words")]
@@ -82,7 +85,6 @@ namespace Lexer {
             var code = @"two words";
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
-
 
             verifyTokens(
                 compiler.SourceCode,
@@ -111,9 +113,9 @@ namespace Lexer {
             var p0 = tokens[0];
             var p1 = tokens[1];
             var p2 = tokens[2];
-            Assert.Equal("a", p0.value);
-            Assert.Equal("'", p1.value);
-            Assert.Equal("b", p2.value);
+            Assert.Equal("a", p0.Tokens.First().Value);
+            Assert.Equal("'", p1.Tokens.First().Value);
+            Assert.Equal("b", p2.Tokens.First().Value);
         }
 
 
@@ -130,7 +132,7 @@ Peter";
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() == 2);
+            Assert.True(compilerResult.Tokens.Count() == 1);
         }
 
         [Fact]
@@ -148,7 +150,7 @@ add x y => x + y;
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() > 1);
+            Assert.True(compilerResult.Tokens.Count() > 8);
         }
 
         [Fact(DisplayName = "Lex String")]

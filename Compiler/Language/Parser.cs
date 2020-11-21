@@ -27,12 +27,19 @@ namespace Compiler.Language {
             index++;
             return c;
         }
+
         private Token Take(SyntaxKind kind, string? message = null) {
             var c = Current;
-            if (c?.kind != kind) {
+
+            if (c is null) {
                 ErrorSink.AddError(new Error(
-                    message ?? $"Expected '{kind}' but received '{Current?.kind}'",
-                    c
+                    message ?? $"Expected '{kind}' but reached the end of the token stream."
+                ));
+            }
+            else if (c?.Kind != kind) {
+                ErrorSink.AddError(new Error(
+                    message ?? $"Expected '{kind}' but received '{Current?.Kind}'",
+                    c ?? Token.DefaultSourceSegment()
                 ));
                 index++;
             }
@@ -42,8 +49,9 @@ namespace Compiler.Language {
             return c;
         }
 
+
         private IEnumerable<Token> TakeWhile(SyntaxKind kind) {
-            while (Current != null && Current?.kind == kind) yield return Take();
+            while (Current != null && Current?.Kind == kind) yield return Take();
         }
         private IEnumerable<Token> TakeWhile(Predicate<Token> predicate) {
             while (Current != null && predicate(Current)) yield return Take();
@@ -51,8 +59,18 @@ namespace Compiler.Language {
         private IEnumerable<Token> TakeBefore(SyntaxKind kind) {
             var i = -1;
             Token? t;
-            while((t = TokenAt(i))?.kind == kind) {
+            while((t = TokenAt(i))?.Kind == kind) {
                 yield return t;
+                i--;
+            }
+        }
+
+        private IEnumerable<Token> TakeBefore(Predicate<Token> when) {
+            var i = -1;
+            var token = TokenAt(i);
+            while ((token = TokenAt(i)) != null && (token.Kind == SyntaxKind.NewLineToken || token.Kind == SyntaxKind.IndentToken || when(token))) {
+                if (token.Kind != SyntaxKind.IndentToken)
+                    yield return token;
                 i--;
             }
         }
@@ -63,37 +81,43 @@ namespace Compiler.Language {
             max = this.Tokens.Count;
         }
 
-        public IEnumerable<AstNode> Parse() {
+        //public IEnumerable<AstNode> Parse() {
 
-            while (index < max) {
-                CurrentContext = Current?.context ?? ContextType.None;
+        //    foreach (var tokenBlock in TokenBlocks) {
+        //        if (tokenBlock.Context == ContextType.TypeDeclaration) {
+        //            yield return 
+        //        }
+        //    }
 
-                if (Current?.kind == SyntaxKind.NewLineToken) {
-                    Take();
-                    // do nothing
-                }
-                else if (Current?.kind == SyntaxKind.EndBlock) {
-                    Take();
-                    // do nothing
-                }
-                else if (Current?.kind == SyntaxKind.SemiColonToken) {
-                    Take();
-                    // do nothing
-                }
-                else if (Current?.kind == SyntaxKind.MarkdownStartBlockToken) {
-                    yield return ParseMarkdown();
-                }
-                else if (Current?.kind == SyntaxKind.RecordDeclarationToken) {
-                    yield return ParseTypeDefinition();
-                }
-                else if (Current?.kind == SyntaxKind.TypeDefinitionToken) {
-                    yield return ParseAliasDefinition();
-                }
-                else {
-                    yield return ParseExpression();
-                }
-            }
+        //    //while (index < max) {
+        //    //    CurrentContext = Current?.Context ?? ContextType.None;
 
-        }
+        //    //    if (Current?.Kind == SyntaxKind.NewLineToken) {
+        //    //        Take();
+        //    //        // do nothing
+        //    //    }
+        //    //    else if (Current?.Kind == SyntaxKind.EndBlock) {
+        //    //        Take();
+        //    //        // do nothing
+        //    //    }
+        //    //    else if (Current?.Kind == SyntaxKind.SemiColonToken) {
+        //    //        Take();
+        //    //        // do nothing
+        //    //    }
+        //    //    else if (Current?.Kind == SyntaxKind.MarkdownStartBlockToken) {
+        //    //        yield return ParseMarkdown();
+        //    //    }
+        //    //    else if (Current?.Kind == SyntaxKind.RecordDeclarationToken) {
+        //    //        yield return ParseTypeDefinition();
+        //    //    }
+        //    //    else if (Current?.Kind == SyntaxKind.TypeDefinitionToken) {
+        //    //        yield return ParseAliasDefinition();
+        //    //    }
+        //    //    else {
+        //    //        yield return ParseExpression();
+        //    //    }
+        //    //}
+
+        //}
     }
 }

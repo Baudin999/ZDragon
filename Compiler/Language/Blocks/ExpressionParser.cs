@@ -8,9 +8,9 @@ namespace Compiler.Language {
 
             var left = ParseAtom();
 
-            if (Current?.kind == SyntaxKind.NextParameterToken) {
+            if (Current?.Kind == SyntaxKind.NextParameterToken) {
                 var tokens = new List<ExpressionNode>() { left };
-                while (Current?.kind == SyntaxKind.NextParameterToken) {
+                while (Current?.Kind == SyntaxKind.NextParameterToken) {
                     Take(SyntaxKind.NextParameterToken);
                     tokens.Add(ParseAtom());
                 }

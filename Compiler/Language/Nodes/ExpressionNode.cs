@@ -16,6 +16,8 @@ namespace Compiler.Language.Nodes {
         IdentifierExpression,
         ParameterExpression,
         FunctionDefinitionExpression,
+        TypeApplicationExpression,
+        GenericParameterExpression,
 
         StartExpressionGroup,
 
@@ -26,5 +28,10 @@ namespace Compiler.Language.Nodes {
         TypeExpression,
         None,
         EndExpressionGroup,
+        AnnotationExpression,
+
+
+        RecordField,
+        Record
     }
 }

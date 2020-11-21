@@ -80,44 +80,5 @@ namespace Compiler.Language {
             this.ErrorSink = errorSink;
             max = this.Tokens.Count;
         }
-
-        //public IEnumerable<AstNode> Parse() {
-
-        //    foreach (var tokenBlock in TokenBlocks) {
-        //        if (tokenBlock.Context == ContextType.TypeDeclaration) {
-        //            yield return 
-        //        }
-        //    }
-
-        //    //while (index < max) {
-        //    //    CurrentContext = Current?.Context ?? ContextType.None;
-
-        //    //    if (Current?.Kind == SyntaxKind.NewLineToken) {
-        //    //        Take();
-        //    //        // do nothing
-        //    //    }
-        //    //    else if (Current?.Kind == SyntaxKind.EndBlock) {
-        //    //        Take();
-        //    //        // do nothing
-        //    //    }
-        //    //    else if (Current?.Kind == SyntaxKind.SemiColonToken) {
-        //    //        Take();
-        //    //        // do nothing
-        //    //    }
-        //    //    else if (Current?.Kind == SyntaxKind.MarkdownStartBlockToken) {
-        //    //        yield return ParseMarkdown();
-        //    //    }
-        //    //    else if (Current?.Kind == SyntaxKind.RecordDeclarationToken) {
-        //    //        yield return ParseTypeDefinition();
-        //    //    }
-        //    //    else if (Current?.Kind == SyntaxKind.TypeDefinitionToken) {
-        //    //        yield return ParseAliasDefinition();
-        //    //    }
-        //    //    else {
-        //    //        yield return ParseExpression();
-        //    //    }
-        //    //}
-
-        //}
     }
 }

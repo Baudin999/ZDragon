@@ -8,6 +8,10 @@ namespace Compiler.Language.Nodes {
         public ExpressionNode(ISourceSegment sourceSegment, ExpressionKind expressionKind): base(sourceSegment) {
             this.ExpressionKind = expressionKind;
         }
+
+        public ExpressionNode(ISourceSegment startSegment, ISourceSegment endSegment, ExpressionKind expressionKind) : base(startSegment, endSegment) {
+            this.ExpressionKind = expressionKind;
+        }
     }
 
     public enum ExpressionKind {
@@ -29,6 +33,7 @@ namespace Compiler.Language.Nodes {
         None,
         EndExpressionGroup,
         AnnotationExpression,
+        RestrictionExpression,
 
 
         RecordField,

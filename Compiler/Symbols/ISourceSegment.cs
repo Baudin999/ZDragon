@@ -20,5 +20,14 @@
         public int LineStart { get; set; }
 
         public int LineEnd { get; set; }
+
+        public static ISourceSegment Empty => new SourceSegment {
+            ColumnEnd = 0,
+            ColumnStart = 0,
+            IndexStart = 0,
+            IndexEnd = 0,
+            LineStart = 0,
+            LineEnd = 0
+        };
     }
 }

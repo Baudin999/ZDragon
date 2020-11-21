@@ -99,7 +99,7 @@ type add 'a 'b = 'a -> 'b -> number;
 
             Assert.IsType<TypeAliasNode>(compilerResult.Ast.First());
             TypeAliasNode typeNode = (TypeAliasNode)compilerResult.Ast.First();
-            Assert.Equal("add", typeNode.Id.Value);
+            Assert.Equal("add", typeNode.IdToken.Value);
             Assert.Equal(2, typeNode.GenericParameters.Count());
             Assert.Equal("'a", typeNode.GenericParameters.First().Value);
             Assert.Equal("'b", typeNode.GenericParameters.Last().Value);
@@ -107,6 +107,7 @@ type add 'a 'b = 'a -> 'b -> number;
             Assert.IsType<FunctionParameterNode>(typeNode.Body);
             var nodes = ((FunctionParameterNode)typeNode.Body).Nodes.ToList();
             Assert.Equal(3, nodes.Count);
+
             GenericParameterNode aGN = (GenericParameterNode)nodes[0];
             GenericParameterNode bGN = (GenericParameterNode)nodes[1];
             IdentifierNode result = (IdentifierNode)nodes[2];
@@ -129,6 +130,54 @@ type bindMaybe 'a 'b = Maybe 'a -> ('a -> 'b) -> Maybe 'b;
             var compilerResult = compiler.Compile();
 
             Assert.True(compilerResult.Ast.Count == 1);
+
+            Assert.IsType<TypeAliasNode>(compilerResult.Ast.First());
+            TypeAliasNode typeNode = (TypeAliasNode)compilerResult.Ast.First();
+            Assert.Equal("bindMaybe", typeNode.IdToken.Value);
+            Assert.Equal(2, typeNode.GenericParameters.Count());
+            Assert.Equal("'a", typeNode.GenericParameters.First().Value);
+            Assert.Equal("'b", typeNode.GenericParameters.Last().Value);
+
+            Assert.IsType<FunctionParameterNode>(typeNode.Body);
+            var nodes = ((FunctionParameterNode)typeNode.Body).Nodes.ToList();
+            Assert.Equal(3, nodes.Count);
+
+            Assert.IsType<TypeApplicationNode>(nodes[0]);
+            TypeApplicationNode first = (TypeApplicationNode)nodes[0];
+            Assert.Equal(2, first.Parameters.Count);
+            Assert.Equal("Maybe", first.Parameters[0].Value);
+            Assert.Equal("'a", first.Parameters[1].Value);
+
+
+            Assert.IsType<FunctionParameterNode>(nodes[1]);
+            FunctionParameterNode second = (FunctionParameterNode)nodes[1];
+            Assert.Equal(2, second.Nodes.Count);
+            Assert.Equal("'a", (second.Nodes[0] as GenericParameterNode)?.Id.Value);
+            Assert.Equal("'b", (second.Nodes[1] as GenericParameterNode)?.Id.Value);
+
+            Assert.IsType<TypeApplicationNode>(nodes[2]);
+            TypeApplicationNode third = (TypeApplicationNode)nodes[2];
+            Assert.Equal(2, third.Parameters.Count);
+            Assert.Equal("Maybe", third.Parameters[0].Value);
+            Assert.Equal("'b", third.Parameters[1].Value);
+        }
+
+        [Fact(DisplayName = "Expression - Annotations")]
+        public void Expression_Annotations() {
+            var code = @"
+@ The name type
+@ with multi-line 
+@ annotations
+type name = string;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.True(compilerResult.Ast.Count == 1);
+            Assert.IsType<TypeAliasNode>(compilerResult.Ast.First());
+            TypeAliasNode typeNode = (TypeAliasNode)compilerResult.Ast.First();
+            var annotation = "The name type with multi-line annotations";
+            Assert.Equal(annotation, typeNode.Annotation.Annotation);
         }
     }
 }

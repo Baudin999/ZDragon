@@ -1,4 +1,5 @@
 ﻿using Compiler.Language.Nodes;
+using Compiler.Symbols;
 using System.Linq;
 
 namespace Compiler.Language {
@@ -18,6 +19,11 @@ namespace Compiler.Language {
             else if (Current.Kind == SyntaxKind.GenericParameterToken) {
                 var parameter = Take(SyntaxKind.GenericParameterToken);
                 return new GenericParameterNode(parameter);
+            }
+            else if (Current.Kind == SyntaxKind.AmpersandToken) {
+                var attributeTokens = TakeWhile(t => t.Kind != SyntaxKind.NewLineToken).ToList();
+                var annotationToken = new Token(attributeTokens, SyntaxKind.AnnotationToken);
+                return new AnnotationNode(annotationToken);
             }
             else if (Current?.Kind == SyntaxKind.ParanOpenToken) {
                 Take(SyntaxKind.ParanOpenToken);

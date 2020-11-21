@@ -7,13 +7,14 @@ namespace Compiler.Language {
     public partial class Parser {
 
         public ExpressionNode ParseRecordDefinition() {
-            AnnotationNode? recordAnnotation = null;
-            TakeBefore(n => n.Kind == SyntaxKind.AnnotationToken)
-                .ToList()
-                .ForEach(a => {
-                    if (recordAnnotation == null) recordAnnotation = new AnnotationNode(a);
-                    else recordAnnotation.Add(a);
-                });
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
+
             var recordDeclaration = Take(SyntaxKind.RecordDeclarationToken);
             var id = Take(SyntaxKind.IdentifierToken);
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();
@@ -42,13 +43,24 @@ namespace Compiler.Language {
                 while (Current?.Kind == SyntaxKind.IdentifierToken || Current?.Kind == SyntaxKind.GenericParameterToken) {
                     fieldType.Add(Take());
                 }
+
+                TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                var restrictions = new List<RestrictionNode>();
+                while(Current?.Kind == SyntaxKind.AndToken) {
+                    Take();
+                    var key = Take(SyntaxKind.IdentifierToken);
+                    var value = Take();
+                    restrictions.Add(new RestrictionNode(key, value));
+                    TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                }
+
                 Take(SyntaxKind.SemiColonToken);
 
-                fields.Add(new RecordFieldNode(annotation, fieldId, fieldType));
+                fields.Add(new RecordFieldNode(annotation, fieldId, fieldType, restrictions));
             }
 
 
-            return new RecordNode(recordAnnotation, id, genericParameters, extensions, fields);
+            return new RecordNode(annotationNode, id, genericParameters, extensions, fields);
         }
     }
 }

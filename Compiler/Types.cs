@@ -73,6 +73,7 @@ namespace Compiler {
                 { "~", SyntaxKind.TildeToken },
                 { "#", SyntaxKind.HashToken },
                 { "|", SyntaxKind.PipeToken },
+                { "&", SyntaxKind.AndToken },
                 { ":", SyntaxKind.ColonToken },
                 { "%", SyntaxKind.PercentageToken },
                 { "`", SyntaxKind.BacktickToken },
@@ -83,7 +84,7 @@ namespace Compiler {
 
         public static Dictionary<string, SyntaxKind> Keywords = new Dictionary<string, SyntaxKind> {
                 { "record", SyntaxKind.RecordDeclarationToken },
-                { "type", SyntaxKind.TypeDefinitionToken },
+                { "type", SyntaxKind.TypeDeclarationToken },
                 { "data", SyntaxKind.DataDeclarationToken },
                 { "choice", SyntaxKind.ChoiceDeclarationToken },
                 { "if", SyntaxKind.IfToken },
@@ -217,6 +218,7 @@ namespace Compiler {
         TildeToken,
         HashToken,
         PipeToken,
+        AndToken,
         ColonToken,
         PercentageToken,
         BacktickToken,
@@ -231,7 +233,7 @@ namespace Compiler {
         /// <summary>
         /// type
         /// </summary>
-        TypeDefinitionToken,
+        TypeDeclarationToken,
         DataDeclarationToken,
         ChoiceDeclarationToken,
         EndKeywordToken,

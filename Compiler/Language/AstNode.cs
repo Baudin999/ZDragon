@@ -9,6 +9,9 @@ namespace Compiler.Language {
         public AstNode(ISourceSegment segment) {
             this.Segment = segment;
         }
+        public AstNode(ISourceSegment start, ISourceSegment end) {
+            this.Segment = Token.Range(start, end);
+        }
 
     }
 }

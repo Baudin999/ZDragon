@@ -5,38 +5,28 @@ namespace Compiler.Symbols {
 
 
     /// <summary>
-    /// The type definition tokenizer, this function takes a stream of tokens and 
-    /// creates a token-block specifically for type declarations like:
-    /// 
-    /// type name = string;
-    /// type add = number -> number -> number;
-    /// 
-    /// The semicolon at the end of the type definition is important.
-    /// Splitting the defintion over multiple lines requires an indentation:
-    /// 
-    /// type add =
-    ///     number ->
-    ///     number ->
-    ///     number;
-    ///     
+    ///  
     /// </summary>
     internal partial class ContextualTokenizer {
-        private TokenBlock TokenizeTypeDefinition(List<Token> annotations) {
+        private TokenBlock TokenizeRecordDefinition(List<Token> annotations) {
             var tokens = new List<Token>();
             tokens.AddRange(annotations);
-            while (index < max && Current.Kind != SyntaxKind.SemiColonToken) {
+            while (index < max && Current != null && Current.Kind != SyntaxKind.EndKeywordToken) {
                 if (Current.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
                     tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.NextParameterToken, 1));
                 }
                 else if (Current.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
                     tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
                 }
-                else if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind != SyntaxKind.IndentToken) {
-                    ErrorSink.AddError(new Error(
-                        @"Indentation Error: Expected an Indentation after a 'New Line'.",
-                        Next ?? Current
-                    ));
+                else if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.NewLineToken) {
                     Take();
+                }
+                else if (Current.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
+                    // end the context
+                    break;
+                }
+                else if (Current.Kind == SyntaxKind.AmpersandToken) {
+                    tokens.Add(ParseAnnotation());
                 }
                 else if (Current.Kind == SyntaxKind.IndentToken) {
                     Take();
@@ -56,7 +46,11 @@ namespace Compiler.Symbols {
                 tokens.Add(Take());
             }
 
-            return new TokenBlock(ContextType.TypeDeclaration, tokens);
+            if (Current?.Kind == SyntaxKind.EndKeywordToken) {
+                Take();
+            }
+
+            return new TokenBlock(ContextType.RecordDeclaration, tokens);
         }
     }
 }

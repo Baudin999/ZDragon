@@ -63,22 +63,6 @@ namespace Lexer {
                 });
         }
 
-        [Fact(DisplayName ="Lex Lambda Token")]
-        public void LambdaSymbolParser() {
-            var code = @"=>";
-            var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile(ContextType.FunctionDeclaration);
-
-
-            verifyTokens(
-                compiler.SourceCode,
-                compilerResult.Tokens.ToList(),
-                false);
-
-            Assert.Single(compilerResult.Tokens);
-            Assert.True(compilerResult.Tokens.First().Context == ContextType.None);
-            Assert.True(compilerResult.Tokens.First().Tokens.First().Kind == SyntaxKind.LambdaToken);
-        }
 
         [Fact(DisplayName = "Lex - Two Words")]
         public void TwoWords() {
@@ -91,7 +75,9 @@ namespace Lexer {
                 compilerResult.Tokens.ToList(),
                 false);
 
-            Assert.True(compilerResult.Tokens.Count() == 2);
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(ContextType.Markdown, compilerResult.Tokens.First().Context);
         }
 
 

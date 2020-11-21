@@ -6,14 +6,24 @@ using System.Linq;
 namespace Compiler.Language {
     public partial class Parser {
         public ExpressionNode ParseTypeDefinition() {
-            var type = Take(SyntaxKind.TypeDefinitionToken);
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode = 
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
+            // parse the rest of the type definition
+            var type = Take(SyntaxKind.TypeDeclarationToken);
             var id = Take(SyntaxKind.IdentifierToken, AliasMessages[AliasErrors.InvalidIdentifier]);
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();
             var typeDef = Take(SyntaxKind.EqualsToken, AliasMessages[AliasErrors.AssignmentExpected]);
             var idAlias = ParseExpression();
 
             var endStatement = Take(SyntaxKind.SemiColonToken);
-            return new TypeAliasNode(Token.Range(type, endStatement), id, genericParameters, idAlias);
+
+            // return the block
+            return new TypeAliasNode(Token.Range(type, endStatement), annotationNode, id, genericParameters, idAlias);
         }
 
         private enum AliasErrors {

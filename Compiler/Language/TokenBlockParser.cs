@@ -1,6 +1,4 @@
-﻿using Compiler.Language.Nodes;
-using Compiler.Symbols;
-using System;
+﻿using Compiler.Symbols;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,6 +17,9 @@ namespace Compiler.Language {
             foreach (var tokenBlock in TokenBlocks) {
                 if (tokenBlock.Context == ContextType.TypeDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseTypeDefinition();
+                }
+                else if (tokenBlock.Context == ContextType.RecordDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseRecordDefinition();
                 }
             }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Compiler.Language.Nodes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -22,7 +23,7 @@ namespace Compiler.Symbols {
         private Token Take() {
             var c = Current;
             index++;
-            c.ChangeIndentLevel(indentLevel);
+            //c.ChangeIndentLevel(indentLevel);
             c.Context = CurrentContext;
             return c;
         }
@@ -32,7 +33,7 @@ namespace Compiler.Symbols {
         }
         private IEnumerable<Token> TakeWhile(Predicate<Token> p, int indentLevel = 0) {
             while (Current != null && p(Current)) {
-                yield return Current.ChangeIndentLevel(indentLevel);
+                yield return Take().ChangeIndentLevel(indentLevel);
             }
         }
 
@@ -63,19 +64,36 @@ namespace Compiler.Symbols {
         }
 
         private Token ParseAnnotation() {
-            var tokens = new List<Token> { Take() };
-            while (Current.Kind != SyntaxKind.NewLineToken) {
-                tokens.Add(Take());
-            }
-            return new Token(tokens, SyntaxKind.AnnotationToken, indentLevel);
+            var attributeTokens = TakeWhile(t => t.Kind != SyntaxKind.NewLineToken).ToList();
+            var annotationToken = new Token(attributeTokens, SyntaxKind.AnnotationToken);
+            return annotationToken;
         }
 
-       
+        //private IEnumerable<Token> GroupTokens() {
+        //    while (index < max) {
+        //        if (Current?.Kind == SyntaxKind.AmpersandToken) {
+        //            yield return ParseAnnotation();
+        //        }
+        //        else {
+        //            // We are probably in a markdown block and will interpert it like so...
+        //            yield return Take();
+        //        }
+        //    }
+        //}
 
         internal IEnumerable<TokenBlock> Tokenize(ContextType contextType = ContextType.None) {
+            List<Token> annotations = new List<Token>();
             while (index < max) {
-                if (Current?.Kind == SyntaxKind.TypeDefinitionToken) {
-                    yield return TokenizeTypeDefinition();
+                if (Current?.Kind == SyntaxKind.TypeDeclarationToken) {
+                    yield return TokenizeTypeDefinition(annotations);
+                    annotations = new List<Token>();
+                }
+                else if (Current?.Kind == SyntaxKind.RecordDeclarationToken) {
+                    yield return TokenizeRecordDefinition(annotations);
+                    annotations = new List<Token>();
+                }
+                else if (Current?.Kind == SyntaxKind.AmpersandToken) {
+                    annotations.Add(ParseAnnotation());
                 }
                 else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
@@ -175,6 +193,7 @@ namespace Compiler.Symbols {
         None,
         LanguageDeclaration,
         TypeDeclaration,
+        RecordDeclaration,
         FunctionDeclaration,
         Markdown,
         VariableDef

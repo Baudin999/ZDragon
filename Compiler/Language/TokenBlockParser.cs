@@ -27,8 +27,7 @@ namespace Compiler.Language {
                 }
                 else if (tokenBlock.Context == ContextType.MarkdownDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());
-                    var text = string.Join("", tokenBlock.Tokens.Select(t => t.Value));
-                    yield return new MarkdownNode(text, sourceSection);
+                    yield return new MarkdownNode(tokenBlock.Text, sourceSection);
                 }
             }
 

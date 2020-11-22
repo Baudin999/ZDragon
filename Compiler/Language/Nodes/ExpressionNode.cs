@@ -36,7 +36,9 @@ namespace Compiler.Language.Nodes {
         RestrictionExpression,
 
 
-        RecordField,
-        Record
+        RecordExpressionField,
+        RecordExpression,
+
+        DataExpression
     }
 }

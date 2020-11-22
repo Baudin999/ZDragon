@@ -5,23 +5,10 @@ namespace Compiler.Symbols {
 
 
     /// <summary>
-    /// The type definition tokenizer, this function takes a stream of tokens and 
-    /// creates a token-block specifically for type declarations like:
     /// 
-    /// type name = string;
-    /// type add = number -> number -> number;
-    /// 
-    /// The semicolon at the end of the type definition is important.
-    /// Splitting the defintion over multiple lines requires an indentation:
-    /// 
-    /// type add =
-    ///     number ->
-    ///     number ->
-    ///     number;
-    ///     
     /// </summary>
     internal partial class ContextualTokenizer {
-        private TokenBlock TokenizeTypeDefinition(List<Token> annotations) {
+        private TokenBlock TokenizeDataDefinition(List<Token> annotations) {
             var tokens = new List<Token>();
             tokens.AddRange(annotations);
             while (index < max && Current.Kind != SyntaxKind.SemiColonToken) {
@@ -37,9 +24,6 @@ namespace Compiler.Symbols {
                         Next ?? Current
                     ));
                     Take();
-                }
-                else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
-                    tokens.Add(AggregateStringLiteralToken());
                 }
                 else if (Current.Kind == SyntaxKind.IndentToken) {
                     Take();
@@ -59,7 +43,7 @@ namespace Compiler.Symbols {
                 tokens.Add(Take());
             }
 
-            return new TokenBlock(ContextType.TypeDeclaration, tokens);
+            return new TokenBlock(ContextType.DataDeclaration, tokens);
         }
     }
 }

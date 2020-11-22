@@ -22,6 +22,9 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.RecordDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseRecordDefinition();
                 }
+                else if (tokenBlock.Context == ContextType.DataDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseDataDefinition();
+                }
                 else if (tokenBlock.Context == ContextType.MarkdownDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());
                     var text = string.Join("", tokenBlock.Tokens.Select(t => t.Value));

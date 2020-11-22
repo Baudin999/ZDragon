@@ -27,7 +27,6 @@ namespace Compiler.Language {
             index++;
             return c;
         }
-
         private Token Take(SyntaxKind kind, string? message = null) {
             var c = Current;
 
@@ -48,8 +47,6 @@ namespace Compiler.Language {
             }
             return c;
         }
-
-
         private IEnumerable<Token> TakeWhile(SyntaxKind kind) {
             while (Current != null && Current?.Kind == kind) yield return Take();
         }
@@ -64,7 +61,6 @@ namespace Compiler.Language {
                 i--;
             }
         }
-
         private IEnumerable<Token> TakeBefore(Predicate<Token> when) {
             var i = -1;
             var token = TokenAt(i);
@@ -74,7 +70,6 @@ namespace Compiler.Language {
                 i--;
             }
         }
-
         public Parser(IEnumerable<Token> tokens, ErrorSink errorSink) {
             this.Tokens = tokens.ToList();
             this.ErrorSink = errorSink;

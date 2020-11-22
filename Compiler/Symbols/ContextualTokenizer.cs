@@ -1,10 +1,6 @@
-﻿using Compiler.Language.Nodes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Compiler.Symbols {
     internal partial class ContextualTokenizer {
@@ -18,17 +14,17 @@ namespace Compiler.Symbols {
 
         private int index = 0;
         private readonly int max;
-        private Token Current => Tokens[index];
+        private Token? Current => index < max ? Tokens[index] : null;
         private Token? Next => (index + 1) < max ? Tokens[index + 1] : null;
-        private Token Take() {
+        private Token? Take() {
             var c = Current;
             index++;
-            //c.ChangeIndentLevel(indentLevel);
-            c.Context = CurrentContext;
+            if (c != null)
+                c.Context = CurrentContext;
             return c;
         }
-        private Token Take(SyntaxKind kind) {
-            if (Current.Kind != kind) throw new Exception($"Expected token of kind '{kind}' but received token of kind'{Current.Kind}'.");
+        private Token? Take(SyntaxKind kind) {
+            if (Current?.Kind != kind) throw new Exception($"Expected token of kind '{kind}' but received token of kind'{Current.Kind}'.");
             return Take();
         }
         private IEnumerable<Token> TakeWhile(Predicate<Token> p, int indentLevel = 0) {
@@ -52,13 +48,14 @@ namespace Compiler.Symbols {
         /// Example: "Something"
         /// Example 2: "{a} is a word"  <-- valiable can be found within the scope
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Token</returns>
         private Token AggregateStringLiteralToken() {
-            List<Token> parts = new List<Token> { (Token)Take(SyntaxKind.DoubleQuoteToken) };
-            while (Current.Kind != SyntaxKind.DoubleQuoteToken) {
-                parts.Add((Token)Take());
+            List<Token?> parts = new List<Token?> { Take(SyntaxKind.DoubleQuoteToken) }.Where(i => i != null).ToList();
+            
+            while (Current?.Kind != SyntaxKind.DoubleQuoteToken && Current != null) {
+                parts.Add(Take());
             }
-            parts.Add((Token)Take(SyntaxKind.DoubleQuoteToken));
+            parts.Add(Take(SyntaxKind.DoubleQuoteToken));
 
             return new Token(parts, SyntaxKind.StringLiteralToken, indentLevel);
         }
@@ -78,6 +75,10 @@ namespace Compiler.Symbols {
                 }
                 else if (Current?.Kind == SyntaxKind.RecordDeclarationToken) {
                     yield return TokenizeRecordDefinition(annotations);
+                    annotations = new List<Token>();
+                }
+                else if (Current?.Kind == SyntaxKind.DataDeclarationToken) {
+                    yield return TokenizeDataDefinition(annotations);
                     annotations = new List<Token>();
                 }
                 else if (Current?.Kind == SyntaxKind.AmpersandToken) {
@@ -182,6 +183,7 @@ namespace Compiler.Symbols {
         LanguageDeclaration,
         TypeDeclaration,
         RecordDeclaration,
+        DataDeclaration,
         FunctionDeclaration,
         MarkdownDeclaration,
         VariableDef

@@ -118,13 +118,17 @@ namespace Compiler.Symbols {
             this.IndentLevel = indentLevel;
         }
 
-        public Token(List<Token> tokens, SyntaxKind kind, int indentLevel = 0): 
+        public Token(List<Token?> tokens, SyntaxKind kind, int indentLevel = 0): 
+#pragma warning disable CS8604 // Possible null reference argument.
             this(
-                string.Join("", tokens.Select(t => t.Value)), 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                string.Join("", tokens.Where(t => t != null).Select(t => t.Value)),
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 kind, 
-                tokens.First(), 
-                tokens.Last(),
+                tokens.Where(t => t != null).First(),
+                tokens.Where(t => t != null).Last(),
                 indentLevel) { }
+#pragma warning restore CS8604 // Possible null reference argument.
 
         public override string ToString() {
             return $"{Kind} - '{Value}'";

@@ -12,7 +12,7 @@ namespace Compiler.Language.Nodes {
         public List<Token> Extensions { get; }
         public List<RecordFieldNode> Fields { get; }
 
-        public RecordNode(AnnotationNode? annotation, Token identifierToken, List<Token> genericParameters, List<Token> extensions, List<RecordFieldNode> fields) : base(identifierToken, ExpressionKind.RecordField) {
+        public RecordNode(AnnotationNode? annotation, Token identifierToken, List<Token> genericParameters, List<Token> extensions, List<RecordFieldNode> fields) : base(identifierToken, ExpressionKind.RecordExpressionField) {
             this.AnnotationNode = annotation;
             this.IdToken = identifierToken;
             this.GenericParameters = genericParameters;

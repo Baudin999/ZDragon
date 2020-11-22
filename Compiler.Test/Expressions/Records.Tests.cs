@@ -131,6 +131,34 @@ record Address =
             Assert.Equal(2, addressRecord.Fields.Count);
         }
 
+
+        [Fact(DisplayName = "Expression - Default Field Value")]
+        public void Expression_DefaultFieldValue() {
+            var code = @"
+record Person =
+    FirstName: string
+        & default ""Peter Pan"";
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Ast);
+
+            Assert.IsType<RecordNode>(compilerResult.Ast.First());
+            RecordNode record = (RecordNode)compilerResult.Ast.First();
+            Assert.Equal("Person", record.Id);
+            Assert.Equal("", record.Description);
+            Assert.Single(record.Fields);
+
+            var firstName = record.Fields[0];
+            Assert.Equal("FirstName", firstName.Id);
+            Assert.Single(firstName.Restrictions);
+            var defaultRestriction = firstName.Restrictions[0];
+            Assert.Equal("default", defaultRestriction.Key);
+            Assert.Equal("\"Peter Pan\"", defaultRestriction.Value);
+        }
+
         [Fact(DisplayName = "Expression - parse person record")]
         public void ParseType() {
             var code = @"

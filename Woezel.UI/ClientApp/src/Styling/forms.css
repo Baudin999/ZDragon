@@ -1,0 +1,57 @@
+/* FOMRS */
+.search,
+input,
+select,
+option,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.4em;
+  border: 1px solid lightgray;
+  border-radius: 0;
+}
+
+select {
+  padding-right: 2rem;
+  position: relative;
+}
+
+/* input,
+select,
+option,
+textarea,
+button {
+  outline: var(--color-primary);
+  border-radius: 0;
+} */
+
+/* input:active,
+select:active,
+option:active,
+textarea:active {
+  outline: var(--color-primary);
+}*/
+
+input:focus,
+select:focus,
+option:focus,
+textarea:focus {
+    outline-color: var(--color-primary);
+} 
+
+.invalid {
+  border: 1px solid red;
+  color: red;
+}
+.error {
+  color: red;
+  text-align: center;
+}
+
+.form-field--container .error {
+  text-align: right;
+}
+
+textarea {
+  height: 150px;
+}

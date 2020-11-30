@@ -7,7 +7,7 @@ namespace Compiler.Symbols {
     ///
     /// </summary>
     internal partial class ContextualTokenizer {
-        private TokenBlock ParseMarkdown() {
+        private TokenGroup TokenizeMarkdown() {
             var tokens = new List<Token>();
             while (index < max && Current != null) {
                 if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.NewLineToken) {
@@ -20,7 +20,7 @@ namespace Compiler.Symbols {
                 }
             }
             
-            return new TokenBlock(ContextType.MarkdownDeclaration, tokens);
+            return new TokenGroup(ContextType.MarkdownDeclaration, tokens);
         }
     }
 }

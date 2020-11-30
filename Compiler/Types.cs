@@ -1,6 +1,7 @@
 
 
 using Compiler.Language;
+using Compiler.Language.Nodes;
 using Compiler.Symbols;
 using System.Collections.Generic;
 using System.Linq;
@@ -254,16 +255,19 @@ namespace Compiler {
         // literals
         StringWrapToken,
         StringLiteralToken,
-        AnnotationToken
+        AnnotationToken,
+
+        // Markup
+        CloseMarkupElement
     }
 
 
     public class CompilationResult {
-        public IEnumerable<TokenBlock> Tokens { get; }
+        public IEnumerable<TokenGroup> Tokens { get; }
         public List<AstNode> Ast { get; }
         public ErrorSink ErrorSink { get; }
 
-        public CompilationResult(List<AstNode> ast, IEnumerable<TokenBlock> tokens, ErrorSink errorSink) {
+        public CompilationResult(List<AstNode> ast, IEnumerable<TokenGroup> tokens, ErrorSink errorSink) {
             this.Tokens = tokens.ToList();
             this.Ast = ast;
             this.ErrorSink = errorSink;

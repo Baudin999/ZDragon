@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler.Language {
-    public partial class TokenBlockParser {
-        private List<TokenBlock> TokenBlocks { get; }
+    public partial class ContextualParser {
+        private List<TokenGroup> TokenBlocks { get; }
         private ErrorSink ErrorSink { get; }
 
-        public TokenBlockParser(IEnumerable<TokenBlock> tokens, ErrorSink errorSink) {
+        public ContextualParser(IEnumerable<TokenGroup> tokens, ErrorSink errorSink) {
             this.TokenBlocks = tokens.ToList();
             this.ErrorSink = errorSink;
         }
@@ -24,6 +24,9 @@ namespace Compiler.Language {
                 }
                 else if (tokenBlock.Context == ContextType.DataDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseDataDefinition();
+                }
+                else if (tokenBlock.Context == ContextType.MarkupDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseMarkup();
                 }
                 else if (tokenBlock.Context == ContextType.MarkdownDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());

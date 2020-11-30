@@ -1,5 +1,4 @@
-﻿using Compiler.Language.Nodes;
-using Compiler.Symbols;
+﻿using Compiler.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;

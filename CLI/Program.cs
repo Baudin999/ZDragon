@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Linq;
-using Compiler;
-using Compiler.Symbols;
 
-namespace CLI
-{
+namespace CLI {
     class Program
     {
         static void Main(string[] args)

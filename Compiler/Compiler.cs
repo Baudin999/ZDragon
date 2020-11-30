@@ -21,7 +21,7 @@ namespace Compiler {
             var tokens = new Lexer(this.SourceCode, errorSink).Tokenize(initialContext).ToList();
             var contextualTokens = new ContextualTokenizer(tokens, errorSink).Tokenize(initialContext).ToList();
 
-            var ast = new TokenBlockParser(contextualTokens, errorSink).Parse().ToList();
+            var ast = new ContextualParser(contextualTokens, errorSink).Parse().ToList();
 
             return new CompilationResult(ast, contextualTokens, errorSink);
 

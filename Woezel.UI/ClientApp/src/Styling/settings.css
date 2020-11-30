@@ -1,0 +1,21 @@
+:root {
+  --color-primary: #fa6003;
+  --color-primary--dark: #803100;
+  --color-primary--alt: white;
+
+  --color-secundary: rgb(15, 82, 109);
+  --color-secundary--alt: white;
+
+  --color-warning: rgb(75, 5, 5);
+  --color-warning--alt: white;
+
+  --border-color: lightgray;
+
+  --background: white;
+  --color: rgb(31, 31, 31);
+}
+
+.dark {
+  --background: rgb(31, 31, 31);
+  --color: rgb(243, 243, 243);
+}

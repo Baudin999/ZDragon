@@ -21,7 +21,7 @@ namespace Compiler.Symbols {
     ///     
     /// </summary>
     internal partial class ContextualTokenizer {
-        private TokenBlock TokenizeTypeDefinition(List<Token> annotations) {
+        private TokenGroup TokenizeTypeDefinition(List<Token> annotations) {
             var tokens = new List<Token>();
             tokens.AddRange(annotations);
             while (index < max && Current.Kind != SyntaxKind.SemiColonToken) {
@@ -59,7 +59,7 @@ namespace Compiler.Symbols {
                 tokens.Add(Take());
             }
 
-            return new TokenBlock(ContextType.TypeDeclaration, tokens);
+            return new TokenGroup(ContextType.TypeDeclaration, tokens);
         }
     }
 }

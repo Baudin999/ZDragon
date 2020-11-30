@@ -8,7 +8,7 @@ namespace Compiler.Symbols {
     ///  
     /// </summary>
     internal partial class ContextualTokenizer {
-        private TokenBlock TokenizeRecordDefinition(List<Token> annotations) {
+        private TokenGroup TokenizeRecordDefinition(List<Token> annotations) {
             var tokens = new List<Token>();
             tokens.AddRange(annotations);
             while (index < max && Current != null && Current?.Kind != SyntaxKind.EndKeywordToken) {
@@ -53,7 +53,7 @@ namespace Compiler.Symbols {
                 Take();
             }
 
-            return new TokenBlock(ContextType.RecordDeclaration, tokens);
+            return new TokenGroup(ContextType.RecordDeclaration, tokens);
         }
     }
 }

@@ -5,7 +5,7 @@ using Xunit;
 namespace Expressions {
     public class Markdown {
         [Fact(DisplayName = "Markdown - Example 01")]
-        public void Expression_OnlyName() {
+        public void Markdown_Example01() {
             var code = @"
 # Chapter One
 
@@ -24,6 +24,44 @@ happen to the output:
 
             Assert.Equal(3, compilerResult.Tokens.Count());
             Assert.Equal(3, compilerResult.Ast.Count());
+        }
+
+
+        [Fact(DisplayName = "Markdown - Example 02")]
+        public void Markdown_Example02() {
+            var code = @"
+# Chapter One
+
+This is the core part of the documentation
+we can write in multiple lines and see what will 
+happen to the output:
+
+ * First
+ * Second
+ * Third
+    * With indent 1
+    * With indent 2
+
+type Name = String;
+type Age = Number;
+
+record Person =
+    FirstName: Name;
+    LastName: Name;
+    Age: Number;
+
+let peterPan = 
+    Person { 
+        FirstName = ""Peter"",
+        LastName = ""Pan""
+    };
+
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Equal(7, compilerResult.Tokens.Count());
+            Assert.Equal(7, compilerResult.Ast.Count());
         }
     }
 }

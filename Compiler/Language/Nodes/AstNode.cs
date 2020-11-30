@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Compiler.Language {
+namespace Compiler.Language.Nodes {
     public class AstNode {
         public ISourceSegment Segment { get; protected set; }
         public AstNode(ISourceSegment segment) {

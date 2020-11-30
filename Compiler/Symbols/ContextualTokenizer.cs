@@ -66,7 +66,7 @@ namespace Compiler.Symbols {
             return annotationToken;
         }
 
-        internal IEnumerable<TokenBlock> Tokenize(ContextType contextType = ContextType.None) {
+        internal IEnumerable<TokenGroup> Tokenize(ContextType contextType = ContextType.None) {
             List<Token> annotations = new List<Token>();
             while (index < max) {
                 if (Current?.Kind == SyntaxKind.TypeDeclarationToken) {
@@ -81,6 +81,11 @@ namespace Compiler.Symbols {
                     yield return TokenizeDataDefinition(annotations);
                     annotations = new List<Token>();
                 }
+                else if (Current?.Kind == SyntaxKind.LessThenToken) {
+                    // we'll have to start parsing markup
+                    yield return TokenizeMarkupDefinition();
+                    annotations = new List<Token>();
+                }
                 else if (Current?.Kind == SyntaxKind.AmpersandToken) {
                     annotations.Add(ParseAnnotation());
                 }
@@ -89,93 +94,10 @@ namespace Compiler.Symbols {
                 }
                 else {
                     // We are probably in a markdown block and will interpert it like so...
-                    yield return ParseMarkdown();
+                    yield return TokenizeMarkdown();
                 }
             }
         }
-
-
-        /*
-
-        internal IEnumerable<Token> Tokenize_old(ContextType contextType = ContextType.None) {
-
-            CurrentContext = contextType;
-
-            while (index < max) {
-                if (Current.Kind == SyntaxKind.DoubleQuoteToken) {
-                    // we will, in the future, be able to create a full string parser/builder
-                    // with parameter substitution and interpolation. For now, just aggregate 
-                    // the string.
-                    yield return AggregateStringLiteralToken();
-                }
-                else if (
-                    CurrentContext == ContextType.FunctionDeclaration &&    //  func
-                    Current.Kind == SyntaxKind.EqualsToken &&
-                    Next?.Kind == SyntaxKind.GreaterThenToken) {            //  =>
-                    yield return new Token(new List<Token> { Take(), Take() }, SyntaxKind.LambdaToken, indentLevel);
-                }
-                else if (
-                    CurrentContext == ContextType.LanguageDeclaration &&
-                    Current.Kind == SyntaxKind.MinusToken &&
-                    Next?.Kind == SyntaxKind.GreaterThenToken) {
-                    yield return new Token(new List<Token> { Take(), Take() }, SyntaxKind.NextParameterToken, indentLevel);
-                }
-                else if (Current.Kind == SyntaxKind.AmpersandToken) {
-                    yield return ParseAnnotation();
-                }
-                else if (Current.Kind == SyntaxKind.RecordDeclarationToken) {
-                    CurrentContext = ContextType.LanguageDeclaration;
-                    yield return Take();
-                }
-                else if (Current.Kind == SyntaxKind.TypeDefinitionToken) {
-                    CurrentContext = ContextType.LanguageDeclaration;
-                    yield return Take();
-                }
-                else if (Current.Kind == SyntaxKind.FuncDefinitionToken) {
-                    CurrentContext = ContextType.FunctionDeclaration;
-                    yield return Take();
-                }
-                else if (CurrentContext == ContextType.LanguageDeclaration && Current.Kind == SyntaxKind.ColonToken && Next?.Kind == SyntaxKind.ColonToken) {
-                    yield return new Token(new List<Token>() { Take(), Take() }, SyntaxKind.TypeDefToken, indentLevel);
-                    indentLevel++;
-                }
-                else if (Current.Kind == SyntaxKind.SingleQuoteToken && CurrentContext == ContextType.LanguageDeclaration) {
-                    if (Next?.Kind != SyntaxKind.IdentifierToken) {
-                        ErrorSink.AddError(new Error(
-                            @"Expected an Identifier after a ' as a ' signifies a generic parameter within the context of a type definition.",
-                            Next ?? Current
-                        ));
-                        yield return Take();
-                    }
-                    else {
-                        yield return new Token(new List<Token> { Take(), Take() }, SyntaxKind.GenericParameterToken, indentLevel);
-                    }
-                }
-                else if (Current.Kind == SyntaxKind.SemiColonToken || Current.Kind == SyntaxKind.EndBlock) {
-                    Take();
-                    yield return new Token("", SyntaxKind.EndBlock, Current);
-                    indentLevel--;
-                }
-                else if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind != SyntaxKind.IndentToken && Next?.Kind != SyntaxKind.NewLineToken) {
-                    if (CurrentContext == ContextType.LanguageDeclaration) {
-                        CurrentContext = ContextType.None;
-                        yield return new Token("", SyntaxKind.EndBlock, Current);
-                    }
-                    Take();
-                    indentLevel = 0;
-                }
-                else if (Current.Kind == SyntaxKind.WhiteSpaceToken || Current.Kind == SyntaxKind.NewLineToken || Current.Kind == SyntaxKind.IndentToken) {
-                    // do not yield whitepaces, newlines or indentations
-                    Take();
-                }
-                else {
-                    yield return Take();
-                }
-            }
-
-        }
-        */
-
     }
 
     public enum ContextType {
@@ -186,6 +108,7 @@ namespace Compiler.Symbols {
         DataDeclaration,
         FunctionDeclaration,
         MarkdownDeclaration,
-        VariableDef
+        VariableDef,
+        MarkupDeclaration
     }
 }

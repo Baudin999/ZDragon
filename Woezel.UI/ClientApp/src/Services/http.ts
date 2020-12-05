@@ -3,13 +3,18 @@ import { writable } from "svelte/store";
 
 export let fetcher = writable(false);
 
-let manageResult = async response => {
+let manageResult = async (response, isText = false) => {
     fetcher.set(false);
     var clone = response.clone();
     if (response.status === 401) {
         //push("/login");
     }
+
     try {
+        // just simply return the text
+        if (isText) return await response.text();
+
+        // try to parse the json result
         return await response.json();
     } catch (err) {
         return clone.text();
@@ -77,6 +82,16 @@ export const get = async url => {
     fetcher.set(true);
     try {
         return manageResult(await fetch(url));
+    } catch (err) {
+        fetcher.set(false);
+        console.log(err);
+    }
+};
+
+export const getText = async url => {
+    fetcher.set(true);
+    try {
+        return manageResult(await fetch(url), true);
     } catch (err) {
         fetcher.set(false);
         console.log(err);

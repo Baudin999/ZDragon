@@ -1574,11 +1574,15 @@ var woezel = (function () {
 
     // import { push } from "svelte-spa-router";
     let fetcher = writable(false);
-    let manageResult = async (response) => {
+    let manageResult = async (response, isText = false) => {
         fetcher.set(false);
         var clone = response.clone();
         if (response.status === 401) ;
         try {
+            // just simply return the text
+            if (isText)
+                return await response.text();
+            // try to parse the json result
             return await response.json();
         }
         catch (err) {
@@ -1612,21 +1616,31 @@ var woezel = (function () {
             console.log(err);
         }
     };
+    const getText = async (url) => {
+        fetcher.set(true);
+        try {
+            return manageResult(await fetch(url), true);
+        }
+        catch (err) {
+            fetcher.set(false);
+            console.log(err);
+        }
+    };
     //# sourceMappingURL=http.js.map
 
     const documentStore = writable({});
     const selectFile = async (file) => {
         // console.log("File selected: ", file);
-        let text = await getText(file);
+        let text = await getTxt(file);
         documentStore.update(s => ({ ...s, selectedFile: file, text }));
     };
-    const getText = async (file) => {
+    const getTxt = async (file) => {
         // console.log(file)
         if (!file)
             return;
         var url = `/document/${file.path.replace(/[\\\/]/g, "___")}`;
-        console.log(url);
-        var text = await get(url);
+        var text = await getText(url);
+        console.log(text);
         return text;
     };
     documentStore.subscribe(async (value) => {
@@ -2827,7 +2841,7 @@ var woezel = (function () {
     	let div0;
 
     	let t0_value = (/*file*/ ctx[0]
-    	? /*file*/ ctx[0].namespace
+    	? /*file*/ ctx[0].namespace || /*file*/ ctx[0].path
     	: "unknown file") + "";
 
     	let t0;
@@ -2838,11 +2852,14 @@ var woezel = (function () {
     	let current;
 
     	const editor = new Editor({
-    			props: { text: /*text*/ ctx[1] },
+    			props: {
+    				text: /*text*/ ctx[1],
+    				language: /*type*/ ctx[2]
+    			},
     			$$inline: true
     		});
 
-    	editor.$on("save", /*onSave*/ ctx[2]);
+    	editor.$on("save", /*onSave*/ ctx[3]);
 
     	const block = {
     		c: function create() {
@@ -2856,13 +2873,13 @@ var woezel = (function () {
     			div2 = element("div");
     			div2.textContent = "footer";
     			attr_dev(div0, "class", "header svelte-1sgju34");
-    			add_location(div0, file_1$1, 40, 4, 864);
+    			add_location(div0, file_1$1, 48, 4, 1084);
     			attr_dev(div1, "class", "editor svelte-1sgju34");
-    			add_location(div1, file_1$1, 42, 4, 938);
+    			add_location(div1, file_1$1, 52, 4, 1187);
     			attr_dev(div2, "class", "footer svelte-1sgju34");
-    			add_location(div2, file_1$1, 46, 4, 1022);
+    			add_location(div2, file_1$1, 56, 4, 1287);
     			attr_dev(div3, "class", "container svelte-1sgju34");
-    			add_location(div3, file_1$1, 39, 0, 835);
+    			add_location(div3, file_1$1, 47, 0, 1055);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2880,11 +2897,12 @@ var woezel = (function () {
     		},
     		p: function update(ctx, [dirty]) {
     			if ((!current || dirty & /*file*/ 1) && t0_value !== (t0_value = (/*file*/ ctx[0]
-    			? /*file*/ ctx[0].namespace
+    			? /*file*/ ctx[0].namespace || /*file*/ ctx[0].path
     			: "unknown file") + "")) set_data_dev(t0, t0_value);
 
     			const editor_changes = {};
     			if (dirty & /*text*/ 2) editor_changes.text = /*text*/ ctx[1];
+    			if (dirty & /*type*/ 4) editor_changes.language = /*type*/ ctx[2];
     			editor.$set(editor_changes);
     		},
     		i: function intro(local) {
@@ -2916,6 +2934,7 @@ var woezel = (function () {
     function instance$6($$self, $$props, $$invalidate) {
     	let file;
     	let text = "";
+    	let type = "carlang";
 
     	let onSave = async event => {
     		let code = event.detail;
@@ -2926,6 +2945,13 @@ var woezel = (function () {
     	documentStore.subscribe(value => {
     		$$invalidate(0, file = value.selectedFile);
     		$$invalidate(1, text = value.text);
+
+    		if (file && file.path && file.path.endsWith(".json")) {
+    			$$invalidate(2, type = "json");
+    			$$invalidate(1, text = JSON.stringify(JSON.parse(text), null, 4));
+    		} else {
+    			$$invalidate(2, type = "carlang");
+    		}
     	});
 
     	$$self.$capture_state = () => {
@@ -2935,10 +2961,11 @@ var woezel = (function () {
     	$$self.$inject_state = $$props => {
     		if ("file" in $$props) $$invalidate(0, file = $$props.file);
     		if ("text" in $$props) $$invalidate(1, text = $$props.text);
-    		if ("onSave" in $$props) $$invalidate(2, onSave = $$props.onSave);
+    		if ("type" in $$props) $$invalidate(2, type = $$props.type);
+    		if ("onSave" in $$props) $$invalidate(3, onSave = $$props.onSave);
     	};
 
-    	return [file, text, onSave];
+    	return [file, text, type, onSave];
     }
 
     class DocumentEditor extends SvelteComponentDev {

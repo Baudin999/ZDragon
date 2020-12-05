@@ -18,7 +18,8 @@ namespace Woezel.UI.Controllers {
             // rehydrate path
             var realPath = path.Replace("___", "\\");
             if (Program.Project.IsValidProjectPath(realPath)) {
-                return Ok(await Program.Project.GetTextByPath(realPath));
+                var text = await Program.Project.GetTextByPath(realPath);
+                return Ok(text);
             }
             else {
                 return BadRequest("Unauthorized path");

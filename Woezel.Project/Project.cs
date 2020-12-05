@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace Woezel.Project {
 
         public Project(string root) {
             _root = root;
-            Dir = getDirectoryInfo(_root); ;
+            Dir = getDirectoryInfo(_root);
         }
 
         public bool IsValidProjectPath(string path) {
@@ -18,6 +19,9 @@ namespace Woezel.Project {
         }
 
         public string getNamespace(string path) {
+
+            if (!path.EndsWith(".car")) return path;
+
             var p = path
                 .Replace(_root, "")
                 .Replace("/", ".")
@@ -65,7 +69,7 @@ namespace Woezel.Project {
             List<FInfo> files = new List<FInfo>();
             foreach (string d in Directory.GetFiles(path)) {
                 var _fInfo = new FileInfo(d);
-                var fInfo = new FInfo(_fInfo.Name, _fInfo.FullName);
+                var fInfo = new FInfo(_fInfo, getNamespace(_fInfo.FullName));
 
                 if (_fInfo.Extension == ".car") {
                     fInfo.Namespace = getNamespace(fInfo.Path);
@@ -102,9 +106,17 @@ namespace Woezel.Project {
         public string Path { get; }
         public string Namespace { get; set; }
         public string Id { get; }
-        public FInfo(string name, string path) {
-            this.Name = name;
-            this.Path = path;
+        public DateTime ChangedOn { get; }
+        public DateTime CreatedOn { get; }
+        public string LastChangedFormatted { get; }
+        
+        public FInfo(FileInfo fileInfo, string ns) {
+            this.Namespace = ns;
+            this.Name = fileInfo.Name;
+            this.Path = fileInfo.FullName;
+            this.ChangedOn = fileInfo.LastWriteTime;
+            this.CreatedOn = fileInfo.CreationTime;
+
             this.Id = $"{Namespace}::{Name}";
         }
         public async Task<string> GetText() {

@@ -1,24 +1,3 @@
-:root {
-  --color-primary: #fa6003;
-  --color-primary--dark: #803100;
-  --color-primary--alt: white;
-
-  --color-secundary: rgb(15, 82, 109);
-  --color-secundary--alt: white;
-
-  --color-warning: rgb(75, 5, 5);
-  --color-warning--alt: white;
-
-  --border-color: lightgray;
-
-  --background: white;
-  --color: rgb(31, 31, 31);
-}
-
-.dark {
-  --background: rgb(31, 31, 31);
-  --color: rgb(243, 243, 243);
-}
 *,
 *:before,
 *:after {
@@ -68,6 +47,27 @@ body {
 .fade-in {
   opacity: 1;
 }
+:root {
+  --color-primary: #fa6003;
+  --color-primary--dark: #803100;
+  --color-primary--alt: white;
+
+  --color-secundary: rgb(15, 82, 109);
+  --color-secundary--alt: white;
+
+  --color-warning: rgb(75, 5, 5);
+  --color-warning--alt: white;
+
+  --border-color: lightgray;
+
+  --background: white;
+  --color: rgb(31, 31, 31);
+}
+
+.dark {
+  --background: rgb(31, 31, 31);
+  --color: rgb(243, 243, 243);
+}
 /* Button Styling */
 
 button {
@@ -103,6 +103,28 @@ button.warning {
 button.warning:hover {
   background: var(--color-primary);
   color: var(--color-primary--alt);
+}
+table.table--glossary {
+  border-collapse: collapse;
+}
+table.table--glossary td,
+table.table--glossary th {
+  padding: 1rem;
+  text-align: left;
+}
+table.table--glossary td:last-child,
+table.table--glossary th:last-child {
+  padding-right: 4rem;
+}
+table.table--glossary td {
+  border-bottom: 1px solid lightgray;
+}
+table.table--glossary thead {
+  background: #fa6003;
+}
+table.table--glossary thead th {
+  font-weight: normal;
+  color: #ffffff;
 }
 /* FOMRS */
 .search,
@@ -202,26 +224,4 @@ textarea {
 .file-explorer ul li.selected {
     background: var(--color-secundary);
     color: var(--color-secundary--alt);
-}
-table.table--glossary {
-  border-collapse: collapse;
-}
-table.table--glossary td,
-table.table--glossary th {
-  padding: 1rem;
-  text-align: left;
-}
-table.table--glossary td:last-child,
-table.table--glossary th:last-child {
-  padding-right: 4rem;
-}
-table.table--glossary td {
-  border-bottom: 1px solid lightgray;
-}
-table.table--glossary thead {
-  background: #fa6003;
-}
-table.table--glossary thead th {
-  font-weight: normal;
-  color: #ffffff;
 }

@@ -5,6 +5,7 @@
 
     let file;
     let text = "";
+    let type = "carlang";
 
     let onSave = async (event) => {
         let code = event.detail;
@@ -15,6 +16,13 @@
     documentStore.subscribe((value: any) => {
         file = value.selectedFile;
         text = value.text;
+
+        if (file && file.path && file.path.endsWith(".json")) {
+            type = "json";
+            text = JSON.stringify(JSON.parse(text), null, 4);
+        } else {
+            type = "carlang";
+        }
     });
 </script>
 
@@ -44,10 +52,12 @@
 </style>
 
 <div class="container">
-    <div class="header">{file ? file.namespace : 'unknown file'}</div>
+    <div class="header">
+        {file ? file.namespace || file.path : 'unknown file'}
+    </div>
 
     <div class="editor">
-        <Editor {text} on:save={onSave} />
+        <Editor {text} language={type} on:save={onSave} />
     </div>
 
     <div class="footer">footer</div>

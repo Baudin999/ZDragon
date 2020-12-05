@@ -2,7 +2,7 @@ export const tokenizer = {
     brackets: [{ open: "{*", close: "*}", token: "delimiter.bracket" }],
     keywords: [
         "type",
-        "alias",
+        "record",
         "choice",
         "data",
         "open",

@@ -85,6 +85,11 @@ namespace Woezel.Project {
 
             return new DInfo(dInfo.Name, path, files, directories);
         }
+
+        public async Task<string> SaveFile(string path, string text) {
+            await File.WriteAllTextAsync(path, text);
+            return text;
+        }
     }
 
 

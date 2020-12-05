@@ -1630,12 +1630,10 @@ var woezel = (function () {
 
     const documentStore = writable({});
     const selectFile = async (file) => {
-        // console.log("File selected: ", file);
         let text = await getTxt(file);
         documentStore.update(s => ({ ...s, selectedFile: file, text }));
     };
     const getTxt = async (file) => {
-        // console.log(file)
         if (!file)
             return;
         var url = `/document/${file.path.replace(/[\\\/]/g, "___")}`;
@@ -2873,13 +2871,13 @@ var woezel = (function () {
     			div2 = element("div");
     			div2.textContent = "footer";
     			attr_dev(div0, "class", "header svelte-1sgju34");
-    			add_location(div0, file_1$1, 48, 4, 1084);
+    			add_location(div0, file_1$1, 49, 4, 1118);
     			attr_dev(div1, "class", "editor svelte-1sgju34");
-    			add_location(div1, file_1$1, 52, 4, 1187);
+    			add_location(div1, file_1$1, 53, 4, 1221);
     			attr_dev(div2, "class", "footer svelte-1sgju34");
-    			add_location(div2, file_1$1, 56, 4, 1287);
+    			add_location(div2, file_1$1, 57, 4, 1321);
     			attr_dev(div3, "class", "container svelte-1sgju34");
-    			add_location(div3, file_1$1, 47, 0, 1055);
+    			add_location(div3, file_1$1, 48, 0, 1089);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2937,9 +2935,9 @@ var woezel = (function () {
     	let type = "carlang";
 
     	let onSave = async event => {
+    		if (!file || !event) return;
     		let code = event.detail;
-    		var result = await post("/Document", { code });
-    		console.log(result);
+    		var result = await post("/Document", { path: file.path, code });
     	};
 
     	documentStore.subscribe(value => {
@@ -4231,7 +4229,7 @@ var woezel = (function () {
         brackets: [{ open: "{*", close: "*}", token: "delimiter.bracket" }],
         keywords: [
             "type",
-            "alias",
+            "record",
             "choice",
             "data",
             "open",

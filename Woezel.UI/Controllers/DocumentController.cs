@@ -22,14 +22,23 @@ namespace Woezel.UI.Controllers {
                 return Ok(text);
             }
             else {
-                return BadRequest("Unauthorized path");
+                return Unauthorized("Unauthorized path");
             }
         }
 
         [HttpPost("/document")]
         public async Task<IActionResult> Submit([FromBody] DocumentSubmitBody body) {
-            var compilerResult = new Compiler.Compiler(body.Code).Compile();
-            return Ok(compilerResult);
+            if (Program.Project.IsValidProjectPath(body.Path)) {
+                // First we save the document
+                await Program.Project.SaveFile(body.Path, body.Code);
+
+                // compile the result
+                var compilerResult = new Compiler.Compiler(body.Code).Compile();
+                return Ok(compilerResult);
+            }
+            else {
+                return Unauthorized("Unauthorized path");
+            }
         }
 
         [HttpGet("/documents")]
@@ -39,6 +48,7 @@ namespace Woezel.UI.Controllers {
     }
 
     public class DocumentSubmitBody {
+        public string Path { get; set; }
         public string Code { get; set; }
     }
 }

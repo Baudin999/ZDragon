@@ -1,52 +1,3 @@
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-
-  overflow: hidden;
-
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 12px;
-  background: var(--background);
-  color: var(--color);
-}
-
-* {
-  text-rendering: optimizeLegibility;
-}
-
-body {
-  font-family: Verdana, Geneva, sans-serif;
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-}
-
-.fade-out {
-  opacity: 0;
-}
-.fade-in {
-  opacity: 1;
-}
 :root {
   --color-primary: #fa6003;
   --color-primary--dark: #803100;
@@ -67,6 +18,63 @@ body {
 .dark {
   --background: rgb(31, 31, 31);
   --color: rgb(243, 243, 243);
+}
+/* FOMRS */
+.search,
+input,
+select,
+option,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.4em;
+  border: 1px solid lightgray;
+  border-radius: 0;
+}
+
+select {
+  padding-right: 2rem;
+  position: relative;
+}
+
+/* input,
+select,
+option,
+textarea,
+button {
+  outline: var(--color-primary);
+  border-radius: 0;
+} */
+
+/* input:active,
+select:active,
+option:active,
+textarea:active {
+  outline: var(--color-primary);
+}*/
+
+input:focus,
+select:focus,
+option:focus,
+textarea:focus {
+    outline-color: var(--color-primary);
+} 
+
+.invalid {
+  border: 1px solid red;
+  color: red;
+}
+.error {
+  color: red;
+  text-align: center;
+}
+
+.form-field--container .error {
+  text-align: right;
+}
+
+textarea {
+  height: 150px;
 }
 /* Button Styling */
 
@@ -126,65 +134,57 @@ table.table--glossary thead th {
   font-weight: normal;
   color: #ffffff;
 }
-/* FOMRS */
-.search,
-input,
-select,
-option,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0.4em;
-  border: 1px solid lightgray;
-  border-radius: 0;
-}
-
-select {
-  padding-right: 2rem;
-  position: relative;
-}
-
-/* input,
-select,
-option,
-textarea,
-button {
-  outline: var(--color-primary);
-  border-radius: 0;
-} */
-
-/* input:active,
-select:active,
-option:active,
-textarea:active {
-  outline: var(--color-primary);
-}*/
-
-input:focus,
-select:focus,
-option:focus,
-textarea:focus {
-    outline-color: var(--color-primary);
-} 
-
-.invalid {
-  border: 1px solid red;
-  color: red;
-}
-.error {
-  color: red;
-  text-align: center;
-}
-
-.form-field--container .error {
-  text-align: right;
-}
-
-textarea {
-  height: 150px;
-}
 .mermaid > svg {
   text-align: center;
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 12px;
+  background: var(--background);
+  color: var(--color);
+}
+
+* {
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.fade-out {
+  opacity: 0;
+}
+.fade-in {
+  opacity: 1;
 }
 
 .file-explorer {

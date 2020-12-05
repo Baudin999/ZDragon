@@ -8,9 +8,9 @@
     let type = "carlang";
 
     let onSave = async (event) => {
+        if (!file || !event) return;
         let code = event.detail;
-        var result = await post("/Document", { code });
-        console.log(result);
+        var result = await post("/Document", { path: file.path, code });
     };
 
     documentStore.subscribe((value: any) => {

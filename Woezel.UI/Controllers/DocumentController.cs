@@ -13,9 +13,16 @@ namespace Woezel.UI.Controllers {
             _logger = logger;
         }
 
-        [HttpGet("/document/{ns}")]
-        public async Task<IActionResult> Index([FromRoute]string ns) {
-            return Ok(await Program.Project.GetTextByNamespace(ns));
+        [HttpGet("/document/{path}")]
+        public async Task<IActionResult> Index([FromRoute]string path) {
+            // rehydrate path
+            var realPath = path.Replace("___", "\\");
+            if (Program.Project.IsValidProjectPath(realPath)) {
+                return Ok(await Program.Project.GetTextByPath(realPath));
+            }
+            else {
+                return BadRequest("Unauthorized path");
+            }
         }
 
         [HttpPost("/document")]

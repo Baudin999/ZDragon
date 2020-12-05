@@ -13,6 +13,10 @@ namespace Woezel.Project {
             Dir = getDirectoryInfo(_root); ;
         }
 
+        public bool IsValidProjectPath(string path) {
+            return path.StartsWith(_root);
+        }
+
         public string getNamespace(string path) {
             var p = path
                 .Replace(_root, "")
@@ -48,6 +52,10 @@ namespace Woezel.Project {
             else {
                 return "";
             }
+        }
+
+        public async Task<string> GetTextByPath(string path) {
+            return await File.ReadAllTextAsync(path);
         }
 
         private DInfo getDirectoryInfo(string path) {
@@ -93,9 +101,11 @@ namespace Woezel.Project {
         public string Name { get; }
         public string Path { get; }
         public string Namespace { get; set; }
+        public string Id { get; }
         public FInfo(string name, string path) {
             this.Name = name;
             this.Path = path;
+            this.Id = $"{Namespace}::{Name}";
         }
         public async Task<string> GetText() {
             return await File.ReadAllTextAsync(this.Path);

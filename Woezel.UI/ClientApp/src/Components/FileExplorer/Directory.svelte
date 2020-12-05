@@ -1,16 +1,15 @@
 <script>
     import File from "./File.svelte";
+    import { documentStore } from "../../Services/file";
+    $: selectedFile = $documentStore.selectedFile;
+
     export let directory;
+    export let open = false;
+    export let showSelf = true;
+    export let indent = 0;
 </script>
 
 <style type="less">
-    ul {
-        list-style: none;
-        li:hover {
-            cursor: pointer;
-        }
-    }
-
     fa {
         color: var(--color-secundary);
         display: inline-block;
@@ -18,16 +17,26 @@
     }
 </style>
 
-<ul>
-    {#each directory.directories as dir}
-        <li>
-            <fa class="fa fa-folder" />{dir.name}
+{#if open}
+    {#if showSelf}
+        <li on:click={() => (open = !open)}>
+            <fa class="fa fa-folder-open-o" />{directory.name}
         </li>
-        <li>
-            <svelte:self directory={dir} />
-        </li>
-    {/each}
-    {#each directory.files as file}
-        <File {file} />
-    {/each}
-</ul>
+    {/if}
+    <ul class={`indent-${indent}`}>
+        {#each directory.directories as dir}
+            <li>
+                <svelte:self directory={dir} indent={indent + 1} />
+            </li>
+        {/each}
+        {#each directory.files as file}
+            <File
+                {file}
+                selected={file && selectedFile && file.id == selectedFile.id} />
+        {/each}
+    </ul>
+{:else if showSelf}
+    <li on:click={() => (open = !open)}>
+        <fa class="fa fa-folder-o" />{directory.name}
+    </li>
+{/if}

@@ -1,0 +1,39 @@
+
+.file-explorer {
+    padding: 1rem;
+}
+.file-explorer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.file-explorer ul.indent-0 li {
+    padding-left: 0;
+}
+.file-explorer ul.indent-1 li {
+    padding-left: 1rem;
+}
+.file-explorer ul.indent-2 li {
+    padding-left: 2rem;
+}
+.file-explorer ul.indent-3 li {
+    padding-left: 3rem;
+}
+.file-explorer ul.indent-4 li {
+    padding-left: 4rem;
+}
+.file-explorer ul.indent-5 li {
+    padding-left: 5rem;
+}
+
+.file-explorer ul li {
+    margin: 5px 0px;
+}
+.file-explorer ul li:hover {
+    cursor: pointer;
+}
+.file-explorer ul li.selected {
+    background: var(--color-secundary);
+    color: var(--color-secundary--alt);
+}

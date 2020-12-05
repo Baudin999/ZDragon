@@ -2,6 +2,7 @@
     import { selectFile } from "../../Services/file";
 
     export let file;
+    export let selected = false;
 
     const fileSelected = () => {
         selectFile(file);
@@ -14,11 +15,8 @@
         display: inline-block;
         margin-right: 3px;
     }
-    li:hover {
-        cursor: pointer;
-    }
 </style>
 
-<li on:click={fileSelected}>
-    <fa class="fa fa-file" />{file.name}
+<li class:selected on:click={fileSelected}>
+    <fa class="fa fa-file-o" />{file.name}
 </li>

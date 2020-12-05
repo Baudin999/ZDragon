@@ -7,6 +7,7 @@ import "./Styling/forms.css";
 import "./Styling/buttons.css";
 import "./Styling/mermaid.css";
 import "./Styling/tables.css";
+import "./Styling/file-explorer.css";
 
 // INIT MONACO
 import { theme, tokenizer } from "./editor-carlang.js";

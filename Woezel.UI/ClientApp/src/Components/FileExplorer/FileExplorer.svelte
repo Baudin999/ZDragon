@@ -12,8 +12,8 @@
     getDocuments();
 </script>
 
-<div>
+<div class="file-explorer">
     {#if documents}
-        <Directory directory={documents} />
+        <Directory directory={documents} open={true} showSelf={false} />
     {/if}
 </div>

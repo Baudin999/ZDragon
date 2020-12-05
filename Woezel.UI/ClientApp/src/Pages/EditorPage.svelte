@@ -9,7 +9,7 @@
         height: 100%;
         width: 100%;
         display: grid;
-        grid-template-columns: 300px auto auto;
+        grid-template-columns: 300px 750px auto;
         grid-gap: 1px;
         background: var(--color-secundary);
 

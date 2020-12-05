@@ -17,6 +17,8 @@ namespace Compiler.Language {
 
             var recordDeclaration = Take(SyntaxKind.RecordDeclarationToken);
             var id = Take(SyntaxKind.IdentifierToken);
+
+            // generic parameters
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();
 
             // extensions
@@ -26,37 +28,39 @@ namespace Compiler.Language {
                 extensions = TakeWhile(SyntaxKind.IdentifierToken).ToList();
             }
 
+            // = tokens
             var equals = Take(SyntaxKind.EqualsToken);
-
             var fields = new List<RecordFieldNode>();
-            while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
-                               
-                AnnotationNode? annotation = null;
-                while (Current.Kind == SyntaxKind.AnnotationToken) {
-                    if (annotation == null) annotation = new AnnotationNode(Take());
-                    else annotation.Add(Take());
-                }
+            if (equals != null) {
+                while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
 
-                var fieldId = Take(SyntaxKind.IdentifierToken);
-                Take(SyntaxKind.ColonToken);
-                var fieldType = new List<Token>();
-                while (Current?.Kind == SyntaxKind.IdentifierToken || Current?.Kind == SyntaxKind.GenericParameterToken) {
-                    fieldType.Add(Take());
-                }
+                    AnnotationNode? annotation = null;
+                    while (Current.Kind == SyntaxKind.AnnotationToken) {
+                        if (annotation == null) annotation = new AnnotationNode(Take());
+                        else annotation.Add(Take());
+                    }
 
-                TakeWhile(SyntaxKind.AnnotationToken).ToList();
-                var restrictions = new List<RestrictionNode>();
-                while(Current?.Kind == SyntaxKind.AndToken) {
-                    Take();
-                    var key = Take(SyntaxKind.IdentifierToken);
-                    var value = Take();
-                    restrictions.Add(new RestrictionNode(key, value));
+                    var fieldId = Take(SyntaxKind.IdentifierToken);
+                    Take(SyntaxKind.ColonToken);
+                    var fieldType = new List<Token>();
+                    while (Current?.Kind == SyntaxKind.IdentifierToken || Current?.Kind == SyntaxKind.GenericParameterToken) {
+                        fieldType.Add(Take());
+                    }
+
                     TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                    var restrictions = new List<RestrictionNode>();
+                    while (Current?.Kind == SyntaxKind.AndToken) {
+                        Take();
+                        var key = Take(SyntaxKind.IdentifierToken);
+                        var value = Take();
+                        restrictions.Add(new RestrictionNode(key, value));
+                        TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                    }
+
+                    Take(SyntaxKind.SemiColonToken);
+
+                    fields.Add(new RecordFieldNode(annotation, fieldId, fieldType, restrictions));
                 }
-
-                Take(SyntaxKind.SemiColonToken);
-
-                fields.Add(new RecordFieldNode(annotation, fieldId, fieldType, restrictions));
             }
 
 

@@ -30,9 +30,10 @@ namespace Compiler.Language {
             var c = Current;
 
             if (c is null) {
-                ErrorSink.AddError(new Error(
-                    message ?? $"Expected '{kind}' but reached the end of the token stream."
-                ));
+                //ErrorSink.AddError(new Error(
+                //    message ?? $"Expected '{kind}' but reached the end of the token stream."
+                //));
+                // DO NOTHING!
             }
             else if (c?.Kind != kind) {
                 ErrorSink.AddError(new Error(

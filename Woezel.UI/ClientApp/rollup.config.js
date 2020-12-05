@@ -4,6 +4,7 @@ import commonjs from "rollup-plugin-commonjs";
 import { terser } from "rollup-plugin-terser";
 import css from "rollup-plugin-css-only";
 import autoPreprocess from "svelte-preprocess";
+import typescript from '@rollup/plugin-typescript';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -12,8 +13,8 @@ export default {
   output: {
     sourcemap: true,
     format: "iife",
-    name: "app",
-    file: "./public/bundle.js"
+    name: "woezel",
+    file: "./../wwwroot/bundle.js"
   },
   plugins: [
     svelte({
@@ -28,12 +29,21 @@ export default {
       // we'll extract any component CSS out into
       // a separate file — better for performance
       css: css => {
-        css.write("./public/bundle.css");
-      }
+        css.write("./../wwwroot/bundle.css");
+      },
+      // remove unused css warning
+      onwarn: (warning, handler) => {
+        const { code, frame } = warning;
+        if (code === "css-unused-selector")
+          return;
+
+        handler(warning);
+      },
     }),
     css({
-      output: "./public/styles.css"
+      output: "./../wwwroot/styles.css"
     }),
+
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
@@ -46,18 +56,11 @@ export default {
         importee === "svelte" || importee.startsWith("svelte/")
     }),
     commonjs(),
+    // !production && serve(),
+    //!production && livereload("./../wwwroot/build"),
+    production && terser(),
 
-    // In dev mode, call `npm run start` once
-    // the bundle has been generated
-    !production && serve(),
-
-    // Watch the `public` directory and refresh the
-    // browser on changes when not in production
-    //!production && livereload("./../wwwroot"),
-
-    // If we're building for production (npm run build
-    // instead of npm run dev), minify
-    production && terser()
+    typescript({ sourceMap: !production })
   ],
   watch: {
     clearScreen: false

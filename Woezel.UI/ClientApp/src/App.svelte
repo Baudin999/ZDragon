@@ -1,14 +1,38 @@
 <script type="typescript">
-  import Editor from "./Pages/EditorPage.svelte";
+  import { Router, Route } from "svelte-routing";
+
+  import EditorPage from "./Pages/EditorPage.svelte";
+  import Home from "./Pages/Home.svelte";
+  import About from "./Pages/About.svelte";
+  import Menu from "./Components/Menu.svelte";
+
+  let url = "";
 </script>
 
-<style>
+<style type="less">
   .root {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .page-content {
+      flex: 1;
+    }
   }
 </style>
 
-<div class="root">
-  <Editor />
-</div>
+<Router {url}>
+  <div class="root">
+    <Menu />
+    <div class="page-content">
+      <Route path="/editor">
+        <EditorPage />
+      </Route>
+      <Route path="/about" component={About} />
+      <Route path="/">
+        <Home />
+      </Route>
+    </div>
+  </div>
+</Router>

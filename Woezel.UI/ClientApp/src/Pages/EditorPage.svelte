@@ -1,38 +1,42 @@
 <script>
-    import FileExplorer from "../Components/FileExplorer.svelte";
+    import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import PageViewer from "../Components/PageViewer.svelte";
-    import Menu from "../Components/Menu.svelte";
 </script>
 
 <style type="less">
     .container {
         height: 100%;
         width: 100%;
-        display: flex;
-        flex-direction: row;
-
-        .menu {
-            width: 60px;
-            background: var(--color-secundary);
-        }
+        display: grid;
+        grid-template-columns: 300px auto auto;
+        grid-gap: 1px;
+        background: var(--color-secundary);
 
         .file-explorer {
-            width: 300px;
+            grid-column: 1;
             height: 100%;
-            border-right: 1px solid lightgray;
+            max-height: 100%;
+            overflow: auto;
+            background: white;
         }
         .document-editor {
-            width: 775px;
+            grid-column: 2;
+            height: 100%;
+            max-height: 100%;
+            div {
+                width: 100%;
+                height: 100%;
+            }
         }
         .page-viewer {
-            flex: 1;
+            grid-column: 3;
             font-family: sans-serif;
             background: gray;
             padding: 0;
             margin: 0;
             height: 100%;
-            width: 100%;
+            max-height: 100%;
             overflow-x: hidden;
             overflow-y: auto;
             padding-top: 1cm;
@@ -41,14 +45,13 @@
 </style>
 
 <div class="container">
-    <div class="menu">
-        <Menu />
-    </div>
     <div class="file-explorer">
         <FileExplorer />
     </div>
     <div class="document-editor">
-        <DocumentEditor />
+        <div>
+            <DocumentEditor />
+        </div>
     </div>
     <div class="page-viewer">
         <PageViewer />

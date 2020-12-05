@@ -57,9 +57,10 @@
     };
     onMount(() => {
         initEditor();
-        editorContainer.addEventListener("resize", function () {
-            if (editor) editor.layout();
+        var ro = new ResizeObserver(() => {
+            editor.layout();
         });
+        ro.observe(editorContainer);
     });
     onDestroy(() => {
         window.removeEventListener("keydown", keyTrap, true);
@@ -103,11 +104,6 @@
             return false;
         }
     }
-
-    // function MyEditor(node) {
-    //     debugger;
-
-    // }
 </script>
 
 <style>

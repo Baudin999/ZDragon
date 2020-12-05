@@ -1,0 +1,17 @@
+{
+    "module": "commonjs",
+    "include": [
+        "src/**/*",
+        "src/node_modules"
+    ],
+    "exclude": [
+        "node_modules/*",
+        "__sapper__/*",
+        "public/*"
+    ],
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "isolatedModules": false,
+        "target": "ES2019"
+    }
+}

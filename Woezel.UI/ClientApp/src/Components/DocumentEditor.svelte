@@ -1,32 +1,53 @@
-<script>
+<script type="ts">
     import Editor from "./Editor.svelte";
+    import { post } from "./../Services/http";
+    import { documentStore } from "./../Services/file";
+
+    let file;
+    let text = "";
+
+    let onSave = async (event) => {
+        let code = event.detail;
+        var result = await post("/Document", { code });
+        console.log(result);
+    };
+
+    documentStore.subscribe((value: any) => {
+        file = value.selectedFile;
+        text = value.text;
+    });
 </script>
 
 <style type="less">
     .container {
         height: 100%;
         width: 100%;
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-rows: min-content auto min-content;
 
         .header,
         .footer {
-            flex: 0;
             padding: 0.5rem;
-            border-bottom: 1px solid lightgray;
-            border-top: 1px solid lightgray;
+            color: var(--color-secundary);
+            background: var(--color-secundary--alt);
+        }
+        header {
+            grid-row: 1;
+        }
+        footer {
+            grid-row: 3;
         }
         .editor {
-            flex: 1;
+            grid-row: 2;
         }
     }
 </style>
 
 <div class="container">
-    <div class="header">header</div>
+    <div class="header">{file ? file.namespace : 'unknown file'}</div>
 
     <div class="editor">
-        <Editor />
+        <Editor {text} on:save={onSave} />
     </div>
 
     <div class="footer">footer</div>

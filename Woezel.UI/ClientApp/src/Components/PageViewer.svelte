@@ -2,12 +2,12 @@
     import { onMount } from "svelte";
     import Page from "./Page.svelte";
 
-    export let content;
+    export let content = "NO CONTENT";
 
     let container;
     function resize() {
+        if (!container) return;
         var scaleX = container.clientWidth / 900;
-
         if (scaleX < 1) {
             container.setAttribute("style", `transform: scale(${scaleX})`);
         }
@@ -15,12 +15,14 @@
 
     function watch() {
         var ro = new ResizeObserver(resize);
-        ro.observe(container);
+        ro.observe(document.body);
     }
 
     onMount(() => {
-        resize();
         watch();
+        setTimeout(() => {
+            resize();
+        });
     });
 </script>
 

@@ -1,7 +1,4 @@
 ﻿using Compiler.Symbols;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Compiler.Language.Nodes {
     public class AstNode {

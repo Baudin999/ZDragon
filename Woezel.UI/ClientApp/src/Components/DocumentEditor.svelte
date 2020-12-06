@@ -1,7 +1,8 @@
 <script type="ts">
     import Editor from "./Editor.svelte";
-    import { post } from "./../Services/http";
-    import { documentStore } from "./../Services/file";
+    import { post } from "../Services/http";
+    import { documentStore } from "../Services/file";
+    import { parseCode } from "../Services/ast";
 
     let file;
     let text = "";
@@ -10,7 +11,8 @@
     let onSave = async (event) => {
         if (!file || !event) return;
         let code = event.detail;
-        var result = await post("/Document", { path: file.path, code });
+        //var result = await post("/Document", { path: file.path, code });
+        parseCode(file, code);
     };
 
     documentStore.subscribe((value: any) => {

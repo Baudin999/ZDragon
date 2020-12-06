@@ -17,8 +17,3 @@ const getTxt = async (file) => {
     var text = await getText(url);
     return text;
 };
-
-
-documentStore.subscribe(async (value: any) => {
-    //
-});

@@ -21,7 +21,7 @@ let manageResult = async (response, isText = false) => {
     }
 };
 
-export const post = async (url: string, data: any) => {
+export const post = async (url, data) => {
     fetcher.set(true);
     try {
         return manageResult(

@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 
 namespace Woezel.UI {
     public class Startup {
@@ -21,9 +20,13 @@ namespace Woezel.UI {
             services.AddControllersWithViews();
             services
                 .AddControllers()
-                .AddJsonOptions(options => {
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
+                .AddNewtonsoftJson();
+                //.AddJsonOptions(options => {
+                //    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                //    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+                //    //options.JsonSerializerOptions.
+                //    System.Text.Json.Serialization.
+                //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

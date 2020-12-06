@@ -5,9 +5,7 @@
     let documents;
 
     const getDocuments = async () => {
-        var r = await get("/documents");
-        console.log(r);
-        documents = r;
+        documents = await get("/documents");
     };
     getDocuments();
 </script>

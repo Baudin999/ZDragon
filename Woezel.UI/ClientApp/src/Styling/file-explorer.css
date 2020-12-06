@@ -34,6 +34,7 @@
     cursor: pointer;
 }
 .file-explorer ul li.selected {
-    background: var(--color-secundary);
-    color: var(--color-secundary--alt);
+    color: var(--color-secundary);
+    font-weight: bolder;
+    /* color: var(--color-secundary--alt); */
 }

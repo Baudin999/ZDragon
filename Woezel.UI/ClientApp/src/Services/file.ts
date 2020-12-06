@@ -12,7 +12,8 @@ export const selectFile = async file => {
 const getTxt = async (file) => {
     if (!file) return;
 
-    var url = `/document/${file.path.replace(/[\\\/]/g, "___")}`;
+    var encodedURI = encodeURI(file.path);
+    var url = `/document/${encodedURI}`;
     var text = await getText(url);
     return text;
 };

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using System.Threading.Tasks;
 
 
@@ -16,7 +17,8 @@ namespace Woezel.UI.Controllers {
         [HttpGet("/document/{path}")]
         public async Task<IActionResult> Index([FromRoute]string path) {
             // rehydrate path
-            var realPath = path.Replace("___", "\\");
+            //var realPath = path.Replace("___", "\\");
+            var realPath = WebUtility.UrlDecode(path);
             if (Program.Project.IsValidProjectPath(realPath)) {
                 var text = await Program.Project.GetTextByPath(realPath);
                 return Ok(text);

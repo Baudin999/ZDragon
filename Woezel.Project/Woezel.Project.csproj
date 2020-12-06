@@ -4,4 +4,8 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="PlantUml.Net" Version="1.2.48" />
+  </ItemGroup>
+
 </Project>

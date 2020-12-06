@@ -1,76 +1,3 @@
-:root {
-  --color-primary: #fa6003;
-  --color-primary--dark: #803100;
-  --color-primary--alt: white;
-
-  --color-secundary: rgb(15, 82, 109);
-  --color-secundary--alt: white;
-
-  --color-warning: rgb(75, 5, 5);
-  --color-warning--alt: white;
-
-  --border-color: lightgray;
-
-  --background: white;
-  --color: rgb(31, 31, 31);
-}
-
-.dark {
-  --background: rgb(31, 31, 31);
-  --color: rgb(243, 243, 243);
-}
-.mermaid > svg {
-  text-align: center;
-}
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-
-  overflow: hidden;
-
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 12px;
-  background: var(--background);
-  color: var(--color);
-}
-
-* {
-  text-rendering: optimizeLegibility;
-}
-
-body {
-  font-family: Verdana, Geneva, sans-serif;
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-}
-
-.fade-out {
-  opacity: 0;
-}
-.fade-in {
-  opacity: 1;
-}
 /* FOMRS */
 .search,
 input,
@@ -127,6 +54,79 @@ textarea:focus {
 
 textarea {
   height: 150px;
+}
+:root {
+  --color-primary: #fa6003;
+  --color-primary--dark: #803100;
+  --color-primary--alt: white;
+
+  --color-secundary: rgb(15, 82, 109);
+  --color-secundary--alt: white;
+
+  --color-warning: rgb(75, 5, 5);
+  --color-warning--alt: white;
+
+  --border-color: lightgray;
+
+  --background: white;
+  --color: rgb(31, 31, 31);
+}
+
+.dark {
+  --background: rgb(31, 31, 31);
+  --color: rgb(243, 243, 243);
+}
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 12px;
+  background: var(--background);
+  color: var(--color);
+}
+
+* {
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.fade-out {
+  opacity: 0;
+}
+.fade-in {
+  opacity: 1;
+}
+.mermaid > svg {
+  text-align: center;
 }
 /* Button Styling */
 

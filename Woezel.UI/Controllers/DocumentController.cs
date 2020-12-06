@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Threading.Tasks;
-
+using Woezel.Project;
 
 namespace Woezel.UI.Controllers {
 
@@ -33,6 +33,17 @@ namespace Woezel.UI.Controllers {
             if (Program.Project.IsValidProjectPath(body.Path)) {
                 // First we save the document
                 await Program.Project.SaveFile(body.Path, body.Code);
+
+                // render some useless plantuml
+                var puml = @"
+@startuml
+!define DARKBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+Bob->Alice : Hello
+@enduml
+";
+                PlantUmlRenderer.Render(puml);
 
                 // compile the result
                 var compilerResult = new Compiler.Compiler(body.Code).Compile();

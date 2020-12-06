@@ -21,12 +21,6 @@ namespace Woezel.UI {
             services
                 .AddControllers()
                 .AddNewtonsoftJson();
-                //.AddJsonOptions(options => {
-                //    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                //    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
-                //    //options.JsonSerializerOptions.
-                //    System.Text.Json.Serialization.
-                //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

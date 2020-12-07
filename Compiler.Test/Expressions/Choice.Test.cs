@@ -27,6 +27,23 @@ choice Gender =
 
         }
 
+        [Fact(DisplayName = "Choice - Same Type Error")]
+        public void Data_SameTypeError() {
+            var code = @"
+choice Gender =
+    | ""Male""
+    | ""Female""
+    | 12
+    | ""Other""
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.ErrorSink.Errors);
+
+        }
+
 
         [Fact(DisplayName = "Choice - Mixed")]
         public void Choice_Mixed() {

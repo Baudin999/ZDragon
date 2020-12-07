@@ -40,7 +40,7 @@ namespace Compiler.Language
 
                 // choices can be either of type String or Number
                 var value = Take();
-                if (value.Kind != SyntaxKind.StringLiteralToken || value.Kind != SyntaxKind.NumberLiteralToken)
+                if (value.Kind != SyntaxKind.StringLiteralToken && value.Kind != SyntaxKind.NumberLiteralToken)
                 {
                     // error
                     ErrorSink.AddError(new Error(

@@ -9,11 +9,11 @@ namespace Compiler.Symbols {
     /// </summary>
     internal partial class ContextualTokenizer {
         private TokenGroup TokenizeChoiceDefinition(List<Token> annotations) {
-            var tokens = new List<Token>();
+            var tokens = new List<Token?>();
             tokens.AddRange(annotations);
             while (index < max && Current?.Kind != SyntaxKind.SemiColonToken) {
                 if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
-                    tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
+                    tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
                 }
                 else if (Current?.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
                     Take(); // take the newline token
@@ -23,13 +23,13 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
                     tokens.Add(AggregateStringLiteralToken());
                 }
-                else if (Current.Kind == SyntaxKind.IndentToken) {
+                else if (Current?.Kind == SyntaxKind.IndentToken) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.WhiteSpaceToken) {
+                else if (Current?.Kind == SyntaxKind.WhiteSpaceToken) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.NewLineToken) {
+                else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                 }
                 else {

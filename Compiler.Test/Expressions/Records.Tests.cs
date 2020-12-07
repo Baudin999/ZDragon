@@ -231,5 +231,17 @@ record Person 'a 'b extends Mammal =
             Assert.Equal("max", maxRestriction.Key);
             Assert.Equal("100", maxRestriction.Value);
         }
+
+        [Fact(DisplayName = "Record - Unknown Field Type")]
+        public void Record_UnknownFieldType() {
+            var code = @"
+record Person =
+    FirstName: Name;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Single(compilerResult.ErrorSink.Errors);
+        }
     }
 }

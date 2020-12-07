@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler.Language.Nodes {
-    public class DataFieldNode : ExpressionNode {
+    public class DataFieldNode : ExpressionNode, IIdentifierExpressionNode {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
         public List<Token> TypesTokens { get; }

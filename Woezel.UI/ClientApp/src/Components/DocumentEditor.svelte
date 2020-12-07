@@ -1,17 +1,18 @@
 <script type="ts">
+    import { writable } from "svelte/store";
     import Editor from "./Editor.svelte";
     import { post } from "../Services/http";
     import { documentStore } from "../Services/file";
-    import { parseCode } from "../Services/ast";
+    import { parseCode, astStore } from "../Services/ast";
 
     let file;
     let text = "";
     let type = "carlang";
+    let markers = writable([]);
 
     let onSave = async (event) => {
         if (!file || !event) return;
         let code = event.detail;
-        //var result = await post("/Document", { path: file.path, code });
         parseCode(file, code);
     };
 
@@ -25,6 +26,23 @@
         } else {
             type = "carlang";
         }
+    });
+
+    let mapErrorToken = (e) => {
+        return {
+            startLineNumber: e.sourceSegment.lineStart + 1,
+            endLineNumber: e.sourceSegment.lineEnd + 1,
+            startColumn: e.sourceSegment.columnStart + 1,
+            endColumn: e.sourceSegment.columnEnd + 1,
+            message: e.message,
+        };
+    };
+
+    astStore.subscribe((v: any) => {
+        var errors = v?.errorSink?.errors || [];
+        var mappedErrors = errors.map(mapErrorToken);
+        console.log(mappedErrors);
+        markers.set(mappedErrors);
     });
 </script>
 
@@ -59,7 +77,7 @@
     </div>
 
     <div class="editor">
-        <Editor {text} language={type} on:save={onSave} />
+        <Editor {text} {markers} language={type} on:save={onSave} />
     </div>
 
     <div class="footer">footer</div>

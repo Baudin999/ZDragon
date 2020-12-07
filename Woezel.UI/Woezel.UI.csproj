@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\Woezel.Project\Woezel.Project.csproj" />
+    <ProjectReference Include="..\Woezel.Transpilers\Woezel.Transpilers.csproj" />
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->

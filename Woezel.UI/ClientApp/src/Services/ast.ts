@@ -7,8 +7,8 @@ export const astStore = writable({});
 
 export const parseCode = async (file, code) => {
     if (!file || !code) return;
-    var ast = await post("/Document", { path: file.path, code });
-    astStore.update(s => ast);
+    var ast = await post("/Document", { path: file.path, namespace: file.namespace, code });
+    astStore.update(s => ({ ...ast, file }));
 };
 
 documentStore.subscribe((s: any) => {

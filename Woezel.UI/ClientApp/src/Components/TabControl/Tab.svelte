@@ -8,7 +8,7 @@
 	registerTab(tab);
 </script>
 
-<style>
+<style type="less">
 	button {
 		background: none;
 		border: none;
@@ -16,6 +16,10 @@
 		border-radius: 0;
 		margin: 0;
 		color: #ccc;
+		&::selection {
+			border: none;
+			outline: none;
+		}
 	}
 
 	.selected {

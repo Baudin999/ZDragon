@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="PlantUml.Net" Version="1.2.48" />
+    <ProjectReference Include="..\Compiler\Compiler.csproj" />
   </ItemGroup>
 
 </Project>

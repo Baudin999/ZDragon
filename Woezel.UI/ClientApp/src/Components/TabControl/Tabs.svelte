@@ -54,7 +54,7 @@
 <style>
     .tabs {
         height: 100%;
-        overflow: auto;
+        overflow: hidden;
     }
 </style>
 

@@ -16,6 +16,10 @@ monaco.languages.setMonarchTokensProvider("carlang", tokenizer);
 monaco.editor.defineTheme("carlangTheme", theme);
 
 
+// json editor
+// import "./../node_modules/jsoneditor/dist/jsoneditor.min.js";
+import "./../node_modules/jsoneditor/dist/jsoneditor.css";
+
 const app = new App({
   target: document.body
 });

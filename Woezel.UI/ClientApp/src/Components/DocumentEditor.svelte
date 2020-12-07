@@ -1,7 +1,6 @@
 <script type="ts">
     import { writable } from "svelte/store";
     import Editor from "./Editor.svelte";
-    import { post } from "../Services/http";
     import { documentStore } from "../Services/file";
     import { parseCode, astStore } from "../Services/ast";
 

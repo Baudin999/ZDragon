@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -7,11 +8,17 @@ namespace Woezel.Project {
     public class Project {
 
         private readonly string _root;
+        private readonly string outpath;
+        private readonly Dictionary<string, FInfo> mapping = new Dictionary<string, FInfo>();
         public DInfo Dir { get; }
 
         public Project(string root) {
             _root = root;
+            outpath = Path.Combine(_root, "out");
             Dir = getDirectoryInfo(_root);
+
+            if (!Directory.Exists(outpath))
+                Directory.CreateDirectory(outpath);
         }
 
         public bool IsValidProjectPath(string path) {
@@ -31,31 +38,12 @@ namespace Woezel.Project {
             return p;
         }
 
-        private FInfo? FindFileByNamespace(DInfo dInfo, string ns) {
-            FInfo? file = null;
-            foreach (var f in dInfo.Files) {
-                if (f.Namespace == ns) {
-                    file = f;
-                    break;
-                }
-            }
-            if (file is null) {
-                foreach (var d in dInfo.Directories) {
-                    var f = FindFileByNamespace(d, ns);
-                    if (file is null) file = f;
-                }
-            }
-            return file;
-        }
- 
+
         public async Task<string> GetTextByNamespace(string ns) {
-            var fInfo = FindFileByNamespace(Dir, ns);
-            if (fInfo != null) {
-                return await fInfo.GetText();
+            if (mapping.ContainsKey(ns)) {
+                return await mapping[ns].GetText();
             }
-            else {
-                return "";
-            }
+            return "";
         }
 
         public async Task<string> GetTextByPath(string path) {
@@ -73,6 +61,7 @@ namespace Woezel.Project {
 
                 if (_fInfo.Extension == ".car") {
                     fInfo.Namespace = getNamespace(fInfo.Path);
+                    mapping.Add(fInfo.Namespace, fInfo);
                 }
                 files.Add(fInfo);
             }
@@ -90,42 +79,72 @@ namespace Woezel.Project {
             await File.WriteAllTextAsync(path, text);
             return text;
         }
-    }
 
-
-    public class DInfo {
-        public string Name { get; }
-        public string Path { get; }
-        public List<FInfo> Files { get; }
-        public List<DInfo> Directories { get; }
-        public DInfo(string name, string path, List<FInfo> files, List<DInfo> directories) {
-            this.Name = name;
-            this.Path = path;
-            this.Files = files;
-            this.Directories = directories;
+        public FInfo? GetFileInfo(string ns) {
+            if (mapping.ContainsKey(ns))
+                return mapping[ns];
+            else
+                return null;
         }
-    }
 
-    public class FInfo {
-        public string Name { get; }
-        public string Path { get; }
-        public string Namespace { get; set; }
-        public string Id { get; }
-        public DateTime ChangedOn { get; }
-        public DateTime CreatedOn { get; }
-        public string LastChangedFormatted { get; }
-        
-        public FInfo(FileInfo fileInfo, string ns) {
-            this.Namespace = ns;
-            this.Name = fileInfo.Name;
-            this.Path = fileInfo.FullName;
-            this.ChangedOn = fileInfo.LastWriteTime;
-            this.CreatedOn = fileInfo.CreationTime;
-
-            this.Id = $"{Namespace}::{Name}";
+        public async Task SaveCompilerResult(FInfo fInfo, object o) {
+            try {
+                var path = Path.Combine(outpath, fInfo.Namespace + ".json");
+                string text = JsonConvert.SerializeObject(o);
+                await File.WriteAllTextAsync(path, text);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
         }
-        public async Task<string> GetText() {
-            return await File.ReadAllTextAsync(this.Path);
+
+        public async Task<string> GetContent(string ns) {
+            try {
+                var fInfo = mapping[ns];
+                var path = Path.Combine(outpath, fInfo.Namespace + ".json");
+                return await File.ReadAllTextAsync(path);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return "";
+            }
+        }
+
+
+        public class DInfo {
+            public string Name { get; }
+            public string Path { get; }
+            public List<FInfo> Files { get; }
+            public List<DInfo> Directories { get; }
+            public DInfo(string name, string path, List<FInfo> files, List<DInfo> directories) {
+                this.Name = name;
+                this.Path = path;
+                this.Files = files;
+                this.Directories = directories;
+            }
+        }
+
+        public class FInfo {
+            public string Name { get; }
+            public string Path { get; }
+            public string Namespace { get; set; }
+            public string Id { get; }
+            public DateTime ChangedOn { get; }
+            public DateTime CreatedOn { get; }
+            public string LastChangedFormatted { get; }
+
+            public FInfo(FileInfo fileInfo, string ns) {
+                this.Namespace = ns;
+                this.Name = fileInfo.Name;
+                this.Path = fileInfo.FullName;
+                this.ChangedOn = fileInfo.LastWriteTime;
+                this.CreatedOn = fileInfo.CreationTime;
+
+                this.Id = $"{Namespace}::{Name}";
+            }
+            public async Task<string> GetText() {
+                return await File.ReadAllTextAsync(this.Path);
+            }
         }
     }
 }

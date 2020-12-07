@@ -1,7 +1,12 @@
 <style>
     .tab-list {
-        border-bottom: 1px solid teal;
         background: white;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3rem;
+        z-index: 9999;
     }
 </style>
 

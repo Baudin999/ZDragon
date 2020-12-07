@@ -2,6 +2,7 @@
     import { Tabs, TabList, TabPanel, Tab } from "../Components/components.js";
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
+    import Panel from "../Components/Panel.svelte";
     import PageViewer from "../Components/PageViewer.svelte";
     import ASTViewer from "../Components/ASTViewer.svelte";
 </script>
@@ -13,9 +14,8 @@
         display: grid;
         grid-template-columns: 300px 750px auto;
         grid-gap: 1px;
-        // background: var(--color-secundary);
 
-        .file-explorer {
+        .file-explorer--container {
             grid-column: 1;
             height: 100%;
             max-height: 100%;
@@ -32,6 +32,7 @@
             }
         }
         .page-viewer {
+            position: relative;
             grid-column: 3;
             font-family: sans-serif;
             padding: 0;
@@ -39,14 +40,14 @@
             height: 100%;
             max-height: 100%;
             overflow-x: hidden;
-            overflow-y: auto;
+            overflow-y: hidden;
             background-color: lightgray;
         }
     }
 </style>
 
 <div class="container">
-    <div class="file-explorer">
+    <div class="file-explorer--container">
         <FileExplorer />
     </div>
     <div class="document-editor">
@@ -57,16 +58,22 @@
     <div class="page-viewer">
         <Tabs>
             <TabList>
-                <Tab>JSON</Tab>
+                <Tab>AST</Tab>
                 <Tab>Document</Tab>
             </TabList>
 
             <TabPanel>
-                <ASTViewer />
+                <Panel
+                    style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;">
+                    <ASTViewer />
+                </Panel>
             </TabPanel>
 
             <TabPanel>
-                <PageViewer />
+                <Panel
+                    style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;">
+                    <PageViewer />
+                </Panel>
             </TabPanel>
         </Tabs>
     </div>

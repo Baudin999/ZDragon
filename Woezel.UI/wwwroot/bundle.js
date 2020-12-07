@@ -161,15 +161,6 @@ var woezel = (function () {
     function getContext(key) {
         return get_current_component().$$.context.get(key);
     }
-    // TODO figure out if we still want to support
-    // shorthand events, or if we want to implement
-    // a real bubbling mechanism
-    function bubble(component, event) {
-        const callbacks = component.$$.callbacks[event.type];
-        if (callbacks) {
-            callbacks.slice().forEach(fn => fn(event));
-        }
-    }
 
     const dirty_components = [];
     const binding_callbacks = [];
@@ -263,8 +254,6 @@ var woezel = (function () {
             block.o(local);
         }
     }
-
-    const globals = (typeof window !== 'undefined' ? window : global);
 
     function get_spread_update(levels, updates) {
         const update = {};
@@ -1596,8 +1585,8 @@ var woezel = (function () {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "tabs svelte-14d7cfw");
-    			add_location(div, file, 60, 0, 1578);
+    			attr_dev(div, "class", "tabs svelte-8bxw33");
+    			add_location(div, file, 60, 0, 1580);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1731,8 +1720,8 @@ var woezel = (function () {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "tab-list svelte-138kyvh");
-    			add_location(div, file$1, 7, 0, 113);
+    			attr_dev(div, "class", "tab-list svelte-nkhwz8");
+    			add_location(div, file$1, 12, 0, 203);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1975,9 +1964,9 @@ var woezel = (function () {
     		c: function create() {
     			button = element("button");
     			if (default_slot) default_slot.c();
-    			attr_dev(button, "class", "svelte-17jjrxs");
+    			attr_dev(button, "class", "svelte-sz9zkj");
     			toggle_class(button, "selected", /*$selectedTab*/ ctx[0] === /*tab*/ ctx[1]);
-    			add_location(button, file$2, 27, 0, 460);
+    			add_location(button, file$2, 29, 0, 506);
     			dispose = listen_dev(button, "click", /*click_handler*/ ctx[7], false, false, false);
     		},
     		l: function claim(nodes) {
@@ -2083,15 +2072,16 @@ var woezel = (function () {
     function create_fragment$6(ctx) {
     	let div;
     	let current;
-    	const default_slot_template = /*$$slots*/ ctx[1].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[0], null);
+    	const default_slot_template = /*$$slots*/ ctx[2].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[1], null);
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			if (default_slot) default_slot.c();
-    			attr_dev(div, "class", "panel svelte-7ud1ka");
-    			add_location(div, file$3, 9, 0, 139);
+    			attr_dev(div, "class", "panel svelte-x2vmpr");
+    			attr_dev(div, "style", /*style*/ ctx[0]);
+    			add_location(div, file$3, 14, 0, 210);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2106,8 +2096,12 @@ var woezel = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (default_slot && default_slot.p && dirty & /*$$scope*/ 1) {
-    				default_slot.p(get_slot_context(default_slot_template, ctx, /*$$scope*/ ctx[0], null), get_slot_changes(default_slot_template, /*$$scope*/ ctx[0], dirty, null));
+    			if (default_slot && default_slot.p && dirty & /*$$scope*/ 2) {
+    				default_slot.p(get_slot_context(default_slot_template, ctx, /*$$scope*/ ctx[1], null), get_slot_changes(default_slot_template, /*$$scope*/ ctx[1], dirty, null));
+    			}
+
+    			if (!current || dirty & /*style*/ 1) {
+    				attr_dev(div, "style", /*style*/ ctx[0]);
     			}
     		},
     		i: function intro(local) {
@@ -2137,27 +2131,35 @@ var woezel = (function () {
     }
 
     function instance$6($$self, $$props, $$invalidate) {
+    	let { style } = $$props;
+    	const writable_props = ["style"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Panel> was created with unknown prop '${key}'`);
+    	});
+
     	let { $$slots = {}, $$scope } = $$props;
 
     	$$self.$set = $$props => {
-    		if ("$$scope" in $$props) $$invalidate(0, $$scope = $$props.$$scope);
+    		if ("style" in $$props) $$invalidate(0, style = $$props.style);
+    		if ("$$scope" in $$props) $$invalidate(1, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => {
-    		return {};
+    		return { style };
     	};
 
     	$$self.$inject_state = $$props => {
-    		
+    		if ("style" in $$props) $$invalidate(0, style = $$props.style);
     	};
 
-    	return [$$scope, $$slots];
+    	return [style, $$scope, $$slots];
     }
 
     class Panel extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$6, create_fragment$6, safe_not_equal, {});
+    		init(this, options, instance$6, create_fragment$6, safe_not_equal, { style: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -2165,6 +2167,21 @@ var woezel = (function () {
     			options,
     			id: create_fragment$6.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || ({});
+
+    		if (/*style*/ ctx[0] === undefined && !("style" in props)) {
+    			console.warn("<Panel> was created without expected prop 'style'");
+    		}
+    	}
+
+    	get style() {
+    		throw new Error("<Panel>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set style(value) {
+    		throw new Error("<Panel>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -3106,7 +3123,7 @@ var woezel = (function () {
     /* src\Components\FileExplorer\FileExplorer.svelte generated by Svelte v3.16.7 */
     const file$5 = "src\\Components\\FileExplorer\\FileExplorer.svelte";
 
-    // (14:4) {#if documents}
+    // (21:4) {#if documents}
     function create_if_block$3(ctx) {
     	let current;
 
@@ -3150,7 +3167,7 @@ var woezel = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(14:4) {#if documents}",
+    		source: "(21:4) {#if documents}",
     		ctx
     	});
 
@@ -3166,8 +3183,8 @@ var woezel = (function () {
     		c: function create() {
     			div = element("div");
     			if (if_block) if_block.c();
-    			attr_dev(div, "class", "file-explorer");
-    			add_location(div, file$5, 12, 0, 259);
+    			attr_dev(div, "class", "file-explorer svelte-kfz6yl");
+    			add_location(div, file$5, 19, 0, 376);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3555,10 +3572,10 @@ var woezel = (function () {
                 case 0:
                     if (!file || !code)
                         return [2 /*return*/];
-                    return [4 /*yield*/, post("/Document", { path: file.path, code: code })];
+                    return [4 /*yield*/, post("/Document", { path: file.path, namespace: file.namespace, code: code })];
                 case 1:
                     ast = _a.sent();
-                    astStore.update(function (s) { return ast; });
+                    astStore.update(function (s) { return (__assign(__assign({}, ast), { file: file })); });
                     return [2 /*return*/];
             }
         });
@@ -3611,13 +3628,13 @@ var woezel = (function () {
     			div2 = element("div");
     			div2.textContent = "footer";
     			attr_dev(div0, "class", "header svelte-1sgju34");
-    			add_location(div0, file_1$1, 77, 4, 2525);
+    			add_location(div0, file_1$1, 76, 4, 2483);
     			attr_dev(div1, "class", "editor svelte-1sgju34");
-    			add_location(div1, file_1$1, 81, 4, 2628);
+    			add_location(div1, file_1$1, 80, 4, 2586);
     			attr_dev(div2, "class", "footer svelte-1sgju34");
-    			add_location(div2, file_1$1, 85, 4, 2738);
+    			add_location(div2, file_1$1, 84, 4, 2696);
     			attr_dev(div3, "class", "container svelte-1sgju34");
-    			add_location(div3, file_1$1, 76, 0, 2496);
+    			add_location(div3, file_1$1, 75, 0, 2454);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4080,46 +4097,106 @@ var woezel = (function () {
     	}
     }
 
-    var contextKey = {};
+    /* src\Components\ASTViewer.svelte generated by Svelte v3.16.7 */
 
-    /* node_modules\svelte-json-tree\src\JSONArrow.svelte generated by Svelte v3.16.7 */
+    // (16:0) {#if text}
+    function create_if_block$4(ctx) {
+    	let current;
 
-    const file$9 = "node_modules\\svelte-json-tree\\src\\JSONArrow.svelte";
-
-    function create_fragment$e(ctx) {
-    	let div1;
-    	let div0;
-    	let dispose;
+    	const editor = new Editor({
+    			props: { language: "json", text: /*text*/ ctx[0] },
+    			$$inline: true
+    		});
 
     	const block = {
     		c: function create() {
-    			div1 = element("div");
-    			div0 = element("div");
-    			div0.textContent = `${"▶"}`;
-    			attr_dev(div0, "class", "arrow svelte-1vyml86");
-    			toggle_class(div0, "expanded", /*expanded*/ ctx[0]);
-    			add_location(div0, file$9, 29, 2, 622);
-    			attr_dev(div1, "class", "container svelte-1vyml86");
-    			add_location(div1, file$9, 28, 0, 587);
-    			dispose = listen_dev(div1, "click", /*click_handler*/ ctx[1], false, false, false);
+    			create_component(editor.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(editor, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const editor_changes = {};
+    			if (dirty & /*text*/ 1) editor_changes.text = /*text*/ ctx[0];
+    			editor.$set(editor_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(editor.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(editor.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(editor, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$4.name,
+    		type: "if",
+    		source: "(16:0) {#if text}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$e(ctx) {
+    	let if_block_anchor;
+    	let current;
+    	let if_block = /*text*/ ctx[0] && create_if_block$4(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
-    			insert_dev(target, div1, anchor);
-    			append_dev(div1, div0);
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*expanded*/ 1) {
-    				toggle_class(div0, "expanded", /*expanded*/ ctx[0]);
+    			if (/*text*/ ctx[0]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    					transition_in(if_block, 1);
+    				} else {
+    					if_block = create_if_block$4(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
     			}
     		},
-    		i: noop,
-    		o: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			current = false;
+    		},
     		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div1);
-    			dispose();
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
     		}
     	};
 
@@ -4135,3614 +4212,12 @@ var woezel = (function () {
     }
 
     function instance$e($$self, $$props, $$invalidate) {
-    	let { expanded } = $$props;
-    	const writable_props = ["expanded"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONArrow> was created with unknown prop '${key}'`);
-    	});
-
-    	function click_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	$$self.$set = $$props => {
-    		if ("expanded" in $$props) $$invalidate(0, expanded = $$props.expanded);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return { expanded };
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("expanded" in $$props) $$invalidate(0, expanded = $$props.expanded);
-    	};
-
-    	return [expanded, click_handler];
-    }
-
-    class JSONArrow extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, { expanded: 0 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONArrow",
-    			options,
-    			id: create_fragment$e.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*expanded*/ ctx[0] === undefined && !("expanded" in props)) {
-    			console.warn("<JSONArrow> was created without expected prop 'expanded'");
-    		}
-    	}
-
-    	get expanded() {
-    		throw new Error("<JSONArrow>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set expanded(value) {
-    		throw new Error("<JSONArrow>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONKey.svelte generated by Svelte v3.16.7 */
-
-    const file$a = "node_modules\\svelte-json-tree\\src\\JSONKey.svelte";
-
-    // (16:0) {#if showKey && key}
-    function create_if_block$4(ctx) {
-    	let label;
-    	let span;
-    	let t0;
-    	let t1;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			label = element("label");
-    			span = element("span");
-    			t0 = text(/*key*/ ctx[0]);
-    			t1 = text(/*colon*/ ctx[2]);
-    			add_location(span, file$a, 17, 4, 399);
-    			attr_dev(label, "class", "svelte-1vlbacg");
-    			toggle_class(label, "spaced", /*isParentExpanded*/ ctx[1]);
-    			add_location(label, file$a, 16, 2, 346);
-    			dispose = listen_dev(label, "click", /*click_handler*/ ctx[5], false, false, false);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, label, anchor);
-    			append_dev(label, span);
-    			append_dev(span, t0);
-    			append_dev(span, t1);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*key*/ 1) set_data_dev(t0, /*key*/ ctx[0]);
-    			if (dirty & /*colon*/ 4) set_data_dev(t1, /*colon*/ ctx[2]);
-
-    			if (dirty & /*isParentExpanded*/ 2) {
-    				toggle_class(label, "spaced", /*isParentExpanded*/ ctx[1]);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(label);
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$4.name,
-    		type: "if",
-    		source: "(16:0) {#if showKey && key}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$f(ctx) {
-    	let if_block_anchor;
-    	let if_block = /*showKey*/ ctx[3] && /*key*/ ctx[0] && create_if_block$4(ctx);
-
-    	const block = {
-    		c: function create() {
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, if_block_anchor, anchor);
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (/*showKey*/ ctx[3] && /*key*/ ctx[0]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block$4(ctx);
-    					if_block.c();
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(if_block_anchor);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$f.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$f($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray = false } = $$props,
-    		{ colon = ":" } = $$props;
-
-    	const writable_props = ["key", "isParentExpanded", "isParentArray", "colon"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONKey> was created with unknown prop '${key}'`);
-    	});
-
-    	function click_handler(event) {
-    		bubble($$self, event);
-    	}
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(4, isParentArray = $$props.isParentArray);
-    		if ("colon" in $$props) $$invalidate(2, colon = $$props.colon);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			isParentExpanded,
-    			isParentArray,
-    			colon,
-    			showKey
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(4, isParentArray = $$props.isParentArray);
-    		if ("colon" in $$props) $$invalidate(2, colon = $$props.colon);
-    		if ("showKey" in $$props) $$invalidate(3, showKey = $$props.showKey);
-    	};
-
-    	let showKey;
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*isParentExpanded, isParentArray, key*/ 19) {
-    			 $$invalidate(3, showKey = isParentExpanded || !isParentArray || key != +key);
-    		}
-    	};
-
-    	return [key, isParentExpanded, colon, showKey, isParentArray, click_handler];
-    }
-
-    class JSONKey extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {
-    			key: 0,
-    			isParentExpanded: 1,
-    			isParentArray: 4,
-    			colon: 2
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONKey",
-    			options,
-    			id: create_fragment$f.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONKey> was created without expected prop 'key'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[1] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONKey> was created without expected prop 'isParentExpanded'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONKey>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONKey>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONKey>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONKey>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONKey>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONKey>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get colon() {
-    		throw new Error("<JSONKey>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set colon(value) {
-    		throw new Error("<JSONKey>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONNested.svelte generated by Svelte v3.16.7 */
-    const file$b = "node_modules\\svelte-json-tree\\src\\JSONNested.svelte";
-
-    function get_each_context$1(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[12] = list[i];
-    	child_ctx[20] = i;
-    	return child_ctx;
-    }
-
-    // (57:4) {#if expandable && isParentExpanded}
-    function create_if_block_3(ctx) {
-    	let current;
-
-    	const jsonarrow = new JSONArrow({
-    			props: { expanded: /*expanded*/ ctx[0] },
-    			$$inline: true
-    		});
-
-    	jsonarrow.$on("click", /*toggleExpand*/ ctx[15]);
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonarrow.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonarrow, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const jsonarrow_changes = {};
-    			if (dirty & /*expanded*/ 1) jsonarrow_changes.expanded = /*expanded*/ ctx[0];
-    			jsonarrow.$set(jsonarrow_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonarrow.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonarrow.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonarrow, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_3.name,
-    		type: "if",
-    		source: "(57:4) {#if expandable && isParentExpanded}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (75:4) {:else}
-    function create_else_block$1(ctx) {
-    	let span;
-
-    	const block = {
-    		c: function create() {
-    			span = element("span");
-    			span.textContent = "…";
-    			add_location(span, file$b, 75, 6, 2085);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, span, anchor);
-    		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(span);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_else_block$1.name,
-    		type: "else",
-    		source: "(75:4) {:else}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (63:4) {#if isParentExpanded}
-    function create_if_block$5(ctx) {
-    	let ul;
-    	let t;
-    	let current;
-    	let dispose;
-    	let each_value = /*slicedKeys*/ ctx[13];
-    	let each_blocks = [];
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$1(get_each_context$1(ctx, each_value, i));
-    	}
-
-    	const out = i => transition_out(each_blocks[i], 1, 1, () => {
-    		each_blocks[i] = null;
-    	});
-
-    	let if_block = /*slicedKeys*/ ctx[13].length < /*previewKeys*/ ctx[7].length && create_if_block_1$2(ctx);
-
-    	const block = {
-    		c: function create() {
-    			ul = element("ul");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			t = space();
-    			if (if_block) if_block.c();
-    			attr_dev(ul, "class", "svelte-rwxv37");
-    			toggle_class(ul, "collapse", !/*expanded*/ ctx[0]);
-    			add_location(ul, file$b, 63, 6, 1589);
-    			dispose = listen_dev(ul, "click", /*expand*/ ctx[16], false, false, false);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, ul, anchor);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(ul, null);
-    			}
-
-    			append_dev(ul, t);
-    			if (if_block) if_block.m(ul, null);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*expanded, previewKeys, getKey, slicedKeys, isArray, getValue, getPreviewValue*/ 10129) {
-    				each_value = /*slicedKeys*/ ctx[13];
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$1(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    						transition_in(each_blocks[i], 1);
-    					} else {
-    						each_blocks[i] = create_each_block$1(child_ctx);
-    						each_blocks[i].c();
-    						transition_in(each_blocks[i], 1);
-    						each_blocks[i].m(ul, t);
-    					}
-    				}
-
-    				group_outros();
-
-    				for (i = each_value.length; i < each_blocks.length; i += 1) {
-    					out(i);
-    				}
-
-    				check_outros();
-    			}
-
-    			if (/*slicedKeys*/ ctx[13].length < /*previewKeys*/ ctx[7].length) {
-    				if (!if_block) {
-    					if_block = create_if_block_1$2(ctx);
-    					if_block.c();
-    					if_block.m(ul, null);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-
-    			if (dirty & /*expanded*/ 1) {
-    				toggle_class(ul, "collapse", !/*expanded*/ ctx[0]);
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-
-    			for (let i = 0; i < each_value.length; i += 1) {
-    				transition_in(each_blocks[i]);
-    			}
-
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			each_blocks = each_blocks.filter(Boolean);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				transition_out(each_blocks[i]);
-    			}
-
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(ul);
-    			destroy_each(each_blocks, detaching);
-    			if (if_block) if_block.d();
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$5.name,
-    		type: "if",
-    		source: "(63:4) {#if isParentExpanded}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (67:10) {#if !expanded && index < previewKeys.length - 1}
-    function create_if_block_2$1(ctx) {
-    	let span;
-
-    	const block = {
-    		c: function create() {
-    			span = element("span");
-    			span.textContent = ",";
-    			attr_dev(span, "class", "comma svelte-rwxv37");
-    			add_location(span, file$b, 67, 12, 1901);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, span, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(span);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_2$1.name,
-    		type: "if",
-    		source: "(67:10) {#if !expanded && index < previewKeys.length - 1}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (65:8) {#each slicedKeys as key, index}
-    function create_each_block$1(ctx) {
-    	let t;
-    	let if_block_anchor;
-    	let current;
-
-    	const jsonnode = new JSONNode({
-    			props: {
-    				key: /*getKey*/ ctx[8](/*key*/ ctx[12]),
-    				isParentExpanded: /*expanded*/ ctx[0],
-    				isParentArray: /*isArray*/ ctx[4],
-    				value: /*expanded*/ ctx[0]
-    				? /*getValue*/ ctx[9](/*key*/ ctx[12])
-    				: /*getPreviewValue*/ ctx[10](/*key*/ ctx[12])
-    			},
-    			$$inline: true
-    		});
-
-    	let if_block = !/*expanded*/ ctx[0] && /*index*/ ctx[20] < /*previewKeys*/ ctx[7].length - 1 && create_if_block_2$1(ctx);
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonnode.$$.fragment);
-    			t = space();
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonnode, target, anchor);
-    			insert_dev(target, t, anchor);
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, if_block_anchor, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const jsonnode_changes = {};
-    			if (dirty & /*getKey, slicedKeys*/ 8448) jsonnode_changes.key = /*getKey*/ ctx[8](/*key*/ ctx[12]);
-    			if (dirty & /*expanded*/ 1) jsonnode_changes.isParentExpanded = /*expanded*/ ctx[0];
-    			if (dirty & /*isArray*/ 16) jsonnode_changes.isParentArray = /*isArray*/ ctx[4];
-
-    			if (dirty & /*expanded, getValue, slicedKeys, getPreviewValue*/ 9729) jsonnode_changes.value = /*expanded*/ ctx[0]
-    			? /*getValue*/ ctx[9](/*key*/ ctx[12])
-    			: /*getPreviewValue*/ ctx[10](/*key*/ ctx[12]);
-
-    			jsonnode.$set(jsonnode_changes);
-
-    			if (!/*expanded*/ ctx[0] && /*index*/ ctx[20] < /*previewKeys*/ ctx[7].length - 1) {
-    				if (!if_block) {
-    					if_block = create_if_block_2$1(ctx);
-    					if_block.c();
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnode.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnode.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonnode, detaching);
-    			if (detaching) detach_dev(t);
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(if_block_anchor);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block$1.name,
-    		type: "each",
-    		source: "(65:8) {#each slicedKeys as key, index}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (71:8) {#if slicedKeys.length < previewKeys.length }
-    function create_if_block_1$2(ctx) {
-    	let span;
-
-    	const block = {
-    		c: function create() {
-    			span = element("span");
-    			span.textContent = "…";
-    			add_location(span, file$b, 71, 10, 2026);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, span, anchor);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(span);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1$2.name,
-    		type: "if",
-    		source: "(71:8) {#if slicedKeys.length < previewKeys.length }",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$g(ctx) {
-    	let li;
-    	let label_1;
-    	let t0;
-    	let t1;
-    	let span1;
-    	let span0;
-    	let t2;
-    	let t3;
-    	let t4;
-    	let current_block_type_index;
-    	let if_block1;
-    	let t5;
-    	let span2;
-    	let t6;
-    	let current;
-    	let dispose;
-    	let if_block0 = /*expandable*/ ctx[11] && /*isParentExpanded*/ ctx[2] && create_if_block_3(ctx);
-
-    	const jsonkey = new JSONKey({
-    			props: {
-    				key: /*key*/ ctx[12],
-    				colon: /*context*/ ctx[14].colon,
-    				isParentExpanded: /*isParentExpanded*/ ctx[2],
-    				isParentArray: /*isParentArray*/ ctx[3]
-    			},
-    			$$inline: true
-    		});
-
-    	jsonkey.$on("click", /*toggleExpand*/ ctx[15]);
-    	const if_block_creators = [create_if_block$5, create_else_block$1];
-    	const if_blocks = [];
-
-    	function select_block_type(ctx, dirty) {
-    		if (/*isParentExpanded*/ ctx[2]) return 0;
-    		return 1;
-    	}
-
-    	current_block_type_index = select_block_type(ctx);
-    	if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-
-    	const block = {
-    		c: function create() {
-    			li = element("li");
-    			label_1 = element("label");
-    			if (if_block0) if_block0.c();
-    			t0 = space();
-    			create_component(jsonkey.$$.fragment);
-    			t1 = space();
-    			span1 = element("span");
-    			span0 = element("span");
-    			t2 = text(/*label*/ ctx[1]);
-    			t3 = text(/*bracketOpen*/ ctx[5]);
-    			t4 = space();
-    			if_block1.c();
-    			t5 = space();
-    			span2 = element("span");
-    			t6 = text(/*bracketClose*/ ctx[6]);
-    			add_location(span0, file$b, 60, 34, 1504);
-    			add_location(span1, file$b, 60, 4, 1474);
-    			attr_dev(label_1, "class", "svelte-rwxv37");
-    			add_location(label_1, file$b, 55, 2, 1253);
-    			add_location(span2, file$b, 77, 2, 2112);
-    			attr_dev(li, "class", "svelte-rwxv37");
-    			toggle_class(li, "indent", /*isParentExpanded*/ ctx[2]);
-    			add_location(li, file$b, 54, 0, 1214);
-    			dispose = listen_dev(span1, "click", /*toggleExpand*/ ctx[15], false, false, false);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, li, anchor);
-    			append_dev(li, label_1);
-    			if (if_block0) if_block0.m(label_1, null);
-    			append_dev(label_1, t0);
-    			mount_component(jsonkey, label_1, null);
-    			append_dev(label_1, t1);
-    			append_dev(label_1, span1);
-    			append_dev(span1, span0);
-    			append_dev(span0, t2);
-    			append_dev(span1, t3);
-    			append_dev(li, t4);
-    			if_blocks[current_block_type_index].m(li, null);
-    			append_dev(li, t5);
-    			append_dev(li, span2);
-    			append_dev(span2, t6);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (/*expandable*/ ctx[11] && /*isParentExpanded*/ ctx[2]) {
-    				if (if_block0) {
-    					if_block0.p(ctx, dirty);
-    					transition_in(if_block0, 1);
-    				} else {
-    					if_block0 = create_if_block_3(ctx);
-    					if_block0.c();
-    					transition_in(if_block0, 1);
-    					if_block0.m(label_1, t0);
-    				}
-    			} else if (if_block0) {
-    				group_outros();
-
-    				transition_out(if_block0, 1, 1, () => {
-    					if_block0 = null;
-    				});
-
-    				check_outros();
-    			}
-
-    			const jsonkey_changes = {};
-    			if (dirty & /*key*/ 4096) jsonkey_changes.key = /*key*/ ctx[12];
-    			if (dirty & /*isParentExpanded*/ 4) jsonkey_changes.isParentExpanded = /*isParentExpanded*/ ctx[2];
-    			if (dirty & /*isParentArray*/ 8) jsonkey_changes.isParentArray = /*isParentArray*/ ctx[3];
-    			jsonkey.$set(jsonkey_changes);
-    			if (!current || dirty & /*label*/ 2) set_data_dev(t2, /*label*/ ctx[1]);
-    			if (!current || dirty & /*bracketOpen*/ 32) set_data_dev(t3, /*bracketOpen*/ ctx[5]);
-    			let previous_block_index = current_block_type_index;
-    			current_block_type_index = select_block_type(ctx);
-
-    			if (current_block_type_index === previous_block_index) {
-    				if_blocks[current_block_type_index].p(ctx, dirty);
-    			} else {
-    				group_outros();
-
-    				transition_out(if_blocks[previous_block_index], 1, 1, () => {
-    					if_blocks[previous_block_index] = null;
-    				});
-
-    				check_outros();
-    				if_block1 = if_blocks[current_block_type_index];
-
-    				if (!if_block1) {
-    					if_block1 = if_blocks[current_block_type_index] = if_block_creators[current_block_type_index](ctx);
-    					if_block1.c();
-    				}
-
-    				transition_in(if_block1, 1);
-    				if_block1.m(li, t5);
-    			}
-
-    			if (!current || dirty & /*bracketClose*/ 64) set_data_dev(t6, /*bracketClose*/ ctx[6]);
-
-    			if (dirty & /*isParentExpanded*/ 4) {
-    				toggle_class(li, "indent", /*isParentExpanded*/ ctx[2]);
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(if_block0);
-    			transition_in(jsonkey.$$.fragment, local);
-    			transition_in(if_block1);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(if_block0);
-    			transition_out(jsonkey.$$.fragment, local);
-    			transition_out(if_block1);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(li);
-    			if (if_block0) if_block0.d();
-    			destroy_component(jsonkey);
-    			if_blocks[current_block_type_index].d();
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$g.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$g($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ keys } = $$props,
-    		{ colon = ":" } = $$props,
-    		{ label = "" } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props,
-    		{ isArray = false } = $$props,
-    		{ bracketOpen } = $$props,
-    		{ bracketClose } = $$props;
-
-    	let { previewKeys = keys } = $$props;
-    	let { getKey = key => key } = $$props;
-    	let { getValue = key => key } = $$props;
-    	let { getPreviewValue = getValue } = $$props;
-    	let { expanded = false } = $$props, { expandable = true } = $$props;
-    	const context = getContext(contextKey);
-    	setContext(contextKey, { ...context, colon });
-
-    	function toggleExpand() {
-    		$$invalidate(0, expanded = !expanded);
-    	}
-
-    	function expand() {
-    		$$invalidate(0, expanded = true);
-    	}
-
-    	const writable_props = [
-    		"key",
-    		"keys",
-    		"colon",
-    		"label",
-    		"isParentExpanded",
-    		"isParentArray",
-    		"isArray",
-    		"bracketOpen",
-    		"bracketClose",
-    		"previewKeys",
-    		"getKey",
-    		"getValue",
-    		"getPreviewValue",
-    		"expanded",
-    		"expandable"
-    	];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONNested> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(12, key = $$props.key);
-    		if ("keys" in $$props) $$invalidate(17, keys = $$props.keys);
-    		if ("colon" in $$props) $$invalidate(18, colon = $$props.colon);
-    		if ("label" in $$props) $$invalidate(1, label = $$props.label);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    		if ("isArray" in $$props) $$invalidate(4, isArray = $$props.isArray);
-    		if ("bracketOpen" in $$props) $$invalidate(5, bracketOpen = $$props.bracketOpen);
-    		if ("bracketClose" in $$props) $$invalidate(6, bracketClose = $$props.bracketClose);
-    		if ("previewKeys" in $$props) $$invalidate(7, previewKeys = $$props.previewKeys);
-    		if ("getKey" in $$props) $$invalidate(8, getKey = $$props.getKey);
-    		if ("getValue" in $$props) $$invalidate(9, getValue = $$props.getValue);
-    		if ("getPreviewValue" in $$props) $$invalidate(10, getPreviewValue = $$props.getPreviewValue);
-    		if ("expanded" in $$props) $$invalidate(0, expanded = $$props.expanded);
-    		if ("expandable" in $$props) $$invalidate(11, expandable = $$props.expandable);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			keys,
-    			colon,
-    			label,
-    			isParentExpanded,
-    			isParentArray,
-    			isArray,
-    			bracketOpen,
-    			bracketClose,
-    			previewKeys,
-    			getKey,
-    			getValue,
-    			getPreviewValue,
-    			expanded,
-    			expandable,
-    			slicedKeys
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(12, key = $$props.key);
-    		if ("keys" in $$props) $$invalidate(17, keys = $$props.keys);
-    		if ("colon" in $$props) $$invalidate(18, colon = $$props.colon);
-    		if ("label" in $$props) $$invalidate(1, label = $$props.label);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    		if ("isArray" in $$props) $$invalidate(4, isArray = $$props.isArray);
-    		if ("bracketOpen" in $$props) $$invalidate(5, bracketOpen = $$props.bracketOpen);
-    		if ("bracketClose" in $$props) $$invalidate(6, bracketClose = $$props.bracketClose);
-    		if ("previewKeys" in $$props) $$invalidate(7, previewKeys = $$props.previewKeys);
-    		if ("getKey" in $$props) $$invalidate(8, getKey = $$props.getKey);
-    		if ("getValue" in $$props) $$invalidate(9, getValue = $$props.getValue);
-    		if ("getPreviewValue" in $$props) $$invalidate(10, getPreviewValue = $$props.getPreviewValue);
-    		if ("expanded" in $$props) $$invalidate(0, expanded = $$props.expanded);
-    		if ("expandable" in $$props) $$invalidate(11, expandable = $$props.expandable);
-    		if ("slicedKeys" in $$props) $$invalidate(13, slicedKeys = $$props.slicedKeys);
-    	};
-
-    	let slicedKeys;
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*isParentExpanded*/ 4) {
-    			 if (!isParentExpanded) {
-    				$$invalidate(0, expanded = false);
-    			}
-    		}
-
-    		if ($$self.$$.dirty & /*expanded, keys, previewKeys*/ 131201) {
-    			 $$invalidate(13, slicedKeys = expanded ? keys : previewKeys.slice(0, 5));
-    		}
-    	};
-
-    	return [
-    		expanded,
-    		label,
-    		isParentExpanded,
-    		isParentArray,
-    		isArray,
-    		bracketOpen,
-    		bracketClose,
-    		previewKeys,
-    		getKey,
-    		getValue,
-    		getPreviewValue,
-    		expandable,
-    		key,
-    		slicedKeys,
-    		context,
-    		toggleExpand,
-    		expand,
-    		keys,
-    		colon
-    	];
-    }
-
-    class JSONNested extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$g, create_fragment$g, safe_not_equal, {
-    			key: 12,
-    			keys: 17,
-    			colon: 18,
-    			label: 1,
-    			isParentExpanded: 2,
-    			isParentArray: 3,
-    			isArray: 4,
-    			bracketOpen: 5,
-    			bracketClose: 6,
-    			previewKeys: 7,
-    			getKey: 8,
-    			getValue: 9,
-    			getPreviewValue: 10,
-    			expanded: 0,
-    			expandable: 11
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONNested",
-    			options,
-    			id: create_fragment$g.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[12] === undefined && !("key" in props)) {
-    			console.warn("<JSONNested> was created without expected prop 'key'");
-    		}
-
-    		if (/*keys*/ ctx[17] === undefined && !("keys" in props)) {
-    			console.warn("<JSONNested> was created without expected prop 'keys'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[2] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONNested> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[3] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONNested> was created without expected prop 'isParentArray'");
-    		}
-
-    		if (/*bracketOpen*/ ctx[5] === undefined && !("bracketOpen" in props)) {
-    			console.warn("<JSONNested> was created without expected prop 'bracketOpen'");
-    		}
-
-    		if (/*bracketClose*/ ctx[6] === undefined && !("bracketClose" in props)) {
-    			console.warn("<JSONNested> was created without expected prop 'bracketClose'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get keys() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set keys(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get colon() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set colon(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get label() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set label(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isArray() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isArray(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get bracketOpen() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set bracketOpen(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get bracketClose() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set bracketClose(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get previewKeys() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set previewKeys(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get getKey() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set getKey(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get getValue() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set getValue(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get getPreviewValue() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set getPreviewValue(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get expanded() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set expanded(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get expandable() {
-    		throw new Error("<JSONNested>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set expandable(value) {
-    		throw new Error("<JSONNested>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONObjectNode.svelte generated by Svelte v3.16.7 */
-
-    const { Object: Object_1 } = globals;
-
-    function create_fragment$h(ctx) {
-    	let current;
-
-    	const jsonnested = new JSONNested({
-    			props: {
-    				key: /*key*/ ctx[0],
-    				expanded: /*expanded*/ ctx[4],
-    				isParentExpanded: /*isParentExpanded*/ ctx[1],
-    				isParentArray: /*isParentArray*/ ctx[2],
-    				keys: /*keys*/ ctx[5],
-    				previewKeys: /*keys*/ ctx[5],
-    				getValue: /*getValue*/ ctx[6],
-    				label: "" + (/*nodeType*/ ctx[3] + " "),
-    				bracketOpen: "{",
-    				bracketClose: "}"
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonnested.$$.fragment);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonnested, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const jsonnested_changes = {};
-    			if (dirty & /*key*/ 1) jsonnested_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*expanded*/ 16) jsonnested_changes.expanded = /*expanded*/ ctx[4];
-    			if (dirty & /*isParentExpanded*/ 2) jsonnested_changes.isParentExpanded = /*isParentExpanded*/ ctx[1];
-    			if (dirty & /*isParentArray*/ 4) jsonnested_changes.isParentArray = /*isParentArray*/ ctx[2];
-    			if (dirty & /*keys*/ 32) jsonnested_changes.keys = /*keys*/ ctx[5];
-    			if (dirty & /*keys*/ 32) jsonnested_changes.previewKeys = /*keys*/ ctx[5];
-    			if (dirty & /*nodeType*/ 8) jsonnested_changes.label = "" + (/*nodeType*/ ctx[3] + " ");
-    			jsonnested.$set(jsonnested_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnested.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnested.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonnested, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$h.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$h($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props,
-    		{ nodeType } = $$props;
-
-    	let { expanded = false } = $$props;
-
-    	function getValue(key) {
-    		return value[key];
-    	}
-
-    	const writable_props = ["key", "value", "isParentExpanded", "isParentArray", "nodeType", "expanded"];
-
-    	Object_1.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONObjectNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(7, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(2, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(3, nodeType = $$props.nodeType);
-    		if ("expanded" in $$props) $$invalidate(4, expanded = $$props.expanded);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			isParentExpanded,
-    			isParentArray,
-    			nodeType,
-    			expanded,
-    			keys
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(7, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(2, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(3, nodeType = $$props.nodeType);
-    		if ("expanded" in $$props) $$invalidate(4, expanded = $$props.expanded);
-    		if ("keys" in $$props) $$invalidate(5, keys = $$props.keys);
-    	};
-
-    	let keys;
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value*/ 128) {
-    			 $$invalidate(5, keys = Object.getOwnPropertyNames(value));
-    		}
-    	};
-
-    	return [
-    		key,
-    		isParentExpanded,
-    		isParentArray,
-    		nodeType,
-    		expanded,
-    		keys,
-    		getValue,
-    		value
-    	];
-    }
-
-    class JSONObjectNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$h, create_fragment$h, safe_not_equal, {
-    			key: 0,
-    			value: 7,
-    			isParentExpanded: 1,
-    			isParentArray: 2,
-    			nodeType: 3,
-    			expanded: 4
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONObjectNode",
-    			options,
-    			id: create_fragment$h.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONObjectNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[7] === undefined && !("value" in props)) {
-    			console.warn("<JSONObjectNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[1] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONObjectNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[2] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONObjectNode> was created without expected prop 'isParentArray'");
-    		}
-
-    		if (/*nodeType*/ ctx[3] === undefined && !("nodeType" in props)) {
-    			console.warn("<JSONObjectNode> was created without expected prop 'nodeType'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONObjectNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONObjectNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<JSONObjectNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<JSONObjectNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONObjectNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONObjectNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONObjectNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONObjectNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get nodeType() {
-    		throw new Error("<JSONObjectNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set nodeType(value) {
-    		throw new Error("<JSONObjectNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get expanded() {
-    		throw new Error("<JSONObjectNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set expanded(value) {
-    		throw new Error("<JSONObjectNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONArrayNode.svelte generated by Svelte v3.16.7 */
-
-    const { Object: Object_1$1 } = globals;
-
-    function create_fragment$i(ctx) {
-    	let current;
-
-    	const jsonnested = new JSONNested({
-    			props: {
-    				key: /*key*/ ctx[0],
-    				expanded: /*expanded*/ ctx[4],
-    				isParentExpanded: /*isParentExpanded*/ ctx[2],
-    				isParentArray: /*isParentArray*/ ctx[3],
-    				isArray: true,
-    				keys: /*keys*/ ctx[5],
-    				previewKeys: /*previewKeys*/ ctx[6],
-    				getValue: /*getValue*/ ctx[7],
-    				label: "Array(" + /*value*/ ctx[1].length + ")",
-    				bracketOpen: "[",
-    				bracketClose: "]"
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonnested.$$.fragment);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonnested, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const jsonnested_changes = {};
-    			if (dirty & /*key*/ 1) jsonnested_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*expanded*/ 16) jsonnested_changes.expanded = /*expanded*/ ctx[4];
-    			if (dirty & /*isParentExpanded*/ 4) jsonnested_changes.isParentExpanded = /*isParentExpanded*/ ctx[2];
-    			if (dirty & /*isParentArray*/ 8) jsonnested_changes.isParentArray = /*isParentArray*/ ctx[3];
-    			if (dirty & /*keys*/ 32) jsonnested_changes.keys = /*keys*/ ctx[5];
-    			if (dirty & /*previewKeys*/ 64) jsonnested_changes.previewKeys = /*previewKeys*/ ctx[6];
-    			if (dirty & /*value*/ 2) jsonnested_changes.label = "Array(" + /*value*/ ctx[1].length + ")";
-    			jsonnested.$set(jsonnested_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnested.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnested.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonnested, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$i.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$i($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props;
-
-    	let { expanded = false } = $$props;
-    	const filteredKey = new Set(["length"]);
-
-    	function getValue(key) {
-    		return value[key];
-    	}
-
-    	const writable_props = ["key", "value", "isParentExpanded", "isParentArray", "expanded"];
-
-    	Object_1$1.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONArrayNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    		if ("expanded" in $$props) $$invalidate(4, expanded = $$props.expanded);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			isParentExpanded,
-    			isParentArray,
-    			expanded,
-    			keys,
-    			previewKeys
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    		if ("expanded" in $$props) $$invalidate(4, expanded = $$props.expanded);
-    		if ("keys" in $$props) $$invalidate(5, keys = $$props.keys);
-    		if ("previewKeys" in $$props) $$invalidate(6, previewKeys = $$props.previewKeys);
-    	};
-
-    	let keys;
-    	let previewKeys;
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value*/ 2) {
-    			 $$invalidate(5, keys = Object.getOwnPropertyNames(value));
-    		}
-
-    		if ($$self.$$.dirty & /*keys*/ 32) {
-    			 $$invalidate(6, previewKeys = keys.filter(key => !filteredKey.has(key)));
-    		}
-    	};
-
-    	return [
-    		key,
-    		value,
-    		isParentExpanded,
-    		isParentArray,
-    		expanded,
-    		keys,
-    		previewKeys,
-    		getValue
-    	];
-    }
-
-    class JSONArrayNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$i, create_fragment$i, safe_not_equal, {
-    			key: 0,
-    			value: 1,
-    			isParentExpanded: 2,
-    			isParentArray: 3,
-    			expanded: 4
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONArrayNode",
-    			options,
-    			id: create_fragment$i.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONArrayNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
-    			console.warn("<JSONArrayNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[2] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONArrayNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[3] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONArrayNode> was created without expected prop 'isParentArray'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<JSONArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<JSONArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get expanded() {
-    		throw new Error("<JSONArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set expanded(value) {
-    		throw new Error("<JSONArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONIterableArrayNode.svelte generated by Svelte v3.16.7 */
-
-    function create_fragment$j(ctx) {
-    	let current;
-
-    	const jsonnested = new JSONNested({
-    			props: {
-    				key: /*key*/ ctx[0],
-    				isParentExpanded: /*isParentExpanded*/ ctx[1],
-    				isParentArray: /*isParentArray*/ ctx[2],
-    				keys: /*keys*/ ctx[4],
-    				getKey,
-    				getValue,
-    				isArray: true,
-    				label: "" + (/*nodeType*/ ctx[3] + "(" + /*keys*/ ctx[4].length + ")"),
-    				bracketOpen: "{",
-    				bracketClose: "}"
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonnested.$$.fragment);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonnested, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const jsonnested_changes = {};
-    			if (dirty & /*key*/ 1) jsonnested_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*isParentExpanded*/ 2) jsonnested_changes.isParentExpanded = /*isParentExpanded*/ ctx[1];
-    			if (dirty & /*isParentArray*/ 4) jsonnested_changes.isParentArray = /*isParentArray*/ ctx[2];
-    			if (dirty & /*keys*/ 16) jsonnested_changes.keys = /*keys*/ ctx[4];
-    			if (dirty & /*nodeType, keys*/ 24) jsonnested_changes.label = "" + (/*nodeType*/ ctx[3] + "(" + /*keys*/ ctx[4].length + ")");
-    			jsonnested.$set(jsonnested_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnested.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnested.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonnested, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$j.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function getKey(key) {
-    	return String(key[0]);
-    }
-
-    function getValue(key) {
-    	return key[1];
-    }
-
-    function instance$j($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props,
-    		{ nodeType } = $$props;
-
-    	let keys = [];
-    	const writable_props = ["key", "value", "isParentExpanded", "isParentArray", "nodeType"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONIterableArrayNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(5, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(2, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(3, nodeType = $$props.nodeType);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			isParentExpanded,
-    			isParentArray,
-    			nodeType,
-    			keys
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(5, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(2, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(3, nodeType = $$props.nodeType);
-    		if ("keys" in $$props) $$invalidate(4, keys = $$props.keys);
-    	};
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value*/ 32) {
-    			 {
-    				let result = [];
-    				let i = 0;
-
-    				for (const entry of value) {
-    					result.push([i++, entry]);
-    				}
-
-    				$$invalidate(4, keys = result);
-    			}
-    		}
-    	};
-
-    	return [key, isParentExpanded, isParentArray, nodeType, keys, value];
-    }
-
-    class JSONIterableArrayNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$j, create_fragment$j, safe_not_equal, {
-    			key: 0,
-    			value: 5,
-    			isParentExpanded: 1,
-    			isParentArray: 2,
-    			nodeType: 3
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONIterableArrayNode",
-    			options,
-    			id: create_fragment$j.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONIterableArrayNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[5] === undefined && !("value" in props)) {
-    			console.warn("<JSONIterableArrayNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[1] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONIterableArrayNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[2] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONIterableArrayNode> was created without expected prop 'isParentArray'");
-    		}
-
-    		if (/*nodeType*/ ctx[3] === undefined && !("nodeType" in props)) {
-    			console.warn("<JSONIterableArrayNode> was created without expected prop 'nodeType'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get nodeType() {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set nodeType(value) {
-    		throw new Error("<JSONIterableArrayNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    class MapEntry {
-      constructor(key, value) {
-        this.key = key;
-        this.value = value;
-      }
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONIterableMapNode.svelte generated by Svelte v3.16.7 */
-
-    function create_fragment$k(ctx) {
-    	let current;
-
-    	const jsonnested = new JSONNested({
-    			props: {
-    				key: /*key*/ ctx[0],
-    				isParentExpanded: /*isParentExpanded*/ ctx[1],
-    				isParentArray: /*isParentArray*/ ctx[2],
-    				keys: /*keys*/ ctx[4],
-    				getKey: getKey$1,
-    				getValue: getValue$1,
-    				label: "" + (/*nodeType*/ ctx[3] + "(" + /*keys*/ ctx[4].length + ")"),
-    				colon: "",
-    				bracketOpen: "{",
-    				bracketClose: "}"
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonnested.$$.fragment);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonnested, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const jsonnested_changes = {};
-    			if (dirty & /*key*/ 1) jsonnested_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*isParentExpanded*/ 2) jsonnested_changes.isParentExpanded = /*isParentExpanded*/ ctx[1];
-    			if (dirty & /*isParentArray*/ 4) jsonnested_changes.isParentArray = /*isParentArray*/ ctx[2];
-    			if (dirty & /*keys*/ 16) jsonnested_changes.keys = /*keys*/ ctx[4];
-    			if (dirty & /*nodeType, keys*/ 24) jsonnested_changes.label = "" + (/*nodeType*/ ctx[3] + "(" + /*keys*/ ctx[4].length + ")");
-    			jsonnested.$set(jsonnested_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnested.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnested.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonnested, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$k.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function getKey$1(entry) {
-    	return entry[0];
-    }
-
-    function getValue$1(entry) {
-    	return entry[1];
-    }
-
-    function instance$k($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props,
-    		{ nodeType } = $$props;
-
-    	let keys = [];
-    	const writable_props = ["key", "value", "isParentExpanded", "isParentArray", "nodeType"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONIterableMapNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(5, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(2, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(3, nodeType = $$props.nodeType);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			isParentExpanded,
-    			isParentArray,
-    			nodeType,
-    			keys
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(5, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(1, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(2, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(3, nodeType = $$props.nodeType);
-    		if ("keys" in $$props) $$invalidate(4, keys = $$props.keys);
-    	};
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value*/ 32) {
-    			 {
-    				let result = [];
-    				let i = 0;
-
-    				for (const entry of value) {
-    					result.push([i++, new MapEntry(entry[0], entry[1])]);
-    				}
-
-    				$$invalidate(4, keys = result);
-    			}
-    		}
-    	};
-
-    	return [key, isParentExpanded, isParentArray, nodeType, keys, value];
-    }
-
-    class JSONIterableMapNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$k, create_fragment$k, safe_not_equal, {
-    			key: 0,
-    			value: 5,
-    			isParentExpanded: 1,
-    			isParentArray: 2,
-    			nodeType: 3
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONIterableMapNode",
-    			options,
-    			id: create_fragment$k.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONIterableMapNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[5] === undefined && !("value" in props)) {
-    			console.warn("<JSONIterableMapNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[1] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONIterableMapNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[2] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONIterableMapNode> was created without expected prop 'isParentArray'");
-    		}
-
-    		if (/*nodeType*/ ctx[3] === undefined && !("nodeType" in props)) {
-    			console.warn("<JSONIterableMapNode> was created without expected prop 'nodeType'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get nodeType() {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set nodeType(value) {
-    		throw new Error("<JSONIterableMapNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONMapEntryNode.svelte generated by Svelte v3.16.7 */
-
-    function create_fragment$l(ctx) {
-    	let current;
-
-    	const jsonnested = new JSONNested({
-    			props: {
-    				expanded: /*expanded*/ ctx[4],
-    				isParentExpanded: /*isParentExpanded*/ ctx[2],
-    				isParentArray: /*isParentArray*/ ctx[3],
-    				key: /*isParentExpanded*/ ctx[2]
-    				? String(/*key*/ ctx[0])
-    				: /*value*/ ctx[1].key,
-    				keys: /*keys*/ ctx[5],
-    				getValue: /*getValue*/ ctx[6],
-    				label: /*isParentExpanded*/ ctx[2] ? "Entry " : "=> ",
-    				bracketOpen: "{",
-    				bracketClose: "}"
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonnested.$$.fragment);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonnested, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const jsonnested_changes = {};
-    			if (dirty & /*expanded*/ 16) jsonnested_changes.expanded = /*expanded*/ ctx[4];
-    			if (dirty & /*isParentExpanded*/ 4) jsonnested_changes.isParentExpanded = /*isParentExpanded*/ ctx[2];
-    			if (dirty & /*isParentArray*/ 8) jsonnested_changes.isParentArray = /*isParentArray*/ ctx[3];
-
-    			if (dirty & /*isParentExpanded, key, value*/ 7) jsonnested_changes.key = /*isParentExpanded*/ ctx[2]
-    			? String(/*key*/ ctx[0])
-    			: /*value*/ ctx[1].key;
-
-    			if (dirty & /*isParentExpanded*/ 4) jsonnested_changes.label = /*isParentExpanded*/ ctx[2] ? "Entry " : "=> ";
-    			jsonnested.$set(jsonnested_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnested.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnested.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonnested, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$l.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$l($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props;
-
-    	let { expanded = false } = $$props;
-    	const keys = ["key", "value"];
-
-    	function getValue(key) {
-    		return value[key];
-    	}
-
-    	const writable_props = ["key", "value", "isParentExpanded", "isParentArray", "expanded"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONMapEntryNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    		if ("expanded" in $$props) $$invalidate(4, expanded = $$props.expanded);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			isParentExpanded,
-    			isParentArray,
-    			expanded
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    		if ("expanded" in $$props) $$invalidate(4, expanded = $$props.expanded);
-    	};
-
-    	return [key, value, isParentExpanded, isParentArray, expanded, keys, getValue];
-    }
-
-    class JSONMapEntryNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$l, create_fragment$l, safe_not_equal, {
-    			key: 0,
-    			value: 1,
-    			isParentExpanded: 2,
-    			isParentArray: 3,
-    			expanded: 4
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONMapEntryNode",
-    			options,
-    			id: create_fragment$l.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONMapEntryNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
-    			console.warn("<JSONMapEntryNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[2] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONMapEntryNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[3] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONMapEntryNode> was created without expected prop 'isParentArray'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get expanded() {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set expanded(value) {
-    		throw new Error("<JSONMapEntryNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONValueNode.svelte generated by Svelte v3.16.7 */
-    const file$c = "node_modules\\svelte-json-tree\\src\\JSONValueNode.svelte";
-
-    function create_fragment$m(ctx) {
-    	let li;
-    	let t0;
-    	let span;
-
-    	let t1_value = (/*valueGetter*/ ctx[2]
-    	? /*valueGetter*/ ctx[2](/*value*/ ctx[1])
-    	: /*value*/ ctx[1]) + "";
-
-    	let t1;
-    	let span_class_value;
-    	let current;
-
-    	const jsonkey = new JSONKey({
-    			props: {
-    				key: /*key*/ ctx[0],
-    				colon: /*colon*/ ctx[6],
-    				isParentExpanded: /*isParentExpanded*/ ctx[3],
-    				isParentArray: /*isParentArray*/ ctx[4]
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			li = element("li");
-    			create_component(jsonkey.$$.fragment);
-    			t0 = space();
-    			span = element("span");
-    			t1 = text(t1_value);
-    			attr_dev(span, "class", span_class_value = "" + (null_to_empty(/*nodeType*/ ctx[5]) + " svelte-3bjyvl"));
-    			add_location(span, file$c, 47, 2, 948);
-    			attr_dev(li, "class", "svelte-3bjyvl");
-    			toggle_class(li, "indent", /*isParentExpanded*/ ctx[3]);
-    			add_location(li, file$c, 45, 0, 846);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, li, anchor);
-    			mount_component(jsonkey, li, null);
-    			append_dev(li, t0);
-    			append_dev(li, span);
-    			append_dev(span, t1);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const jsonkey_changes = {};
-    			if (dirty & /*key*/ 1) jsonkey_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*isParentExpanded*/ 8) jsonkey_changes.isParentExpanded = /*isParentExpanded*/ ctx[3];
-    			if (dirty & /*isParentArray*/ 16) jsonkey_changes.isParentArray = /*isParentArray*/ ctx[4];
-    			jsonkey.$set(jsonkey_changes);
-
-    			if ((!current || dirty & /*valueGetter, value*/ 6) && t1_value !== (t1_value = (/*valueGetter*/ ctx[2]
-    			? /*valueGetter*/ ctx[2](/*value*/ ctx[1])
-    			: /*value*/ ctx[1]) + "")) set_data_dev(t1, t1_value);
-
-    			if (!current || dirty & /*nodeType*/ 32 && span_class_value !== (span_class_value = "" + (null_to_empty(/*nodeType*/ ctx[5]) + " svelte-3bjyvl"))) {
-    				attr_dev(span, "class", span_class_value);
-    			}
-
-    			if (dirty & /*isParentExpanded*/ 8) {
-    				toggle_class(li, "indent", /*isParentExpanded*/ ctx[3]);
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonkey.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonkey.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(li);
-    			destroy_component(jsonkey);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$m.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$m($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ valueGetter = null } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props,
-    		{ nodeType } = $$props;
-
-    	const { colon } = getContext(contextKey);
-    	const writable_props = ["key", "value", "valueGetter", "isParentExpanded", "isParentArray", "nodeType"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONValueNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("valueGetter" in $$props) $$invalidate(2, valueGetter = $$props.valueGetter);
-    		if ("isParentExpanded" in $$props) $$invalidate(3, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(4, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(5, nodeType = $$props.nodeType);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			valueGetter,
-    			isParentExpanded,
-    			isParentArray,
-    			nodeType
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("valueGetter" in $$props) $$invalidate(2, valueGetter = $$props.valueGetter);
-    		if ("isParentExpanded" in $$props) $$invalidate(3, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(4, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(5, nodeType = $$props.nodeType);
-    	};
-
-    	return [key, value, valueGetter, isParentExpanded, isParentArray, nodeType, colon];
-    }
-
-    class JSONValueNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$m, create_fragment$m, safe_not_equal, {
-    			key: 0,
-    			value: 1,
-    			valueGetter: 2,
-    			isParentExpanded: 3,
-    			isParentArray: 4,
-    			nodeType: 5
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONValueNode",
-    			options,
-    			id: create_fragment$m.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONValueNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
-    			console.warn("<JSONValueNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[3] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONValueNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[4] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONValueNode> was created without expected prop 'isParentArray'");
-    		}
-
-    		if (/*nodeType*/ ctx[5] === undefined && !("nodeType" in props)) {
-    			console.warn("<JSONValueNode> was created without expected prop 'nodeType'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONValueNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONValueNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<JSONValueNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<JSONValueNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get valueGetter() {
-    		throw new Error("<JSONValueNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set valueGetter(value) {
-    		throw new Error("<JSONValueNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONValueNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONValueNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONValueNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONValueNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get nodeType() {
-    		throw new Error("<JSONValueNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set nodeType(value) {
-    		throw new Error("<JSONValueNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\ErrorNode.svelte generated by Svelte v3.16.7 */
-    const file$d = "node_modules\\svelte-json-tree\\src\\ErrorNode.svelte";
-
-    function get_each_context$2(ctx, list, i) {
-    	const child_ctx = ctx.slice();
-    	child_ctx[8] = list[i];
-    	child_ctx[10] = i;
-    	return child_ctx;
-    }
-
-    // (40:2) {#if isParentExpanded}
-    function create_if_block_2$2(ctx) {
-    	let current;
-
-    	const jsonarrow = new JSONArrow({
-    			props: { expanded: /*expanded*/ ctx[0] },
-    			$$inline: true
-    		});
-
-    	jsonarrow.$on("click", /*toggleExpand*/ ctx[7]);
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonarrow.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonarrow, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const jsonarrow_changes = {};
-    			if (dirty & /*expanded*/ 1) jsonarrow_changes.expanded = /*expanded*/ ctx[0];
-    			jsonarrow.$set(jsonarrow_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonarrow.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonarrow.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonarrow, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_2$2.name,
-    		type: "if",
-    		source: "(40:2) {#if isParentExpanded}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (45:2) {#if isParentExpanded}
-    function create_if_block$6(ctx) {
-    	let ul;
-    	let current;
-    	let if_block = /*expanded*/ ctx[0] && create_if_block_1$3(ctx);
-
-    	const block = {
-    		c: function create() {
-    			ul = element("ul");
-    			if (if_block) if_block.c();
-    			attr_dev(ul, "class", "svelte-1ca3gb2");
-    			toggle_class(ul, "collapse", !/*expanded*/ ctx[0]);
-    			add_location(ul, file$d, 45, 4, 1134);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, ul, anchor);
-    			if (if_block) if_block.m(ul, null);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			if (/*expanded*/ ctx[0]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    					transition_in(if_block, 1);
-    				} else {
-    					if_block = create_if_block_1$3(ctx);
-    					if_block.c();
-    					transition_in(if_block, 1);
-    					if_block.m(ul, null);
-    				}
-    			} else if (if_block) {
-    				group_outros();
-
-    				transition_out(if_block, 1, 1, () => {
-    					if_block = null;
-    				});
-
-    				check_outros();
-    			}
-
-    			if (dirty & /*expanded*/ 1) {
-    				toggle_class(ul, "collapse", !/*expanded*/ ctx[0]);
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(if_block);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(if_block);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(ul);
-    			if (if_block) if_block.d();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block$6.name,
-    		type: "if",
-    		source: "(45:2) {#if isParentExpanded}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (47:6) {#if expanded}
-    function create_if_block_1$3(ctx) {
-    	let t0;
-    	let li;
-    	let t1;
-    	let span;
-    	let current;
-
-    	const jsonnode = new JSONNode({
-    			props: {
-    				key: "message",
-    				value: /*value*/ ctx[2].message
-    			},
-    			$$inline: true
-    		});
-
-    	const jsonkey = new JSONKey({
-    			props: {
-    				key: "stack",
-    				colon: ":",
-    				isParentExpanded: /*isParentExpanded*/ ctx[3]
-    			},
-    			$$inline: true
-    		});
-
-    	let each_value = /*stack*/ ctx[5];
-    	let each_blocks = [];
-
-    	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block$2(get_each_context$2(ctx, each_value, i));
-    	}
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsonnode.$$.fragment);
-    			t0 = space();
-    			li = element("li");
-    			create_component(jsonkey.$$.fragment);
-    			t1 = space();
-    			span = element("span");
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].c();
-    			}
-
-    			add_location(span, file$d, 50, 10, 1330);
-    			attr_dev(li, "class", "svelte-1ca3gb2");
-    			add_location(li, file$d, 48, 8, 1252);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsonnode, target, anchor);
-    			insert_dev(target, t0, anchor);
-    			insert_dev(target, li, anchor);
-    			mount_component(jsonkey, li, null);
-    			append_dev(li, t1);
-    			append_dev(li, span);
-
-    			for (let i = 0; i < each_blocks.length; i += 1) {
-    				each_blocks[i].m(span, null);
-    			}
-
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const jsonnode_changes = {};
-    			if (dirty & /*value*/ 4) jsonnode_changes.value = /*value*/ ctx[2].message;
-    			jsonnode.$set(jsonnode_changes);
-    			const jsonkey_changes = {};
-    			if (dirty & /*isParentExpanded*/ 8) jsonkey_changes.isParentExpanded = /*isParentExpanded*/ ctx[3];
-    			jsonkey.$set(jsonkey_changes);
-
-    			if (dirty & /*stack*/ 32) {
-    				each_value = /*stack*/ ctx[5];
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context$2(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    					} else {
-    						each_blocks[i] = create_each_block$2(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(span, null);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-
-    				each_blocks.length = each_value.length;
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnode.$$.fragment, local);
-    			transition_in(jsonkey.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnode.$$.fragment, local);
-    			transition_out(jsonkey.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsonnode, detaching);
-    			if (detaching) detach_dev(t0);
-    			if (detaching) detach_dev(li);
-    			destroy_component(jsonkey);
-    			destroy_each(each_blocks, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1$3.name,
-    		type: "if",
-    		source: "(47:6) {#if expanded}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (52:12) {#each stack as line, index}
-    function create_each_block$2(ctx) {
-    	let span;
-    	let t_value = /*line*/ ctx[8] + "";
-    	let t;
-    	let br;
-
-    	const block = {
-    		c: function create() {
-    			span = element("span");
-    			t = text(t_value);
-    			br = element("br");
-    			attr_dev(span, "class", "svelte-1ca3gb2");
-    			toggle_class(span, "indent", /*index*/ ctx[10] > 0);
-    			add_location(span, file$d, 52, 14, 1392);
-    			add_location(br, file$d, 52, 58, 1436);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, span, anchor);
-    			append_dev(span, t);
-    			insert_dev(target, br, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*stack*/ 32 && t_value !== (t_value = /*line*/ ctx[8] + "")) set_data_dev(t, t_value);
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(span);
-    			if (detaching) detach_dev(br);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_each_block$2.name,
-    		type: "each",
-    		source: "(52:12) {#each stack as line, index}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$n(ctx) {
-    	let li;
-    	let t0;
-    	let t1;
-    	let span;
-    	let t2;
-    	let t3_value = (/*expanded*/ ctx[0] ? "" : /*value*/ ctx[2].message) + "";
-    	let t3;
-    	let t4;
-    	let current;
-    	let dispose;
-    	let if_block0 = /*isParentExpanded*/ ctx[3] && create_if_block_2$2(ctx);
-
-    	const jsonkey = new JSONKey({
-    			props: {
-    				key: /*key*/ ctx[1],
-    				colon: /*context*/ ctx[6].colon,
-    				isParentExpanded: /*isParentExpanded*/ ctx[3],
-    				isParentArray: /*isParentArray*/ ctx[4]
-    			},
-    			$$inline: true
-    		});
-
-    	let if_block1 = /*isParentExpanded*/ ctx[3] && create_if_block$6(ctx);
-
-    	const block = {
-    		c: function create() {
-    			li = element("li");
-    			if (if_block0) if_block0.c();
-    			t0 = space();
-    			create_component(jsonkey.$$.fragment);
-    			t1 = space();
-    			span = element("span");
-    			t2 = text("Error: ");
-    			t3 = text(t3_value);
-    			t4 = space();
-    			if (if_block1) if_block1.c();
-    			add_location(span, file$d, 43, 2, 1033);
-    			attr_dev(li, "class", "svelte-1ca3gb2");
-    			toggle_class(li, "indent", /*isParentExpanded*/ ctx[3]);
-    			add_location(li, file$d, 38, 0, 831);
-    			dispose = listen_dev(span, "click", /*toggleExpand*/ ctx[7], false, false, false);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, li, anchor);
-    			if (if_block0) if_block0.m(li, null);
-    			append_dev(li, t0);
-    			mount_component(jsonkey, li, null);
-    			append_dev(li, t1);
-    			append_dev(li, span);
-    			append_dev(span, t2);
-    			append_dev(span, t3);
-    			append_dev(li, t4);
-    			if (if_block1) if_block1.m(li, null);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			if (/*isParentExpanded*/ ctx[3]) {
-    				if (if_block0) {
-    					if_block0.p(ctx, dirty);
-    					transition_in(if_block0, 1);
-    				} else {
-    					if_block0 = create_if_block_2$2(ctx);
-    					if_block0.c();
-    					transition_in(if_block0, 1);
-    					if_block0.m(li, t0);
-    				}
-    			} else if (if_block0) {
-    				group_outros();
-
-    				transition_out(if_block0, 1, 1, () => {
-    					if_block0 = null;
-    				});
-
-    				check_outros();
-    			}
-
-    			const jsonkey_changes = {};
-    			if (dirty & /*key*/ 2) jsonkey_changes.key = /*key*/ ctx[1];
-    			if (dirty & /*isParentExpanded*/ 8) jsonkey_changes.isParentExpanded = /*isParentExpanded*/ ctx[3];
-    			if (dirty & /*isParentArray*/ 16) jsonkey_changes.isParentArray = /*isParentArray*/ ctx[4];
-    			jsonkey.$set(jsonkey_changes);
-    			if ((!current || dirty & /*expanded, value*/ 5) && t3_value !== (t3_value = (/*expanded*/ ctx[0] ? "" : /*value*/ ctx[2].message) + "")) set_data_dev(t3, t3_value);
-
-    			if (/*isParentExpanded*/ ctx[3]) {
-    				if (if_block1) {
-    					if_block1.p(ctx, dirty);
-    					transition_in(if_block1, 1);
-    				} else {
-    					if_block1 = create_if_block$6(ctx);
-    					if_block1.c();
-    					transition_in(if_block1, 1);
-    					if_block1.m(li, null);
-    				}
-    			} else if (if_block1) {
-    				group_outros();
-
-    				transition_out(if_block1, 1, 1, () => {
-    					if_block1 = null;
-    				});
-
-    				check_outros();
-    			}
-
-    			if (dirty & /*isParentExpanded*/ 8) {
-    				toggle_class(li, "indent", /*isParentExpanded*/ ctx[3]);
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(if_block0);
-    			transition_in(jsonkey.$$.fragment, local);
-    			transition_in(if_block1);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(if_block0);
-    			transition_out(jsonkey.$$.fragment, local);
-    			transition_out(if_block1);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(li);
-    			if (if_block0) if_block0.d();
-    			destroy_component(jsonkey);
-    			if (if_block1) if_block1.d();
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$n.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$n($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props;
-
-    	let { expanded = false } = $$props;
-    	const context = getContext(contextKey);
-    	setContext(contextKey, { ...context, colon: ":" });
-
-    	function toggleExpand() {
-    		$$invalidate(0, expanded = !expanded);
-    	}
-
-    	const writable_props = ["key", "value", "isParentExpanded", "isParentArray", "expanded"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<ErrorNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(1, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(2, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(3, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(4, isParentArray = $$props.isParentArray);
-    		if ("expanded" in $$props) $$invalidate(0, expanded = $$props.expanded);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			isParentExpanded,
-    			isParentArray,
-    			expanded,
-    			stack
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(1, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(2, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(3, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(4, isParentArray = $$props.isParentArray);
-    		if ("expanded" in $$props) $$invalidate(0, expanded = $$props.expanded);
-    		if ("stack" in $$props) $$invalidate(5, stack = $$props.stack);
-    	};
-
-    	let stack;
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value*/ 4) {
-    			 $$invalidate(5, stack = value.stack.split("\n"));
-    		}
-
-    		if ($$self.$$.dirty & /*isParentExpanded*/ 8) {
-    			 if (!isParentExpanded) {
-    				$$invalidate(0, expanded = false);
-    			}
-    		}
-    	};
-
-    	return [
-    		expanded,
-    		key,
-    		value,
-    		isParentExpanded,
-    		isParentArray,
-    		stack,
-    		context,
-    		toggleExpand
-    	];
-    }
-
-    class ErrorNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$n, create_fragment$n, safe_not_equal, {
-    			key: 1,
-    			value: 2,
-    			isParentExpanded: 3,
-    			isParentArray: 4,
-    			expanded: 0
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "ErrorNode",
-    			options,
-    			id: create_fragment$n.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[1] === undefined && !("key" in props)) {
-    			console.warn("<ErrorNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[2] === undefined && !("value" in props)) {
-    			console.warn("<ErrorNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[3] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<ErrorNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[4] === undefined && !("isParentArray" in props)) {
-    			console.warn("<ErrorNode> was created without expected prop 'isParentArray'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<ErrorNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<ErrorNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<ErrorNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<ErrorNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<ErrorNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<ErrorNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<ErrorNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<ErrorNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get expanded() {
-    		throw new Error("<ErrorNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set expanded(value) {
-    		throw new Error("<ErrorNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    function objType(obj) {
-      const type = Object.prototype.toString.call(obj).slice(8, -1);
-      if (type === 'Object') {
-        if (typeof obj[Symbol.iterator] === 'function') {
-          return 'Iterable';
-        }
-        return obj.constructor.name;
-      }
-
-      return type;
-    }
-
-    /* node_modules\svelte-json-tree\src\JSONNode.svelte generated by Svelte v3.16.7 */
-
-    function create_fragment$o(ctx) {
-    	let switch_instance_anchor;
-    	let current;
-    	var switch_value = /*componentType*/ ctx[5];
-
-    	function switch_props(ctx) {
-    		return {
-    			props: {
-    				key: /*key*/ ctx[0],
-    				value: /*value*/ ctx[1],
-    				isParentExpanded: /*isParentExpanded*/ ctx[2],
-    				isParentArray: /*isParentArray*/ ctx[3],
-    				nodeType: /*nodeType*/ ctx[4],
-    				valueGetter: /*valueGetter*/ ctx[6]
-    			},
-    			$$inline: true
-    		};
-    	}
-
-    	if (switch_value) {
-    		var switch_instance = new switch_value(switch_props(ctx));
-    	}
-
-    	const block = {
-    		c: function create() {
-    			if (switch_instance) create_component(switch_instance.$$.fragment);
-    			switch_instance_anchor = empty();
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			if (switch_instance) {
-    				mount_component(switch_instance, target, anchor);
-    			}
-
-    			insert_dev(target, switch_instance_anchor, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const switch_instance_changes = {};
-    			if (dirty & /*key*/ 1) switch_instance_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*value*/ 2) switch_instance_changes.value = /*value*/ ctx[1];
-    			if (dirty & /*isParentExpanded*/ 4) switch_instance_changes.isParentExpanded = /*isParentExpanded*/ ctx[2];
-    			if (dirty & /*isParentArray*/ 8) switch_instance_changes.isParentArray = /*isParentArray*/ ctx[3];
-    			if (dirty & /*nodeType*/ 16) switch_instance_changes.nodeType = /*nodeType*/ ctx[4];
-    			if (dirty & /*valueGetter*/ 64) switch_instance_changes.valueGetter = /*valueGetter*/ ctx[6];
-
-    			if (switch_value !== (switch_value = /*componentType*/ ctx[5])) {
-    				if (switch_instance) {
-    					group_outros();
-    					const old_component = switch_instance;
-
-    					transition_out(old_component.$$.fragment, 1, 0, () => {
-    						destroy_component(old_component, 1);
-    					});
-
-    					check_outros();
-    				}
-
-    				if (switch_value) {
-    					switch_instance = new switch_value(switch_props(ctx));
-    					create_component(switch_instance.$$.fragment);
-    					transition_in(switch_instance.$$.fragment, 1);
-    					mount_component(switch_instance, switch_instance_anchor.parentNode, switch_instance_anchor);
-    				} else {
-    					switch_instance = null;
-    				}
-    			} else if (switch_value) {
-    				switch_instance.$set(switch_instance_changes);
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(switch_instance_anchor);
-    			if (switch_instance) destroy_component(switch_instance, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$o.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$o($$self, $$props, $$invalidate) {
-    	let { key } = $$props,
-    		{ value } = $$props,
-    		{ isParentExpanded } = $$props,
-    		{ isParentArray } = $$props;
-
-    	function getComponent(nodeType) {
-    		switch (nodeType) {
-    			case "Object":
-    				return JSONObjectNode;
-    			case "Error":
-    				return ErrorNode;
-    			case "Array":
-    				return JSONArrayNode;
-    			case "Iterable":
-    			case "Map":
-    			case "Set":
-    				return typeof value.set === "function"
-    				? JSONIterableMapNode
-    				: JSONIterableArrayNode;
-    			case "MapEntry":
-    				return JSONMapEntryNode;
-    			default:
-    				return JSONValueNode;
-    		}
-    	}
-
-    	function getValueGetter(nodeType) {
-    		switch (nodeType) {
-    			case "Object":
-    			case "Error":
-    			case "Array":
-    			case "Iterable":
-    			case "Map":
-    			case "Set":
-    			case "MapEntry":
-    			case "Number":
-    				return undefined;
-    			case "String":
-    				return raw => `"${raw}"`;
-    			case "Boolean":
-    				return raw => raw ? "true" : "false";
-    			case "Date":
-    				return raw => raw.toISOString();
-    			case "Null":
-    				return () => "null";
-    			case "Undefined":
-    				return () => "undefined";
-    			case "Function":
-    			case "Symbol":
-    				return raw => raw.toString();
-    			default:
-    				return () => `<${nodeType}>`;
-    		}
-    	}
-
-    	const writable_props = ["key", "value", "isParentExpanded", "isParentArray"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JSONNode> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return {
-    			key,
-    			value,
-    			isParentExpanded,
-    			isParentArray,
-    			nodeType,
-    			componentType,
-    			valueGetter
-    		};
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    		if ("isParentExpanded" in $$props) $$invalidate(2, isParentExpanded = $$props.isParentExpanded);
-    		if ("isParentArray" in $$props) $$invalidate(3, isParentArray = $$props.isParentArray);
-    		if ("nodeType" in $$props) $$invalidate(4, nodeType = $$props.nodeType);
-    		if ("componentType" in $$props) $$invalidate(5, componentType = $$props.componentType);
-    		if ("valueGetter" in $$props) $$invalidate(6, valueGetter = $$props.valueGetter);
-    	};
-
-    	let nodeType;
-    	let componentType;
-    	let valueGetter;
-
-    	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*value*/ 2) {
-    			 $$invalidate(4, nodeType = objType(value));
-    		}
-
-    		if ($$self.$$.dirty & /*nodeType*/ 16) {
-    			 $$invalidate(5, componentType = getComponent(nodeType));
-    		}
-
-    		if ($$self.$$.dirty & /*nodeType*/ 16) {
-    			 $$invalidate(6, valueGetter = getValueGetter(nodeType));
-    		}
-    	};
-
-    	return [
-    		key,
-    		value,
-    		isParentExpanded,
-    		isParentArray,
-    		nodeType,
-    		componentType,
-    		valueGetter
-    	];
-    }
-
-    class JSONNode extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-
-    		init(this, options, instance$o, create_fragment$o, safe_not_equal, {
-    			key: 0,
-    			value: 1,
-    			isParentExpanded: 2,
-    			isParentArray: 3
-    		});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "JSONNode",
-    			options,
-    			id: create_fragment$o.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*key*/ ctx[0] === undefined && !("key" in props)) {
-    			console.warn("<JSONNode> was created without expected prop 'key'");
-    		}
-
-    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
-    			console.warn("<JSONNode> was created without expected prop 'value'");
-    		}
-
-    		if (/*isParentExpanded*/ ctx[2] === undefined && !("isParentExpanded" in props)) {
-    			console.warn("<JSONNode> was created without expected prop 'isParentExpanded'");
-    		}
-
-    		if (/*isParentArray*/ ctx[3] === undefined && !("isParentArray" in props)) {
-    			console.warn("<JSONNode> was created without expected prop 'isParentArray'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<JSONNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<JSONNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<JSONNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<JSONNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentExpanded() {
-    		throw new Error("<JSONNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentExpanded(value) {
-    		throw new Error("<JSONNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get isParentArray() {
-    		throw new Error("<JSONNode>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set isParentArray(value) {
-    		throw new Error("<JSONNode>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* node_modules\svelte-json-tree\src\Root.svelte generated by Svelte v3.16.7 */
-    const file$e = "node_modules\\svelte-json-tree\\src\\Root.svelte";
-
-    function create_fragment$p(ctx) {
-    	let ul;
-    	let current;
-
-    	const jsonnode = new JSONNode({
-    			props: {
-    				key: /*key*/ ctx[0],
-    				value: /*value*/ ctx[1],
-    				isParentExpanded: true,
-    				isParentArray: false
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			ul = element("ul");
-    			create_component(jsonnode.$$.fragment);
-    			attr_dev(ul, "class", "svelte-773n60");
-    			add_location(ul, file$e, 37, 0, 1295);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, ul, anchor);
-    			mount_component(jsonnode, ul, null);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const jsonnode_changes = {};
-    			if (dirty & /*key*/ 1) jsonnode_changes.key = /*key*/ ctx[0];
-    			if (dirty & /*value*/ 2) jsonnode_changes.value = /*value*/ ctx[1];
-    			jsonnode.$set(jsonnode_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsonnode.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsonnode.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(ul);
-    			destroy_component(jsonnode);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$p.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$p($$self, $$props, $$invalidate) {
-    	setContext(contextKey, {});
-    	let { key = "" } = $$props, { value } = $$props;
-    	const writable_props = ["key", "value"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Root> was created with unknown prop '${key}'`);
-    	});
-
-    	$$self.$set = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    	};
-
-    	$$self.$capture_state = () => {
-    		return { key, value };
-    	};
-
-    	$$self.$inject_state = $$props => {
-    		if ("key" in $$props) $$invalidate(0, key = $$props.key);
-    		if ("value" in $$props) $$invalidate(1, value = $$props.value);
-    	};
-
-    	return [key, value];
-    }
-
-    class Root extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, instance$p, create_fragment$p, safe_not_equal, { key: 0, value: 1 });
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Root",
-    			options,
-    			id: create_fragment$p.name
-    		});
-
-    		const { ctx } = this.$$;
-    		const props = options.props || ({});
-
-    		if (/*value*/ ctx[1] === undefined && !("value" in props)) {
-    			console.warn("<Root> was created without expected prop 'value'");
-    		}
-    	}
-
-    	get key() {
-    		throw new Error("<Root>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set key(value) {
-    		throw new Error("<Root>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get value() {
-    		throw new Error("<Root>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set value(value) {
-    		throw new Error("<Root>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-    }
-
-    /* src\Components\ASTViewer.svelte generated by Svelte v3.16.7 */
-
-    // (13:0) <Panel>
-    function create_default_slot(ctx) {
-    	let current;
-
-    	const jsontree = new Root({
-    			props: {
-    				value: /*value*/ ctx[0],
-    				isParentExpanded: true
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(jsontree.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(jsontree, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const jsontree_changes = {};
-    			if (dirty & /*value*/ 1) jsontree_changes.value = /*value*/ ctx[0];
-    			jsontree.$set(jsontree_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(jsontree.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(jsontree.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(jsontree, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot.name,
-    		type: "slot",
-    		source: "(13:0) <Panel>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function create_fragment$q(ctx) {
-    	let current;
-
-    	const panel = new Panel({
-    			props: {
-    				$$slots: { default: [create_default_slot] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(panel.$$.fragment);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(panel, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, [dirty]) {
-    			const panel_changes = {};
-
-    			if (dirty & /*$$scope, value*/ 3) {
-    				panel_changes.$$scope = { dirty, ctx };
-    			}
-
-    			panel.$set(panel_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(panel.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(panel.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(panel, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$q.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    function instance$q($$self, $$props, $$invalidate) {
-    	var value = {};
+    	var text;
 
     	astStore.subscribe(s => {
-    		$$invalidate(0, value = s);
+    		if (s) {
+    			$$invalidate(0, text = JSON.stringify(s, null, 4));
+    		}
     	});
 
     	$$self.$capture_state = () => {
@@ -7750,36 +4225,36 @@ var woezel = (function () {
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ("value" in $$props) $$invalidate(0, value = $$props.value);
+    		if ("text" in $$props) $$invalidate(0, text = $$props.text);
     	};
 
-    	return [value];
+    	return [text];
     }
 
     class ASTViewer extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$q, create_fragment$q, safe_not_equal, {});
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ASTViewer",
     			options,
-    			id: create_fragment$q.name
+    			id: create_fragment$e.name
     		});
     	}
     }
 
     /* src\Pages\EditorPage.svelte generated by Svelte v3.16.7 */
-    const file$f = "src\\Pages\\EditorPage.svelte";
+    const file$9 = "src\\Pages\\EditorPage.svelte";
 
-    // (57:16) <Tab>
-    function create_default_slot_5(ctx) {
+    // (59:16) <Tab>
+    function create_default_slot_7(ctx) {
     	let t;
 
     	const block = {
     		c: function create() {
-    			t = text("JSON");
+    			t = text("AST");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -7791,17 +4266,17 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_5.name,
+    		id: create_default_slot_7.name,
     		type: "slot",
-    		source: "(57:16) <Tab>",
+    		source: "(59:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (58:16) <Tab>
-    function create_default_slot_4(ctx) {
+    // (60:16) <Tab>
+    function create_default_slot_6(ctx) {
     	let t;
 
     	const block = {
@@ -7818,23 +4293,23 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_4.name,
+    		id: create_default_slot_6.name,
     		type: "slot",
-    		source: "(58:16) <Tab>",
+    		source: "(60:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (56:12) <TabList>
-    function create_default_slot_3(ctx) {
+    // (58:12) <TabList>
+    function create_default_slot_5(ctx) {
     	let t;
     	let current;
 
     	const tab0 = new Tab({
     			props: {
-    				$$slots: { default: [create_default_slot_5] },
+    				$$slots: { default: [create_default_slot_7] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -7842,7 +4317,7 @@ var woezel = (function () {
 
     	const tab1 = new Tab({
     			props: {
-    				$$slots: { default: [create_default_slot_4] },
+    				$$slots: { default: [create_default_slot_6] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -7896,17 +4371,17 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_3.name,
+    		id: create_default_slot_5.name,
     		type: "slot",
-    		source: "(56:12) <TabList>",
+    		source: "(58:12) <TabList>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:12) <TabPanel>
-    function create_default_slot_2(ctx) {
+    // (64:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;">
+    function create_default_slot_4(ctx) {
     	let current;
     	const astviewer = new ASTViewer({ $$inline: true });
 
@@ -7934,17 +4409,72 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2.name,
+    		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(61:12) <TabPanel>",
+    		source: "(64:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (65:12) <TabPanel>
-    function create_default_slot_1(ctx) {
+    // (63:12) <TabPanel>
+    function create_default_slot_3(ctx) {
+    	let current;
+
+    	const panel = new Panel({
+    			props: {
+    				style: "margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;",
+    				$$slots: { default: [create_default_slot_4] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(panel.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(panel, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const panel_changes = {};
+
+    			if (dirty & /*$$scope*/ 1) {
+    				panel_changes.$$scope = { dirty, ctx };
+    			}
+
+    			panel.$set(panel_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(panel.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(panel.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(panel, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_3.name,
+    		type: "slot",
+    		source: "(63:12) <TabPanel>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (71:16) <Panel                      style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;">
+    function create_default_slot_2(ctx) {
     	let current;
     	const pageviewer = new PageViewer({ $$inline: true });
 
@@ -7972,24 +4502,79 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1.name,
+    		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(65:12) <TabPanel>",
+    		source: "(71:16) <Panel                      style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (55:8) <Tabs>
-    function create_default_slot$1(ctx) {
+    // (70:12) <TabPanel>
+    function create_default_slot_1(ctx) {
+    	let current;
+
+    	const panel = new Panel({
+    			props: {
+    				style: "background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;",
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(panel.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(panel, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const panel_changes = {};
+
+    			if (dirty & /*$$scope*/ 1) {
+    				panel_changes.$$scope = { dirty, ctx };
+    			}
+
+    			panel.$set(panel_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(panel.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(panel.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(panel, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(70:12) <TabPanel>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (57:8) <Tabs>
+    function create_default_slot(ctx) {
     	let t0;
     	let t1;
     	let current;
 
     	const tablist = new TabList({
     			props: {
-    				$$slots: { default: [create_default_slot_3] },
+    				$$slots: { default: [create_default_slot_5] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -7997,7 +4582,7 @@ var woezel = (function () {
 
     	const tabpanel0 = new TabPanel({
     			props: {
-    				$$slots: { default: [create_default_slot_2] },
+    				$$slots: { default: [create_default_slot_3] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -8074,16 +4659,16 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$1.name,
+    		id: create_default_slot.name,
     		type: "slot",
-    		source: "(55:8) <Tabs>",
+    		source: "(57:8) <Tabs>",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$r(ctx) {
+    function create_fragment$f(ctx) {
     	let div4;
     	let div0;
     	let t0;
@@ -8097,7 +4682,7 @@ var woezel = (function () {
 
     	const tabs = new Tabs({
     			props: {
-    				$$slots: { default: [create_default_slot$1] },
+    				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -8115,16 +4700,16 @@ var woezel = (function () {
     			t1 = space();
     			div3 = element("div");
     			create_component(tabs.$$.fragment);
-    			attr_dev(div0, "class", "file-explorer svelte-ieo0kf");
-    			add_location(div0, file$f, 45, 4, 1047);
-    			attr_dev(div1, "class", "svelte-ieo0kf");
-    			add_location(div1, file$f, 49, 8, 1157);
-    			attr_dev(div2, "class", "document-editor svelte-ieo0kf");
-    			add_location(div2, file$f, 48, 4, 1118);
-    			attr_dev(div3, "class", "page-viewer svelte-ieo0kf");
-    			add_location(div3, file$f, 53, 4, 1228);
-    			attr_dev(div4, "class", "container svelte-ieo0kf");
-    			add_location(div4, file$f, 44, 0, 1018);
+    			attr_dev(div0, "class", "file-explorer--container svelte-r26n07");
+    			add_location(div0, file$9, 47, 4, 1135);
+    			attr_dev(div1, "class", "svelte-r26n07");
+    			add_location(div1, file$9, 51, 8, 1256);
+    			attr_dev(div2, "class", "document-editor svelte-r26n07");
+    			add_location(div2, file$9, 50, 4, 1217);
+    			attr_dev(div3, "class", "page-viewer svelte-r26n07");
+    			add_location(div3, file$9, 55, 4, 1327);
+    			attr_dev(div4, "class", "container svelte-r26n07");
+    			add_location(div4, file$9, 46, 0, 1106);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8174,7 +4759,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$r.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -8186,29 +4771,29 @@ var woezel = (function () {
     class EditorPage extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$r, safe_not_equal, {});
+    		init(this, options, null, create_fragment$f, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "EditorPage",
     			options,
-    			id: create_fragment$r.name
+    			id: create_fragment$f.name
     		});
     	}
     }
 
     /* src\Pages\Home.svelte generated by Svelte v3.16.7 */
 
-    const file$g = "src\\Pages\\Home.svelte";
+    const file$a = "src\\Pages\\Home.svelte";
 
-    function create_fragment$s(ctx) {
+    function create_fragment$g(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "Home";
-    			add_location(div, file$g, 0, 0, 0);
+    			add_location(div, file$a, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8226,7 +4811,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$s.name,
+    		id: create_fragment$g.name,
     		type: "component",
     		source: "",
     		ctx
@@ -8238,29 +4823,29 @@ var woezel = (function () {
     class Home extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$s, safe_not_equal, {});
+    		init(this, options, null, create_fragment$g, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Home",
     			options,
-    			id: create_fragment$s.name
+    			id: create_fragment$g.name
     		});
     	}
     }
 
     /* src\Pages\About.svelte generated by Svelte v3.16.7 */
 
-    const file$h = "src\\Pages\\About.svelte";
+    const file$b = "src\\Pages\\About.svelte";
 
-    function create_fragment$t(ctx) {
+    function create_fragment$h(ctx) {
     	let div;
 
     	const block = {
     		c: function create() {
     			div = element("div");
     			div.textContent = "About";
-    			add_location(div, file$h, 0, 0, 0);
+    			add_location(div, file$b, 0, 0, 0);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8278,7 +4863,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$t.name,
+    		id: create_fragment$h.name,
     		type: "component",
     		source: "",
     		ctx
@@ -8290,22 +4875,22 @@ var woezel = (function () {
     class About extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$t, safe_not_equal, {});
+    		init(this, options, null, create_fragment$h, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "About",
     			options,
-    			id: create_fragment$t.name
+    			id: create_fragment$h.name
     		});
     	}
     }
 
     /* src\Components\NavButton.svelte generated by Svelte v3.16.7 */
-    const file$i = "src\\Components\\NavButton.svelte";
+    const file$c = "src\\Components\\NavButton.svelte";
 
     // (42:0) {:else}
-    function create_else_block$2(ctx) {
+    function create_else_block$1(ctx) {
     	let span;
     	let t;
     	let dispose;
@@ -8317,7 +4902,7 @@ var woezel = (function () {
     			attr_dev(span, "class", "nav-button svelte-6ucpud");
     			toggle_class(span, "selected", /*selected*/ ctx[1]);
     			toggle_class(span, "link", /*link*/ ctx[3]);
-    			add_location(span, file$i, 42, 4, 941);
+    			add_location(span, file$c, 42, 4, 941);
     			dispose = listen_dev(span, "click", /*click*/ ctx[4], false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -8343,7 +4928,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_else_block$2.name,
+    		id: create_else_block$1.name,
     		type: "else",
     		source: "(42:0) {:else}",
     		ctx
@@ -8353,7 +4938,7 @@ var woezel = (function () {
     }
 
     // (36:0) {#if icon}
-    function create_if_block$7(ctx) {
+    function create_if_block$5(ctx) {
     	let span;
     	let i;
     	let i_class_value;
@@ -8361,7 +4946,7 @@ var woezel = (function () {
     	let br;
     	let t1;
     	let dispose;
-    	let if_block = /*title*/ ctx[0] && /*title*/ ctx[0].length > 0 && create_if_block_1$4(ctx);
+    	let if_block = /*title*/ ctx[0] && /*title*/ ctx[0].length > 0 && create_if_block_1$2(ctx);
 
     	const block = {
     		c: function create() {
@@ -8372,12 +4957,12 @@ var woezel = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			attr_dev(i, "class", i_class_value = "" + (null_to_empty(/*icon*/ ctx[2]) + " svelte-6ucpud"));
-    			add_location(i, file$i, 37, 8, 799);
-    			add_location(br, file$i, 38, 8, 827);
+    			add_location(i, file$c, 37, 8, 799);
+    			add_location(br, file$c, 38, 8, 827);
     			attr_dev(span, "class", "nav-button icon svelte-6ucpud");
     			toggle_class(span, "selected", /*selected*/ ctx[1]);
     			toggle_class(span, "link", /*link*/ ctx[3]);
-    			add_location(span, file$i, 36, 4, 716);
+    			add_location(span, file$c, 36, 4, 716);
     			dispose = listen_dev(span, "click", /*click*/ ctx[4], false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -8397,7 +4982,7 @@ var woezel = (function () {
     				if (if_block) {
     					if_block.p(ctx, dirty);
     				} else {
-    					if_block = create_if_block_1$4(ctx);
+    					if_block = create_if_block_1$2(ctx);
     					if_block.c();
     					if_block.m(span, null);
     				}
@@ -8423,7 +5008,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$7.name,
+    		id: create_if_block$5.name,
     		type: "if",
     		source: "(36:0) {#if icon}",
     		ctx
@@ -8433,7 +5018,7 @@ var woezel = (function () {
     }
 
     // (40:8) {#if title && title.length > 0}
-    function create_if_block_1$4(ctx) {
+    function create_if_block_1$2(ctx) {
     	let span;
     	let t;
 
@@ -8442,7 +5027,7 @@ var woezel = (function () {
     			span = element("span");
     			t = text(/*title*/ ctx[0]);
     			attr_dev(span, "class", "title");
-    			add_location(span, file$i, 39, 39, 874);
+    			add_location(span, file$c, 39, 39, 874);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -8458,7 +5043,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block_1$4.name,
+    		id: create_if_block_1$2.name,
     		type: "if",
     		source: "(40:8) {#if title && title.length > 0}",
     		ctx
@@ -8467,12 +5052,12 @@ var woezel = (function () {
     	return block;
     }
 
-    function create_fragment$u(ctx) {
+    function create_fragment$i(ctx) {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
-    		if (/*icon*/ ctx[2]) return create_if_block$7;
-    		return create_else_block$2;
+    		if (/*icon*/ ctx[2]) return create_if_block$5;
+    		return create_else_block$1;
     	}
 
     	let current_block_type = select_block_type(ctx);
@@ -8513,7 +5098,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$u.name,
+    		id: create_fragment$i.name,
     		type: "component",
     		source: "",
     		ctx
@@ -8522,7 +5107,7 @@ var woezel = (function () {
     	return block;
     }
 
-    function instance$r($$self, $$props, $$invalidate) {
+    function instance$f($$self, $$props, $$invalidate) {
     	let { href = undefined } = $$props;
     	let { title = "" } = $$props;
 
@@ -8585,7 +5170,7 @@ var woezel = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$r, create_fragment$u, safe_not_equal, {
+    		init(this, options, instance$f, create_fragment$i, safe_not_equal, {
     			href: 5,
     			title: 0,
     			onClick: 6,
@@ -8599,7 +5184,7 @@ var woezel = (function () {
     			component: this,
     			tagName: "NavButton",
     			options,
-    			id: create_fragment$u.name
+    			id: create_fragment$i.name
     		});
     	}
 
@@ -8661,9 +5246,9 @@ var woezel = (function () {
     }
 
     /* src\Components\Menu.svelte generated by Svelte v3.16.7 */
-    const file$j = "src\\Components\\Menu.svelte";
+    const file$d = "src\\Components\\Menu.svelte";
 
-    function create_fragment$v(ctx) {
+    function create_fragment$j(ctx) {
     	let nav;
     	let t0;
     	let t1;
@@ -8705,7 +5290,7 @@ var woezel = (function () {
     			t1 = space();
     			create_component(navbutton2.$$.fragment);
     			attr_dev(nav, "class", "svelte-1kf5xti");
-    			add_location(nav, file$j, 19, 0, 376);
+    			add_location(nav, file$d, 19, 0, 376);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -8743,7 +5328,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$v.name,
+    		id: create_fragment$j.name,
     		type: "component",
     		source: "",
     		ctx
@@ -8755,19 +5340,19 @@ var woezel = (function () {
     class Menu extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$v, safe_not_equal, {});
+    		init(this, options, null, create_fragment$j, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Menu",
     			options,
-    			id: create_fragment$v.name
+    			id: create_fragment$j.name
     		});
     	}
     }
 
     /* src\App.svelte generated by Svelte v3.16.7 */
-    const file$k = "src\\App.svelte";
+    const file$e = "src\\App.svelte";
 
     // (24:6) <Route path="/editor">
     function create_default_slot_2$1(ctx) {
@@ -8846,7 +5431,7 @@ var woezel = (function () {
     }
 
     // (20:0) <Router {url}>
-    function create_default_slot$2(ctx) {
+    function create_default_slot$1(ctx) {
     	let div1;
     	let t0;
     	let div0;
@@ -8890,9 +5475,9 @@ var woezel = (function () {
     			t2 = space();
     			create_component(route2.$$.fragment);
     			attr_dev(div0, "class", "page-content svelte-sl0cek");
-    			add_location(div0, file$k, 22, 4, 489);
+    			add_location(div0, file$e, 22, 4, 489);
     			attr_dev(div1, "class", "root svelte-sl0cek");
-    			add_location(div1, file$k, 20, 2, 451);
+    			add_location(div1, file$e, 20, 2, 451);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -8948,7 +5533,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$2.name,
+    		id: create_default_slot$1.name,
     		type: "slot",
     		source: "(20:0) <Router {url}>",
     		ctx
@@ -8957,13 +5542,13 @@ var woezel = (function () {
     	return block;
     }
 
-    function create_fragment$w(ctx) {
+    function create_fragment$k(ctx) {
     	let current;
 
     	const router = new Router({
     			props: {
     				url: /*url*/ ctx[0],
-    				$$slots: { default: [create_default_slot$2] },
+    				$$slots: { default: [create_default_slot$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -9005,7 +5590,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$w.name,
+    		id: create_fragment$k.name,
     		type: "component",
     		source: "",
     		ctx
@@ -9014,7 +5599,7 @@ var woezel = (function () {
     	return block;
     }
 
-    function instance$s($$self) {
+    function instance$g($$self) {
     	let url = "";
 
     	$$self.$capture_state = () => {
@@ -9031,13 +5616,13 @@ var woezel = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$s, create_fragment$w, safe_not_equal, {});
+    		init(this, options, instance$g, create_fragment$k, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "App",
     			options,
-    			id: create_fragment$w.name
+    			id: create_fragment$k.name
     		});
     	}
     }
@@ -9153,7 +5738,6 @@ var woezel = (function () {
     monaco.languages.register({ id: "carlang" });
     monaco.languages.setMonarchTokensProvider("carlang", tokenizer);
     monaco.editor.defineTheme("carlangTheme", theme);
-
 
     const app = new App({
       target: document.body

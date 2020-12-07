@@ -224,10 +224,10 @@ stringCombine s1 s2 =>
         }
 
         [Fact(DisplayName = "Lex - Large Example")]
-        public void BiggerExample() {
+        public void Lex_LargeExample() {
             var code = @"
 
-alias add = Number -> Number -> Number;
+type add = Number -> Number -> Number;
 let add x y => x + y;
 
 type extra = String;

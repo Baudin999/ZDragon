@@ -12,6 +12,7 @@ type name = string;
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
+            Assert.Empty(compilerResult.ErrorSink.Errors);
             Assert.True(compilerResult.Ast.Count == 1);
             Assert.IsType<TypeAliasNode>(compilerResult.Ast.First());
             TypeAliasNode typeNode = (TypeAliasNode)compilerResult.Ast.First();

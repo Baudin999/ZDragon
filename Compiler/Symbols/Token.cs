@@ -172,6 +172,10 @@ namespace Compiler.Symbols {
         }
 
         public static ISourceSegment Range(ISourceSegment from, ISourceSegment to) {
+            if (from is null || to is null) {
+                throw new System.Exception("Could not resolve range");
+            }
+
             return new SourceSegment {
                 LineStart = from.LineStart,
                 LineEnd = to.LineEnd,

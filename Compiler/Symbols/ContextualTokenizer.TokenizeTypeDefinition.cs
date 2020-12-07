@@ -31,13 +31,18 @@ namespace Compiler.Symbols {
                 else if (Current.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
                     tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
                 }
-                else if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind != SyntaxKind.IndentToken) {
-                    ErrorSink.AddError(new Error(
-                        @"Indentation Error: Expected an Indentation after a 'New Line'.",
-                        Next ?? Current
-                    ));
-                    Take();
+                else if (Current?.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
+                    Take(); // take the newline token
+                    // end the context
+                    break;
                 }
+                //else if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind != SyntaxKind.IndentToken) {
+                //    ErrorSink.AddError(new Error(
+                //        @"Indentation Error: Expected an Indentation after a 'New Line'.",
+                //        Next ?? Current
+                //    ));
+                //    Take();
+                //}
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
                     tokens.Add(AggregateStringLiteralToken());
                 }

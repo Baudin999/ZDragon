@@ -81,6 +81,10 @@ namespace Compiler.Symbols {
                     yield return TokenizeDataDefinition(annotations);
                     annotations = new List<Token>();
                 }
+                else if (Current?.Kind == SyntaxKind.ChoiceDeclarationToken) {
+                    yield return TokenizeChoiceDefinition(annotations);
+                    annotations = new List<Token>();
+                }
                 else if (Current?.Kind == SyntaxKind.LessThenToken) {
                     // we'll have to start parsing markup
                     yield return TokenizeMarkupDefinition();
@@ -109,6 +113,7 @@ namespace Compiler.Symbols {
         FunctionDeclaration,
         MarkdownDeclaration,
         VariableDef,
-        MarkupDeclaration
+        MarkupDeclaration,
+        ChoiceDeclaration
     }
 }

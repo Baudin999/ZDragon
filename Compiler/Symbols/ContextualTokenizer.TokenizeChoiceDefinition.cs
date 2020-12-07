@@ -8,11 +8,11 @@ namespace Compiler.Symbols {
     /// 
     /// </summary>
     internal partial class ContextualTokenizer {
-        private TokenGroup TokenizeDataDefinition(List<Token> annotations) {
+        private TokenGroup TokenizeChoiceDefinition(List<Token> annotations) {
             var tokens = new List<Token>();
             tokens.AddRange(annotations);
-            while (index < max && Current.Kind != SyntaxKind.SemiColonToken) {
-                if (Current.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
+            while (index < max && Current?.Kind != SyntaxKind.SemiColonToken) {
+                if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
                     tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
                 }
                 else if (Current?.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
@@ -20,13 +20,9 @@ namespace Compiler.Symbols {
                     // end the context
                     break;
                 }
-                //else if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind != SyntaxKind.IndentToken) {
-                //    ErrorSink.AddError(new Error(
-                //        @"Indentation Error: Expected an Indentation after a 'New Line'.",
-                //        Next ?? Current
-                //    ));
-                //    Take();
-                //}
+                else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
+                    tokens.Add(AggregateStringLiteralToken());
+                }
                 else if (Current.Kind == SyntaxKind.IndentToken) {
                     Take();
                 }
@@ -45,7 +41,7 @@ namespace Compiler.Symbols {
                 tokens.Add(Take());
             }
 
-            return new TokenGroup(ContextType.DataDeclaration, tokens);
+            return new TokenGroup(ContextType.ChoiceDeclaration, tokens);
         }
     }
 }

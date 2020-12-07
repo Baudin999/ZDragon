@@ -137,7 +137,7 @@ namespace Compiler.Symbols
                 take();
                 takeWhile(isNumber);
             }
-            return pushToken(SyntaxKind.Number);
+            return pushToken(SyntaxKind.NumberLiteralToken);
         }
 
         private bool isWhiteSpace(char c)

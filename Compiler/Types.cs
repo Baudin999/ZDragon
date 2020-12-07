@@ -176,7 +176,6 @@ namespace Compiler {
 
         IdentifierToken,
         WordToken,
-        Number,
 
         // Documentation Parser
         MarkdownBlock,
@@ -255,6 +254,7 @@ namespace Compiler {
         // literals
         StringWrapToken,
         StringLiteralToken,
+        NumberLiteralToken,
         AnnotationToken,
 
         // Markup

@@ -23,7 +23,7 @@ namespace Compiler.Language {
             var endStatement = Take(SyntaxKind.SemiColonToken);
 
             // return the block
-            return new TypeAliasNode(Token.Range(type, endStatement), annotationNode, id, genericParameters, idAlias);
+            return new TypeAliasNode(Token.Range(type, endStatement ?? idAlias.Segment), annotationNode, id, genericParameters, idAlias);
         }
 
         private enum AliasErrors {

@@ -40,6 +40,9 @@ namespace Compiler.Language.Nodes {
         RecordExpressionField,
         RecordExpression,
 
-        DataExpression
+        DataExpression,
+
+        ChoiceExpression,
+        ChoiceFieldExpression
     }
 }

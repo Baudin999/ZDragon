@@ -12,10 +12,7 @@ namespace Compiler.Symbols {
             var tokens = new List<Token>();
             tokens.AddRange(annotations);
             while (index < max && Current != null && Current?.Kind != SyntaxKind.EndKeywordToken) {
-                if (Current?.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
-                    tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.NextParameterToken, 1));
-                }
-                else if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
+                if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
                     tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
                 }
                 else if (Current?.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.NewLineToken) {

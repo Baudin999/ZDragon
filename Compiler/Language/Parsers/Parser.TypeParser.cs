@@ -20,6 +20,16 @@ namespace Compiler.Language {
             var typeDef = Take(SyntaxKind.EqualsToken, AliasMessages[AliasErrors.AssignmentExpected]);
             var idAlias = ParseExpression();
 
+            TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var restrictions = new List<RestrictionNode>();
+            while (Current?.Kind == SyntaxKind.AndToken) {
+                Take();
+                var key = Take(SyntaxKind.IdentifierToken);
+                var value = Take();
+                restrictions.Add(new RestrictionNode(key, value));
+                TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            }
+
             var endStatement = Take(SyntaxKind.SemiColonToken);
 
             // return the block

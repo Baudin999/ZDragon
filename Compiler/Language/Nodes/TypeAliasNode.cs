@@ -8,12 +8,21 @@ namespace Compiler.Language.Nodes {
         public IEnumerable<Token> GenericParameters { get; private set; }
         public ExpressionNode Body { get; private set; }
         public AnnotationNode Annotation { get; }
+        public List<RestrictionNode> Restrictions { get; }
 
-        public TypeAliasNode(ISourceSegment sourceSegment, AnnotationNode annotationNode, Token id, IEnumerable<Token> genericParameters, ExpressionNode body): base(sourceSegment, ExpressionKind.AliasExpression) {
+        public TypeAliasNode(
+                ISourceSegment sourceSegment, 
+                AnnotationNode annotationNode, 
+                Token id, 
+                IEnumerable<Token> genericParameters, 
+                ExpressionNode body, 
+                List<RestrictionNode>? restrictions = null) : base(sourceSegment, ExpressionKind.AliasExpression) {
+
             this.IdToken = id;
             this.GenericParameters = genericParameters;
             this.Body = body;
             this.Annotation = annotationNode;
+            this.Restrictions = restrictions ?? new List<RestrictionNode>() ;
         }
 
         public override string ToString() {

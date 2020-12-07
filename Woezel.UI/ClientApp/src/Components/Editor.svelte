@@ -31,7 +31,7 @@
             theme: theme,
             scrollBeyondLastLine: false,
             roundedSelection: true,
-            fontSize: "12px",
+            fontSize: "16px",
             wordWrapColumn: 120,
             wordWrap: wordWrap ? "on" : "off",
             minimap: {

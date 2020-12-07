@@ -5,8 +5,8 @@ using Xunit;
 namespace Expressions {
     public class Records {
 
-        [Fact(DisplayName = "Expression - Only name")]
-        public void Expression_OnlyName() {
+        [Fact(DisplayName = "Records - Only name")]
+        public void Records_OnlyName() {
             var code = @"
 record Person
 ";
@@ -21,8 +21,8 @@ record Person
             Assert.Empty(record.Fields);
         }
 
-        [Fact(DisplayName = "Expression - Two types names only")]
-        public void Expression_TwoTypesNamesOnly() {
+        [Fact(DisplayName = "Records - Two types names only")]
+        public void Records_TwoTypesNamesOnly() {
             var code = @"
 record Person
 record Address
@@ -40,8 +40,8 @@ record Address
             Assert.Empty(record.Fields);
         }
 
-        [Fact(DisplayName = "Expression - With annotations")]
-        public void Expression_WithAnnotations() {
+        [Fact(DisplayName = "Records - With annotations")]
+        public void Records_WithAnnotations() {
             var code = @"
 @ This is the person type
 @ And here are the annotation.
@@ -58,8 +58,8 @@ record Person
 
         }
 
-        [Fact(DisplayName = "Expression - Few Simple Fields")]
-        public void Expression_FewSimpleFields() {
+        [Fact(DisplayName = "Records - Few Simple Fields")]
+        public void Records_FewSimpleFields() {
             var code = @"
 @ This is the person type
 @ And here are the annotation.
@@ -89,8 +89,8 @@ record Person =
 
         }
 
-        [Fact(DisplayName = "Expression - Two types with a Few Simple Fields")]
-        public void Expression_FewSimpleFields2() {
+        [Fact(DisplayName = "Records - Two types with a Few Simple Fields")]
+        public void Records_FewSimpleFields2() {
             var code = @"
 @ This is the person type
 @ And here are the annotation.
@@ -132,8 +132,8 @@ record Address =
         }
 
 
-        [Fact(DisplayName = "Expression - Default Field Value")]
-        public void Expression_DefaultFieldValue() {
+        [Fact(DisplayName = "Records - Default Field Value")]
+        public void Records_DefaultFieldValue() {
             var code = @"
 record Person =
     FirstName: string
@@ -159,8 +159,8 @@ record Person =
             Assert.Equal("\"Peter Pan\"", defaultRestriction.Value);
         }
 
-        [Fact(DisplayName = "Expression - parse person record")]
-        public void ParseType() {
+        [Fact(DisplayName = "Records - Parse Person Record")]
+        public void Records_ParsePersonRecord() {
             var code = @"
 
 @ The person record

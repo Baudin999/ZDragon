@@ -3348,7 +3348,7 @@ var woezel = (function () {
     			theme,
     			scrollBeyondLastLine: false,
     			roundedSelection: true,
-    			fontSize: "12px",
+    			fontSize: "16px",
     			wordWrapColumn: 120,
     			wordWrap: wordWrap ? "on" : "off",
     			minimap: { enabled: true }
@@ -4380,7 +4380,7 @@ var woezel = (function () {
     	return block;
     }
 
-    // (64:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;">
+    // (64:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
     function create_default_slot_4(ctx) {
     	let current;
     	const astviewer = new ASTViewer({ $$inline: true });
@@ -4411,7 +4411,7 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(64:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;\\\">",
+    		source: "(64:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;\\\">",
     		ctx
     	});
 
@@ -4424,7 +4424,7 @@ var woezel = (function () {
 
     	const panel = new Panel({
     			props: {
-    				style: "margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;",
+    				style: "margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;",
     				$$slots: { default: [create_default_slot_4] },
     				$$scope: { ctx }
     			},
@@ -4473,7 +4473,7 @@ var woezel = (function () {
     	return block;
     }
 
-    // (71:16) <Panel                      style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;">
+    // (71:16) <Panel                      style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
     function create_default_slot_2(ctx) {
     	let current;
     	const pageviewer = new PageViewer({ $$inline: true });
@@ -4504,7 +4504,7 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(71:16) <Panel                      style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;\\\">",
+    		source: "(71:16) <Panel                      style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
     		ctx
     	});
 
@@ -4517,7 +4517,7 @@ var woezel = (function () {
 
     	const panel = new Panel({
     			props: {
-    				style: "background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;",
+    				style: "background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;",
     				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
     			},

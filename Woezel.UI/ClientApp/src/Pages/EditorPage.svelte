@@ -64,14 +64,14 @@
 
             <TabPanel>
                 <Panel
-                    style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden;">
+                    style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
                     <ASTViewer />
                 </Panel>
             </TabPanel>
 
             <TabPanel>
                 <Panel
-                    style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem;">
+                    style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
                     <PageViewer />
                 </Panel>
             </TabPanel>

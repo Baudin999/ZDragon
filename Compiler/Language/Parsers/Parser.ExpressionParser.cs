@@ -15,8 +15,7 @@ namespace Compiler.Language {
                     tokens.Add(ParseAtom());
                 }
                 return new FunctionParameterNode(tokens);
-            }
-            
+            }            
 
             return left;
         }

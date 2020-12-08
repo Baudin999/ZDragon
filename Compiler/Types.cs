@@ -88,6 +88,7 @@ namespace Compiler {
                 { "type", SyntaxKind.TypeDeclarationToken },
                 { "data", SyntaxKind.DataDeclarationToken },
                 { "choice", SyntaxKind.ChoiceDeclarationToken },
+                { "open", SyntaxKind.OpenDeclarationToken },
                 { "if", SyntaxKind.IfToken },
                 { "else", SyntaxKind.ElseToken },
                 { "where", SyntaxKind.WhereToken },
@@ -236,6 +237,7 @@ namespace Compiler {
         TypeDeclarationToken,
         DataDeclarationToken,
         ChoiceDeclarationToken,
+        OpenDeclarationToken,
         EndKeywordToken,
         /// <summary>
         /// func

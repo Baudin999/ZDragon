@@ -1,10 +1,25 @@
-<script>
+<script type="ts">
     import { Tabs, TabList, TabPanel, Tab } from "../Components/components.js";
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
     import PageViewer from "../Components/PageViewer.svelte";
     import ASTViewer from "../Components/ASTViewer.svelte";
+    import { documentStore } from "../Services/file.js";
+    import { astStore } from "../Services/ast.js";
+
+    let timeout;
+    let file;
+    documentStore.subscribe((s: any) => {
+        file = s?.selectedFile;
+    });
+
+    astStore.subscribe((store: any) => {
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            file = store.file;
+        }, 1500);
+    });
 </script>
 
 <style type="less">
@@ -44,6 +59,19 @@
             background-color: lightgray;
         }
     }
+    img {
+        margin-top: 4rem;
+        max-width: 100%;
+        max-height: 100%;
+    }
+    i {
+        margin-top: 4rem;
+        display: block;
+        &:hover {
+            color: pink;
+            cursor: pointer;
+        }
+    }
 </style>
 
 <div class="container">
@@ -58,9 +86,23 @@
     <div class="page-viewer">
         <Tabs>
             <TabList>
+                <Tab>Image</Tab>
                 <Tab>AST</Tab>
                 <Tab>Document</Tab>
             </TabList>
+
+            <TabPanel>
+                <Panel>
+                    {#if file}
+                        <i
+                            class="fa fa-refresh"
+                            on:click={() => (file = file)} />
+                        <img
+                            alt="svg"
+                            src={`/documents/${file ? file.namespace : 'unknown'}.svg?timestamp=${new Date().getMilliseconds()}`} />
+                    {/if}
+                </Panel>
+            </TabPanel>
 
             <TabPanel>
                 <Panel

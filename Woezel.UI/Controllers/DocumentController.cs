@@ -44,9 +44,6 @@ namespace Woezel.UI.Controllers {
                     var compilerResult = new Compiler.Compiler(body.Code).Compile();
                     _ = Program.Project.SaveCompilerResult(fInfo, compilerResult);
 
-                    // generate the plantuml image
-                    var puml = new Transpiler(compilerResult).Transpile();
-                    PlantUmlRenderer.Render(puml);
 
                     // return the result
                     return Ok(compilerResult);
@@ -69,6 +66,12 @@ namespace Woezel.UI.Controllers {
         public async Task<IActionResult> GetContentJson(string ns) {
             var text = await Program.Project.GetContent(ns);
             return Content(text, "application/json");
+        }
+
+        [HttpGet("/documents/{ns}.svg")]
+        public async Task<IActionResult> GetContentSvg(string ns) {
+            var bytes = await Program.Project.GetSvg(ns);
+            return File(bytes, "image/svg+xml");
         }
 
 

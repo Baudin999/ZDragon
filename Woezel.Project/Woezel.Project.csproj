@@ -9,4 +9,9 @@
     <PackageReference Include="PlantUml.Net" Version="1.2.48" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Compiler\Compiler.csproj" />
+    <ProjectReference Include="..\Woezel.Transpilers\Woezel.Transpilers.csproj" />
+  </ItemGroup>
+
 </Project>

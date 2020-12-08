@@ -16,8 +16,10 @@
 		border-radius: 0;
 		margin: 0;
 		color: #ccc;
-		&::selection {
-			border: none;
+
+		&:hover,
+		&:active,
+		&:focus {
 			outline: none;
 		}
 	}

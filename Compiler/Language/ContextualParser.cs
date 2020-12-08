@@ -28,6 +28,9 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.ChoiceDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseChoiceDefinition();
                 }
+                else if (tokenBlock.Context == ContextType.OpenDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseOpenDefinition();
+                }
                 else if (tokenBlock.Context == ContextType.MarkupDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseMarkup();
                 }

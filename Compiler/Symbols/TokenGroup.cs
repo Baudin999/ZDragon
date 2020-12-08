@@ -6,9 +6,9 @@ namespace Compiler.Symbols {
         public IEnumerable<Token> Tokens { get; }
         public string Text => string.Join("", this.Tokens.Select(t => t.Value));
         public ContextType Context { get; }
-        public TokenGroup(ContextType context, IEnumerable<Token> tokens) {
+        public TokenGroup(ContextType context, IEnumerable<Token?> tokens) {
             this.Context = context;
-            this.Tokens = tokens;
+            this.Tokens = (IEnumerable<Token>)tokens.Where(t => t != null);
         }
     }
 }

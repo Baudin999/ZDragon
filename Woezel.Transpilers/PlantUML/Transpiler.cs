@@ -37,7 +37,19 @@ class {node.Id} {{
             }
         }
         private void TranspileDataNode(DataNode node) {
-            //
+            var fields = node.Fields.Select(f => $"{string.Join(" ", f.Types)}");
+            types.Add($@"
+abstract class {node.Id} {{
+    {string.Join("\r\n\t", fields)}
+}}
+");
+            foreach (var field in node.Fields) {
+                var t = field.Types.Last();
+                if (!baseTypes.Contains(t)) {
+                    relations.Add($"{node.Id} --* {t}");
+                }
+                
+            }
         }
         private void TranspileChoiceNode(ChoiceNode node) {
             types.Add($@"

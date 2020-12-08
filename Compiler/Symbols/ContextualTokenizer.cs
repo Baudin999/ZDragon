@@ -85,6 +85,10 @@ namespace Compiler.Symbols {
                     yield return TokenizeChoiceDefinition(annotations);
                     annotations = new List<Token>();
                 }
+                else if (Current?.Kind == SyntaxKind.OpenDeclarationToken) {
+                    yield return TokenizeOpenDefinition(annotations);
+                    annotations = new List<Token>();
+                }
                 else if (Current?.Kind == SyntaxKind.LessThenToken) {
                     // we'll have to start parsing markup
                     yield return TokenizeMarkupDefinition();
@@ -107,6 +111,7 @@ namespace Compiler.Symbols {
     public enum ContextType {
         None,
         LanguageDeclaration,
+        OpenDeclaration,
         TypeDeclaration,
         RecordDeclaration,
         DataDeclaration,

@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Compiler;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Woezel.Transpilers.PlantUML;
 
 namespace Woezel.Project {
     public class Project {
@@ -87,11 +89,15 @@ namespace Woezel.Project {
                 return null;
         }
 
-        public async Task SaveCompilerResult(FInfo fInfo, object o) {
+        public async Task SaveCompilerResult(FInfo fInfo, CompilationResult compilerResult) {
             try {
                 var path = Path.Combine(outpath, fInfo.Namespace + ".json");
-                string text = JsonConvert.SerializeObject(o);
-                await File.WriteAllTextAsync(path, text);
+                string text = JsonConvert.SerializeObject(compilerResult);
+                _ = File.WriteAllTextAsync(path, text);
+
+                var svgPath = Path.Combine(outpath, fInfo.Namespace + ".svg");
+                var puml = new Transpiler(compilerResult).Transpile();
+                _ = File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
@@ -107,6 +113,18 @@ namespace Woezel.Project {
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
                 return "";
+            }
+        }
+
+        public async Task<byte[]> GetSvg(string ns) {
+            try {
+                var fInfo = mapping[ns];
+                var path = Path.Combine(outpath, fInfo.Namespace + ".svg");
+                return await File.ReadAllBytesAsync(path);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return Array.Empty<byte>();
             }
         }
 

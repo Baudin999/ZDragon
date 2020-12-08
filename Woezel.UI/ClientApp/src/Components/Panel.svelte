@@ -1,5 +1,5 @@
-<script>
-    export let style;
+<script type="ts">
+    export let style: string = "";
 </script>
 
 <style>

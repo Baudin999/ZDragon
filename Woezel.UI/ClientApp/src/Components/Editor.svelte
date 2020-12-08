@@ -2,6 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { onMount, onDestroy, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
+    import { selectWord } from "../Services/selection";
 
     const dispatch = createEventDispatcher();
 
@@ -97,11 +98,23 @@
     }
 
     function keyTrap(e) {
-        if ((e.ctrlKey === true || e.metaKey == true) && e.key == "s") {
-            dispatch("save", editor.getValue());
-            onKeyPress(e, editor.getValue());
-            e.preventDefault();
-            return false;
+        if (editor.hasTextFocus()) {
+            if ((e.ctrlKey === true || e.metaKey == true) && e.key == "s") {
+                dispatch("save", editor.getValue());
+                onKeyPress(e, editor.getValue());
+                e.preventDefault();
+                return false;
+            } else if (language === "carlang" && e.key == "F2") {
+                var wordUnderCursor = editor
+                    .getModel()
+                    .getWordAtPosition(editor.getPosition());
+                if (wordUnderCursor && wordUnderCursor.word) {
+                    // console.log(wordUnderCursor.word);
+                    selectWord(wordUnderCursor.word);
+                }
+            } else {
+                // console.log(e);
+            }
         }
     }
 </script>

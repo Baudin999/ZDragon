@@ -1,8 +1,11 @@
 ﻿using Compiler;
+using LiteDB;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Woezel.Transpilers.PlantUML;
 
@@ -11,12 +14,15 @@ namespace Woezel.Project {
 
         private readonly string _root;
         private readonly string outpath;
+        private readonly string dbPath;
         private readonly Dictionary<string, FInfo> mapping = new Dictionary<string, FInfo>();
         public DInfo Dir { get; }
 
         public Project(string root) {
             _root = root;
             outpath = Path.Combine(_root, "out");
+            dbPath = Path.Combine(outpath, "store.db");
+
             Dir = getDirectoryInfo(_root);
 
             if (!Directory.Exists(outpath))
@@ -64,6 +70,15 @@ namespace Woezel.Project {
                 if (_fInfo.Extension == ".car") {
                     fInfo.Namespace = getNamespace(fInfo.Path);
                     mapping.Add(fInfo.Namespace, fInfo);
+
+                    if (fInfo.IsCarFile()) {
+                        //Task.Run(() => {
+                            var code = File.ReadAllText(fInfo.Path);
+                            var compilationResult = new Compiler.Compiler(code).Compile(false);
+                            CompilationCache.Add(fInfo.Namespace, compilationResult);
+                            Console.WriteLine($"Compiled '{fInfo.Namespace}'");
+                        //});
+                    }
                 }
                 files.Add(fInfo);
             }
@@ -89,14 +104,18 @@ namespace Woezel.Project {
                 return null;
         }
 
-        public async Task SaveCompilerResult(FInfo fInfo, CompilationResult compilerResult) {
+        public CompilationResult Compile(FInfo fInfo, string code) {
+            var compilationResult = new Compiler.Compiler(code).Compile();
+            CompilationCache.Add(fInfo.Namespace, compilationResult);
+            return compilationResult;
+        }
+
+        public async Task SaveCompilerResult(FInfo fInfo, CompilationResult compilationResult) {
             try {
-                var path = Path.Combine(outpath, fInfo.Namespace + ".json");
-                string text = JsonConvert.SerializeObject(compilerResult);
-                _ = File.WriteAllTextAsync(path, text);
+                CompilationCache.Add(fInfo.Namespace, compilationResult);
 
                 var svgPath = Path.Combine(outpath, fInfo.Namespace + ".svg");
-                var puml = new Transpiler(compilerResult).Transpile();
+                var puml = new Transpiler(compilationResult).Transpile();
                 _ = File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
             }
             catch (Exception ex) {
@@ -104,16 +123,8 @@ namespace Woezel.Project {
             }
         }
 
-        public async Task<string> GetContent(string ns) {
-            try {
-                var fInfo = mapping[ns];
-                var path = Path.Combine(outpath, fInfo.Namespace + ".json");
-                return await File.ReadAllTextAsync(path);
-            }
-            catch (Exception ex) {
-                Console.WriteLine(ex.Message);
-                return "";
-            }
+        public CompilationResult? GetCompilationResult(string ns) {
+            return CompilationCache.Get(ns);
         }
 
         public async Task<byte[]> GetSvg(string ns) {
@@ -150,6 +161,7 @@ namespace Woezel.Project {
             public DateTime ChangedOn { get; }
             public DateTime CreatedOn { get; }
             public string LastChangedFormatted { get; }
+            public bool IsCarFile() => Path.EndsWith(".car");
 
             public FInfo(FileInfo fileInfo, string ns) {
                 this.Namespace = ns;

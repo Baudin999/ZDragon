@@ -77,7 +77,11 @@ enum {node.Id} {{
                 }
             };
 
-            return String.Join("\r\n", types) + "\r\n" + string.Join("\r\n", relations);
+            return "!define DARKBLUE\r\n" +
+                "!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml \r\n" +
+                String.Join("\r\n", types) + 
+                "\r\n" + 
+                string.Join("\r\n", relations);
         }
     }
 }

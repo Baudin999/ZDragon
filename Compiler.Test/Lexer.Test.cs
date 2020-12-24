@@ -177,27 +177,6 @@ Pan""";
             Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
         }
 
-        [Fact(DisplayName = "Lex Indent - Multiple Indents")]
-        public void LexMultipleIndentations() {
-            var code = @"
-stringCombine :: string -> string -> string
-stringCombine s1 s2 =>
-    ""{s1} {s2}""
-";
-            var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
-
-            verifyTokens(
-                compiler.SourceCode,
-                compilerResult.Tokens.ToList(),
-                false);
-
-            Assert.Single(compilerResult.Tokens);
-            Assert.Single(compilerResult.Ast);
-            Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
-            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Markdown);
-        }
-
 
         [Fact(DisplayName = "Lex markup - Markup Example")]
         public void LexMarkup() {
@@ -228,35 +207,8 @@ stringCombine s1 s2 =>
             var code = @"
 
 type add = Number -> Number -> Number;
-let add x y => x + y;
-
-type extra = String;
-let extra = ""ghij""
-
-
 type stringCombine = string -> string -> string;
-let stringCombine s1 s2 =>
-    ""{s1} {s2}"";
 
-type bar = () -> string
-let bar () =>
-    concat ""ab"" other another extra;
-    where
-        let other = ""c"";
-        let another = ""def"";
-
-{{
-
-# Markdown documentation
-
-Inside this documentation you can write
-stuff you'll need. CarLang is automatically
-outputting your documenation for you.
-
-}}
-
-let main () =>
-    bar();
 ";
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();

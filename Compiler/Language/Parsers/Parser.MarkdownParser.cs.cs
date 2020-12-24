@@ -7,7 +7,7 @@ namespace Compiler.Language {
         private AstNode ParseMarkdown() {
             var markdown = new List<string>();
             var start = Take(SyntaxKind.MarkdownStartBlockToken); // take the start token
-            while (Current.Kind != SyntaxKind.MarkdownEndBlockToken) {
+            while (Current?.Kind != SyntaxKind.MarkdownEndBlockToken) {
                 markdown.Add(Take().Value);
             }
             var end = Take(SyntaxKind.MarkdownEndBlockToken); // take the end token

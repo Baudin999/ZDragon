@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
 using Woezel.Project;
@@ -41,7 +42,7 @@ namespace Woezel.UI.Controllers {
                     await Program.Project.SaveFile(body.Path, body.Code);
 
                     // compile the result
-                    var compilerResult = new Compiler.Compiler(body.Code).Compile();
+                    var compilerResult = Program.Project.Compile(fInfo, body.Code);//new Compiler.Compiler(body.Code).Compile();
                     _ = Program.Project.SaveCompilerResult(fInfo, compilerResult);
 
 
@@ -63,8 +64,9 @@ namespace Woezel.UI.Controllers {
         }
 
         [HttpGet("/documents/{ns}.json")]
-        public async Task<IActionResult> GetContentJson(string ns) {
-            var text = await Program.Project.GetContent(ns);
+        public IActionResult GetContentJson(string ns) {
+            var compilationResult = Program.Project.GetCompilationResult(ns);
+            var text = JsonConvert.SerializeObject(compilationResult);
             return Content(text, "application/json");
         }
 

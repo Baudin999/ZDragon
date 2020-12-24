@@ -265,18 +265,19 @@ namespace Compiler {
 
 
     public class CompilationResult {
-        public IEnumerable<TokenGroup> Tokens { get; }
+         public IEnumerable<TokenGroup> Tokens { get; }
         public List<AstNode> Ast { get; }
         public ErrorSink ErrorSink { get; }
-        public Dictionary<string, AstNode?> Lexicon { get; }
+        public Dictionary<string, AstNode> Lexicon { get; }
         public List<Error> Errors() => ErrorSink.Errors;
 
-        public CompilationResult(List<AstNode> ast, IEnumerable<TokenGroup> tokens, ErrorSink errorSink, Dictionary<string, AstNode?> lexicon) {
+        public CompilationResult(List<AstNode> ast, IEnumerable<TokenGroup> tokens, ErrorSink errorSink, Dictionary<string, AstNode> lexicon) {
             this.Tokens = tokens.ToList();
             this.Ast = ast;
             this.ErrorSink = errorSink;
             this.Lexicon = lexicon;
         }
+
     }
 
     public enum CharacterCodes {

@@ -57,15 +57,23 @@
             padding: 0.5rem;
             color: var(--color-secundary);
             background: var(--color-secundary--alt);
+            border-right: 1px solid lightgray;
         }
-        header {
+        .header {
             grid-row: 1;
+            border-bottom: 1px solid lightgray;
         }
-        footer {
+        .footer {
             grid-row: 3;
+            border-top: 1px solid lightgray;
         }
         .editor {
             grid-row: 2;
+            border-right: 1px solid lightgray;
+        }
+
+        .sep {
+            box-shadow: black 0 6px 6px -6px inset;
         }
     }
 </style>

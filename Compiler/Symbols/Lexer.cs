@@ -87,7 +87,7 @@ namespace Compiler.Symbols
         }
         private Token parseNewline()
         {
-            if (current == '\r' || next == '\n') {
+            if (current == '\r' && next == '\n') {
                 take();
                 take();
             }

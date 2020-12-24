@@ -1,4 +1,5 @@
-﻿using Compiler.Language.Nodes;
+﻿using Compiler;
+using Compiler.Language.Nodes;
 using System.Linq;
 using Xunit;
 
@@ -243,5 +244,123 @@ record Person =
 
             Assert.Single(compilerResult.ErrorSink.Errors);
         }
+
+        [Fact(DisplayName = "Record - Qualified Field Types 001")]
+        public void Record_QualifiedFieldType_001() {
+            var code = @"
+record Person =
+    FirstName: Address.Street;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Single(compilerResult.Ast);
+            Assert.Single(compilerResult.ErrorSink.Errors);
+        }
+
+        [Fact(DisplayName = "Record - Qualified Field Types 002")]
+        public void Record_QualifiedFieldType_002() {
+            var code = @"
+type FirstName = String;
+record Person =
+    FirstName: Names.FirstName;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Single(compilerResult.ErrorSink.Errors);
+        }
+
+        [Fact(DisplayName = "Record - Qualified Field Types 003")]
+        public void Record_QualifiedFieldType_003() {
+            
+            var moduleAddress = new Compiler.Compiler("record Address;").Compile();
+            CompilationCache.Add("Address", moduleAddress);
+
+            var moduleNames = new Compiler.Compiler("type FirstName = String;").Compile();
+            CompilationCache.Add("Names", moduleNames);
+
+
+            var code = @"
+type FirstName = String;
+record Person =
+    FirstName: Names.FirstName;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Empty(compilerResult.ErrorSink.Errors);
+        }
+
+        [Fact(DisplayName = "Record - Qualified Field Types 004")]
+        public void Record_QualifiedFieldType_004() {
+            var code = @"
+record Person =
+    Address: Address.Address;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Single(compilerResult.Ast);
+            Assert.Single(compilerResult.ErrorSink.Errors);
+        }
+
+        [Fact(DisplayName = "Parser - Spaces in wrong place")]
+        public void Parser_SpacesInWrongPlace() {
+            var code = @"
+open Address
+
+This is a Module, here you can describe your Logical Data Models
+and collaborate on the actual functionality.
+
+    
+@Example logical type
+record Person =
+    FirstName: Name;
+    MiddleName: Name;
+    LastName: Name;
+    Prefixes: String;
+    @ van, de, etc tussenvoegsel
+    Insertion: String;
+    Salutation: String;
+    Title: String;
+    DateOfBirth: Date;
+    Gender: Gender;
+    
+type Name = String
+    & min 2
+    & max 50;
+    
+choice Gender =
+    | ""Male""
+    | ""Female""
+    | ""Non-binary""
+    
+record ContactInformation extends Person CommunicationInformation =
+    @ Function in the company
+    Function: Maybe String;
+    SIZOKey: Maybe String;
+
+record CommunicationInformation extends Address =
+    Email: Email;
+    Phone: Phone;
+    PhoneWork: Phone;
+    PhoneMobile: Phone;
+    PreferredLanguage: Maybe String;
+
+type Email = String
+type Phone = String
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Equal(9, compilerResult.Ast.Count);
+            
+        }
+
+        
+
     }
 }

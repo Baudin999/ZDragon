@@ -53,6 +53,9 @@ namespace Compiler.Symbols {
             return this;
         }
 
+        [System.Text.Json.Serialization.JsonConstructor]
+        public Token() { }
+
         public Token(string value, SyntaxKind kind, int indexStart, int indexEnd, int columnStart, int columnEnd, int line, int indentLevel = 0) {
             this.Value = value;
             this.Kind = kind;
@@ -118,13 +121,13 @@ namespace Compiler.Symbols {
             this.IndentLevel = indentLevel;
         }
 
-        public Token(List<Token?> tokens, SyntaxKind kind, int indentLevel = 0): 
+        public Token(List<Token?> tokens, SyntaxKind kind, int indentLevel = 0) :
 #pragma warning disable CS8604 // Possible null reference argument.
             this(
 #pragma warning disable CS8602 // Dereference of a possibly null reference.
                 string.Join("", tokens.Where(t => t != null).Select(t => t.Value)),
 #pragma warning restore CS8602 // Dereference of a possibly null reference.
-                kind, 
+                kind,
                 tokens.Where(t => t != null).First(),
                 tokens.Where(t => t != null).Last(),
                 indentLevel) { }
@@ -197,18 +200,42 @@ namespace Compiler.Symbols {
             };
         }
 
-        //public static Token From(string value, SyntaxKind kind, ISourceSegment position, int indentLevel = 0) {
-        //    return new Token(
-        //        value,
-        //        kind,
-        //        position.indexStart,
-        //        position.indexEnd,
-        //        position.columnStart,
-        //        position.columnEnd,
-        //        position.lineStart,
-        //        position.lineEnd,
-        //        indentLevel
-        //    );
-        //}
+    }
+
+    public class QualifiedToken : Token {
+        public string QualifiedName { get; }
+        public string Namespace { get; }
+        public List<Token> Parts { get; }
+        public Token? IdToken { get; }
+        public string Id { 
+            get { 
+                return IdToken?.Value ?? throw new System.Exception("Invalid Id Token"); 
+            } 
+        }
+
+        public QualifiedToken(List<Token?> tokens) : base(tokens, SyntaxKind.IdentifierToken, 0) {
+
+            this.QualifiedName = string.Join(".", tokens.Select(t => t.Value));
+            this.Namespace = string.Join(".", TakeAllButLast(tokens).Select(t => t.Value));
+            this.Parts = tokens.OfType<Token>().ToList();
+            this.IdToken = tokens.Last();
+        }
+
+        public IEnumerable<T> TakeAllButLast<T>(IEnumerable<T> source) {
+            var it = source.GetEnumerator();
+            bool hasRemainingItems = false;
+            bool isFirst = true;
+            T item = default(T);
+
+            do {
+                hasRemainingItems = it.MoveNext();
+                if (hasRemainingItems) {
+                    if (!isFirst) yield return item;
+                    item = it.Current;
+                    isFirst = false;
+                }
+            } while (hasRemainingItems);
+        }
+
     }
 }

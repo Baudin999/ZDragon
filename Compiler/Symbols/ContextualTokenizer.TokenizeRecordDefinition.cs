@@ -1,5 +1,6 @@
 ﻿using Compiler.Language.Nodes;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler.Symbols {
 
@@ -21,6 +22,16 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
                     // end the context
                     break;
+                }
+                else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
+                    var identifierParts = new List<Token?>();
+                    while (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
+                        identifierParts.Add(Take()); // add the part
+                        Take(); // skip the dot
+                    }
+                    identifierParts.Add(Take());
+
+                    tokens.Add(new QualifiedToken(identifierParts));
                 }
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
                     tokens.Add(AggregateStringLiteralToken());

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,6 +46,10 @@ namespace Compiler.Symbols {
         public SyntaxKind Kind { get; }
 
         public int IndentLevel { get; private set; } = 0;
+
+        internal Token Combine(Token token) {
+            return new Token(new List<Token?> { this, token }, token.Kind, token.IndentLevel);
+        }
 
         public ContextType Context { get; set; } = ContextType.None;
 
@@ -133,6 +138,7 @@ namespace Compiler.Symbols {
                 indentLevel) { }
 #pragma warning restore CS8604 // Possible null reference argument.
 
+
         public override string ToString() {
             return $"{Kind} - '{Value}'";
         }
@@ -198,6 +204,10 @@ namespace Compiler.Symbols {
                 LineStart = 0,
                 LineEnd = 0
             };
+        }
+
+        public Token Clone() {
+            return new Token(this.Value, this.Kind, this, this.IndentLevel);
         }
 
 

@@ -351,6 +351,28 @@ record Person =
             Assert.Single(compilerResult.ErrorSink.Errors);
         }
 
+        [Fact(DisplayName = "Record - Extended Fields")]
+        public void Record_ExtendedFields() {
+            var code = @"
+record Person =
+    FirstName: String;
+    LastName: String;
+record Address =
+    Street: String;
+record PeterPan extends Person Address =
+    Age: Number;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Equal(3, compilerResult.Ast.Count);
+            Assert.Equal(3, compilerResult.Lexicon.Count);
+            Assert.Empty(compilerResult.ErrorSink.Errors);
+
+            var peterPan = compilerResult.Lexicon["PeterPan"] as RecordNode;
+            Assert.Equal(4, peterPan.Fields.Count);
+        }
+
         [Fact(DisplayName = "Parser - Spaces in wrong place")]
         public void Parser_SpacesInWrongPlace() {
             var code = @"

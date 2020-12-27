@@ -17,11 +17,11 @@ namespace Woezel.Transpilers.PlantUML {
 
         private void TranspileTypeAliasNode(TypeAliasNode node) {
             types.Add($@"
-class {node.Id} {{}}
+interface {node.Id} {{}}
 ");
         }
         private void TranspileRecordNode(RecordNode node) {
-            var fields = node.Fields.Select(f => $"{f.Id}:{string.Join(" ", f.Types)};");
+            var fields = node.Fields.Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}:{string.Join(" ", f.Types)};");
             types.Add($@"
 class {node.Id} {{
     {string.Join("\r\n\t", fields)}
@@ -34,6 +34,10 @@ class {node.Id} {{
                         relations.Add($"{node.Id} -- {t}");
                     }
                 }
+            }
+
+            foreach (var extension in node.Extensions) {
+                relations.Add($"{node.Id} --|> {extension.Value}");
             }
         }
         private void TranspileDataNode(DataNode node) {

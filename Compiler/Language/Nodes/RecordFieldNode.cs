@@ -1,4 +1,5 @@
 ﻿using Compiler.Symbols;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,17 +9,29 @@ namespace Compiler.Language.Nodes {
         public string Id => IdToken.Value;
         public List<Token> TypeTokens { get; }
         public List<RestrictionNode> Restrictions { get; }
+        public bool IsCloned { get; }
 
         public List<string> Types => TypeTokens.Select(t => t.Value).ToList();
         public AnnotationNode? AnnotationNode { get; }
         public string Description => AnnotationNode?.Annotation ?? "";
 
        
-        public RecordFieldNode(AnnotationNode? annotation, Token identifierToken, List<Token> types, List<RestrictionNode> restrictions) : base(identifierToken, ExpressionKind.RecordExpressionField) {
+        public RecordFieldNode(AnnotationNode? annotation, Token identifierToken, IEnumerable<Token> types, IEnumerable<RestrictionNode> restrictions, bool cloned = false) : base(identifierToken, ExpressionKind.RecordExpressionField) {
             this.AnnotationNode = annotation;
             this.IdToken = identifierToken;
-            this.TypeTokens = types;
-            this.Restrictions = restrictions;
+            this.TypeTokens = types.ToList();
+            this.Restrictions = restrictions.ToList();
+            this.IsCloned = cloned;
+        }
+
+        internal RecordFieldNode Clone() {
+            return new RecordFieldNode(
+                this.AnnotationNode?.Clone(),
+                this.IdToken.Clone(),
+                this.TypeTokens.Select(t => t.Clone()),
+                this.Restrictions.Select(r => r.Clone()),
+                true
+            );
         }
     }
 }

@@ -23,6 +23,18 @@ namespace Compiler.Checkers {
                     CheckTokens(node, field, field.TypeTokens);
                 }
             }
+
+            foreach (var extension in node.Extensions) {
+                // get the type
+                var ext = this.lexicon[extension.Value];
+
+                // add the fields
+                if (ext is RecordNode rn) {
+                    foreach (var field in rn.Fields) {
+                        node.Fields.Add(field.Clone());
+                    }
+                }
+            }
         }
     }
 }

@@ -15,5 +15,9 @@ namespace Compiler.Language.Nodes {
             this.ValueToken = value;
         }
 
+        internal RestrictionNode Clone() {
+            return new RestrictionNode(KeyToken.Clone(), ValueToken.Clone());
+        }
+
     }
 }

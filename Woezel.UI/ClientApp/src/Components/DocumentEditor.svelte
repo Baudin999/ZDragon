@@ -18,6 +18,7 @@
     documentStore.subscribe((value: any) => {
         file = value.selectedFile;
         text = value.text;
+        markers.set([]);
 
         if (file && file.path && file.path.endsWith(".json")) {
             type = "json";

@@ -113,7 +113,7 @@ Your List definitions seems to have {message} type parameters.
 
             errorSink.AddError(new Error(
                 @$"Could not find type '{token.Value}' on '{rootName}'.",
-                root.IdToken
+                token
             ));
         }
 

@@ -26,12 +26,14 @@ namespace Compiler.Checkers {
 
             foreach (var extension in node.Extensions) {
                 // get the type
-                var ext = this.lexicon[extension.Value];
+                if (this.lexicon.ContainsKey(extension.Value)) {
+                    var ext = this.lexicon[extension.Value];
 
-                // add the fields
-                if (ext is RecordNode rn) {
-                    foreach (var field in rn.Fields) {
-                        node.Fields.Add(field.Clone());
+                    // add the fields
+                    if (ext is RecordNode rn) {
+                        foreach (var field in rn.Fields) {
+                            node.Fields.Add(field.Clone());
+                        }
                     }
                 }
             }

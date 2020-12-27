@@ -42,7 +42,7 @@ namespace Woezel.UI.Controllers {
                     await Program.Project.SaveFile(body.Path, body.Code);
 
                     // compile the result
-                    var compilerResult = Program.Project.Compile(fInfo, body.Code);//new Compiler.Compiler(body.Code).Compile();
+                    var compilerResult = Program.Project.Compile(fInfo, body.Code, Program.Project.Cache);
                     _ = Program.Project.SaveCompilerResult(fInfo, compilerResult);
 
 

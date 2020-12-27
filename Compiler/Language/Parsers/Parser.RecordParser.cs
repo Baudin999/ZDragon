@@ -28,6 +28,11 @@ namespace Compiler.Language {
                 extensions = TakeWhile(SyntaxKind.IdentifierToken).ToList();
             }
 
+            if (Current?.Kind == SyntaxKind.SemiColonToken || Current?.Kind == SyntaxKind.EndBlock) {
+                TakeWhile(t => t.Kind == SyntaxKind.SemiColonToken || t.Kind == SyntaxKind.EndBlock);
+                return new RecordNode(annotationNode, id, genericParameters, extensions, new List<RecordFieldNode>());
+            }
+
             // = tokens
             var equals = Take(SyntaxKind.EqualsToken);
             var fields = new List<RecordFieldNode>();

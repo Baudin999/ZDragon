@@ -13,7 +13,7 @@ choice Gender =
     | ""Other""
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Tokens);
             Assert.IsType<ChoiceNode>(compilerResult.Ast.First());
@@ -37,7 +37,7 @@ choice Gender =
     | ""Other""
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.ErrorSink.Errors);
@@ -63,7 +63,7 @@ record Person =
     
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Equal(4, compilerResult.Tokens.Count());
 

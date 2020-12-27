@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace Compiler.Linker {
     public class Lexicon {
-        private readonly List<string> defaults;
         private readonly Dictionary<string, AstNode> lexicon;
         private readonly ErrorSink errorSink;
         private readonly IEnumerable<IIdentifierExpressionNode> ast;
@@ -13,20 +12,6 @@ namespace Compiler.Linker {
         public Lexicon(ErrorSink es, IEnumerable<AstNode> ast) {
             this.errorSink = es;
             this.ast = ast.OfType<IIdentifierExpressionNode>();
-            this.defaults = new List<string>() {
-                "String",
-                "Number",
-                "Date",
-                "Time",
-                "DateTime",
-                "Decimal",
-                "Boolean",
-
-                // higher level types
-                "Maybe",
-                "Either",
-                "List"
-            };
             this.lexicon = new Dictionary<string, AstNode>();
         }
 
@@ -68,32 +53,7 @@ namespace Compiler.Linker {
         }
 
         private void CheckTypeToken(Token token, IIdentifierExpressionNode root, string errorQualifier) {
-            if (defaults.Contains(token.Value)) {
-                // a default 
-            }
-            else if (lexicon.ContainsKey(token.Value)) {
-                // already in there
-            }
-            else if (token is QualifiedToken qt) {
-                if (CompilationCache.Has(qt.Namespace)) {
-                    var importedLexicon = CompilationCache.Get(qt.Namespace);
-                    if (importedLexicon.Lexicon.ContainsKey(qt.Id) && !this.lexicon.ContainsKey(qt.QualifiedName)) {
-                        this.lexicon.Add(qt.QualifiedName, (AstNode)importedLexicon.Lexicon[qt.Id]);
-                    }
-                }
-                else {
-                    errorSink.AddError(new Error(
-                        $"Namespace '{qt.Namespace}' can not be found of {errorQualifier} of type '{root.Id}'.",
-                        token
-                    ));
-                }
-            }
-            else {
-                errorSink.AddError(new Error(
-                    $"Entity of type '{token.Value}' can not be found.",
-                    token
-                ));
-            }
+            //
         }
 
         private void addToLexicon<T>(T node) where T : AstNode, IIdentifierExpressionNode {

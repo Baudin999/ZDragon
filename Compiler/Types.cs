@@ -1,14 +1,9 @@
-
-
 using Compiler.Language;
-using Compiler.Language.Nodes;
-using Compiler.Symbols;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Compiler {
 
-    
+
 
     public static class Mappings {
         public static List<int> Operators = new List<int> {
@@ -261,23 +256,6 @@ namespace Compiler {
 
         // Markup
         CloseMarkupElement
-    }
-
-
-    public class CompilationResult {
-         public IEnumerable<TokenGroup> Tokens { get; }
-        public List<AstNode> Ast { get; }
-        public ErrorSink ErrorSink { get; }
-        public Dictionary<string, AstNode> Lexicon { get; }
-        public List<Error> Errors() => ErrorSink.Errors;
-
-        public CompilationResult(List<AstNode> ast, IEnumerable<TokenGroup> tokens, ErrorSink errorSink, Dictionary<string, AstNode> lexicon) {
-            this.Tokens = tokens.ToList();
-            this.Ast = ast;
-            this.ErrorSink = errorSink;
-            this.Lexicon = lexicon;
-        }
-
     }
 
     public enum CharacterCodes {

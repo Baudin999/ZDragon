@@ -200,42 +200,6 @@ namespace Compiler.Symbols {
             };
         }
 
-    }
-
-    public class QualifiedToken : Token {
-        public string QualifiedName { get; }
-        public string Namespace { get; }
-        public List<Token> Parts { get; }
-        public Token? IdToken { get; }
-        public string Id { 
-            get { 
-                return IdToken?.Value ?? throw new System.Exception("Invalid Id Token"); 
-            } 
-        }
-
-        public QualifiedToken(List<Token?> tokens) : base(tokens, SyntaxKind.IdentifierToken, 0) {
-
-            this.QualifiedName = string.Join(".", tokens.Select(t => t.Value));
-            this.Namespace = string.Join(".", TakeAllButLast(tokens).Select(t => t.Value));
-            this.Parts = tokens.OfType<Token>().ToList();
-            this.IdToken = tokens.Last();
-        }
-
-        public IEnumerable<T> TakeAllButLast<T>(IEnumerable<T> source) {
-            var it = source.GetEnumerator();
-            bool hasRemainingItems = false;
-            bool isFirst = true;
-            T item = default(T);
-
-            do {
-                hasRemainingItems = it.MoveNext();
-                if (hasRemainingItems) {
-                    if (!isFirst) yield return item;
-                    item = it.Current;
-                    isFirst = false;
-                }
-            } while (hasRemainingItems);
-        }
 
     }
 }

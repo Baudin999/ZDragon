@@ -240,7 +240,7 @@ record Person =
     FirstName: Name;
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.ErrorSink.Errors);
         }
@@ -252,7 +252,7 @@ record Person =
     FirstName: Address.Street;
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile(true);
 
             Assert.Single(compilerResult.Ast);
             Assert.Single(compilerResult.ErrorSink.Errors);
@@ -265,33 +265,77 @@ type FirstName = String;
 record Person =
     FirstName: Names.FirstName;
 ";
-            var compiler = new Compiler.Compiler(code);
+            var cache = new CompilationCache(new ErrorSink());
+            var compiler = new Compiler.Compiler(code, "Names", cache);
             var compilerResult = compiler.Compile();
 
+            cache.TypeCheck();
+
             Assert.Equal(2, compilerResult.Ast.Count);
-            Assert.Single(compilerResult.ErrorSink.Errors);
+            Assert.Empty(cache.ErrorSink.Errors);
+        }
+
+        [Fact(DisplayName = "Record - Reverse Definitions")]
+        public void Record_ReverseDefinitions() {
+            var code = @"
+record Person =
+    FirstName: FirstName;
+type FirstName = String;
+";
+            var cache = new CompilationCache(new ErrorSink());
+            var compiler = new Compiler.Compiler(code, "Names", cache);
+            var compilerResult = compiler.Compile();
+
+            cache.TypeCheck();
+
+            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Empty(cache.ErrorSink.Errors);
         }
 
         [Fact(DisplayName = "Record - Qualified Field Types 003")]
         public void Record_QualifiedFieldType_003() {
-            
-            var moduleAddress = new Compiler.Compiler("record Address;").Compile();
-            CompilationCache.Add("Address", moduleAddress);
+            var errorSink = new ErrorSink();
+            var cache = new CompilationCache(errorSink);
 
-            var moduleNames = new Compiler.Compiler("type FirstName = String;").Compile();
-            CompilationCache.Add("Names", moduleNames);
-
-
+            new Compiler.Compiler("record Address;", "Address", cache).Compile();
+            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile();
             var code = @"
-type FirstName = String;
+open Names;
 record Person =
     FirstName: Names.FirstName;
 ";
-            var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            new Compiler.Compiler(code, "Person", cache).Compile();
+            var compilerResult = cache.Get("Person");
 
+            cache.TypeCheck();
+
+            Assert.Equal(3, cache.Count());
             Assert.Equal(2, compilerResult.Ast.Count);
-            Assert.Empty(compilerResult.ErrorSink.Errors);
+            Assert.Empty(errorSink.Errors);
+        }
+
+        [Fact(DisplayName = "Record - Qualified Field Add Twice")]
+        public void Record_QualifiedFieldAddTwice() {
+            var errorSink = new ErrorSink();
+            var cache = new CompilationCache(errorSink);
+
+            new Compiler.Compiler("record Address;", "Address", cache).Compile();
+            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile();
+            var code = @"
+open Names;
+record Person =
+    FirstName: Names.FirstName;
+    InvoiceAddress: Address.Address;
+    DeliveryAddress: Address.Address;
+";
+            new Compiler.Compiler(code, "Person", cache).Compile();
+            var compilerResult = cache.Get("Person");
+
+            cache.TypeCheck();
+
+            Assert.Equal(3, cache.Count());
+            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Empty(errorSink.Errors);
         }
 
         [Fact(DisplayName = "Record - Qualified Field Types 004")]
@@ -301,7 +345,7 @@ record Person =
     Address: Address.Address;
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Ast);
             Assert.Single(compilerResult.ErrorSink.Errors);
@@ -310,11 +354,12 @@ record Person =
         [Fact(DisplayName = "Parser - Spaces in wrong place")]
         public void Parser_SpacesInWrongPlace() {
             var code = @"
-open Address
+
 
 This is a Module, here you can describe your Logical Data Models
 and collaborate on the actual functionality.
 
+type Address = String;
     
 @Example logical type
 record Person =
@@ -354,9 +399,10 @@ type Email = String
 type Phone = String
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Equal(9, compilerResult.Ast.Count);
+            Assert.Empty(compilerResult.Errors);
             
         }
 

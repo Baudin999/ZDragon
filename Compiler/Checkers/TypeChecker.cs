@@ -4,39 +4,24 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler.Checkers {
-    public class TypeChecker {
-
-
+    public partial class TypeChecker {
+        private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Decimal" };
+        private readonly CompilationCache cache;
+        private readonly CompilationResult compilationResult;
         private readonly Dictionary<string, AstNode> lexicon;
-        private readonly List<CompilationResult> links;
-        private readonly ErrorSink errorSink;
+        private readonly Dictionary<string, AstNode> externalLexicon = new Dictionary<string, AstNode>();
+        private ErrorSink errorSink => cache.ErrorSink;
 
-        private void CheckTypeAliasNode(TypeAliasNode node) {
-            //
-        }
-        private void CheckRecordNode(RecordNode node) {
-
-            foreach (var field in node.Fields) {
-                var root = field.TypeTokens.First();
-                var id = root.Value;
-
-                if (id == "Maybe") {
-                    CheckMaybe(node, field, field.TypeTokens);
-                }
-                else if (id == "List") {
-                    CheckList(node, field, field.TypeTokens);
-                }
-            }
-        }
+       
         private void CheckDataNode(DataNode node) {
             // generate record if they do not exist.
             foreach (var field in node.Fields) {
                 if (!lexicon.ContainsKey(field.Id)) {
                     var record = new RecordNode(
-                                        field.AnnotationNode, 
-                                        field.IdToken, 
-                                        field.TypesTokens.Where(t => t.Kind == SyntaxKind.GenericParameterToken).ToList(), 
-                                        new List<Token>(), 
+                                        field.AnnotationNode,
+                                        field.IdToken,
+                                        field.TypesTokens.Where(t => t.Kind == SyntaxKind.GenericParameterToken).ToList(),
+                                        new List<Token>(),
                                         new List<RecordFieldNode>());
                     lexicon.Add(field.Id, record);
                 }
@@ -61,6 +46,15 @@ namespace Compiler.Checkers {
                         field.ValueToken
                     ));
                 }
+            }
+        }
+
+        private void CheckOpenNode(OpenNode open) {
+            if (!cache.Has(open.Id)) {
+                errorSink.AddError(new Error(
+                    $"Module '{open.Id}' does not seem to exist.",
+                    open.IdToken
+                ));
             }
         }
 
@@ -96,39 +90,109 @@ Your List definitions seems to have {message} type parameters.
             }
         }
 
-        private void CheckOpenNode(OpenNode open) {
-            if (!CompilationCache.Has(open.Id)) {
-                errorSink.AddError(new Error(
-                    $"Module '{open.Id}' does not seem to exist.",
-                    open.IdToken
-                ));
+        private void CheckTokens(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
+            foreach (var token in tokens) {
+                if (token is QualifiedToken qt) CheckQualifiedToken(root, context, qt);
+                else if (token is Token t) CheckToken(root, context, t);
             }
         }
 
+        private void CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token) {
+            var rootName = context?.Id ?? root.Id;
+            if (baseTypes.Contains(token.Value)) return;
+            else if (lexicon.ContainsKey(token.Value)) return;
+            else {
+                // check all the other "open" declarations to the get the ast node
+                var _ref = Get(token.Value);
+                if (_ref != null) {
+                    Add(token.Value, _ref);
+                    return;
+                }
+            }
 
-        public TypeChecker(ErrorSink es, Dictionary<string, AstNode> lexicon) {
-            this.lexicon = lexicon;
-            errorSink = es;
+
+            errorSink.AddError(new Error(
+                @$"Could not find type '{token.Value}' on '{rootName}'.",
+                root.IdToken
+            ));
+        }
+
+        private void CheckQualifiedToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, QualifiedToken qt) {
+            // check the namespace
+            if (!cache.Has(qt.Namespace)) {
+                errorSink.AddError(new Error(
+                    $"Module '{qt.Namespace}' does not exist",
+                    Token.Range(qt.NamespaceParts.First(), qt.NamespaceParts.Last())
+                ));
+                return;
+            }
+            else {
+                var module = cache.Get(qt.Namespace).Lexicon;
+                if (!baseTypes.Contains(qt.Id) && !module.ContainsKey(qt.Id)) {
+                    errorSink.AddError(new Error(
+                        @$"Could not find type '{qt.QualifiedName}' in module '{qt.Namespace}'.",
+                        qt.IdToken
+                    ));
+                }
+                else {
+                    Add(qt.QualifiedName, module[qt.Id]);
+                }
+            }
+        }
+
+        private AstNode? Get(string typeName) {
+            AstNode? node = null;
+            foreach (var openNode in compilationResult.References) {
+                var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
+                if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
+                    node = _cr.Lexicon[typeName];
+                    break;
+                }
+            }
+            return node;
+        }
+
+        private void Add(string key, AstNode node) {
+            if (!this.externalLexicon.ContainsKey(key)) {
+                this.externalLexicon.Add(key, node);
+            }
+        }
+
+        public TypeChecker(CompilationCache? cache, CompilationResult cr) {
+            this.cache = cache ?? new CompilationCache(new ErrorSink());
+            this.lexicon = cr.Lexicon;
+            this.compilationResult = cr;
         }
 
         public void Check() {
             // check all the types
             foreach (var (key, node) in lexicon) {
-                switch (node) {
-                    case TypeAliasNode n: CheckTypeAliasNode(n); break;
-                    case RecordNode n: CheckRecordNode(n); break;
-                    case DataNode n: CheckDataNode(n); break;
-                    case ChoiceNode n: CheckChoiceNode(n); break;
-                    case OpenNode n: CheckOpenNode(n); break;
-                    default: break;
-                }
+                CheckNode(node);
             };
+
+            while (externalLexicon.Count > 0) {
+                var temp = new Dictionary<string, AstNode>();
+                foreach (var (key, value) in externalLexicon) {
+                    temp.Add(key, value);
+                }
+                externalLexicon.Clear();
+
+                foreach (var (key, value) in temp) {
+                    lexicon.Add(key, value);
+                }
+            }
         }
 
-
-
+        private void CheckNode(AstNode node) {
+            switch (node) {
+                case TypeAliasNode n: CheckTypeAliasNode(n); break;
+                case RecordNode n: CheckRecordNode(n); break;
+                case DataNode n: CheckDataNode(n); break;
+                case ChoiceNode n: CheckChoiceNode(n); break;
+                case OpenNode n: CheckOpenNode(n); break;
+                default: break;
+            }
+        }
     }
-
-   
 }
 

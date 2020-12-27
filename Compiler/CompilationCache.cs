@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Compiler.Checkers;
+using System.Collections.Generic;
 
 namespace Compiler {
     public class CompilationCache {
-        private static readonly Dictionary<string, CompilationResult> Cache = new Dictionary<string, CompilationResult>();
+        private readonly Dictionary<string, CompilationResult> Cache = new Dictionary<string, CompilationResult>();
+        public ErrorSink ErrorSink { get; }
 
-        public static void Add(string ns, CompilationResult result) {
+        public CompilationCache(ErrorSink errorSink) {
+            this.ErrorSink = errorSink;
+        }
+
+        public void Add(string ns, CompilationResult result) {
             if (Has(ns)) {
                 Cache[ns] = result;
             }
@@ -13,12 +19,22 @@ namespace Compiler {
             }
         }
 
-        public static CompilationResult Get(string ns) {
+        public CompilationResult Get(string ns) {
             return Cache[ns];
         }
 
-        public static bool Has(string ns) {
+        public bool Has(string ns) {
             return Cache.ContainsKey(ns);
+        }
+
+        public int Count() {
+            return Cache.Count;
+        }
+
+        public void TypeCheck() {
+            foreach (var (key, compilationResult) in Cache) {
+                new TypeChecker(this, compilationResult).Check();
+            }
         }
     }
 }

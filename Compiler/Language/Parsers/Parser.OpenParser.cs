@@ -5,7 +5,6 @@ using System.Linq;
 namespace Compiler.Language {
     public partial class Parser
     {
-
         public ExpressionNode ParseOpenDefinition()
         {
             // handle the annotations
@@ -18,7 +17,7 @@ namespace Compiler.Language {
 
             var openDeclaration = Take(SyntaxKind.OpenDeclarationToken);
             var id = Take(SyntaxKind.IdentifierToken);
-
+            Take(SyntaxKind.SemiColonToken);
             var end = Take(SyntaxKind.EndBlock);
 
             return new OpenNode(annotationNode, id);

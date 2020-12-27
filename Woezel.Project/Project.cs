@@ -1,17 +1,13 @@
 ﻿using Compiler;
-using LiteDB;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using Woezel.Transpilers.PlantUML;
 
 namespace Woezel.Project {
     public class Project {
-
+        public readonly CompilationCache Cache = new CompilationCache(new ErrorSink());
         private readonly string _root;
         private readonly string outpath;
         private readonly string dbPath;
@@ -74,8 +70,8 @@ namespace Woezel.Project {
                     if (fInfo.IsCarFile()) {
                         //Task.Run(() => {
                             var code = File.ReadAllText(fInfo.Path);
-                            var compilationResult = new Compiler.Compiler(code).Compile(false);
-                            CompilationCache.Add(fInfo.Namespace, compilationResult);
+                            var compilationResult = new Compiler.Compiler(code).Compile();
+                            Cache.Add(fInfo.Namespace, compilationResult);
                             Console.WriteLine($"Compiled '{fInfo.Namespace}'");
                         //});
                     }
@@ -104,15 +100,14 @@ namespace Woezel.Project {
                 return null;
         }
 
-        public CompilationResult Compile(FInfo fInfo, string code) {
-            var compilationResult = new Compiler.Compiler(code).Compile();
-            CompilationCache.Add(fInfo.Namespace, compilationResult);
-            return compilationResult;
+        public CompilationResult Compile(FInfo fInfo, string code, CompilationCache cache) {
+            //
+            return new Compiler.Compiler(code, fInfo.Namespace, cache).Compile().Check(cache);
         }
 
         public async Task SaveCompilerResult(FInfo fInfo, CompilationResult compilationResult) {
             try {
-                CompilationCache.Add(fInfo.Namespace, compilationResult);
+                Cache.Add(fInfo.Namespace, compilationResult);
 
                 var svgPath = Path.Combine(outpath, fInfo.Namespace + ".svg");
                 var puml = new Transpiler(compilationResult).Transpile();
@@ -124,7 +119,7 @@ namespace Woezel.Project {
         }
 
         public CompilationResult? GetCompilationResult(string ns) {
-            return CompilationCache.Get(ns);
+            return Cache.Get(ns);
         }
 
         public async Task<byte[]> GetSvg(string ns) {

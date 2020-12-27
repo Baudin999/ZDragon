@@ -39,6 +39,7 @@
 
     astStore.subscribe((v: any) => {
         var errors = v?.errorSink?.errors || [];
+        console.log(errors);
         var mappedErrors = errors.map(mapErrorToken);
         console.log(mappedErrors);
         markers.set(mappedErrors);

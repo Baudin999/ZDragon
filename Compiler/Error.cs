@@ -15,5 +15,9 @@ namespace Compiler {
             this.Message = message;
             this.SourceSegment = sourceSegment;
         }
+
+        public override string ToString() {
+            return this.Message;
+        }
     }
 }

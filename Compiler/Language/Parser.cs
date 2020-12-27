@@ -47,10 +47,10 @@ namespace Compiler.Language {
             }
             return c;
         }
-        private IEnumerable<Token> TakeWhile(SyntaxKind kind) {
+        private IEnumerable<Token?> TakeWhile(SyntaxKind kind) {
             while (Current != null && Current?.Kind == kind) yield return Take();
         }
-        private IEnumerable<Token> TakeWhile(Predicate<Token> predicate) {
+        private IEnumerable<Token?> TakeWhile(Predicate<Token> predicate) {
             while (Current != null && predicate(Current)) yield return Take();
         }
         private IEnumerable<Token> TakeBefore(SyntaxKind kind) {

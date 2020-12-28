@@ -79,7 +79,7 @@ namespace Lexer {
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
             Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
-            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Literal);
         }
 
 
@@ -98,7 +98,7 @@ namespace Lexer {
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
             Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
-            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Literal);
         }
 
 
@@ -118,7 +118,7 @@ Peter";
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
             Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
-            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Markdown);
+            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Literal);
         }
 
         [Fact]
@@ -139,7 +139,7 @@ add x y => x + y;
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
             Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
-            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Markdown);
+            Assert.Equal(code.Trim(), ((MarkdownNode)compilerResult.Ast[0]).Content);
         }
 
         [Fact(DisplayName = "Lex - String Literal")]
@@ -156,7 +156,7 @@ add x y => x + y;
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
             Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
-            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Literal);
         }
 
         [Fact(DisplayName = "Lex String - Multiline")]
@@ -174,7 +174,7 @@ Pan""";
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
             Assert.Equal(ContextType.MarkdownDeclaration, compilerResult.Tokens.First().Context);
-            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Markdown);
+            Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Literal);
         }
 
 

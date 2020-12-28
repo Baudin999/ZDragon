@@ -19,8 +19,20 @@ namespace Compiler.Symbols {
                     tokens.Add(Take());
                 }
             }
+
+            
             
             return new TokenGroup(ContextType.MarkdownDeclaration, tokens);
+        }
+
+
+        private TokenGroup TokenizeChapter() {
+            var tokens = new List<Token?>();
+            while (Current?.Kind != SyntaxKind.NewLineToken && Current != null) {
+                tokens.Add(Take());
+            }
+
+            return new TokenGroup(ContextType.MarkdownChapterDeclaration, tokens);
         }
     }
 }

@@ -3640,13 +3640,13 @@ var woezel = (function () {
     			div2 = element("div");
     			div2.textContent = "footer";
     			attr_dev(div0, "class", "header svelte-whjbup");
-    			add_location(div0, file_1$1, 85, 4, 2742);
+    			add_location(div0, file_1$1, 84, 4, 2716);
     			attr_dev(div1, "class", "editor svelte-whjbup");
-    			add_location(div1, file_1$1, 89, 4, 2845);
+    			add_location(div1, file_1$1, 88, 4, 2819);
     			attr_dev(div2, "class", "footer svelte-whjbup");
-    			add_location(div2, file_1$1, 93, 4, 2955);
+    			add_location(div2, file_1$1, 92, 4, 2929);
     			attr_dev(div3, "class", "container svelte-whjbup");
-    			add_location(div3, file_1$1, 84, 0, 2713);
+    			add_location(div3, file_1$1, 83, 0, 2687);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3776,7 +3776,6 @@ var woezel = (function () {
     		? void 0
     		: _a.errors) || [];
 
-    		console.log(errors);
     		var mappedErrors = errors.map(mapErrorToken);
     		console.log(mappedErrors);
     		markers.set(mappedErrors);

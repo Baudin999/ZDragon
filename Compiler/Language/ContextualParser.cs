@@ -34,6 +34,10 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.MarkupDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseMarkup();
                 }
+                else if (tokenBlock.Context == ContextType.MarkdownChapterDeclaration) {
+                    var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());
+                    yield return new MarkdownChapterNode(sourceSection, tokenBlock.Text);
+                }
                 else if (tokenBlock.Context == ContextType.MarkdownDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());
                     yield return new MarkdownNode(tokenBlock.Text, sourceSection);

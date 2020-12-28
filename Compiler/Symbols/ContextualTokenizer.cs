@@ -100,6 +100,9 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                 }
+                else if (Current?.Kind == SyntaxKind.HashToken) {
+                    yield return TokenizeChapter();
+                }
                 else {
                     // We are probably in a markdown block and will interpert it like so...
                     yield return TokenizeMarkdown();
@@ -116,7 +119,10 @@ namespace Compiler.Symbols {
         RecordDeclaration,
         DataDeclaration,
         FunctionDeclaration,
+        
         MarkdownDeclaration,
+        MarkdownChapterDeclaration,
+
         VariableDef,
         MarkupDeclaration,
         ChoiceDeclaration

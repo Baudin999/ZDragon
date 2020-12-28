@@ -1,11 +1,13 @@
 ﻿using Compiler.Symbols;
 
 namespace Compiler.Language.Nodes {
-    public class MarkdownNode : AstNode {
-        public string Markdown { get; }
+    public class MarkdownNode : AstNode, IDocumentNode {
+        public string Content { get; }
+        public string Literal { get; }
 
         public MarkdownNode(string markdown, ISourceSegment sourceSegment) : base(sourceSegment) {
-            this.Markdown = markdown.Trim();
+            this.Content = markdown.Trim();
+            this.Literal = markdown;
         }
 
     }

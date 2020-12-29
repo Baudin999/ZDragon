@@ -32,6 +32,7 @@ namespace Compiler {
         }
 
         public void TypeCheck() {
+            ErrorSink.Reset();
             foreach (var (key, compilationResult) in Cache) {
                 new TypeChecker(this, compilationResult).Check();
             }

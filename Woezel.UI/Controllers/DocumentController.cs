@@ -3,8 +3,6 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
 using System.Threading.Tasks;
-using Woezel.Project;
-using Woezel.Transpilers.PlantUML;
 
 namespace Woezel.UI.Controllers {
 
@@ -41,6 +39,9 @@ namespace Woezel.UI.Controllers {
                     // First we save the document
                     await Program.Project.SaveFile(body.Path, body.Code);
 
+                    // reset the cache
+                    Program.Project.Cache.ErrorSink.Reset();
+                    
                     // compile the result
                     var compilerResult = Program.Project.Compile(fInfo, body.Code, Program.Project.Cache);
                     _ = Program.Project.SaveCompilerResult(fInfo, compilerResult);

@@ -58,28 +58,6 @@ button.warning:hover {
 .mermaid > svg {
   text-align: center;
 }
-table.table--glossary {
-  border-collapse: collapse;
-}
-table.table--glossary td,
-table.table--glossary th {
-  padding: 1rem;
-  text-align: left;
-}
-table.table--glossary td:last-child,
-table.table--glossary th:last-child {
-  padding-right: 4rem;
-}
-table.table--glossary td {
-  border-bottom: 1px solid lightgray;
-}
-table.table--glossary thead {
-  background: #fa6003;
-}
-table.table--glossary thead th {
-  font-weight: normal;
-  color: #ffffff;
-}
 /* FOMRS */
 .search,
 input,
@@ -185,6 +163,28 @@ body {
 }
 .fade-in {
   opacity: 1;
+}
+table.table--glossary {
+  border-collapse: collapse;
+}
+table.table--glossary td,
+table.table--glossary th {
+  padding: 1rem;
+  text-align: left;
+}
+table.table--glossary td:last-child,
+table.table--glossary th:last-child {
+  padding-right: 4rem;
+}
+table.table--glossary td {
+  border-bottom: 1px solid lightgray;
+}
+table.table--glossary thead {
+  background: #fa6003;
+}
+table.table--glossary thead th {
+  font-weight: normal;
+  color: #ffffff;
 }
 
 .file-explorer {

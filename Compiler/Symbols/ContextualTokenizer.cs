@@ -33,6 +33,11 @@ namespace Compiler.Symbols {
             }
         }
 
+        private bool IsEndBlock() {
+            if (Current == null) return true;
+            return Current?.Kind == SyntaxKind.NewLineToken && (Next == null || Next?.Kind != SyntaxKind.IndentToken);
+        }
+
         public ContextualTokenizer(List<Token> tokens, ErrorSink errorSink) {
             this.Tokens = tokens;
             this.ErrorSink = errorSink;
@@ -94,6 +99,9 @@ namespace Compiler.Symbols {
                     yield return TokenizeMarkupDefinition();
                     annotations = new List<Token>();
                 }
+                else if (Current?.Kind == SyntaxKind.PercentageToken) {
+                    yield return TokenizeDirective();
+                }
                 else if (Current?.Kind == SyntaxKind.AmpersandToken) {
                     annotations.Add(ParseAnnotation());
                 }
@@ -118,13 +126,14 @@ namespace Compiler.Symbols {
         TypeDeclaration,
         RecordDeclaration,
         DataDeclaration,
+        ChoiceDeclaration,
         FunctionDeclaration,
         
         MarkdownDeclaration,
         MarkdownChapterDeclaration,
 
+        DirectiveDeclaration,
         VariableDef,
         MarkupDeclaration,
-        ChoiceDeclaration
     }
 }

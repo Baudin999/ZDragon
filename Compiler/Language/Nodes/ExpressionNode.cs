@@ -23,6 +23,7 @@ namespace Compiler.Language.Nodes {
         TypeApplicationExpression,
         GenericParameterExpression,
         MarkupExpression,
+        DirectiveExpression,
 
         StartExpressionGroup,
 

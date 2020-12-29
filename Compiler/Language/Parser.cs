@@ -48,7 +48,9 @@ namespace Compiler.Language {
             return c;
         }
         private IEnumerable<Token?> TakeWhile(SyntaxKind kind) {
-            while (Current != null && Current?.Kind == kind) yield return Take();
+            var tokens = new List<Token>();
+            while (Current != null && Current?.Kind == kind) tokens.Add(Take());
+            return tokens;
         }
         private IEnumerable<Token?> TakeWhile(Predicate<Token> predicate) {
             while (Current != null && predicate(Current)) yield return Take();

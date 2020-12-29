@@ -210,6 +210,12 @@ namespace Compiler.Symbols {
             return new Token(this.Value, this.Kind, this, this.IndentLevel);
         }
 
+        public static Token EndBlock {
+            get {
+                return new Token("", SyntaxKind.EndBlock, Token.DefaultSourceSegment());
+            }
+        }
+
 
     }
 }

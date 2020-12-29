@@ -3,10 +3,10 @@ using System.Linq;
 using Xunit;
 
 namespace Markdown {
-    public class Chapter {
-        [Fact(DisplayName = "Markdown - Chapter Literal")]
+    public class Directives {
+        [Fact(DisplayName = "Markdown - Directive")]
         public void TwoWords() {
-            var code = @"# Chapter One";
+            var code = @"% version: 0.0.1";
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile().Check();
 
@@ -14,11 +14,12 @@ namespace Markdown {
             Assert.Single(compilerResult.Ast);
             Assert.Empty(compilerResult.Errors);
 
-            var chapterOne = compilerResult.Document.First();
-            Assert.IsType<MarkdownChapterNode>(chapterOne);
+            var directive = (DirectiveNode)compilerResult.Ast.First();
+            Assert.NotNull(directive);
+            Assert.Equal("version", directive.Id);
+            Assert.Equal("0.0.1", directive.Literal);
 
-            Assert.Equal("Chapter One", chapterOne.Content);
+
         }
     }
 }
- 

@@ -6000,28 +6000,10 @@ var woezel = (function () {
     const tokenizer = {
         brackets: [{ open: "{*", close: "*}", token: "delimiter.bracket" }],
         keywords: [
-            "type",
             "record",
             "choice",
             "data",
             "open",
-            "view",
-            "process",
-            "database",
-            "extends",
-            "extend",
-            "service",
-            "include",
-            "error",
-            "event",
-            "operation",
-            "pluck",
-            "image",
-            "chart",
-            "task",
-            "roadmap",
-            "lane",
-            "column",
         ],
         baseTypes: [
             "String",
@@ -6039,6 +6021,7 @@ var woezel = (function () {
                 { include: "@chapter" },
                 { include: "@annotation" },
                 { include: "@directive" },
+                { include: "@directive_init" },
                 { include: "common" }
             ],
             qualified: [
@@ -6048,7 +6031,11 @@ var woezel = (function () {
             ],
             chapter: [[/#.*/, "chapter"]],
             annotation: [[/@.*/, "annotation"]],
-            directive: [[/(%)(.*)(:)(.*)/, ["number", "annotation", "number", "word"]]],
+            directive: [
+                [/(%)([^:]*)(:)(.*)/, ["number", "annotation", "number", "word"]],
+                [/([\t\s{4}])([^:]*)(:)([^:]*)/, ["word", "annotation", "number", "word"]]
+            ],
+            directive_init: [[/(%)(.*)/, ["number", "annotation"]]],
             identifier: [
                 [
                     /[A-Z][a-zA-Z0-9_-]*/,
@@ -6067,26 +6054,16 @@ var woezel = (function () {
             ],
             whitespace: [[/[ \t\v\f\r\n]+/, ""]],
             carLang: [
-                [/(@digits)n?/, "number"],
-                [/"/, { token: 'string.quote', next: '@litstring' }],
-                [/\sif\s/, "keyword"],
-                [/\selseif\s/, "keyword"],
-                [/\selse\s*$/, "keyword"],
-                [/\sendif\s*$/, "keyword"],
-                [/\swhile\s/, "keyword"],
-                [/\sendwhile\*$s/, "keyword"],
-                [/\sas\s/, "keyword"],
-                [/\sin\s/, "keyword"],
-                [/\stype\s/, "keyword"],
-                [/(extends)( [A-Z])/, ["keyword", "nothing"]],
-                [/\/\/.*$/, "comment"],
+                [/([A-Z]\w*)( +)(extends)/, ["type.identifier", "nothing", { token: "keyword", next: "@pop" }]],
+                [/([A-Z]\w*)/, "type.identifier", "@pop"],
+                [/([\t\s{4}])/, "nothing"]
             ],
             common: [
                 [
-                    /^.[a-z$][\w$]*/,
+                    /[a-z][^ ]*/,
                     {
                         cases: {
-                            "@keywords": { token: "keyword", next: "@qualified" }
+                            "@keywords": { token: "keyword", next: "@carLang" }
                         }
                     }
                 ]

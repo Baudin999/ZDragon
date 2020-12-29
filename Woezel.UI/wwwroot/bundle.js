@@ -6005,68 +6005,39 @@ var woezel = (function () {
             "data",
             "open",
         ],
-        baseTypes: [
-            "String",
-            "Date",
-            "DateTime",
-            "Time",
-            "Number",
-            "Boolean",
-            "Decimal"
-        ],
         autoClosingPairs: [{ open: "{*", close: "*}" }],
         digits: /\d+(_+\d+)*/,
         tokenizer: {
             root: [
-                { include: "@chapter" },
-                { include: "@annotation" },
-                { include: "@directive" },
-                { include: "@directive_init" },
-                { include: "common" }
-            ],
-            qualified: [
-                { include: "@whitespace" },
-                { include: "@identifier" },
-                ["", "", "@pop"]
+                { include: "chapter" },
+                { include: "annotation" },
+                { include: "directive" },
+                { include: "lang" },
             ],
             chapter: [[/#.*/, "chapter"]],
             annotation: [[/@.*/, "annotation"]],
             directive: [
-                [/(%)([^:]*)(:)(.*)/, ["number", "annotation", "number", "word"]],
+                [/(%)([^:]*)(:)/, ["number", "annotation", "number"], "@directive_inner.$1"],
+                [/(%)([^:]*)/, ["number", "annotation"]],
+            ],
+            directive_inner: [
+                [/.+/, "number", "@pop"],
                 [/([\t\s{4}])([^:]*)(:)([^:]*)/, ["word", "annotation", "number", "word"]]
             ],
-            directive_init: [[/(%)(.*)/, ["number", "annotation"]]],
-            identifier: [
-                [
-                    /[A-Z][a-zA-Z0-9_-]*/,
-                    {
-                        cases: {
-                            "@baseTypes": { token: "baseyype" },
-                            "@default": { token: "identifier" }
-                        }
-                    },
-                    [/\./, "delimiter"]
-                ]
+            lang: [
+                [/([a-z][^ ]*)/, [
+                    { cases: { "record": { token: "keyword", next: "@record" } } }]]
             ],
-            litstring: [
-                [/[^"]+/, 'string'],
-                [/"/, { token: 'string.quote', next: '@pop' }]
+            record: [
+                [/extends/, "keyword"],
+                [/=/, "number", "@field"],
+                { include: "lang" }
             ],
-            whitespace: [[/[ \t\v\f\r\n]+/, ""]],
-            carLang: [
-                [/([A-Z]\w*)( +)(extends)/, ["type.identifier", "nothing", { token: "keyword", next: "@pop" }]],
-                [/([A-Z]\w*)/, "type.identifier", "@pop"],
-                [/([\t\s{4}])/, "nothing"]
-            ],
-            common: [
-                [
-                    /[a-z][^ ]*/,
-                    {
-                        cases: {
-                            "@keywords": { token: "keyword", next: "@carLang" }
-                        }
-                    }
-                ]
+            field: [
+                [/([\t\s{4}])([^:]*)(:)([^;]*)/, ["nothing", "nothing", "number", "nothing"]],
+                [/(& *)([^ ]+)/, ["number", "annotation"]],
+                [';', 'number', "@field"],
+                { include: "lang" }
             ]
         }
     };

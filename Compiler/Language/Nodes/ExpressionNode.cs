@@ -46,6 +46,7 @@ namespace Compiler.Language.Nodes {
         ChoiceExpression,
         ChoiceFieldExpression,
 
-        OpenExpression
+        OpenExpression,
+        ComponentExpression
     }
 }

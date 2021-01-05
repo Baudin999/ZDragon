@@ -33,9 +33,24 @@ namespace Compiler.Symbols {
             }
         }
 
-        private bool IsEndBlock() {
+        private bool IsEndBlock(int depth = 0) {
             if (Current == null) return true;
-            return Current?.Kind == SyntaxKind.NewLineToken && (Next == null || Next?.Kind != SyntaxKind.IndentToken);
+            if (depth == 0) {
+                return Current?.Kind == SyntaxKind.NewLineToken && (Next == null || Next?.Kind != SyntaxKind.IndentToken);
+            }
+            else if (depth > 0) {
+                if (Current?.Kind != SyntaxKind.NewLineToken) return false;
+                if (index + (depth + 1) > max) return false;
+
+                var valid = Tokens[index + depth + 1].Kind != SyntaxKind.IndentToken;
+                for (int i = 1; i < depth + 1; ++i) {
+                    valid = Tokens[index + i].Kind == SyntaxKind.IndentToken && valid;
+                }
+                return valid;
+            }
+            else {
+                return false;
+            }
         }
 
         public ContextualTokenizer(List<Token> tokens, ErrorSink errorSink) {
@@ -111,6 +126,10 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.HashToken) {
                     yield return TokenizeChapter();
                 }
+                else if (Current?.Kind == SyntaxKind.ComponentDeclarationToken) {
+                    //
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.ComponentDeclaration);
+                }
                 else {
                     // We are probably in a markdown block and will interpert it like so...
                     yield return TokenizeMarkdown();
@@ -128,7 +147,10 @@ namespace Compiler.Symbols {
         DataDeclaration,
         ChoiceDeclaration,
         FunctionDeclaration,
-        
+
+        ComponentDeclaration,
+
+
         MarkdownDeclaration,
         MarkdownChapterDeclaration,
 

@@ -84,12 +84,13 @@ namespace Compiler {
                 { "data", SyntaxKind.DataDeclarationToken },
                 { "choice", SyntaxKind.ChoiceDeclarationToken },
                 { "open", SyntaxKind.OpenDeclarationToken },
+                { "component", SyntaxKind.ComponentDeclarationToken },
                 { "if", SyntaxKind.IfToken },
                 { "else", SyntaxKind.ElseToken },
                 { "where", SyntaxKind.WhereToken },
                 { "let", SyntaxKind.LetToken },
                 { "extends", SyntaxKind.ExtendsToken },
-                { "end", SyntaxKind.EndKeywordToken },
+                { "end", SyntaxKind.EndKeywordToken }
             };
 
         public static List<int> Letters = new List<int> {
@@ -255,7 +256,12 @@ namespace Compiler {
         AnnotationToken,
 
         // Markup
-        CloseMarkupElement
+        CloseMarkupElement,
+
+        ComponentDeclarationToken,
+        AttributeFieldStarted,
+        AttributeFieldEnded,
+        None
     }
 
     public enum CharacterCodes {

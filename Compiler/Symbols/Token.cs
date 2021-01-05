@@ -58,8 +58,15 @@ namespace Compiler.Symbols {
             return this;
         }
 
-        [System.Text.Json.Serialization.JsonConstructor]
-        public Token() { }
+        public Token() {
+            this.Value = "";
+            this.Kind = SyntaxKind.None;
+        }
+
+        public Token(SyntaxKind kind) {
+            this.Value = "";
+            this.Kind = kind;
+        }
 
         public Token(string value, SyntaxKind kind, int indexStart, int indexEnd, int columnStart, int columnEnd, int line, int indentLevel = 0) {
             this.Value = value;

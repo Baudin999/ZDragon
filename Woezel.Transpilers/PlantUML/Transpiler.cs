@@ -3,8 +3,6 @@ using Compiler.Language.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Woezel.Transpilers.PlantUML {
     public class Transpiler {
@@ -84,7 +82,7 @@ enum {node.Id} {{
             return "!define DARKBLUE\r\n" +
                 "!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml \r\n" +
                 String.Join("\r\n", types) + 
-                "\r\n" + 
+                "\r\n\r\n" + 
                 string.Join("\r\n", relations);
         }
     }

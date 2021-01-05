@@ -1,4 +1,5 @@
-﻿using Compiler.Symbols;
+﻿using Compiler.Language.Nodes;
+using Compiler.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +64,7 @@ namespace Compiler.Language {
                 i--;
             }
         }
+
         private IEnumerable<Token> TakeBefore(Predicate<Token> when) {
             var i = -1;
             var token = TokenAt(i);

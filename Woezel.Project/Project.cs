@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Woezel.Transpilers.Html;
 using Woezel.Transpilers.PlantUML;
 
 namespace Woezel.Project {
@@ -86,6 +87,11 @@ namespace Woezel.Project {
             }
 
             return new DInfo(dInfo.Name, path, files, directories);
+        }
+
+        public string GetHtml(string ns) {
+            var compilationResult = Cache.Get(ns);
+            return new HtmlTranspiler().Go(Cache, compilationResult);
         }
 
         public async Task<string> SaveFile(string path, string text) {

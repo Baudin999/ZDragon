@@ -27,19 +27,40 @@ export const tokenizer = {
         ],
         lang: [
             [/([a-z][^ ]*)/, [
-                { cases: { "record": { token: "keyword", next: "@record" } } }]]
+                {
+                    cases: {
+                        "record": { token: "keyword", next: "@record" },
+                        "choice": { token: "keyword", next: "@choice" },
+                    }
+                }]]
         ],
         record: [
             [/extends/, "keyword"],
             [/=/, "number", "@field"],
             { include: "lang" }
         ],
+        choice: [
+            [/(|)\w*(")/, ["number", { token: 'string.quote', bracket: '@open', next: '@string' }]],
+            { include: "lang" }
+        ],
         field: [
-            [/([\t\s{4}])([^:]*)(:)([^;]*)/, ["nothing", "nothing", "number", "nothing"]],
-            [/(& *)([^ ]+)/, ["number", "annotation"]],
+            [/\d+/, "number"],
+            [/"/, { token: 'string.quote', bracket: '@open', next: '@string' }],
+            [/([\t\s{4}])([^:]*)(:)([^;]+)(;)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }, "number"], "@field"],
+            [/([\t\s{4}])([^:]*)(:)([^;]+)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }], "@field"],
+            [/( *)(&)( *)([^ ]+)/, ["", "number", "", "annotation"]],
             [';', 'number', "@field"],
             { include: "lang" }
-        ]
+        ],
+        decode_type: [
+            [/(List)([^;]*)(;)/, ["type.identifier", "", "number"]],
+            [/(Maybe)([^;]*)(;)/, ["type.identifier", "", "number"], "@field"],
+            { include: "lang" }
+        ],
+        string: [
+            [/[^\\"]+/, 'string'],
+            [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }]
+        ],
     }
 };
 

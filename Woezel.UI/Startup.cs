@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Converters;
 using System.Threading.Tasks; 
 
 namespace Woezel.UI {
@@ -20,7 +21,10 @@ namespace Woezel.UI {
             services.AddControllersWithViews();
             services
                 .AddControllers()
-                .AddNewtonsoftJson();
+                .AddNewtonsoftJson(options => {
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

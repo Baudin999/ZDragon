@@ -25,7 +25,25 @@ namespace Compiler.Language {
                                 .OfType<Token>()
                                 .ToList();
 
-                    attributes.Add(new AttributeNode(fieldName, fieldDescription));
+                    List<List<Token>> items = new List<List<Token>>();
+                    if (fieldDescription.FirstOrDefault()?.Kind == SyntaxKind.MinusToken ||
+                        (fieldDescription.Count > 1 && fieldDescription[1]?.Kind == SyntaxKind.MinusToken)) {
+                        // we now assume taht we're in a list definition
+
+                        List<Token>? currentItem = null;
+                        foreach (var item in fieldDescription) {
+                            if (item.Kind == SyntaxKind.MinusToken) {
+                                if (currentItem != null) items.Add(currentItem);
+                                currentItem = new List<Token>();
+                            }
+                            else {
+                                if (currentItem != null) currentItem.Add(item);
+                            }
+                        }
+                        if (currentItem != null) items.Add(currentItem);
+                    }
+
+                    attributes.Add(new AttributeNode(fieldName, fieldDescription, items));
 
                     end = Take(); // attribute field ended
                 }

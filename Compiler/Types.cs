@@ -85,6 +85,7 @@ namespace Compiler {
                 { "choice", SyntaxKind.ChoiceDeclarationToken },
                 { "open", SyntaxKind.OpenDeclarationToken },
                 { "component", SyntaxKind.ComponentDeclarationToken },
+                { "endpoint", SyntaxKind.EndPointDeclarationToken },
                 { "if", SyntaxKind.IfToken },
                 { "else", SyntaxKind.ElseToken },
                 { "where", SyntaxKind.WhereToken },
@@ -258,9 +259,14 @@ namespace Compiler {
         // Markup
         CloseMarkupElement,
 
+
+        // Architecture definitions
         ComponentDeclarationToken,
+        EndPointDeclarationToken,
         AttributeFieldStarted,
         AttributeFieldEnded,
+
+
         None
     }
 

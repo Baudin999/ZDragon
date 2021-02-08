@@ -40,6 +40,9 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.ComponentDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseComponent();
                 }
+                else if (tokenBlock.Context == ContextType.EndPointDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseEndPoint();
+                }
                 else if (tokenBlock.Context == ContextType.MarkdownChapterDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());
                     yield return new MarkdownChapterNode(sourceSection, tokenBlock.Text);

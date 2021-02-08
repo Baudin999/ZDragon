@@ -130,6 +130,10 @@ namespace Compiler.Symbols {
                     //
                     yield return TokenizeAttributesDefinition(annotations, ContextType.ComponentDeclaration);
                 }
+                else if (Current?.Kind == SyntaxKind.EndPointDeclarationToken) {
+                    //
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.EndPointDeclaration);
+                }
                 else {
                     // We are probably in a markdown block and will interpert it like so...
                     yield return TokenizeMarkdown();
@@ -149,6 +153,7 @@ namespace Compiler.Symbols {
         FunctionDeclaration,
 
         ComponentDeclaration,
+        EndPointDeclaration,
 
 
         MarkdownDeclaration,

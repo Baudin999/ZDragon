@@ -19,7 +19,7 @@ interface {node.Id} {{}}
 ");
         }
         private void TranspileRecordNode(RecordNode node) {
-            var fields = node.Fields.Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}:{string.Join(" ", f.Types)};");
+            var fields = node.Fields.Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}: {string.Join(" ", f.Types)};");
             types.Add($@"
 class {node.Id} {{
     {string.Join("\r\n\t", fields)}
@@ -28,7 +28,11 @@ class {node.Id} {{
 
             foreach (var field in node.Fields) {
                 foreach (var t in field.Types) {
-                    if (!baseTypes.Contains(t)) {
+                    if (t.StartsWith("'")) {
+                        // do nothing 
+                        // we might want to treat generic parameters differently in the future.
+                    }
+                    else if (!baseTypes.Contains(t)) {
                         relations.Add($"{node.Id} -- {t}");
                     }
                 }

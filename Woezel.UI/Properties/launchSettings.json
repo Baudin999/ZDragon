@@ -14,7 +14,6 @@
       "commandLineArgs": "start",
       "workingDirectory": "."
     },
-
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
@@ -24,7 +23,7 @@
     },
     "Woezel.UI": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\TEMP\\002",
+      "commandLineArgs": "D:\\TEMP\\003",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

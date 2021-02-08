@@ -6,7 +6,7 @@ using System.Linq;
 namespace Compiler.Language {
     public partial class Parser {
 
-        internal ExpressionNode ParseComponent() {
+        internal ExpressionNode ParseEndPoint() {
             var start = Take(SyntaxKind.EndPointDeclarationToken);
             var name = Take(SyntaxKind.IdentifierToken);
             Token end = name;
@@ -49,7 +49,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new ComponentNode(Token.Range(start, end), name, attributes);
+            return new EndPointNode(Token.Range(start, end), name, attributes);
         }
     }
 }

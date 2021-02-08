@@ -1,3 +1,9 @@
+<div class="tab-list">
+    <slot />
+</div>
+
+<div class="tab-list--sep" />
+
 <style>
     .tab-list {
         background: white;
@@ -8,8 +14,7 @@
         height: 3rem;
         z-index: 9999;
     }
+    .tab-list--sep {
+        margin-top: 3rem;
+    }
 </style>
-
-<div class="tab-list">
-    <slot />
-</div>

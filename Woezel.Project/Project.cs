@@ -43,6 +43,10 @@ namespace Woezel.Project {
             return p;
         }
 
+        private string getPathByNamespace(string ns) {
+            return $"{_root}/{ns.Replace(".", "/")}.car";
+        }
+ 
 
         public async Task<string> GetTextByNamespace(string ns) {
             if (mapping.ContainsKey(ns)) {
@@ -97,6 +101,13 @@ namespace Woezel.Project {
         public async Task<string> SaveFile(string path, string text) {
             await File.WriteAllTextAsync(path, text);
             return text;
+        }
+
+        public async Task<FInfo> CreateFile(string ns, string text = "") {
+            var path = getPathByNamespace(ns);
+            await File.WriteAllTextAsync(path, text);
+
+            return new FInfo(new FileInfo(path), ns);
         }
 
         public FInfo? GetFileInfo(string ns) {

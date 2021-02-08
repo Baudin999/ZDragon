@@ -101,6 +101,18 @@ Your List definitions seems to have {message} type parameters.
             var rootName = context?.Id ?? root.Id;
             if (baseTypes.Contains(token.Value)) return;
             else if (lexicon.ContainsKey(token.Value)) return;
+            else if (token.Kind == SyntaxKind.GenericParameterToken) {
+                if (root is RecordNode rn) {
+                    if (!rn.GenericParameters.Any(e => e.Value == token.Value)) {
+                        errorSink.AddError(new Error(
+                            $"Undeclared generic parameter \"{token.Value}\" on field '{context?.Id}' of record '{root.Id}'.",
+                            token
+                            ));
+                        return;
+                    }
+                }
+                return;
+            }
             else {
                 // check all the other "open" declarations to the get the ast node
                 var _ref = Get(token.Value);

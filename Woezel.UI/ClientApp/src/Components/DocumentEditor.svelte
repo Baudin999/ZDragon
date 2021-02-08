@@ -20,6 +20,8 @@
         text = value.text;
         markers.set([]);
 
+        console.log(file);
+
         if (file && file.path && file.path.endsWith(".json")) {
             type = "json";
             text = JSON.stringify(JSON.parse(text), null, 4);
@@ -45,6 +47,16 @@
         markers.set(mappedErrors);
     });
 </script>
+
+<div class="container">
+    <div class="header">
+        {file ? file.namespace || file.path : "unknown file"}
+    </div>
+
+    <div class="editor">
+        <Editor {text} {markers} language={type} on:save={onSave} />
+    </div>
+</div>
 
 <style type="less">
     .container {
@@ -78,15 +90,3 @@
         }
     }
 </style>
-
-<div class="container">
-    <div class="header">
-        {file ? file.namespace || file.path : 'unknown file'}
-    </div>
-
-    <div class="editor">
-        <Editor {text} {markers} language={type} on:save={onSave} />
-    </div>
-
-    <div class="footer">footer</div>
-</div>

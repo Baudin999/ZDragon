@@ -373,6 +373,54 @@ record PeterPan extends Person Address =
             Assert.Equal(4, peterPan.Fields.Count);
         }
 
+
+        [Fact(DisplayName = "Records - Generic Field Type Parameters")]
+        public void Records_GenericFieldTypeParameters() {
+            var code = @"
+record Person 'a =
+    FirstName: 'a;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Single(compilerResult.Ast);
+            Assert.Empty(compilerResult.Errors);
+
+        }
+
+        [Fact(DisplayName = "Records - Generic Field: E01")]
+        public void Records_GenericFieldE01() {
+            var code = @"
+record Person 'a =
+    FirstName: 'b;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Single(compilerResult.Ast);
+            Assert.Single(compilerResult.Errors);
+            Assert.Equal("Undeclared generic parameter \"'b\" on field 'FirstName' of record 'Person'.", compilerResult.Errors.First().Message);
+        }
+
+        [Fact(DisplayName = "Records - Generic Field: E02")]
+        public void Records_GenericFieldE02() {
+            var code = @"
+record Person 'a =
+    FirstName: 'b;
+    LastName: 'c;
+    Street: 'd;
+    HouseNumber: 'a;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Single(compilerResult.Ast);
+            Assert.Equal(3, compilerResult.Errors.Count);
+            Assert.Equal("Undeclared generic parameter \"'b\" on field 'FirstName' of record 'Person'.", compilerResult.Errors[0].Message);
+            Assert.Equal("Undeclared generic parameter \"'c\" on field 'LastName' of record 'Person'.", compilerResult.Errors[1].Message);
+            Assert.Equal("Undeclared generic parameter \"'d\" on field 'Street' of record 'Person'.", compilerResult.Errors[2].Message);
+        }
+
         [Fact(DisplayName = "Parser - Spaces in wrong place")]
         public void Parser_SpacesInWrongPlace() {
             var code = @"
@@ -428,7 +476,9 @@ type Phone = String
             
         }
 
-        
+
+
+
 
     }
 }

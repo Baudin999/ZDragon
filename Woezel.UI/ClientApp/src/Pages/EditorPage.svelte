@@ -22,6 +22,55 @@
     });
 </script>
 
+<div class="container">
+    <div class="file-explorer--container">
+        <FileExplorer />
+    </div>
+    <div class="document-editor">
+        <div>
+            <DocumentEditor />
+        </div>
+    </div>
+    <div class="page-viewer">
+        <Tabs>
+            <TabList>
+                <Tab>Image</Tab>
+                <Tab>AST</Tab>
+                <Tab>Document</Tab>
+            </TabList>
+
+            <TabPanel>
+                <Panel>
+                    {#if file}
+                        <!-- <i
+                            class="fa fa-refresh"
+                            on:click={() => (file = file)} /> -->
+                        <img
+                            alt="svg"
+                            src={`/documents/${
+                                file ? file.namespace : "unknown"
+                            }.svg?timestamp=${new Date().getMilliseconds()}`} />
+                    {/if}
+                </Panel>
+            </TabPanel>
+
+            <TabPanel>
+                <Panel
+                    style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
+                    <ASTViewer />
+                </Panel>
+            </TabPanel>
+
+            <TabPanel>
+                <Panel
+                    style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+                    <PageViewer />
+                </Panel>
+            </TabPanel>
+        </Tabs>
+    </div>
+</div>
+
 <style type="less">
     .container {
         height: 100%;
@@ -56,16 +105,14 @@
             max-height: 100%;
             overflow-x: hidden;
             overflow-y: hidden;
-            background-color: lightgray;
+            background-color: white;
         }
     }
     img {
-        margin-top: 4rem;
         max-width: 100%;
         max-height: 100%;
     }
     i {
-        margin-top: 4rem;
         display: block;
         &:hover {
             color: pink;
@@ -73,50 +120,3 @@
         }
     }
 </style>
-
-<div class="container">
-    <div class="file-explorer--container">
-        <FileExplorer />
-    </div>
-    <div class="document-editor">
-        <div>
-            <DocumentEditor />
-        </div>
-    </div>
-    <div class="page-viewer">
-        <Tabs>
-            <TabList>
-                <Tab>Image</Tab>
-                <Tab>AST</Tab>
-                <Tab>Document</Tab>
-            </TabList>
-
-            <TabPanel>
-                <Panel>
-                    {#if file}
-                        <i
-                            class="fa fa-refresh"
-                            on:click={() => (file = file)} />
-                        <img
-                            alt="svg"
-                            src={`/documents/${file ? file.namespace : 'unknown'}.svg?timestamp=${new Date().getMilliseconds()}`} />
-                    {/if}
-                </Panel>
-            </TabPanel>
-
-            <TabPanel>
-                <Panel
-                    style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
-                    <ASTViewer />
-                </Panel>
-            </TabPanel>
-
-            <TabPanel>
-                <Panel
-                    style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
-                    <PageViewer />
-                </Panel>
-            </TabPanel>
-        </Tabs>
-    </div>
-</div>

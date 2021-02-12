@@ -4,8 +4,8 @@ using Xunit;
 
 namespace Architecture {
     public class Component {
-        [Fact(DisplayName = "Component - Simple")]
-        public void Component_Simple() {
+        [Fact(DisplayName = "Component - Simple 001")]
+        public void Component_Simple_001() {
             var code = @"
 component Application001 =
     Name: First Application
@@ -16,6 +16,7 @@ component Application001 =
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile().Check();
 
+            Assert.Empty(compilerResult.Errors);
             Assert.Single(compilerResult.Tokens);
             Assert.IsType<ComponentNode>(compilerResult.Ast.First());
 
@@ -34,6 +35,23 @@ component Application001 =
             Assert.Equal("This is the first appalication As you can see we can add multi-line descriptions to our components.", descriptionAttribute.Value);
         }
 
+        [Fact(DisplayName = "Component - Simple 002")]
+        public void Component_Simple_002() {
+            var code = @"
+component Application001
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Empty(compilerResult.Errors);
+            Assert.Single(compilerResult.Tokens);
+            Assert.IsType<ComponentNode>(compilerResult.Ast.First());
+
+            var componentNode = (ComponentNode)compilerResult.Ast.First();
+            Assert.Equal("Application001", componentNode.Id);
+            Assert.Empty(componentNode.Attributes);
+        }
+
         [Fact(DisplayName = "Component - Number Field")]
         public void Component_NumberField() {
             var code = @"
@@ -45,6 +63,7 @@ component App =
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile().Check();
 
+            Assert.Empty(compilerResult.Errors);
             Assert.Single(compilerResult.Tokens);
             Assert.IsType<ComponentNode>(compilerResult.Ast.First());
 

@@ -105,7 +105,23 @@ Your List definitions seems to have {message} type parameters.
                 if (root is RecordNode rn) {
                     if (!rn.GenericParameters.Any(e => e.Value == token.Value)) {
                         errorSink.AddError(new Error(
+                            ErrorType.GenericParameter_Undefined,
                             $"Undeclared generic parameter \"{token.Value}\" on field '{context?.Id}' of record '{root.Id}'.",
+                            token
+                            ));
+                        return;
+                    }
+                }
+                else if (root is TypeAliasNode tan) {
+                    if (!tan.GenericParameters.Any(e => e.Value == token.Value)) {
+                        errorSink.AddError(new Error(
+                            ErrorType.GenericParameter_Undefined,
+                            @$"Undeclared generic parameter {token.Value} on type alias '{root.Id}'. 
+
+We expect a generic type definition to at least contain {token.Value} as a generic parameter:
+
+type {root.Id} {token.Value} = ...;
+",
                             token
                             ));
                         return;

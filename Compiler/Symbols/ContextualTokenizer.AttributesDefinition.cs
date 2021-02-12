@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler.Symbols {
     internal partial class ContextualTokenizer {
@@ -19,6 +20,9 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                     tokens.Add(new Token(" ", SyntaxKind.WhiteSpaceToken, Token.DefaultSourceSegment()));
+                }
+                else if (Current.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
+                    tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.NextParameterToken, 1));
                 }
                 else if (Current?.Kind == SyntaxKind.IndentToken) {
                     Take();

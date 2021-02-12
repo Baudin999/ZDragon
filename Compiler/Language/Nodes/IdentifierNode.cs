@@ -2,10 +2,11 @@
 
 namespace Compiler.Language.Nodes {
     public class IdentifierNode : ExpressionNode {
-        public Token Id { get; }
+        public Token IdToken { get; }
+        public string Id => IdToken.Value;
 
         public IdentifierNode(ISourceSegment sourceSegment, Token id): base(sourceSegment, ExpressionKind.IdentifierExpression) {
-            this.Id = id;
+            this.IdToken = id;
         }
     }
 }

@@ -19,9 +19,5 @@ namespace Compiler.Language {
 
             return left;
         }
-
-       
-
-
     }
 }

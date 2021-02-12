@@ -3,10 +3,11 @@
 namespace Compiler.Language.Nodes {
     public class GenericParameterNode : ExpressionNode {
 
-        public Token Id { get; }
+        public Token IdToken { get; }
+        public string Id => IdToken.Value;
 
         public GenericParameterNode(Token genericParameter): base(genericParameter, ExpressionKind.GenericParameterExpression) {
-            this.Id = genericParameter;
+            this.IdToken = genericParameter;
         }
     }
 }

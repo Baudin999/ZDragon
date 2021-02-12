@@ -7,7 +7,7 @@ namespace Compiler.Language {
     public partial class Parser {
 
         internal ExpressionNode ParseComponent() {
-            var start = Take(SyntaxKind.EndPointDeclarationToken);
+            var start = Take(SyntaxKind.ComponentDeclarationToken);
             var name = Take(SyntaxKind.IdentifierToken);
             Token end = name;
 

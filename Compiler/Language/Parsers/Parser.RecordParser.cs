@@ -33,10 +33,12 @@ namespace Compiler.Language {
                 return new RecordNode(annotationNode, id, genericParameters, extensions, new List<RecordFieldNode>());
             }
 
-            // = tokens
+            // '=' token
             var equals = Take(SyntaxKind.EqualsToken);
             var fields = new List<RecordFieldNode>();
             if (equals != null) {
+
+                // parse record fields
                 while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
 
                     AnnotationNode? annotation = null;

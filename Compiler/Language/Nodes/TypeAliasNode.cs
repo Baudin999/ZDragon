@@ -5,7 +5,7 @@ namespace Compiler.Language.Nodes {
     public class TypeAliasNode : ExpressionNode, IIdentifierExpressionNode {
         public Token IdToken { get; private set; }
         public string Id => IdToken.Value;
-        public IEnumerable<Token> GenericParameters { get; private set; }
+        public List<Token> GenericParameters { get; private set; }
         public ExpressionNode Body { get; private set; }
         public AnnotationNode Annotation { get; }
         public List<RestrictionNode> Restrictions { get; }
@@ -14,7 +14,7 @@ namespace Compiler.Language.Nodes {
                 ISourceSegment sourceSegment, 
                 AnnotationNode annotationNode, 
                 Token id, 
-                IEnumerable<Token> genericParameters, 
+                List<Token> genericParameters, 
                 ExpressionNode body, 
                 List<RestrictionNode>? restrictions = null) : base(sourceSegment, ExpressionKind.AliasExpression) {
 

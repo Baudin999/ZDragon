@@ -4,6 +4,7 @@ namespace Compiler {
     public class Error {
         public string Message { get; }
         public ISourceSegment SourceSegment { get; }
+        public ErrorType ErrorType { get; } = ErrorType.GenericError;
 
 
         public Error(string message) {
@@ -16,8 +17,22 @@ namespace Compiler {
             this.SourceSegment = sourceSegment;
         }
 
+        public Error(ErrorType errorType, string message, ISourceSegment sourceSegment) {
+            this.ErrorType = errorType;
+            this.Message = message;
+            this.SourceSegment = sourceSegment;
+        }
+
         public override string ToString() {
             return this.Message;
         }
+    }
+
+    public enum ErrorType {
+        GenericParameter,
+
+        GenericError,
+        GenericParameter_Unused,
+        GenericParameter_Undefined
     }
 }

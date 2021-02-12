@@ -11,6 +11,15 @@ namespace Compiler.Language {
             var name = Take(SyntaxKind.IdentifierToken);
             Token end = name;
 
+
+            ExpressionNode? expression = null;
+            if (Current?.Kind == SyntaxKind.ColonToken && Next?.Kind == SyntaxKind.ColonToken) {
+                Take(); // first colon
+                Take(); // second colon
+
+                expression = ParseExpression();
+            }
+
             var attributes = new List<AttributeNode>();
             if (Current?.Kind == SyntaxKind.EqualsToken) {
                 Take(SyntaxKind.EqualsToken);
@@ -49,7 +58,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new EndPointNode(Token.Range(start, end), name, attributes);
+            return new EndPointNode(Token.Range(start, end), name, attributes, expression);
         }
     }
 }

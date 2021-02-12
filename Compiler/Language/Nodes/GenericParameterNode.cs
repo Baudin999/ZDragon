@@ -10,7 +10,7 @@ namespace Compiler.Language.Nodes {
         }
 
         public ParameterNode(IdentifierNode idNode): base(idNode.Segment, ExpressionKind.ParameterExpression) {
-            this.Id = idNode.Id;
+            this.Id = idNode.IdToken;
         }
     }
 }

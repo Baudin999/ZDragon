@@ -12,14 +12,36 @@ namespace Expressions {
 record Person
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
+            Assert.Empty(compilerResult.Errors);
             Assert.Single(compilerResult.Tokens);
             Assert.IsType<RecordNode>(compilerResult.Ast.First());
             RecordNode record = (RecordNode)compilerResult.Ast.First();
             Assert.Equal("Person", record.Id);
             Assert.Equal("", record.Description);
             Assert.Empty(record.Fields);
+        }
+
+        [Fact(DisplayName = "Records - Capital vs Lower Case")]
+        public void Records_OnlyName_CvsL() {
+            var code = @"
+record person =
+    name: String;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Empty(compilerResult.Errors);
+            Assert.Single(compilerResult.Tokens);
+            Assert.IsType<RecordNode>(compilerResult.Ast.First());
+            RecordNode record = (RecordNode)compilerResult.Ast.First();
+            Assert.Equal("person", record.Id);
+            Assert.Equal("", record.Description);
+            Assert.Single(record.Fields);
+
+            var name = record.Fields[0];
+            Assert.Equal("name", name.Id);
         }
 
         [Fact(DisplayName = "Records - Two types names only")]
@@ -29,7 +51,9 @@ record Person
 record Address
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Empty(compilerResult.Errors);
 
             Assert.Equal(2, compilerResult.Tokens.Count());
             Assert.Equal(2, compilerResult.Ast.Count());
@@ -49,7 +73,9 @@ record Address
 record Person
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Empty(compilerResult.Errors);
 
             Assert.Single(compilerResult.Tokens);
             Assert.IsType<RecordNode>(compilerResult.Ast.First());
@@ -70,7 +96,7 @@ record Person =
     Age: number;
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Tokens);
             Assert.IsType<RecordNode>(compilerResult.Ast.First());
@@ -105,7 +131,7 @@ record Address =
     HouseNumber: number;
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Equal(2, compilerResult.Tokens.Count());
             Assert.Equal(2, compilerResult.Ast.Count());
@@ -141,7 +167,7 @@ record Person =
         & default ""Peter Pan"";
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
@@ -182,7 +208,7 @@ record Person 'a 'b extends Mammal =
 
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Ast);
@@ -267,7 +293,7 @@ record Person =
 ";
             var cache = new CompilationCache(new ErrorSink());
             var compiler = new Compiler.Compiler(code, "Names", cache);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             cache.TypeCheck();
 
@@ -284,7 +310,7 @@ type FirstName = String;
 ";
             var cache = new CompilationCache(new ErrorSink());
             var compiler = new Compiler.Compiler(code, "Names", cache);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             cache.TypeCheck();
 
@@ -297,14 +323,14 @@ type FirstName = String;
             var errorSink = new ErrorSink();
             var cache = new CompilationCache(errorSink);
 
-            new Compiler.Compiler("record Address;", "Address", cache).Compile();
-            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile();
+            new Compiler.Compiler("record Address;", "Address", cache).Compile().Check();
+            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile().Check();
             var code = @"
 open Names;
 record Person =
     FirstName: Names.FirstName;
 ";
-            new Compiler.Compiler(code, "Person", cache).Compile();
+            new Compiler.Compiler(code, "Person", cache).Compile().Check();
             var compilerResult = cache.Get("Person");
 
             cache.TypeCheck();
@@ -319,8 +345,8 @@ record Person =
             var errorSink = new ErrorSink();
             var cache = new CompilationCache(errorSink);
 
-            new Compiler.Compiler("record Address;", "Address", cache).Compile();
-            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile();
+            new Compiler.Compiler("record Address;", "Address", cache).Compile().Check();
+            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile().Check();
             var code = @"
 open Names;
 record Person =
@@ -328,7 +354,7 @@ record Person =
     InvoiceAddress: Address.Address;
     DeliveryAddress: Address.Address;
 ";
-            new Compiler.Compiler(code, "Person", cache).Compile();
+            new Compiler.Compiler(code, "Person", cache).Compile().Check();
             var compilerResult = cache.Get("Person");
 
             cache.TypeCheck();

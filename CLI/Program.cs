@@ -6,11 +6,24 @@ namespace CLI {
     {
         static void Main(string[] args)
         {
-            var code = "This is my code...";
-            var compiler = new Compiler.Compiler(code);
-            var compilationResult = compiler.Compile();
+            var code = @"
+record Person =
+    FirstName: String;
+    LastName: Maybe String;
 
-            Logger.Log(compilationResult.Tokens.ToList());
+type ValidatePerson = Person -> Boolean;
+
+
+# Chapter 01
+
+This is the chapter.
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilationResult = compiler.Compile().Check();
+
+            string s = Logger.Log(compilationResult.Ast.First());
+            Logger.Resolve(s);
+
 
             Console.WriteLine("Hello World!");
         }

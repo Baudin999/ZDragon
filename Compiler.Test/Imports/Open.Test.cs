@@ -19,11 +19,11 @@ record Person =
 ";
             var cache = new CompilationCache(errorSink);
             var compilerFirst = new Compiler.Compiler(codeFirst);
-            var compilerResultFirst = compilerFirst.Compile();
+            var compilerResultFirst = compilerFirst.Compile().Check();
             cache.Add("Address", compilerResultFirst);
 
             var compilerSecond = new Compiler.Compiler(codeSecond);
-            var compilerResultSecond = compilerSecond.Compile();
+            var compilerResultSecond = compilerSecond.Compile().Check();
             cache.Add("Person", compilerResultSecond);
 
             Assert.NotNull(compilerResultFirst);
@@ -38,7 +38,7 @@ record Person =
 open Address
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile();
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Tokens);
             Assert.IsType<OpenNode>(compilerResult.Ast.First());
@@ -52,15 +52,15 @@ open Address
             var errorSink = new ErrorSink();
             var cache = new CompilationCache(errorSink);
 
-            new Compiler.Compiler("record Address;", "Helpers.Address", cache).Compile();
-            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile();
+            new Compiler.Compiler("record Address;", "Helpers.Address", cache).Compile().Check();
+            new Compiler.Compiler("type FirstName = String;", "Names", cache).Compile().Check();
             var code = @"
 open Helpers.Address;
 record Person =
     FirstName: Names.FirstName;
     Address: Address;
 ";
-            new Compiler.Compiler(code, "Person", cache).Compile();
+            new Compiler.Compiler(code, "Person", cache).Compile().Check();
             var compilerResult = cache.Get("Person");
 
             cache.TypeCheck();

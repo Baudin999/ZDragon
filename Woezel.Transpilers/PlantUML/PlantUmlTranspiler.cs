@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Woezel.Transpilers.PlantUML {
-    public class Transpiler {
+    public class PlantUmlTranspiler {
         private readonly CompilationResult compilationresult;
         private readonly List<string> baseTypes = new List<string> {
             "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
@@ -66,7 +66,7 @@ enum {node.Id} {{
         }
 
 
-        public Transpiler(CompilationResult compilationresult) {
+        public PlantUmlTranspiler(CompilationResult compilationresult) {
             this.compilationresult = compilationresult;
         }
 

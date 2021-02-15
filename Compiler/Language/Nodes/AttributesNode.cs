@@ -10,6 +10,14 @@ namespace Compiler.Language.Nodes {
         public string Id => IdToken.Value;
         public List<AttributeNode> Attributes { get; }
 
+        public string GetAttribute(string name) {
+            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value ?? "";
+        }
+
+        public string GetAttribute(string name, string _default) {
+            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value ?? _default;
+        }
+
         public AttributesNode(ISourceSegment segment, Token name, IEnumerable<AttributeNode> attributes, ExpressionKind kind) : base(segment, kind) {
             this.IdToken = name;
             this.Attributes = attributes.ToList();

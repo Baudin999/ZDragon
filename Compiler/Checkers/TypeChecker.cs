@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Compiler.Checkers {
     public partial class TypeChecker {
-        private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Decimal" };
+        private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid" };
         private readonly CompilationCache cache;
         private readonly CompilationResult compilationResult;
         private readonly Dictionary<string, AstNode> lexicon;

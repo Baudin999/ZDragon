@@ -30,26 +30,40 @@ export const tokenizer = {
                 {
                     cases: {
                         "record": { token: "keyword", next: "@record" },
+                        "type": { token: "keyword", next: "@type" },
                         "choice": { token: "keyword", next: "@choice" },
+                        "data": { token: "keyword", next: "@data" },
                     }
                 }]]
         ],
         record: [
             [/extends/, "keyword"],
             [/=/, "number", "@field"],
+            [/'[a-z]/, "generic-parameter"], // generic types
+            { include: "lang" }
+        ],
+        type: [
+            [/->/, "number"],
+            [/;/, "number", "@root"],
+            [/'[a-z]/, "generic-parameter"], // generic types
             { include: "lang" }
         ],
         choice: [
             [/(|)\w*(")/, ["number", { token: 'string.quote', bracket: '@open', next: '@string' }]],
             { include: "lang" }
         ],
+        data: [
+            [/'[a-z]/, "generic-parameter"], // generic types
+            { include: "lang" }
+        ],
         field: [
             [/\d+/, "number"],
             [/"/, { token: 'string.quote', bracket: '@open', next: '@string' }],
-            [/([\t\s{4}])([^:]*)(:)([^;]+)(;)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }, "number"], "@field"],
-            [/([\t\s{4}])([^:]*)(:)([^;]+)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }], "@field"],
-            [/( *)(&)( *)([^ ]+)/, ["", "number", "", "annotation"]],
-            [';', 'number', "@field"],
+            [/'[a-z]/, "generic-parameter"], // generic types
+            //[/([\t\s{4}])([^:]*)(:)([^;]+)(;)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }, "number"], "@field"],
+            //[/([\t\s{4}])([^:]*)(:)([^;]+)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }], "@field"],
+            //[/( *)(&)( *)([^ ]+)/, ["", "number", "", "annotation"]],
+            // [';', 'number', "@field"],
             { include: "lang" }
         ],
         decode_type: [
@@ -71,7 +85,8 @@ export const theme = {
         { token: "chapter", foreground: "#ea5dd5" },
         { token: "annotation", foreground: "#800000" },
         { token: "identifier", foreground: "#00aa9e" },
-        { token: "basetype", foreground: "#fdf8ea" }
+        { token: "basetype", foreground: "#fdf8ea" },
+        { token: "generic-parameter", foreground: "#ea5dd5" },
     ]
 };
 

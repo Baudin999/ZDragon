@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler.Language.Nodes {
-    public class AnnotationNode : ExpressionNode {
+    public partial class AnnotationNode : ExpressionNode {
         public Token Token { get; private set; }
         public string Annotation { get; private set; }
 
@@ -29,6 +29,8 @@ namespace Compiler.Language.Nodes {
             this.Segment = Token.Range(this.Segment, annotation);
             return this;
         }
+
+      
 
         internal AnnotationNode Clone() {
             return new AnnotationNode(this.Token);

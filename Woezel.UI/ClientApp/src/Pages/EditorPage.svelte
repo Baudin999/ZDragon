@@ -1,5 +1,11 @@
 <script type="ts">
-    import { Tabs, TabList, TabPanel, Tab } from "../Components/components.js";
+    import {
+        Tabs,
+        TabList,
+        TabPanel,
+        Tab,
+        Modal,
+    } from "../Components/components.js";
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
@@ -7,6 +13,7 @@
     import ASTViewer from "../Components/ASTViewer.svelte";
     import { documentStore } from "../Services/file.js";
     import { astStore } from "../Services/ast.js";
+    import CreateDomain from "../Forms/CreateDomain.svelte";
 
     let timeout;
     let file;
@@ -14,10 +21,21 @@
         file = s?.selectedFile;
     });
 
+    let showCreateDomain = false;
+    let svgUrl;
+    let componentUrl;
     astStore.subscribe((store: any) => {
         if (timeout) clearTimeout(timeout);
         timeout = setTimeout(() => {
             file = store.file;
+
+            let ns = file ? file.namespace : "unknown";
+            ns = ns.replace(".", "_");
+            console.log(ns);
+            svgUrl = `/documents/data.svg?timestamp=${new Date().getMilliseconds()}`;
+            componentUrl = `/documents/components.svg?timestamp=${new Date().getMilliseconds()}`;
+
+            console.log(componentUrl);
         }, 1500);
     });
 </script>
@@ -41,15 +59,14 @@
 
             <TabPanel>
                 <Panel>
-                    {#if file}
-                        <!-- <i
-                            class="fa fa-refresh"
-                            on:click={() => (file = file)} /> -->
-                        <img
-                            alt="svg"
-                            src={`/documents/${
-                                file ? file.namespace : "unknown"
-                            }.svg?timestamp=${new Date().getMilliseconds()}`} />
+                    {#if svgUrl}
+                        <img alt="svg" src={svgUrl} />
+                    {/if}
+                    <br />
+                    <hr />
+                    <br />
+                    {#if componentUrl}
+                        <img alt="svg" src={componentUrl} />
                     {/if}
                 </Panel>
             </TabPanel>
@@ -69,6 +86,10 @@
             </TabPanel>
         </Tabs>
     </div>
+
+    <Modal title="Create Domain" show={showCreateDomain}>
+        <CreateDomain />
+    </Modal>
 </div>
 
 <style type="less">

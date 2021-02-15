@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Woezel.Project.Components;
+using Woezel.Transpilers.Components;
 using Woezel.Transpilers.Html;
 using Woezel.Transpilers.PlantUML;
 
@@ -15,19 +17,47 @@ namespace Woezel.Project {
         private readonly Dictionary<string, FInfo> mapping = new Dictionary<string, FInfo>();
         public DInfo Dir { get; }
 
+        public List<DomainInteractor> Domains { get; } = new List<DomainInteractor>();
+
         public Project(string root) {
             _root = root;
             outpath = Path.Combine(_root, "out");
             dbPath = Path.Combine(outpath, "store.db");
 
-            Dir = getDirectoryInfo(_root);
-
+           
             if (!Directory.Exists(outpath))
                 Directory.CreateDirectory(outpath);
+
+
+            var domains = new Dictionary<string, DomainInteractor> {
+                { "Marketing", DomainInteractor.Create(root, "Marketing") }
+            };
+            var interactor = DomainInteractor.Create(root, "Offering");
+            interactor.CreateApplication("UPS");
+            interactor.CreateApplication("Identification Services");
+            interactor.CreateApplication("OfferStore");
+
+            domains.Add("Offering", interactor);
+            domains.Add("Contracting", DomainInteractor.Create(root, "Contracting"));
+            domains.Add("Metering", DomainInteractor.Create(root, "Metering"));
+            domains.Add("Debt Management", DomainInteractor.Create(root, "Debt Management"));
+            domains.Add("Invoicing", DomainInteractor.Create(root, "Invoicing"));
+            domains.Add("Customer", DomainInteractor.Create(root, "Customer"));
+            
+
+            foreach (var directory in Directory.GetDirectories(_root)) {
+                var dInfo = new DirectoryInfo(directory);
+                Domains.Add(new DomainInteractor(root, dInfo.Name));
+            }
+
+            Dir = getDirectoryInfo(_root);
+
+
         }
 
         public bool IsValidProjectPath(string path) {
             return path.StartsWith(_root);
+
         }
 
         public string getNamespace(string path) {
@@ -126,9 +156,13 @@ namespace Woezel.Project {
             try {
                 Cache.Add(fInfo.Namespace, compilationResult);
 
-                var svgPath = Path.Combine(outpath, fInfo.Namespace + ".svg");
-                var puml = new Transpiler(compilationResult).Transpile();
+                var svgPath = Path.Combine(outpath, "data.svg");
+                var puml = new PlantUmlTranspiler(compilationResult).Transpile();
                 _ = File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+
+                var componentSvgPath = Path.Combine(outpath, "components.svg");
+                var pumlC = new ComponentTranspiler(compilationResult).Transpile();
+                _ = File.WriteAllBytesAsync(componentSvgPath, await PlantUmlRenderer.Render(pumlC));
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);
@@ -141,9 +175,15 @@ namespace Woezel.Project {
 
         public async Task<byte[]> GetSvg(string ns) {
             try {
-                var fInfo = mapping[ns];
-                var path = Path.Combine(outpath, fInfo.Namespace + ".svg");
-                return await File.ReadAllBytesAsync(path);
+                if (mapping.ContainsKey(ns)) { 
+                    var fInfo = mapping[ns];
+                    var path = Path.Combine(outpath, fInfo.Namespace + ".svg");
+                    return await File.ReadAllBytesAsync(path);
+                }
+                else {
+                    var path = Path.Combine(outpath, ns + ".svg");
+                    return await File.ReadAllBytesAsync(path);
+                }
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);

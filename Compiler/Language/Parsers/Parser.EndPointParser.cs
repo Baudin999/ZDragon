@@ -8,7 +8,10 @@ namespace Compiler.Language {
 
         internal ExpressionNode ParseEndPoint() {
             var start = Take(SyntaxKind.EndPointDeclarationToken);
-            var name = Take(SyntaxKind.IdentifierToken);
+            var name = Take();
+            if (name.Kind != SyntaxKind.IdentifierToken) {
+                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", name));
+            }
             Token end = name;
 
 

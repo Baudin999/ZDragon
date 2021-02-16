@@ -26,13 +26,17 @@ export const tokenizer = {
             [/([\t\s{4}])([^:]*)(:)([^:]*)/, ["word", "annotation", "number", "word"]]
         ],
         lang: [
-            [/([a-z][^ ]*)/, [
+            [/^([a-z][^ ]*)/, [
                 {
                     cases: {
                         "record": { token: "keyword", next: "@record" },
                         "type": { token: "keyword", next: "@type" },
                         "choice": { token: "keyword", next: "@choice" },
                         "data": { token: "keyword", next: "@data" },
+                        "component": { token: "keyword", next: "@attributes" },
+                        "person": { token: "keyword", next: "@attributes" },
+                        "system": { token: "keyword", next: "@attributes" },
+                        "endpoint": { token: "keyword", next: "@attributes_endpoint" },
                     }
                 }]]
         ],
@@ -64,6 +68,16 @@ export const tokenizer = {
             //[/([\t\s{4}])([^:]*)(:)([^;]+)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }], "@field"],
             //[/( *)(&)( *)([^ ]+)/, ["", "number", "", "annotation"]],
             // [';', 'number', "@field"],
+            { include: "lang" }
+        ],
+        attributes: [
+            [/([A-Z][a-zA-Z ]*)(:)/, ["type.identifier", "number"]],
+            { include: "lang" }
+        ],
+        attributes_endpoint: [
+            [/->/, "number"],
+            [/([A-Z][a-zA-Z ]*)(::)/, ["nothing", "number"]],
+            [/([A-Z][a-zA-Z ]*)(:)/, ["type.identifier", "number"]],
             { include: "lang" }
         ],
         decode_type: [

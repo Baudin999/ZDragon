@@ -34,8 +34,6 @@
             console.log(ns);
             svgUrl = `/documents/data.svg?timestamp=${new Date().getMilliseconds()}`;
             componentUrl = `/documents/components.svg?timestamp=${new Date().getMilliseconds()}`;
-
-            console.log(componentUrl);
         }, 1500);
     });
 </script>
@@ -52,7 +50,8 @@
     <div class="page-viewer">
         <Tabs>
             <TabList>
-                <Tab>Image</Tab>
+                <Tab>Architecture</Tab>
+                <Tab>Data Model</Tab>
                 <Tab>AST</Tab>
                 <Tab>Document</Tab>
             </TabList>
@@ -60,13 +59,15 @@
             <TabPanel>
                 <Panel>
                     {#if svgUrl}
-                        <img alt="svg" src={svgUrl} />
-                    {/if}
-                    <br />
-                    <hr />
-                    <br />
-                    {#if componentUrl}
                         <img alt="svg" src={componentUrl} />
+                    {/if}
+                </Panel>
+            </TabPanel>
+
+            <TabPanel>
+                <Panel>
+                    {#if componentUrl}
+                        <img alt="svg" src={svgUrl} />
                     {/if}
                 </Panel>
             </TabPanel>

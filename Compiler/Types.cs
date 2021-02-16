@@ -84,6 +84,8 @@ namespace Compiler {
                 { "data", SyntaxKind.DataDeclarationToken },
                 { "choice", SyntaxKind.ChoiceDeclarationToken },
                 { "open", SyntaxKind.OpenDeclarationToken },
+                { "person", SyntaxKind.PersonDeclarationToken },
+                { "system", SyntaxKind.SystemDeclarationToken },
                 { "component", SyntaxKind.ComponentDeclarationToken },
                 { "endpoint", SyntaxKind.EndPointDeclarationToken },
                 { "if", SyntaxKind.IfToken },
@@ -261,6 +263,8 @@ namespace Compiler {
 
 
         // Architecture definitions
+        PersonDeclarationToken,
+        SystemDeclarationToken,
         ComponentDeclarationToken,
         EndPointDeclarationToken,
         AttributeFieldStarted,

@@ -37,12 +37,22 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.DirectiveDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseDirective();
                 }
+
+                // architecture
+                else if (tokenBlock.Context == ContextType.PersonDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParsePerson();
+                }
+                else if (tokenBlock.Context == ContextType.SystemDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseSystem();
+                }
                 else if (tokenBlock.Context == ContextType.ComponentDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseComponent();
                 } 
                 else if (tokenBlock.Context == ContextType.EndPointDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseEndPoint();
                 }
+
+                // markdown
                 else if (tokenBlock.Context == ContextType.MarkdownChapterDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());
                     yield return new MarkdownChapterNode(sourceSection, tokenBlock.Text);

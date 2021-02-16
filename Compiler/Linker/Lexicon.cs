@@ -94,6 +94,7 @@ namespace Compiler.Linker {
                     case RecordNode n: addToLexicon(n); break;
                     case DataNode n: addToLexicon(n); break;
                     case ChoiceNode n: addToLexicon(n); break;
+                    case ComponentNode n: addToLexicon(n); break;
                     default: break;
                 }
             }

@@ -16,7 +16,10 @@ namespace Compiler.Language {
 
 
             var recordDeclaration = Take(SyntaxKind.RecordDeclarationToken);
-            var id = Take(SyntaxKind.IdentifierToken);
+            var id = Take();
+            if (id.Kind != SyntaxKind.IdentifierToken) {
+                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", id));
+            }
 
             // generic parameters
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();

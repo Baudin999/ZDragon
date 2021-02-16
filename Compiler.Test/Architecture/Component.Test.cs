@@ -1,4 +1,5 @@
-﻿using Compiler.Language.Nodes;
+﻿using Compiler;
+using Compiler.Language.Nodes;
 using System.Linq;
 using Xunit;
 
@@ -106,6 +107,42 @@ component Stew =
             Assert.Equal("Ingredients", ingredientsAttribute.Key);
             Assert.Equal(4, ingredientsAttribute.Items.Count);
 
+        }
+
+        [Fact(DisplayName = "Component - Linked Components 000")]
+        public void Component_LinkedComponents000() {
+            var code = @"
+component Foo =
+    Name: The foo component
+    Interactions: 
+        - Bar
+
+component Bar =
+    Name: The Bar component
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Equal(2, compilerResult.Tokens.Count());
+            Assert.Empty(compilerResult.Errors);
+            
+        }
+
+
+        [Fact(DisplayName = "Component - Linked Components 001")]
+        public void Component_LinkedComponents001() {
+            var code = @"
+component Foo =
+    Interactions: 
+        - Bar
+    
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Single(compilerResult.Tokens);
+            Assert.Single(compilerResult.Errors);
+            Assert.Equal(ErrorType.Unknown, compilerResult.Errors.First().ErrorType);
         }
 
 

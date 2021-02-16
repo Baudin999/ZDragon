@@ -10,8 +10,15 @@ namespace Compiler.Language.Nodes {
         public string Id => IdToken.Value;
         public List<AttributeNode> Attributes { get; }
 
-        public string GetAttribute(string name) {
-            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value ?? "";
+        public string? GetAttribute(string name) {
+            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value;
+        }
+
+        public List<string>? GetAttributeItems(string name) {
+            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Items;
+        }
+        public List<string> GetAttributeItems(string name, List<string> def) {
+            return GetAttributeItems(name) ?? def;
         }
 
         public string GetAttribute(string name, string _default) {

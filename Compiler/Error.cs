@@ -33,6 +33,8 @@ namespace Compiler {
 
         GenericError,
         GenericParameter_Unused,
-        GenericParameter_Undefined
+        GenericParameter_Undefined,
+        InvalidIdentifier,
+        Unknown
     }
 }

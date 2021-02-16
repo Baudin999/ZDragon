@@ -126,6 +126,14 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.HashToken) {
                     yield return TokenizeChapter();
                 }
+                else if (Current?.Kind == SyntaxKind.PersonDeclarationToken) {
+                    //
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.PersonDeclaration);
+                }
+                else if (Current?.Kind == SyntaxKind.SystemDeclarationToken) {
+                    //
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.SystemDeclaration);
+                }
                 else if (Current?.Kind == SyntaxKind.ComponentDeclarationToken) {
                     //
                     yield return TokenizeAttributesDefinition(annotations, ContextType.ComponentDeclaration);
@@ -152,6 +160,8 @@ namespace Compiler.Symbols {
         ChoiceDeclaration,
         FunctionDeclaration,
 
+        PersonDeclaration,
+        SystemDeclaration,
         ComponentDeclaration,
         EndPointDeclaration,
 

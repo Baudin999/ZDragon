@@ -6,8 +6,8 @@ using System.Linq;
 namespace Compiler.Language {
     public partial class Parser {
 
-        internal ExpressionNode ParseComponent() {
-            var start = Take(SyntaxKind.ComponentDeclarationToken);
+        internal ExpressionNode ParsePerson() {
+            var start = Take(SyntaxKind.PersonDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
                 ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", name));
@@ -52,7 +52,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new ComponentNode(Token.Range(start, end), name, attributes);
+            return new PersonNode(Token.Range(start, end), name, attributes);
         }
     }
 }

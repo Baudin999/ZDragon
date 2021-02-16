@@ -32,16 +32,9 @@ record person =
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile().Check();
 
-            Assert.Empty(compilerResult.Errors);
+            Assert.Single(compilerResult.Errors);
             Assert.Single(compilerResult.Tokens);
-            Assert.IsType<RecordNode>(compilerResult.Ast.First());
-            RecordNode record = (RecordNode)compilerResult.Ast.First();
-            Assert.Equal("person", record.Id);
-            Assert.Equal("", record.Description);
-            Assert.Single(record.Fields);
-
-            var name = record.Fields[0];
-            Assert.Equal("name", name.Id);
+            Assert.Equal(ErrorType.InvalidIdentifier, compilerResult.Errors.First().ErrorType);
         }
 
         [Fact(DisplayName = "Records - Two types names only")]

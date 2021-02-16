@@ -218,6 +218,9 @@ type {root.Id} {token.Value} = ...;
                 case DataNode n: CheckDataNode(n); break;
                 case ChoiceNode n: CheckChoiceNode(n); break;
                 case OpenNode n: CheckOpenNode(n); break;
+
+                // check architectural nodes
+                case ComponentNode n: CheckComponentNode(n); break;
                 default: break;
             }
         }

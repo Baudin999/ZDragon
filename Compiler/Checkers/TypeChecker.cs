@@ -207,7 +207,9 @@ type {root.Id} {token.Value} = ...;
                 externalLexicon.Clear();
 
                 foreach (var (key, value) in temp) {
-                    lexicon.Add(key, value);
+                    if (!lexicon.ContainsKey(key)) {
+                        lexicon.Add(key, value);
+                    }
                 }
             }
         }
@@ -223,6 +225,7 @@ type {root.Id} {token.Value} = ...;
                 // check architectural nodes
                 case ComponentNode n: CheckComponentNode(n); break;
                 case EndpointNode n: CheckEndpointNode(n); break;
+                case SystemNode n: CheckSystemNode(n); break;
                 default: break;
             }
         }

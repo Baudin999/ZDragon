@@ -7,17 +7,19 @@ namespace Compiler.Checkers {
 
     public partial class TypeChecker {
 
-        private void CheckEndpointNode(EndpointNode node) {
-
-            if (node.TypeDefinition != null) {
-                HashSet<string> usedParams = new HashSet<string>();
-                bodyChecker(node, node.TypeDefinition, usedParams);
-            }
+        private void CheckSystemNode(SystemNode node) {
 
             var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();
-
             foreach (var interaction in interactions) {
                 var token = interaction.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
+                if (token != null) {
+                    CheckToken(node, null, token);
+                }
+            }
+
+            var contains = node.Attributes.FirstOrDefault(a => a.Key == "Contains")?.ItemsTokens ?? new List<List<Token>>();
+            foreach (var c in contains) {
+                var token = c.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
                 if (token != null) {
                     CheckToken(node, null, token);
                 }

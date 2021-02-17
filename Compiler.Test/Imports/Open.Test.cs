@@ -5,32 +5,6 @@ using Xunit;
 
 namespace Imports {
     public class Open {
-        [Fact(DisplayName = "Imports - Open")]
-        public void Imports_Open() {
-            var errorSink = new ErrorSink();
-            var codeFirst = @"
-record Address =
-    Street: String;
-";
-            var codeSecond = @"
-open Address;
-record Person =
-    Address: Address;
-";
-            var cache = new CompilationCache(errorSink);
-            var compilerFirst = new Compiler.Compiler(codeFirst);
-            var compilerResultFirst = compilerFirst.Compile().Check();
-            cache.Add("Address", compilerResultFirst);
-
-            var compilerSecond = new Compiler.Compiler(codeSecond);
-            var compilerResultSecond = compilerSecond.Compile().Check();
-            cache.Add("Person", compilerResultSecond);
-
-            Assert.NotNull(compilerResultFirst);
-            Assert.NotNull(compilerResultSecond);
-
-            Assert.Empty(errorSink.Errors);
-        }
 
         [Fact(DisplayName = "Open - Simple")]
         public void Open_Simple() {
@@ -46,6 +20,33 @@ open Address
             var open = (OpenNode)compilerResult.Ast.First();
             Assert.Equal("Address", open.Id);
         }
+
+        [Fact(DisplayName = "Imports - Open")]
+        public void Imports_Open() {
+            var errorSink = new ErrorSink();
+            var codeFirst = @"
+record Address =
+    Street: String;
+";
+            var codeSecond = @"
+open Address;
+record Person =
+    Address: Address;
+";
+            var cache = new CompilationCache(errorSink);
+            var compilerFirst = new Compiler.Compiler(codeFirst, "Address", cache);
+            var compilerResultFirst = compilerFirst.Compile().Check();
+
+            var compilerSecond = new Compiler.Compiler(codeSecond, "Person", cache);
+            var compilerResultSecond = compilerSecond.Compile().Check();
+
+            Assert.NotNull(compilerResultFirst);
+            Assert.NotNull(compilerResultSecond);
+
+            Assert.Empty(errorSink.Errors);
+        }
+
+       
 
         [Fact(DisplayName = "Open - References")]
         public void Open_References() {

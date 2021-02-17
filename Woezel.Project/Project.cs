@@ -148,8 +148,7 @@ namespace Woezel.Project {
         }
 
         public CompilationResult Compile(FInfo fInfo, string code, CompilationCache cache) {
-            //
-            return new Compiler.Compiler(code, fInfo.Namespace, cache).Compile().Check(cache);
+            return new Compiler.Compiler(code, fInfo.Namespace, cache).Compile().Check();
         }
 
         public async Task SaveCompilerResult(FInfo fInfo, CompilationResult compilationResult) {

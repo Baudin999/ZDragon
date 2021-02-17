@@ -46,7 +46,7 @@ namespace Compiler {
             var referencedModules = ast.OfType<OpenNode>();
 
             // cannot typecheck without compilation cache
-            var compilationResult = new CompilationResult(ast, contextualTokens, Cache.ErrorSink, referencedModules, lexicon, document, this.Namespace);
+            var compilationResult = new CompilationResult(ast, contextualTokens, Cache, referencedModules, lexicon, document, this.Namespace);
             Cache.Add(this.Namespace, compilationResult);
             return compilationResult;
             
@@ -60,7 +60,7 @@ namespace Compiler {
             var lexicon = new Lexicon(this.Cache.ErrorSink, ast).CreateLexicon();
             var document = ast.OfType<IDocumentNode>();
             var referencedModules = ast.OfType<OpenNode>();
-            var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache.ErrorSink, referencedModules, lexicon, document, this.Namespace);
+            var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);
 
             new TypeChecker(this.Cache, compilationResult).Check();
 
@@ -76,7 +76,7 @@ namespace Compiler {
             var lexicon = new Lexicon(this.Cache.ErrorSink, ast).CreateLexicon();
             var document = ast.OfType<IDocumentNode>();
             var referencedModules = ast.OfType<OpenNode>();
-            var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache.ErrorSink, referencedModules, lexicon, document, this.Namespace);
+            var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);
 
             if (typeCheck) {
                 new TypeChecker(this.Cache, compilationResult).Check();

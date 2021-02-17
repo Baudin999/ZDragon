@@ -160,10 +160,10 @@ component Bar =
 ";
             var cache = new CompilationCache(errorSink);
             var compilerFirst = new Compiler.Compiler(codeFirst, "BaseComponents", cache);
-            var compilerResultFirst = compilerFirst.Compile().Check(cache);
+            var compilerResultFirst = compilerFirst.Compile().Check();
 
             var compilerSecond = new Compiler.Compiler(codeSecond, "Components", cache);
-            var compilerResultSecond = compilerSecond.Compile().Check(cache);
+            var compilerResultSecond = compilerSecond.Compile().Check();
 
             Assert.NotNull(compilerResultFirst);
             Assert.NotNull(compilerResultSecond);

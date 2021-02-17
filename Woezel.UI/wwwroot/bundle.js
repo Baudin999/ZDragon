@@ -4006,26 +4006,19 @@ var woezel = (function () {
     function create_fragment$d(ctx) {
     	let div1;
     	let div0;
-    	let t0;
-    	let t1;
-    	let t2;
-    	let pre;
-    	let t3;
+    	let current;
+    	const default_slot_template = /*$$slots*/ ctx[2].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[1], null);
 
     	const block = {
     		c: function create() {
     			div1 = element("div");
     			div0 = element("div");
-    			t0 = text("This is the page:\r\n        ");
-    			t1 = text(/*name*/ ctx[0]);
-    			t2 = space();
-    			pre = element("pre");
-    			t3 = text(/*content*/ ctx[1]);
-    			add_location(pre, file$8, 26, 8, 538);
-    			attr_dev(div0, "class", "page svelte-2mev25");
-    			add_location(div0, file$8, 23, 4, 450);
+    			if (default_slot) default_slot.c();
+    			attr_dev(div0, "class", "page svelte-vlaztz");
+    			add_location(div0, file$8, 5, 4, 72);
     			attr_dev(div1, "class", "page-container");
-    			add_location(div1, file$8, 22, 0, 416);
+    			add_location(div1, file$8, 4, 0, 38);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -4033,21 +4026,31 @@ var woezel = (function () {
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
     			append_dev(div1, div0);
-    			append_dev(div0, t0);
-    			append_dev(div0, t1);
-    			append_dev(div0, t2);
-    			append_dev(div0, pre);
-    			append_dev(pre, t3);
+
+    			if (default_slot) {
+    				default_slot.m(div0, null);
+    			}
+
     			/*div0_binding*/ ctx[3](div0);
+    			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if (dirty & /*name*/ 1) set_data_dev(t1, /*name*/ ctx[0]);
-    			if (dirty & /*content*/ 2) set_data_dev(t3, /*content*/ ctx[1]);
+    			if (default_slot && default_slot.p && dirty & /*$$scope*/ 2) {
+    				default_slot.p(get_slot_context(default_slot_template, ctx, /*$$scope*/ ctx[1], null), get_slot_changes(default_slot_template, /*$$scope*/ ctx[1], dirty, null));
+    			}
     		},
-    		i: noop,
-    		o: noop,
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
+    			if (default_slot) default_slot.d(detaching);
     			/*div0_binding*/ ctx[3](null);
     		}
     	};
@@ -4064,43 +4067,34 @@ var woezel = (function () {
     }
 
     function instance$d($$self, $$props, $$invalidate) {
-    	let { name = "default" } = $$props;
-    	let { content = "" } = $$props;
     	let page;
-    	const writable_props = ["name", "content"];
-
-    	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Page> was created with unknown prop '${key}'`);
-    	});
+    	let { $$slots = {}, $$scope } = $$props;
 
     	function div0_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
-    			$$invalidate(2, page = $$value);
+    			$$invalidate(0, page = $$value);
     		});
     	}
 
     	$$self.$set = $$props => {
-    		if ("name" in $$props) $$invalidate(0, name = $$props.name);
-    		if ("content" in $$props) $$invalidate(1, content = $$props.content);
+    		if ("$$scope" in $$props) $$invalidate(1, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => {
-    		return { name, content, page };
+    		return {};
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ("name" in $$props) $$invalidate(0, name = $$props.name);
-    		if ("content" in $$props) $$invalidate(1, content = $$props.content);
-    		if ("page" in $$props) $$invalidate(2, page = $$props.page);
+    		if ("page" in $$props) $$invalidate(0, page = $$props.page);
     	};
 
-    	return [name, content, page, div0_binding];
+    	return [page, $$scope, $$slots, div0_binding];
     }
 
     class Page extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$d, create_fragment$d, safe_not_equal, { name: 0, content: 1 });
+    		init(this, options, instance$d, create_fragment$d, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -4109,103 +4103,105 @@ var woezel = (function () {
     			id: create_fragment$d.name
     		});
     	}
-
-    	get name() {
-    		throw new Error("<Page>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set name(value) {
-    		throw new Error("<Page>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	get content() {
-    		throw new Error("<Page>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
-
-    	set content(value) {
-    		throw new Error("<Page>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
-    	}
     }
 
     /* src\Components\PageViewer.svelte generated by Svelte v3.16.7 */
     const file$9 = "src\\Components\\PageViewer.svelte";
 
+    // (30:4) <Page>
+    function create_default_slot(ctx) {
+    	let iframe;
+    	let iframe_src_value;
+
+    	const block = {
+    		c: function create() {
+    			iframe = element("iframe");
+    			attr_dev(iframe, "class", "html-frame svelte-tuldhn");
+    			if (iframe.src !== (iframe_src_value = /*url*/ ctx[0])) attr_dev(iframe, "src", iframe_src_value);
+    			attr_dev(iframe, "title", "Page");
+    			add_location(iframe, file$9, 30, 8, 676);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, iframe, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*url*/ 1 && iframe.src !== (iframe_src_value = /*url*/ ctx[0])) {
+    				attr_dev(iframe, "src", iframe_src_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(iframe);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(30:4) <Page>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
     function create_fragment$e(ctx) {
     	let div1;
-    	let t0;
-    	let t1;
-    	let t2;
+    	let t;
     	let div0;
     	let current;
 
-    	const page0 = new Page({
-    			props: { content: /*content*/ ctx[0] },
-    			$$inline: true
-    		});
-
-    	const page1 = new Page({
-    			props: { name: "Carlos" },
-    			$$inline: true
-    		});
-
-    	const page2 = new Page({
-    			props: { name: "Vincent" },
+    	const page = new Page({
+    			props: {
+    				$$slots: { default: [create_default_slot] },
+    				$$scope: { ctx }
+    			},
     			$$inline: true
     		});
 
     	const block = {
     		c: function create() {
     			div1 = element("div");
-    			create_component(page0.$$.fragment);
-    			t0 = space();
-    			create_component(page1.$$.fragment);
-    			t1 = space();
-    			create_component(page2.$$.fragment);
-    			t2 = space();
+    			create_component(page.$$.fragment);
+    			t = space();
     			div0 = element("div");
-    			attr_dev(div0, "class", "bottom svelte-ghxxov");
-    			add_location(div0, file$9, 51, 4, 1132);
-    			attr_dev(div1, "class", "page-wrapper svelte-ghxxov");
-    			add_location(div1, file$9, 47, 0, 997);
+    			attr_dev(div0, "class", "bottom svelte-tuldhn");
+    			add_location(div0, file$9, 32, 4, 747);
+    			attr_dev(div1, "class", "page-wrapper svelte-tuldhn");
+    			add_location(div1, file$9, 28, 0, 606);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
-    			mount_component(page0, div1, null);
-    			append_dev(div1, t0);
-    			mount_component(page1, div1, null);
-    			append_dev(div1, t1);
-    			mount_component(page2, div1, null);
-    			append_dev(div1, t2);
+    			mount_component(page, div1, null);
+    			append_dev(div1, t);
     			append_dev(div1, div0);
     			/*div1_binding*/ ctx[4](div1);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			const page0_changes = {};
-    			if (dirty & /*content*/ 1) page0_changes.content = /*content*/ ctx[0];
-    			page0.$set(page0_changes);
+    			const page_changes = {};
+
+    			if (dirty & /*$$scope, url*/ 33) {
+    				page_changes.$$scope = { dirty, ctx };
+    			}
+
+    			page.$set(page_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(page0.$$.fragment, local);
-    			transition_in(page1.$$.fragment, local);
-    			transition_in(page2.$$.fragment, local);
+    			transition_in(page.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(page0.$$.fragment, local);
-    			transition_out(page1.$$.fragment, local);
-    			transition_out(page2.$$.fragment, local);
+    			transition_out(page.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div1);
-    			destroy_component(page0);
-    			destroy_component(page1);
-    			destroy_component(page2);
+    			destroy_component(page);
     			/*div1_binding*/ ctx[4](null);
     		}
     	};
@@ -4222,7 +4218,7 @@ var woezel = (function () {
     }
 
     function instance$e($$self, $$props, $$invalidate) {
-    	let { content = "NO CONTENT" } = $$props;
+    	let { url } = $$props;
     	let container;
 
     	function resize() {
@@ -4247,7 +4243,7 @@ var woezel = (function () {
     		});
     	});
 
-    	const writable_props = ["content"];
+    	const writable_props = ["url"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<PageViewer> was created with unknown prop '${key}'`);
@@ -4260,25 +4256,25 @@ var woezel = (function () {
     	}
 
     	$$self.$set = $$props => {
-    		if ("content" in $$props) $$invalidate(0, content = $$props.content);
+    		if ("url" in $$props) $$invalidate(0, url = $$props.url);
     	};
 
     	$$self.$capture_state = () => {
-    		return { content, container };
+    		return { url, container };
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ("content" in $$props) $$invalidate(0, content = $$props.content);
+    		if ("url" in $$props) $$invalidate(0, url = $$props.url);
     		if ("container" in $$props) $$invalidate(1, container = $$props.container);
     	};
 
-    	return [content, container, resize, watch, div1_binding];
+    	return [url, container, resize, watch, div1_binding];
     }
 
     class PageViewer extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, { content: 0 });
+    		init(this, options, instance$e, create_fragment$e, safe_not_equal, { url: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -4286,13 +4282,20 @@ var woezel = (function () {
     			options,
     			id: create_fragment$e.name
     		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || ({});
+
+    		if (/*url*/ ctx[0] === undefined && !("url" in props)) {
+    			console.warn("<PageViewer> was created without expected prop 'url'");
+    		}
     	}
 
-    	get content() {
+    	get url() {
     		throw new Error("<PageViewer>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
 
-    	set content(value) {
+    	set url(value) {
     		throw new Error("<PageViewer>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -4688,7 +4691,7 @@ var woezel = (function () {
     /* src\Pages\EditorPage.svelte generated by Svelte v3.16.7 */
     const file_1$2 = "src\\Pages\\EditorPage.svelte";
 
-    // (44:16) <Tab>
+    // (46:16) <Tab>
     function create_default_slot_14(ctx) {
     	let t;
 
@@ -4708,14 +4711,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_14.name,
     		type: "slot",
-    		source: "(44:16) <Tab>",
+    		source: "(46:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:16) <Tab>
+    // (47:16) <Tab>
     function create_default_slot_13(ctx) {
     	let t;
 
@@ -4735,14 +4738,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_13.name,
     		type: "slot",
-    		source: "(45:16) <Tab>",
+    		source: "(47:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (46:16) <Tab>
+    // (48:16) <Tab>
     function create_default_slot_12(ctx) {
     	let t;
 
@@ -4762,14 +4765,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_12.name,
     		type: "slot",
-    		source: "(46:16) <Tab>",
+    		source: "(48:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (47:16) <Tab>
+    // (49:16) <Tab>
     function create_default_slot_11(ctx) {
     	let t;
 
@@ -4789,14 +4792,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_11.name,
     		type: "slot",
-    		source: "(47:16) <Tab>",
+    		source: "(49:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (43:12) <TabList>
+    // (45:12) <TabList>
     function create_default_slot_10(ctx) {
     	let t0;
     	let t1;
@@ -4858,28 +4861,28 @@ var woezel = (function () {
     		p: function update(ctx, dirty) {
     			const tab0_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				tab0_changes.$$scope = { dirty, ctx };
     			}
 
     			tab0.$set(tab0_changes);
     			const tab1_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				tab1_changes.$$scope = { dirty, ctx };
     			}
 
     			tab1.$set(tab1_changes);
     			const tab2_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				tab2_changes.$$scope = { dirty, ctx };
     			}
 
     			tab2.$set(tab2_changes);
     			const tab3_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				tab3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4915,14 +4918,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_10.name,
     		type: "slot",
-    		source: "(43:12) <TabList>",
+    		source: "(45:12) <TabList>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (52:20) {#if svgUrl}
+    // (54:20) {#if svgUrl}
     function create_if_block_1$2(ctx) {
     	let img;
     	let img_src_value;
@@ -4933,7 +4936,7 @@ var woezel = (function () {
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*componentUrl*/ ctx[1])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-1642kbx");
-    			add_location(img, file_1$2, 52, 24, 1804);
+    			add_location(img, file_1$2, 54, 24, 1903);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4952,14 +4955,14 @@ var woezel = (function () {
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(52:20) {#if svgUrl}",
+    		source: "(54:20) {#if svgUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (51:16) <Panel>
+    // (53:16) <Panel>
     function create_default_slot_9(ctx) {
     	let if_block_anchor;
     	let if_block = /*svgUrl*/ ctx[0] && create_if_block_1$2(ctx);
@@ -4997,14 +5000,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_9.name,
     		type: "slot",
-    		source: "(51:16) <Panel>",
+    		source: "(53:16) <Panel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (50:12) <TabPanel>
+    // (52:12) <TabPanel>
     function create_default_slot_8(ctx) {
     	let current;
 
@@ -5027,7 +5030,7 @@ var woezel = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 35) {
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 67) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5051,14 +5054,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_8.name,
     		type: "slot",
-    		source: "(50:12) <TabPanel>",
+    		source: "(52:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (60:20) {#if componentUrl}
+    // (62:20) {#if componentUrl}
     function create_if_block$5(ctx) {
     	let img;
     	let img_src_value;
@@ -5069,7 +5072,7 @@ var woezel = (function () {
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*svgUrl*/ ctx[0])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-1642kbx");
-    			add_location(img, file_1$2, 60, 24, 2035);
+    			add_location(img, file_1$2, 62, 24, 2134);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -5088,14 +5091,14 @@ var woezel = (function () {
     		block,
     		id: create_if_block$5.name,
     		type: "if",
-    		source: "(60:20) {#if componentUrl}",
+    		source: "(62:20) {#if componentUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (59:16) <Panel>
+    // (61:16) <Panel>
     function create_default_slot_7(ctx) {
     	let if_block_anchor;
     	let if_block = /*componentUrl*/ ctx[1] && create_if_block$5(ctx);
@@ -5133,14 +5136,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_7.name,
     		type: "slot",
-    		source: "(59:16) <Panel>",
+    		source: "(61:16) <Panel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (58:12) <TabPanel>
+    // (60:12) <TabPanel>
     function create_default_slot_6(ctx) {
     	let current;
 
@@ -5163,7 +5166,7 @@ var woezel = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 35) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 67) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5187,14 +5190,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_6.name,
     		type: "slot",
-    		source: "(58:12) <TabPanel>",
+    		source: "(60:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
+    // (69:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
     function create_default_slot_5(ctx) {
     	let current;
     	const astviewer = new ASTViewer({ $$inline: true });
@@ -5225,14 +5228,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_5.name,
     		type: "slot",
-    		source: "(67:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;\\\">",
+    		source: "(69:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (66:12) <TabPanel>
+    // (68:12) <TabPanel>
     function create_default_slot_4(ctx) {
     	let current;
 
@@ -5256,7 +5259,7 @@ var woezel = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5280,17 +5283,21 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(66:12) <TabPanel>",
+    		source: "(68:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (74:16) <Panel                      style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+    // (76:16) <Panel                      style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
     function create_default_slot_3(ctx) {
     	let current;
-    	const pageviewer = new PageViewer({ $$inline: true });
+
+    	const pageviewer = new PageViewer({
+    			props: { url: /*htmlUrl*/ ctx[2] },
+    			$$inline: true
+    		});
 
     	const block = {
     		c: function create() {
@@ -5299,6 +5306,11 @@ var woezel = (function () {
     		m: function mount(target, anchor) {
     			mount_component(pageviewer, target, anchor);
     			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const pageviewer_changes = {};
+    			if (dirty & /*htmlUrl*/ 4) pageviewer_changes.url = /*htmlUrl*/ ctx[2];
+    			pageviewer.$set(pageviewer_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -5318,14 +5330,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_3.name,
     		type: "slot",
-    		source: "(74:16) <Panel                      style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
+    		source: "(76:16) <Panel                      style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (73:12) <TabPanel>
+    // (75:12) <TabPanel>
     function create_default_slot_2(ctx) {
     	let current;
 
@@ -5349,7 +5361,7 @@ var woezel = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope, htmlUrl*/ 68) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5373,14 +5385,14 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(73:12) <TabPanel>",
+    		source: "(75:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (42:8) <Tabs>
+    // (44:8) <Tabs>
     function create_default_slot_1(ctx) {
     	let t0;
     	let t1;
@@ -5455,35 +5467,35 @@ var woezel = (function () {
     		p: function update(ctx, dirty) {
     			const tablist_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				tablist_changes.$$scope = { dirty, ctx };
     			}
 
     			tablist.$set(tablist_changes);
     			const tabpanel0_changes = {};
 
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 35) {
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 67) {
     				tabpanel0_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel0.$set(tabpanel0_changes);
     			const tabpanel1_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 35) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 67) {
     				tabpanel1_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel1.$set(tabpanel1_changes);
     			const tabpanel2_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				tabpanel2_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel2.$set(tabpanel2_changes);
     			const tabpanel3_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope, htmlUrl*/ 68) {
     				tabpanel3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5523,15 +5535,15 @@ var woezel = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(42:8) <Tabs>",
+    		source: "(44:8) <Tabs>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (82:4) <Modal title="Create Domain" show={showCreateDomain}>
-    function create_default_slot(ctx) {
+    // (84:4) <Modal title="Create Domain" show={showCreateDomain}>
+    function create_default_slot$1(ctx) {
     	let current;
     	const createdomain = new CreateDomain({ $$inline: true });
 
@@ -5559,9 +5571,9 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot.name,
+    		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(82:4) <Modal title=\\\"Create Domain\\\" show={showCreateDomain}>",
+    		source: "(84:4) <Modal title=\\\"Create Domain\\\" show={showCreateDomain}>",
     		ctx
     	});
 
@@ -5592,8 +5604,8 @@ var woezel = (function () {
     	const modal = new Modal({
     			props: {
     				title: "Create Domain",
-    				show: /*showCreateDomain*/ ctx[2],
-    				$$slots: { default: [create_default_slot] },
+    				show: /*showCreateDomain*/ ctx[3],
+    				$$slots: { default: [create_default_slot$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5614,15 +5626,15 @@ var woezel = (function () {
     			t2 = space();
     			create_component(modal.$$.fragment);
     			attr_dev(div0, "class", "file-explorer--container svelte-1642kbx");
-    			add_location(div0, file_1$2, 32, 4, 1264);
+    			add_location(div0, file_1$2, 34, 4, 1363);
     			attr_dev(div1, "class", "svelte-1642kbx");
-    			add_location(div1, file_1$2, 36, 8, 1385);
+    			add_location(div1, file_1$2, 38, 8, 1484);
     			attr_dev(div2, "class", "document-editor svelte-1642kbx");
-    			add_location(div2, file_1$2, 35, 4, 1346);
+    			add_location(div2, file_1$2, 37, 4, 1445);
     			attr_dev(div3, "class", "page-viewer svelte-1642kbx");
-    			add_location(div3, file_1$2, 40, 4, 1456);
+    			add_location(div3, file_1$2, 42, 4, 1555);
     			attr_dev(div4, "class", "container svelte-1642kbx");
-    			add_location(div4, file_1$2, 31, 0, 1235);
+    			add_location(div4, file_1$2, 33, 0, 1334);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5645,14 +5657,14 @@ var woezel = (function () {
     		p: function update(ctx, [dirty]) {
     			const tabs_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 35) {
+    			if (dirty & /*$$scope, htmlUrl, componentUrl, svgUrl*/ 71) {
     				tabs_changes.$$scope = { dirty, ctx };
     			}
 
     			tabs.$set(tabs_changes);
     			const modal_changes = {};
 
-    			if (dirty & /*$$scope*/ 32) {
+    			if (dirty & /*$$scope*/ 64) {
     				modal_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5704,6 +5716,7 @@ var woezel = (function () {
     	let showCreateDomain = false;
     	let svgUrl;
     	let componentUrl;
+    	let htmlUrl;
 
     	astStore.subscribe(store => {
     		if (timeout) clearTimeout(timeout);
@@ -5716,6 +5729,7 @@ var woezel = (function () {
     				console.log(ns);
     				$$invalidate(0, svgUrl = `/documents/data.svg?timestamp=${new Date().getMilliseconds()}`);
     				$$invalidate(1, componentUrl = `/documents/components.svg?timestamp=${new Date().getMilliseconds()}`);
+    				$$invalidate(2, htmlUrl = `/documents/page.html?timestamp=${new Date().getMilliseconds()}`);
     			},
     			1500
     		);
@@ -5728,12 +5742,13 @@ var woezel = (function () {
     	$$self.$inject_state = $$props => {
     		if ("timeout" in $$props) timeout = $$props.timeout;
     		if ("file" in $$props) file = $$props.file;
-    		if ("showCreateDomain" in $$props) $$invalidate(2, showCreateDomain = $$props.showCreateDomain);
+    		if ("showCreateDomain" in $$props) $$invalidate(3, showCreateDomain = $$props.showCreateDomain);
     		if ("svgUrl" in $$props) $$invalidate(0, svgUrl = $$props.svgUrl);
     		if ("componentUrl" in $$props) $$invalidate(1, componentUrl = $$props.componentUrl);
+    		if ("htmlUrl" in $$props) $$invalidate(2, htmlUrl = $$props.htmlUrl);
     	};
 
-    	return [svgUrl, componentUrl, showCreateDomain];
+    	return [svgUrl, componentUrl, htmlUrl, showCreateDomain];
     }
 
     class EditorPage extends SvelteComponentDev {
@@ -6399,7 +6414,7 @@ var woezel = (function () {
     }
 
     // (20:0) <Router {url}>
-    function create_default_slot$1(ctx) {
+    function create_default_slot$2(ctx) {
     	let div1;
     	let t0;
     	let div0;
@@ -6501,7 +6516,7 @@ var woezel = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot$1.name,
+    		id: create_default_slot$2.name,
     		type: "slot",
     		source: "(20:0) <Router {url}>",
     		ctx
@@ -6516,7 +6531,7 @@ var woezel = (function () {
     	const router = new Router({
     			props: {
     				url: /*url*/ ctx[0],
-    				$$slots: { default: [create_default_slot$1] },
+    				$$slots: { default: [create_default_slot$2] },
     				$$scope: { ctx }
     			},
     			$$inline: true

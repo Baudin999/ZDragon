@@ -123,9 +123,22 @@ namespace Woezel.Project {
             return new DInfo(dInfo.Name, path, files, directories);
         }
 
-        public string GetHtml(string ns) {
-            var compilationResult = Cache.Get(ns);
-            return new HtmlTranspiler().Go(Cache, compilationResult);
+        public async Task<byte[]> GetHtml(string ns) {
+            try {
+                if (mapping.ContainsKey(ns)) {
+                    var fInfo = mapping[ns];
+                    var path = Path.Combine(outpath, fInfo.Namespace + ".html");
+                    return await File.ReadAllBytesAsync(path);
+                }
+                else {
+                    var path = Path.Combine(outpath, ns + ".html");
+                    return await File.ReadAllBytesAsync(path);
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return Array.Empty<byte>();
+            }
         }
 
         public async Task<string> SaveFile(string path, string text) {
@@ -162,6 +175,10 @@ namespace Woezel.Project {
                 var componentSvgPath = Path.Combine(outpath, "components.svg");
                 var pumlC = new ComponentTranspiler(compilationResult).Transpile();
                 _ = File.WriteAllBytesAsync(componentSvgPath, await PlantUmlRenderer.Render(pumlC));
+
+                var htmlPath = Path.Combine(outpath, "page.html");
+                var html = new HtmlTranspiler().Go(Cache, compilationResult);
+                _ = File.WriteAllTextAsync(htmlPath, html);
             }
             catch (Exception ex) {
                 Console.WriteLine(ex.Message);

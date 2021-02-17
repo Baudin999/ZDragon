@@ -20,6 +20,11 @@ namespace Woezel.Transpilers.Html {
                 if (documentPart is MarkdownChapterNode mcn) RenderChapter(mcn);
                 else RenderParagraph(documentPart);
             }
+            parts.Add("<h1>Logical Data Model</h1>");
+            parts.Add($"<img src=\"/documents/data.svg\" alt=\"data\" />");
+
+            parts.Add("<h1>Component Diagram</h1>");
+            parts.Add($"<img src=\"/documents/components.svg\" alt=\"data\" />");
 
             return string.Join("\n\n", parts);
         }

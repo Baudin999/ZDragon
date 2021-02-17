@@ -1,8 +1,12 @@
 <script>
-    export let name = "default";
-    export let content = "";
     let page;
 </script>
+
+<div class="page-container">
+    <div class="page" bind:this={page}>
+        <slot />
+    </div>
+</div>
 
 <style>
     .page {
@@ -18,12 +22,8 @@
 
         margin-bottom: 1cm;
     }
-</style>
 
-<div class="page-container">
-    <div class="page" bind:this={page}>
-        This is the page:
-        {name}
-        <pre>{content}</pre>
-    </div>
-</div>
+    .html-frame {
+        border: none;
+    }
+</style>

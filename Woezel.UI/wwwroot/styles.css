@@ -19,6 +19,9 @@
   --background: rgb(31, 31, 31);
   --color: rgb(243, 243, 243);
 }
+.mermaid > svg {
+  text-align: center;
+}
 *,
 *:before,
 *:after {
@@ -159,9 +162,6 @@ button.warning {
 button.warning:hover {
   background: var(--color-primary);
   color: var(--color-primary--alt);
-}
-.mermaid > svg {
-  text-align: center;
 }
 
 .file-explorer {

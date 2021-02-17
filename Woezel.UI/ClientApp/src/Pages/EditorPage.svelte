@@ -24,6 +24,7 @@
     let showCreateDomain = false;
     let svgUrl;
     let componentUrl;
+    let htmlUrl;
     astStore.subscribe((store: any) => {
         if (timeout) clearTimeout(timeout);
         timeout = setTimeout(() => {
@@ -34,6 +35,7 @@
             console.log(ns);
             svgUrl = `/documents/data.svg?timestamp=${new Date().getMilliseconds()}`;
             componentUrl = `/documents/components.svg?timestamp=${new Date().getMilliseconds()}`;
+            htmlUrl = `/documents/page.html?timestamp=${new Date().getMilliseconds()}`;
         }, 1500);
     });
 </script>
@@ -82,7 +84,7 @@
             <TabPanel>
                 <Panel
                     style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
-                    <PageViewer />
+                    <PageViewer url={htmlUrl} />
                 </Panel>
             </TabPanel>
         </Tabs>

@@ -88,7 +88,7 @@ enum {node.Id} {{
                 }
             };
 
-            return "!define DARKBLUE\r\n" +
+            return "!define LIGHTBLUE\r\n" +
                 "!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml \r\n" +
                 String.Join("\r\n", types) + 
                 "\r\n\r\n" + 

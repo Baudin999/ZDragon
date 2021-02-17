@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import Page from "./Page.svelte";
 
-    export let content = "NO CONTENT";
+    export let url;
 
     let container;
     function resize() {
@@ -26,6 +26,17 @@
     });
 </script>
 
+<div class="page-wrapper" bind:this={container}>
+    <Page>
+        <iframe class="html-frame" src={url} title="Page" />
+    </Page>
+    <div class="bottom" />
+</div>
+
+<!-- <Page {content} />
+    <Page name="Carlos" />
+    <Page name="Vincent" />
+     -->
 <style>
     .page-wrapper {
         height: 0;
@@ -43,11 +54,9 @@
         display: block;
         height: 2cm;
     }
+    .html-frame {
+        border: none;
+        width: 100%;
+        height: 100%;
+    }
 </style>
-
-<div class="page-wrapper" bind:this={container}>
-    <Page {content} />
-    <Page name="Carlos" />
-    <Page name="Vincent" />
-    <div class="bottom" />
-</div>

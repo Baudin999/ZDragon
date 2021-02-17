@@ -79,7 +79,7 @@ namespace Woezel.UI.Controllers {
 
         [HttpGet("/documents/{ns}.html")]
         public async Task<IActionResult> HetHtmlString(string ns) {
-            var bytes = Program.Project.GetHtml(ns);
+            var bytes = await Program.Project.GetHtml(ns);
             return File(bytes, "text/html");
         }
 

@@ -16,8 +16,13 @@ namespace Compiler.Language {
             // parse the rest of the type definition
             var type = Take(SyntaxKind.TypeDeclarationToken);
             var id = Take(SyntaxKind.IdentifierToken, AliasMessages[AliasErrors.InvalidIdentifier]);
-            var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();
+            var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).OfType<Token>().ToList();
             var typeDef = Take(SyntaxKind.EqualsToken, AliasMessages[AliasErrors.AssignmentExpected]);
+            if (typeDef is null) {
+                ErrorSink.Errors.Add(new Error(ErrorType.InvalidTypeDefinition, $"Type aliasses cannot be simple names, the complete type definition is required", id));
+                return new TypeAliasNode(Token.Range(type, id), annotationNode, id, genericParameters, new ExpressionNode(id, ExpressionKind.EmptyExpression));
+            }
+
             var idAlias = ParseExpression();
 
             TakeWhile(SyntaxKind.AnnotationToken).ToList();

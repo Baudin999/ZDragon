@@ -21,6 +21,8 @@ record Person
             Assert.Equal("Person", record.Id);
             Assert.Equal("", record.Description);
             Assert.Empty(record.Fields);
+
+            Assert.Equal(ExpressionKind.RecordExpression, ((RecordNode)compilerResult.Ast[0]).ExpressionKind);
         }
 
         [Fact(DisplayName = "Records - Capital vs Lower Case")]
@@ -439,6 +441,42 @@ record Person 'a =
             Assert.Equal("Undeclared generic parameter \"'c\" on field 'LastName' of record 'Person'.", compilerResult.Errors[1].Message);
             Assert.Equal("Undeclared generic parameter \"'d\" on field 'Street' of record 'Person'.", compilerResult.Errors[2].Message);
         }
+
+        [Fact(DisplayName = "Parser - Larger Example 001")]
+        public void Parser_LargerExample001() {
+            var code = @"
+
+
+# This is the title
+
+And here we have a paragraph. The paragraph is something which we can use to create a very readable document and actually write our documentation about the offer.
+
+record Offer 'a =
+    Name: 'a;
+    WoonAdres: Adres;
+
+record Adres =
+    Straat: Name;
+    Huisnummer: Number;
+    HuisnummerExtensie: Maybe Number;
+    Validate: ValidateAddress;
+
+type Name = String;
+
+type ValidateAddress = Adres -> Boolean;
+
+data Other 'a =
+    | Something 'a
+    | Nothing
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Empty(compilerResult.Errors);
+
+        }
+
+
 
         [Fact(DisplayName = "Parser - Spaces in wrong place")]
         public void Parser_SpacesInWrongPlace() {

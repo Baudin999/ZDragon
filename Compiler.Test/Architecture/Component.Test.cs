@@ -145,6 +145,32 @@ component Foo =
             Assert.Equal(ErrorType.Unknown, compilerResult.Errors.First().ErrorType);
         }
 
+        [Fact(DisplayName = "Component - Import Open")]
+        public void Component_ImportOpen() {
+            var errorSink = new ErrorSink();
+            var codeFirst = @"
+component Foo =
+    Name: Footje
+";
+            var codeSecond = @"
+open BaseComponents;
+component Bar =
+    Interactions:
+        - Foo
+";
+            var cache = new CompilationCache(errorSink);
+            var compilerFirst = new Compiler.Compiler(codeFirst, "BaseComponents", cache);
+            var compilerResultFirst = compilerFirst.Compile().Check(cache);
+
+            var compilerSecond = new Compiler.Compiler(codeSecond, "Components", cache);
+            var compilerResultSecond = compilerSecond.Compile().Check(cache);
+
+            Assert.NotNull(compilerResultFirst);
+            Assert.NotNull(compilerResultSecond);
+
+            Assert.Empty(errorSink.Errors);
+        }
+
 
     }
 }

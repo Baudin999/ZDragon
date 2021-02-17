@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace Compiler.Linker {
     public class Lexicon {
+        private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid", "Maybe", "List" };
         private readonly Dictionary<string, AstNode> lexicon;
         private readonly ErrorSink errorSink;
         private readonly IEnumerable<IIdentifierExpressionNode> ast;
@@ -49,7 +50,71 @@ namespace Compiler.Linker {
         }
 
         private void AddTypeAliasNodeToLexicon(TypeAliasNode node) {
-            //
+            if (node.Body is TypeApplicationNode) {
+                // A type application in when we resolve a generic type
+                // we ignore (because they are build in types) Maybe and List...
+                // later we might revise that...
+
+                var ta = (TypeApplicationNode)node.Body;
+
+                // check if all the parameters exist.
+                foreach (var token in ta.Parameters) {
+                    if (token.Value == "Maybe" || token.Value == "List") continue;
+                    else if (!lexicon.ContainsKey(token.Value)) {
+                        errorSink.AddError(new Error(ErrorType.Unknown, $"Could not find type \"{token.Value}\" on type \"{node.Id}\"", token));
+                    }
+                }
+
+                var taRoot = ta.Parameters.First();
+                if (taRoot.Value == "Maybe" || taRoot.Value == "List") return;
+                else if (lexicon.ContainsKey(taRoot.Value)) {
+                    var rootNode = lexicon[taRoot.Value];
+                    if (rootNode is RecordNode recordNode) {
+
+                        // check number of generic parameters, we only allow
+                        // complete application, not partial application...
+                        if (recordNode.GenericParameters.Count != ta.Parameters.Count - 1) {
+                            errorSink.AddError(new Error(ErrorType.Generics_ApplicationMisMatch, $"Invalid number of applied generic parameters.", node.IdToken));
+                            return;
+                        }
+
+                        Dictionary<string, Token> genericParameters = new Dictionary<string, Token>();
+                        for (int i = 0; i < recordNode.GenericParameters.Count; ++i) {
+                            genericParameters.Add(recordNode.GenericParameters[i].Value, ta.Parameters[i + 1]);
+                        }
+
+                        var resolvedFields = recordNode.Fields.Select(f => {
+                            return new RecordFieldNode(
+                                f.AnnotationNode?.Clone(),
+                                f.IdToken.Clone(),
+                                f.TypeTokens.Select(t => {
+                                    if (genericParameters.ContainsKey(t.Value)) return genericParameters[t.Value];
+                                    else return t.Clone();
+                                }),
+                                f.Restrictions.Select(r => r.Clone()),
+                                true
+                                );
+                        }).ToList();
+                        var extensions = recordNode.Extensions.Select(e => e.Clone()).ToList();
+                        extensions.Add(taRoot);
+
+                        var newRecordNode = new RecordNode(
+                            recordNode.AnnotationNode.Clone(),
+                            node.IdToken.Clone(),
+                            new List<Token>(),
+                            extensions,
+                            resolvedFields
+                            );
+
+                        lexicon[node.Id] = newRecordNode;
+                    }
+                }
+            }
+        }
+
+        private void AddComponentNodeToLexicon(ComponentNode node) {
+            var interactions = node.GetAttributeItems("Interactions", new List<string>());
+            // not sure yet what to do
         }
 
         private void CheckTypeToken(Token token, IIdentifierExpressionNode root, string errorQualifier) {
@@ -94,7 +159,12 @@ namespace Compiler.Linker {
                     case RecordNode n: addToLexicon(n); break;
                     case DataNode n: addToLexicon(n); break;
                     case ChoiceNode n: addToLexicon(n); break;
+
+                    // architecture
                     case ComponentNode n: addToLexicon(n); break;
+                    case EndpointNode n: addToLexicon(n); break;
+                    case SystemNode n: addToLexicon(n); break;
+                    case PersonNode n: addToLexicon(n); break;
                     default: break;
                 }
             }

@@ -35,6 +35,8 @@ namespace Compiler {
         GenericParameter_Unused,
         GenericParameter_Undefined,
         InvalidIdentifier,
-        Unknown
+        Unknown,
+        InvalidTypeDefinition,
+        Generics_ApplicationMisMatch
     }
 }

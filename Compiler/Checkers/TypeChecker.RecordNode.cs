@@ -32,7 +32,9 @@ namespace Compiler.Checkers {
                     // add the fields
                     if (ext is RecordNode rn) {
                         foreach (var field in rn.Fields) {
-                            node.Fields.Add(field.Clone());
+                            if (!node.Fields.Any(f => f.Id == field.Id)) {
+                                node.Fields.Add(field.Clone());
+                            }
                         }
                     }
                 }

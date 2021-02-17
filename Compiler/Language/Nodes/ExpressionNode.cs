@@ -50,6 +50,7 @@ namespace Compiler.Language.Nodes {
         ComponentExpression,
         SystemExpression,
         PersonExpression,
-        EndPointExpression
+        EndPointExpression,
+        EmptyExpression
     }
 }

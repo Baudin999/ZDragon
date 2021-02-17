@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Compiler.Checkers {
     public partial class TypeChecker {
-        private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid" };
+        private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid", "Maybe", "List" };
         private readonly CompilationCache cache;
         private readonly CompilationResult compilationResult;
         private readonly Dictionary<string, AstNode> lexicon;
@@ -138,8 +138,9 @@ type {root.Id} {token.Value} = ...;
                 }
             }
 
-
+            // default not found Error Sync
             errorSink.AddError(new Error(
+                ErrorType.Unknown,
                 @$"Could not find type '{token.Value}' on '{rootName}'.",
                 token
             ));
@@ -221,6 +222,7 @@ type {root.Id} {token.Value} = ...;
 
                 // check architectural nodes
                 case ComponentNode n: CheckComponentNode(n); break;
+                case EndpointNode n: CheckEndpointNode(n); break;
                 default: break;
             }
         }

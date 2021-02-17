@@ -32,7 +32,7 @@ namespace Woezel.Transpilers.Components {
             }
         }
 
-        private void TranspileEndpointNode(EndPointNode node) {
+        private void TranspileEndpointNode(EndpointNode node) {
             if (containedComponents.Contains(node.Id)) return;
 
             var name = node.GetAttribute("Name") ?? node.Id;
@@ -80,22 +80,30 @@ namespace Woezel.Transpilers.Components {
                     var container = (AttributesNode)this.compilationresult.Ast.OfType<IIdentifierExpressionNode>().FirstOrDefault(n => n.Id == c);
                     if (container is null) continue;
 
-                    var _name = container.GetAttribute("Name");
-                    var _description = container.GetAttribute("Description");
-                    var _tech = container.GetAttribute("Technology");
-                    var ver = node.GetAttribute("Version", "0");
+                    var _name = container.GetAttribute("Name") ?? container.Id;
+                    var _description = container.GetAttribute("Description") ?? "";
+                    var _version = container.GetAttribute("Version", "0");
 
-                    if (_tech is null && container is EndPointNode) _tech = "endpoint";
+                    var type = container.GetAttribute("Type", "container").ToLower().Trim();
+                    var componentType = type switch {
+                        "database" => "ContainerDb",
+                        "db" => "ContainerDb",
+                        "queue" => "ContainerQueue",
+                        _ => "Container"
+                    };
+                    
+
+                    var _tech = container.GetAttribute("Technology");
+                    if (_tech is null && container is EndpointNode) _tech = "endpoint";
                     if (_tech is null && container is SystemNode) _tech = "system";
                     if (_tech is null && container is ComponentNode) _tech = "component";
 
-                    var componentType = "Container";
 
-                    systemParts.Add($@"{componentType}({container.Id}, ""{_name}"", ""v{ver},{_tech}"", ""{_description}"")");
+                    systemParts.Add($@"    {componentType}({container.Id}, ""{_name}"", ""v{_version},{_tech}"", ""{_description}"")");
 
                     var interactions = container.GetAttributeItems("Interactions", new List<string>());
                     foreach (var interaction in interactions) {
-                        relations.Add($"Rel({container.Id}, {interaction}, \"\", \"\")");
+                        relations.Add($"    Rel({container.Id}, {interaction}, \"\", \"\")");
                     }
                 }
 
@@ -116,7 +124,7 @@ namespace Woezel.Transpilers.Components {
             var _tech = node.GetAttribute("Technology", "component");
             var version = node.GetAttribute("Version", "0");
 
-            if (node is EndPointNode) _tech = "endpoint";
+            if (node is EndpointNode) _tech = "endpoint";
             if (node is SystemNode) _tech = "system";
 
             var componentType = "Container";
@@ -145,10 +153,10 @@ namespace Woezel.Transpilers.Components {
 
 
             // check all the types
-            foreach (var node in this.compilationresult.Ast) {
+            foreach (var node in this.compilationresult.Lexicon.Values) {
                 switch (node) {
                     case ComponentNode n: TranspileComponent(n); break;
-                    case EndPointNode n: TranspileEndpointNode(n); break;
+                    case EndpointNode n: TranspileEndpointNode(n); break;
                     case PersonNode n: TranspilePersonNode(n); break;
                     case SystemNode n: TranspileSystemNode(n); break;
                     default: break;

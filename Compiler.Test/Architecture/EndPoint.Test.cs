@@ -12,15 +12,18 @@ endpoint GetProfile :: ProfileId -> Maybe Profile =
     Title: Get Profile by ProfileId
     Description: Get the right Profile by the Profile ProfileId,
         and return the right Profile
+
+record Profile
+type ProfileId = Guid;
 ";
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile().Check();
 
             Assert.Empty(compilerResult.Errors);
-            Assert.Single(compilerResult.Tokens);
-            Assert.IsType<EndPointNode>(compilerResult.Ast.First());
+            Assert.Equal(3, compilerResult.Tokens.Count());
+            Assert.IsType<EndpointNode>(compilerResult.Ast.First());
 
-            var endPointNode = (EndPointNode)compilerResult.Ast.First();
+            var endPointNode = (EndpointNode)compilerResult.Ast.First();
             Assert.NotNull(endPointNode.TypeDefinition);
 
             // test the type definition
@@ -36,6 +39,19 @@ endpoint GetProfile :: ProfileId -> Maybe Profile =
             Assert.Equal("Profile", tan.Parameters[1].Value);
 
 
+        }
+
+        [Fact(DisplayName = "EndPoint - Type Error")]
+        public void EndPoint_TypeError() {
+            var code = @"
+endpoint GetProfile :: ProfileId -> Maybe Profile =
+    Name: Get Profile
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Equal(2, compilerResult.Errors.Count);
+            
         }
     }
 }

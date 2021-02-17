@@ -1,5 +1,6 @@
 ﻿using Compiler;
 using Compiler.Language.Nodes;
+using Compiler.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ interface {node.Id} {{}}
 ");
         }
         private void TranspileRecordNode(RecordNode node) {
-            var fields = node.Fields.Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}: {string.Join(" ", f.Types)};");
+            var fields = node.Fields.OrderBy(f => f.Id).Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}: {string.Join(" ", f.Types)};");
             types.Add($@"
 class {node.Id} {{
     {string.Join("\r\n\t", fields)}
@@ -39,7 +40,11 @@ class {node.Id} {{
             }
 
             foreach (var extension in node.Extensions) {
-                relations.Add($"{node.Id} --|> {extension.Value}");
+                if (extension is QualifiedToken qt) {
+                    relations.Add($"{node.Id} --|> {qt.QualifiedName}");
+                } else {
+                    relations.Add($"{node.Id} --|> {extension.Value}");
+                }
             }
         }
         private void TranspileDataNode(DataNode node) {
@@ -73,7 +78,7 @@ enum {node.Id} {{
         public string Transpile() {
             
             // check all the types
-            foreach (var node in this.compilationresult.Ast) {
+            foreach (var node in this.compilationresult.Lexicon.Values) {
                 switch (node) {
                     case TypeAliasNode n: TranspileTypeAliasNode(n); break;
                     case RecordNode n: TranspileRecordNode(n); break;

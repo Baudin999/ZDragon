@@ -72,7 +72,8 @@ export const tokenizer = {
         ],
         attributes: [
             [/([A-Z][a-zA-Z ]*)(:)/, ["type.identifier", "number"]],
-            { include: "lang" }
+            { include: "lang" },
+            { include: "root" },
         ],
         attributes_endpoint: [
             [/->/, "number"],

@@ -20,6 +20,18 @@ type name = String;
             Assert.IsType<IdentifierNode>(typeNode.Body);
         }
 
+        [Fact(DisplayName = "Types - incomplete type definition")]
+        public void Types_IncompleteTypeDefinition() {
+            var code = @"
+type name
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Single(compilerResult.ErrorSink.Errors);
+            Assert.Equal(ErrorType.InvalidTypeDefinition, compilerResult.ErrorSink.Errors.First().ErrorType);
+        }
+
         [Fact(DisplayName = "Types - function definition")]
         public void Types_FunctionDefinition() {
             var code = @"
@@ -251,6 +263,54 @@ type Name = String
             TypeAliasNode typeNode = (TypeAliasNode)compilerResult.Ast.First();
             var annotation = "The name type with multi-line annotations";
             Assert.Equal(annotation, typeNode.Annotation.Annotation);
+        }
+
+
+        [Fact(DisplayName = "Types - Type Application 001")]
+        public void Expression_TypeApplication001() {
+            var code = @"
+type MaybePerson = Maybe Person;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Single(compilerResult.Errors);
+        }
+
+
+
+        [Fact(DisplayName = "Types - Type Application 002")]
+        public void Expression_TypeApplication002() {
+            var code = @"
+type PersonRequest = Request Person;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Equal(2, compilerResult.Errors.Count);
+        }
+
+
+        [Fact(DisplayName = "Types - Type Application 003")]
+        public void Expression_TypeApplication003() {
+            var code = @"
+type PersonRequest = Request Person;
+
+record Request 'a =
+    Body: 'a;
+
+record Person =
+    FirstName: String;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Empty(compilerResult.Errors);
+
+            var item = compilerResult.Lexicon["PersonRequest"];
+            Assert.IsType<RecordNode>(item);
+            var personRequest = (RecordNode)item;
+            Assert.Equal(ExpressionKind.RecordExpression, personRequest.ExpressionKind);
         }
 
 

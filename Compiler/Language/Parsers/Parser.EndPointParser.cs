@@ -61,7 +61,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new EndPointNode(Token.Range(start, end), name, attributes, expression);
+            return new EndpointNode(Token.Range(start, end), name, attributes, expression);
         }
     }
 }

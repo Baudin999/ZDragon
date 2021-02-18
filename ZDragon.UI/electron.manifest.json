@@ -1,0 +1,21 @@
+{
+  "executable": "ZDragon.UI",
+  "splashscreen": {
+    "imageFile": ""
+  },
+  "name": "Woezel",
+  "author": "Baudin999",
+  "singleInstance": false,
+  "environment": "Production",
+  "build": {
+    "appId": "com.ZDragon.app",
+    "productName": "Woezel",
+    "copyright": "Copyright © 2020",
+    "buildVersion": "0.0.1",
+    "compression": "maximum",
+    "directories": {
+      "output": "../../../bin/Desktop"
+    }
+    
+  }
+}

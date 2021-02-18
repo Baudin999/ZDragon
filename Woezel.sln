@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "CLI\CLI.csproj", "{5
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Compiler.Test", "Compiler.Test\Compiler.Test.csproj", "{04ED622D-59EA-4136-A3FB-5A7A3BA33886}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woezel.UI", "Woezel.UI\Woezel.UI.csproj", "{4F2F85E2-E80E-46B8-82EA-83208E658662}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDragon.UI", "ZDragon.UI\ZDragon.UI.csproj", "{4F2F85E2-E80E-46B8-82EA-83208E658662}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woezel.Project", "Woezel.Project\Woezel.Project.csproj", "{10D95450-C685-4996-9A0E-369839C7FBA0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDragon.Project", "ZDragon.Project\ZDragon.Project.csproj", "{10D95450-C685-4996-9A0E-369839C7FBA0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Woezel.Transpilers", "Woezel.Transpilers\Woezel.Transpilers.csproj", "{55582A40-02A2-4527-9628-95A9F36B4931}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDragon.Transpilers", "ZDragon.Transpilers\ZDragon.Transpilers.csproj", "{55582A40-02A2-4527-9628-95A9F36B4931}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

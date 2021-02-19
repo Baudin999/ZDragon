@@ -25,8 +25,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
-    <ProjectReference Include="..\Woezel.Project\ZDragon.Project.csproj" />
-    <ProjectReference Include="..\Woezel.Transpilers\ZDragon.Transpilers.csproj" />
+    <ProjectReference Include="..\ZDragon.Project\ZDragon.Project.csproj" />
+    <ProjectReference Include="..\ZDragon.Transpilers\ZDragon.Transpilers.csproj" />
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->

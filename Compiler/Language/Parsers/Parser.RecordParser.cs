@@ -20,6 +20,9 @@ namespace Compiler.Language {
             if (id.Kind != SyntaxKind.IdentifierToken) {
                 ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", id));
             }
+            else if (char.IsLower(id.Value[0])) {
+                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier, Identifiers should start with a capital letter.", id));
+            }
 
             // generic parameters
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();

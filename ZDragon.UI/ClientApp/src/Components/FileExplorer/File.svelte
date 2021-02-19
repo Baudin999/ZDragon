@@ -1,13 +1,17 @@
 <script>
-    import { selectFile } from "../../Services/file";
+    import { selectModule } from "../../Services/module";
 
-    export let file;
+    export let module;
     export let selected = false;
 
-    const fileSelected = () => {
-        selectFile(file);
+    const moduleSelected = () => {
+        selectModule(module);
     };
 </script>
+
+<li class:selected on:click={moduleSelected}>
+    <fa class="fa fa-file-o" />{module.namespace}
+</li>
 
 <style>
     fa {
@@ -16,7 +20,3 @@
         margin-right: 3px;
     }
 </style>
-
-<li class:selected on:click={fileSelected}>
-    <fa class="fa fa-file-o" />{file.name}
-</li>

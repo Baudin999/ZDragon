@@ -29,6 +29,7 @@ export const tokenizer = {
             [/^([a-z][^ ]*)/, [
                 {
                     cases: {
+                        "open": { token: "keyword" },
                         "record": { token: "keyword", next: "@record" },
                         "type": { token: "keyword", next: "@type" },
                         "choice": { token: "keyword", next: "@choice" },

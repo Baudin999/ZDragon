@@ -26,13 +26,31 @@ record Person
         }
 
         [Fact(DisplayName = "Records - Capital vs Lower Case")]
-        public void Records_OnlyName_CvsL() {
+        public void Records_CapitalVSLowerCase() {
             var code = @"
 record person =
     name: String;
 ";
-            var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile().Check();
+            var compilerResult = new Compiler.Compiler(code).Compile().Check();
+
+            Assert.Single(compilerResult.Errors);
+            Assert.Single(compilerResult.Tokens);
+            Assert.Equal(ErrorType.InvalidIdentifier, compilerResult.Errors.First().ErrorType);
+        }
+
+        [Fact(DisplayName = "Records - Multiple TypeChecking")]
+        public void Records_MultipleTypeChecking() {
+
+            /*
+             * Typechecking multiple times should only result in the 
+             * single error this code will produce.
+             */
+
+            var code = @"
+record person =
+    name: String;
+";
+            var compilerResult = new Compiler.Compiler(code).Compile().Check().Check();
 
             Assert.Single(compilerResult.Errors);
             Assert.Single(compilerResult.Tokens);

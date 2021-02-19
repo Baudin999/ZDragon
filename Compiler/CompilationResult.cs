@@ -17,6 +17,7 @@ namespace Compiler {
         public List<OpenNode> References { get; }
 
         public CompilationResult(List<AstNode> ast, IEnumerable<TokenGroup> tokens, CompilationCache cache, IEnumerable<OpenNode> references, Dictionary<string, AstNode> lexicon, IEnumerable<IDocumentNode> document, string ns) {
+            if (cache is null) throw new System.Exception("Cache cannot be null!");
             this.Tokens = tokens.ToList();
             this.Ast = ast;
             this.CompilationCache = cache;

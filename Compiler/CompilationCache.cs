@@ -10,6 +10,10 @@ namespace Compiler {
             this.ErrorSink = errorSink;
         }
 
+        public void ClearErrors() {
+            ErrorSink.Reset();
+        }
+
         public void Add(string ns, CompilationResult result) {
             if (Has(ns)) {
                 Cache[ns] = result;

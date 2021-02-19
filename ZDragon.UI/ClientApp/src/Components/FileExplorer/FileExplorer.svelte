@@ -1,14 +1,20 @@
 <script>
     import { get } from "../../Services/http";
-    import Directory from "./Directory.svelte";
+    import Domain from "./Domain.svelte";
 
-    let documents;
+    let domains;
 
     const getDocuments = async () => {
-        documents = await get("/documents");
+        domains = await get("/domains");
     };
     getDocuments();
 </script>
+
+<div class="file-explorer">
+    {#if domains}
+        <Domain domain={domains} open={true} showSelf={false} />
+    {/if}
+</div>
 
 <style>
     .file-explorer {
@@ -16,9 +22,3 @@
         border-right: 1px solid lightgray;
     }
 </style>
-
-<div class="file-explorer">
-    {#if documents}
-        <Directory directory={documents} open={true} showSelf={false} />
-    {/if}
-</div>

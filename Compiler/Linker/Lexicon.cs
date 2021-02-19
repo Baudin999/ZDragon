@@ -9,10 +9,14 @@ namespace Compiler.Linker {
         private readonly Dictionary<string, AstNode> lexicon;
         private readonly ErrorSink errorSink;
         private readonly IEnumerable<IIdentifierExpressionNode> ast;
+        private readonly CompilationCache cache;
+        private readonly List<OpenNode> refereces;
 
-        public Lexicon(ErrorSink es, IEnumerable<AstNode> ast) {
-            this.errorSink = es;
+        public Lexicon(IEnumerable<AstNode> ast, CompilationCache cache) {
+            this.errorSink = cache.ErrorSink;
             this.ast = ast.OfType<IIdentifierExpressionNode>();
+            this.cache = cache;
+            this.refereces = ast.OfType<OpenNode>().ToList();
             this.lexicon = new Dictionary<string, AstNode>();
         }
 
@@ -112,9 +116,26 @@ namespace Compiler.Linker {
             }
         }
 
-        private void AddComponentNodeToLexicon(ComponentNode node) {
+        private void AddAttributesNode(AttributesNode node) {
             var interactions = node.GetAttributeItems("Interactions", new List<string>());
-            // not sure yet what to do
+            foreach (var interaction in interactions) {
+                var link = Get(interaction);
+                if (link != null && link is IIdentifierExpressionNode) {
+                    if (!lexicon.ContainsKey(interaction)) {
+                        lexicon.Add(interaction, link);
+                    }
+                }
+            }
+
+            var contains = node.GetAttributeItems("Contains", new List<string>());
+            foreach (var c in contains) {
+                var link = Get(c);
+                if (link != null && link is IIdentifierExpressionNode) {
+                    if (!lexicon.ContainsKey(c)) {
+                        lexicon.Add(c, link);
+                    }
+                }
+            }
         }
 
         private void CheckTypeToken(Token token, IIdentifierExpressionNode root, string errorQualifier) {
@@ -142,6 +163,19 @@ namespace Compiler.Linker {
             else {
                 lexicon.Add(key, node);
             }
+        }
+
+        private AstNode? Get(string typeName) {
+            if (lexicon.ContainsKey(typeName)) return lexicon[typeName];
+            AstNode? node = null;
+            foreach (var openNode in refereces) {
+                var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
+                if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
+                    node = _cr.Lexicon[typeName];
+                    break;
+                }
+            }
+            return node;
         }
 
         public Dictionary<string, AstNode> CreateLexicon() {
@@ -180,6 +214,9 @@ namespace Compiler.Linker {
                     case RecordNode n: AddRecordToLexicon(n); break;
                     case DataNode n: AddDataNodeToLexicon(n); break;
                     case ChoiceNode n: AddChoiceNodeToLexicon(n); break;
+
+                    // architecture
+                    case AttributesNode n: AddAttributesNode(n); break;
                     default: break;
                 }
             }

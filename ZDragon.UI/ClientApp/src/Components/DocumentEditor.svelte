@@ -1,32 +1,18 @@
 <script type="ts">
     import { writable } from "svelte/store";
     import Editor from "./Editor.svelte";
-    import { documentStore } from "../Services/file";
-    import { parseCode, astStore } from "../Services/ast";
+    import { moduleStore, parseCode, selectModule } from "../Services/module";
 
-    let file;
+    let module;
     let text = "";
     let type = "carlang";
     let markers = writable([]);
 
     let onSave = async (event) => {
-        if (!file || !event) return;
+        if (!module || !event) return;
         let code = event.detail;
-        parseCode(file, code);
+        parseCode(module, code);
     };
-
-    documentStore.subscribe((value: any) => {
-        file = value.selectedFile;
-        text = value.text;
-        markers.set([]);
-
-        if (file && file.path && file.path.endsWith(".json")) {
-            type = "json";
-            text = JSON.stringify(JSON.parse(text), null, 4);
-        } else {
-            type = "carlang";
-        }
-    });
 
     let mapErrorToken = (e) => {
         return {
@@ -38,16 +24,32 @@
         };
     };
 
-    astStore.subscribe((v: any) => {
-        var errors = v?.errorSink?.errors || [];
+    moduleStore.subscribe((value: any) => {
+        if (!value || !value.modules || !value.selectedModule) return;
+
+        module = value.modules[value.selectedModule];
+        if (!module) {
+            text = "";
+            markers.set([]);
+            return;
+        }
+        text = module.text;
+        var errors = module.compilationResult?.errors || [];
         var mappedErrors = errors.map(mapErrorToken);
         markers.set(mappedErrors);
+
+        if (module && module.path && module.path.endsWith(".json")) {
+            type = "json";
+            text = JSON.stringify(JSON.parse(text), null, 4);
+        } else {
+            type = "carlang";
+        }
     });
 </script>
 
 <div class="container">
     <div class="header">
-        {file ? file.namespace || file.path : "unknown file"}
+        {module ? module.namespace || module.path : "unknown file"}
     </div>
 
     <div class="editor">

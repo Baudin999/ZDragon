@@ -11,39 +11,39 @@
     import Panel from "../Components/Panel.svelte";
     import PageViewer from "../Components/PageViewer.svelte";
     import ASTViewer from "../Components/ASTViewer.svelte";
-    import { documentStore } from "../Services/file.js";
-    import { astStore } from "../Services/ast.js";
+    import { moduleStore } from "../Services/module.js";
     import CreateDomain from "../Forms/CreateDomain.svelte";
     import { get } from "./../Services/http";
 
     let timeout;
-    let file;
-    documentStore.subscribe((s: any) => {
-        file = s?.selectedFile;
-    });
-
-    (async () => {
-        let ds = await get("/domains");
-        console.log(ds);
-    })();
-
-    let showCreateDomain = false;
+    let module;
     let svgUrl;
     let componentUrl;
     let htmlUrl;
-    astStore.subscribe((store: any) => {
+
+    const generateUrls = () => {
+        if (!module || !module.namespace) return;
+        var ns = module.namespace;
+        svgUrl = `/documents/${ns}/data.svg?timestamp=${new Date().getMilliseconds()}`;
+        componentUrl = `/documents/${ns}/components.svg?timestamp=${new Date().getMilliseconds()}`;
+        htmlUrl = `/documents/${ns}/page.html?timestamp=${new Date().getMilliseconds()}`;
+    };
+
+    moduleStore.subscribe((s: any) => {
         if (timeout) clearTimeout(timeout);
         timeout = setTimeout(() => {
-            file = store.file;
-
-            let ns = file ? file.namespace : "unknown";
-            ns = ns.replace(".", "_");
-            console.log(ns);
-            svgUrl = `/documents/data.svg?timestamp=${new Date().getMilliseconds()}`;
-            componentUrl = `/documents/components.svg?timestamp=${new Date().getMilliseconds()}`;
-            htmlUrl = `/documents/page.html?timestamp=${new Date().getMilliseconds()}`;
-        }, 1500);
+            if (!s || !s.selectedModule || !s.modules) {
+                svgUrl = undefined;
+                componentUrl = undefined;
+                htmlUrl = undefined;
+                return;
+            }
+            module = s.modules[s.selectedModule];
+            generateUrls();
+        }, 2000);
     });
+
+    let showCreateDomain = false;
 </script>
 
 <div class="container">
@@ -88,11 +88,16 @@
             </TabPanel>
 
             <TabPanel>
-                <Panel
-                    style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
-                    <!-- <PageViewer url={htmlUrl} /> -->
-                    <iframe class="html-iframe" src={htmlUrl} title="Page" />
-                </Panel>
+                {#if htmlUrl}
+                    <Panel
+                        style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+                        <!-- <PageViewer url={htmlUrl} /> -->
+                        <iframe
+                            class="html-iframe"
+                            src={htmlUrl}
+                            title="Page" />
+                    </Panel>
+                {/if}
             </TabPanel>
         </Tabs>
     </div>

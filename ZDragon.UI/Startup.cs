@@ -25,7 +25,7 @@ namespace ZDragon.UI {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
                 });
-            services.AddTransient<Project.Project>(sp => Program.Project);
+            services.AddSingleton<Project.Project>(sp => Program.Project);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

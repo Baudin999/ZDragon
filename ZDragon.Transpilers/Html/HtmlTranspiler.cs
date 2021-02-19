@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ZDragon.Transpilers.Html {
     public class HtmlTranspiler {
-
+        private readonly CompilationResult compilationresult;
         private readonly List<string> parts = new List<string> {
             html_markup,
             "<div class=\"content\">"
@@ -18,17 +18,21 @@ namespace ZDragon.Transpilers.Html {
             parts.Add($"<p>{node.Content}</p>");
         }
 
-        public string Go(CompilationCache cache, CompilationResult target) {
+        public HtmlTranspiler(CompilationResult compilationResult) {
+            this.compilationresult = compilationResult;
+        }
 
-            foreach (var documentPart in target.Document) {
+        public string Transpile() {
+
+            foreach (var documentPart in this.compilationresult.Document) {
                 if (documentPart is MarkdownChapterNode mcn) RenderChapter(mcn);
                 else RenderParagraph(documentPart);
             }
             parts.Add("<h1>Logical Data Model</h1>");
-            parts.Add($"<img src=\"/documents/data.svg\" alt=\"data\" />");
+            parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" />");
 
             parts.Add("<h1>Component Diagram</h1>");
-            parts.Add($"<img src=\"/documents/components.svg\" alt=\"data\" />");
+            parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" />");
 
             parts.Add("</div>");
             return string.Join("\n\n", parts);

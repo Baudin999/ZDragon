@@ -159,11 +159,8 @@ component Bar =
         - Foo
 ";
             var cache = new CompilationCache(errorSink);
-            var compilerFirst = new Compiler.Compiler(codeFirst, "BaseComponents", cache);
-            var compilerResultFirst = compilerFirst.Compile().Check();
-
-            var compilerSecond = new Compiler.Compiler(codeSecond, "Components", cache);
-            var compilerResultSecond = compilerSecond.Compile().Check();
+            var compilerResultFirst = new Compiler.Compiler(codeFirst, "BaseComponents", cache).Compile().Check();
+            var compilerResultSecond = new Compiler.Compiler(codeSecond, "Components", cache).Compile().Check();
 
             Assert.NotNull(compilerResultFirst);
             Assert.NotNull(compilerResultSecond);

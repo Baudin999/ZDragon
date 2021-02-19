@@ -41,7 +41,7 @@ namespace Compiler {
             var tokens = new Lexer(this.SourceCode, Cache.ErrorSink).Tokenize(initialContext).ToList();
             var contextualTokens = new ContextualTokenizer(tokens, Cache.ErrorSink).Tokenize(initialContext).ToList();
             var ast = new ContextualParser(contextualTokens, Cache.ErrorSink).Parse().ToList();
-            var lexicon = new Lexicon(Cache.ErrorSink, ast).CreateLexicon();
+            var lexicon = new Lexicon(ast, Cache).CreateLexicon();
             var document = ast.OfType<IDocumentNode>();
             var referencedModules = ast.OfType<OpenNode>();
 
@@ -49,15 +49,13 @@ namespace Compiler {
             var compilationResult = new CompilationResult(ast, contextualTokens, Cache, referencedModules, lexicon, document, this.Namespace);
             Cache.Add(this.Namespace, compilationResult);
             return compilationResult;
-            
         }
 
-        public CompilationResult Compile(ContextType initialContext = ContextType.None)
-        {
+        public CompilationResult Compile(ContextType initialContext = ContextType.None) {
             var tokens = new Lexer(this.SourceCode, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
             var contextualTokens = new ContextualTokenizer(tokens, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
             var ast = new ContextualParser(contextualTokens, this.Cache.ErrorSink).Parse().ToList();
-            var lexicon = new Lexicon(this.Cache.ErrorSink, ast).CreateLexicon();
+            var lexicon = new Lexicon(ast, Cache).CreateLexicon();
             var document = ast.OfType<IDocumentNode>();
             var referencedModules = ast.OfType<OpenNode>();
             var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);
@@ -73,7 +71,7 @@ namespace Compiler {
             var tokens = new Lexer(this.SourceCode, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
             var contextualTokens = new ContextualTokenizer(tokens, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
             var ast = new ContextualParser(contextualTokens, this.Cache.ErrorSink).Parse().ToList();
-            var lexicon = new Lexicon(this.Cache.ErrorSink, ast).CreateLexicon();
+            var lexicon = new Lexicon(ast, Cache).CreateLexicon();
             var document = ast.OfType<IDocumentNode>();
             var referencedModules = ast.OfType<OpenNode>();
             var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);

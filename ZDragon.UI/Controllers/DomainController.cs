@@ -23,7 +23,7 @@ namespace ZDragon.UI.Controllers {
 
         [HttpGet("/domains")]
         public IActionResult GetDomains() {
-            return Ok(_project.Domains);
+            return Ok(_project.DirectoryInteractor);
         }
 
 

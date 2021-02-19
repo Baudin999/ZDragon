@@ -1,23 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Text;
+
 
 namespace ZDragon.Project {
     public static class Utilities {
 
         public static string GetNamespaceFromPath(string root, string path) {
+            
+            if (root == path) return "";
 
-            var p = Path.IsPathFullyQualified(path);
-            var p2 = Path.IsPathRooted(path);
-            var p3 = Path.DirectorySeparatorChar;
-            var _t = path.Replace(root, "");
-            var __t = Path.GetRelativePath(root, path);
-
-            var _path = Path.ChangeExtension(path, null);
-            if (Path.IsPathRooted(path) && Path.IsPathRooted(root)) {
-                _path = Path
-                    .GetRelativePath(root, path)
-                     .Replace(".", "_$_$_")
-                    .Replace("\\", ".");
+            var _path = Path.ChangeExtension(path, " ").Trim();
+            if (Path.IsPathRooted(_path) && Path.IsPathRooted(root)) {
+                _path = Path.GetRelativePath(root, _path);
+                _path = _path.Replace(".", "_$_$_");
+                _path = _path.Replace("\\", ".");
                 return _path;
             }
             else {
@@ -26,7 +23,7 @@ namespace ZDragon.Project {
 
         }
 
-        public static string GetpathFromNamespace(string root, string ns) {
+        public static string GetPathFromNamespace(string root, string ns) {
             var _path =
                 ns
                     .Replace(".", "\\")
@@ -44,8 +41,39 @@ namespace ZDragon.Project {
             return path.Replace(" ", "");
         }
 
-        internal static object GetNamespaceFromPath(string domainPath) {
-            throw new System.NotImplementedException();
+        public static byte[] StringToByteArray(string s) {
+            return ASCIIEncoding.ASCII.GetBytes(s);
         }
+
+        public static string ByteArrayToString(byte[] arrInput) {
+            int i;
+            StringBuilder sOutput = new StringBuilder(arrInput.Length);
+            for (i = 0; i < arrInput.Length - 1; i++) {
+                sOutput.Append(arrInput[i].ToString("X2"));
+            }
+            return sOutput.ToString();
+        }
+
+        public static bool HashCompare(byte[] h1, byte[] h2) {
+            bool bEqual = false;
+            if (h2.Length == h1.Length) {
+                int i = 0;
+                while ((i < h2.Length) && (h2[i] == h1[i])) {
+                    i += 1;
+                }
+                if (i == h2.Length) {
+                    bEqual = true;
+                }
+            }
+            return bEqual;
+        }
+
+        public static byte[] HashString(string s) {
+            var sha256 = System.Security.Cryptography.SHA256.Create();
+            return sha256.ComputeHash(StringToByteArray(s));
+        }
+
+       
+
     }
 }

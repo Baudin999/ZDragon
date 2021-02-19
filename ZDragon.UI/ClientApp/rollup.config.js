@@ -13,7 +13,7 @@ export default {
   output: {
     sourcemap: true,
     format: "iife",
-    name: "woezel",
+    name: "zdragon",
     file: "./../wwwroot/bundle.js"
   },
   plugins: [
@@ -60,7 +60,7 @@ export default {
     //!production && livereload("./../wwwroot/build"),
     production && terser(),
 
-    typescript({ sourceMap: !production })
+    typescript({ sourceMap: true })
   ],
   watch: {
     clearScreen: false

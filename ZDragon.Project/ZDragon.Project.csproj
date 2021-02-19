@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
-    <ProjectReference Include="..\Woezel.Transpilers\ZDragon.Transpilers.csproj" />
+    <ProjectReference Include="..\ZDragon.Transpilers\ZDragon.Transpilers.csproj" />
   </ItemGroup>
 
 </Project>

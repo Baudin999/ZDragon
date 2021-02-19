@@ -1,7 +1,7 @@
 <script type="ts">
     import { onMount } from "svelte";
     import { selections } from "../Services/selection";
-    import { astStore } from "./../Services/ast";
+    import { moduleStore } from "./../Services/module";
     import Editor from "./Editor.svelte";
 
     let input;
@@ -9,9 +9,11 @@
     let text;
     let lexicon;
 
-    astStore.subscribe((s: any) => {
-        if (s && s.lexicon) {
-            lexicon = s.ast;
+    moduleStore.subscribe((s: any) => {
+        if (s && s.selectedModule && s.selectedModule.lexicon) {
+            lexicon = s.selectedModule.lexicon;
+            text = s.selectedModule.text;
+
             if (input) searchNode();
         } else {
             lexicon = {};
@@ -48,6 +50,22 @@
     });
 </script>
 
+{#if text}
+    <div class="json-viewer">
+        <div class="json-viewer--search">
+            <span>Search:</span>
+            <input
+                bind:this={input}
+                on:input={searchNode}
+                on:change={searchNode}
+                bind:value={key} />
+        </div>
+        <div class="json-viewer--editor">
+            <Editor language="json" {text} />
+        </div>
+    </div>
+{/if}
+
 <style type="less">
     .json-viewer {
         height: 100%;
@@ -75,19 +93,3 @@
         }
     }
 </style>
-
-{#if text}
-    <div class="json-viewer">
-        <div class="json-viewer--search">
-            <span>Search:</span>
-            <input
-                bind:this={input}
-                on:input={searchNode}
-                on:change={searchNode}
-                bind:value={key} />
-        </div>
-        <div class="json-viewer--editor">
-            <Editor language="json" {text} />
-        </div>
-    </div>
-{/if}

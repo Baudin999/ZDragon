@@ -8,8 +8,8 @@ namespace Compiler.Checkers {
         private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid", "Maybe", "List" };
         private readonly CompilationCache cache;
         private readonly CompilationResult compilationResult;
-        private readonly Dictionary<string, AstNode> lexicon;
-        private readonly Dictionary<string, AstNode> externalLexicon = new Dictionary<string, AstNode>();
+        private readonly Dictionary<string, IIdentifierExpressionNode> lexicon;
+        private readonly Dictionary<string, IIdentifierExpressionNode> externalLexicon = new Dictionary<string, IIdentifierExpressionNode>();
         private ErrorSink errorSink => cache.ErrorSink;
 
        
@@ -169,8 +169,8 @@ type {root.Id} {token.Value} = ...;
             }
         }
 
-        private AstNode? Get(string typeName) {
-            AstNode? node = null;
+        private IIdentifierExpressionNode? Get(string typeName) {
+            IIdentifierExpressionNode? node = null;
             foreach (var openNode in compilationResult.References) {
                 var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
                 if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
@@ -181,7 +181,7 @@ type {root.Id} {token.Value} = ...;
             return node;
         }
 
-        private void Add(string key, AstNode node) {
+        private void Add(string key, IIdentifierExpressionNode node) {
             if (!this.externalLexicon.ContainsKey(key)) {
                 this.externalLexicon.Add(key, node);
             }
@@ -200,7 +200,7 @@ type {root.Id} {token.Value} = ...;
             };
 
             while (externalLexicon.Count > 0) {
-                var temp = new Dictionary<string, AstNode>();
+                var temp = new Dictionary<string, IIdentifierExpressionNode>();
                 foreach (var (key, value) in externalLexicon) {
                     temp.Add(key, value);
                 }
@@ -214,7 +214,7 @@ type {root.Id} {token.Value} = ...;
             }
         }
 
-        private void CheckNode(AstNode node) {
+        private void CheckNode(IIdentifierExpressionNode node) {
             switch (node) {
                 case TypeAliasNode n: CheckTypeAliasNode(n); break;
                 case RecordNode n: CheckRecordNode(n); break;

@@ -1,6 +1,5 @@
 <script type="ts">
     import { onMount } from "svelte";
-    import { selections } from "../Services/selection";
     import { moduleStore } from "./../Services/module";
     import Editor from "./Editor.svelte";
 
@@ -18,13 +17,6 @@
         } else {
             lexicon = {};
             text = "";
-        }
-    });
-
-    selections.subscribe((s: any) => {
-        if (s.word && s.word != key) {
-            key = s.word;
-            searchNode();
         }
     });
 

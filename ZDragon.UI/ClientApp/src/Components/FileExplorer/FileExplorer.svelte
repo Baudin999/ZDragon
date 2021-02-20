@@ -1,6 +1,7 @@
 <script>
     import { get } from "../../Services/http";
     import Domain from "./Domain.svelte";
+    import FileToolbar from "./FileToolbar.svelte";
 
     let domains;
 
@@ -11,6 +12,8 @@
 </script>
 
 <div class="file-explorer">
+    <FileToolbar />
+
     {#if domains}
         <Domain domain={domains} open={true} showSelf={false} />
     {/if}

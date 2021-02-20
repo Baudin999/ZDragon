@@ -6,7 +6,7 @@ using System.Linq;
 namespace Compiler.Linker {
     public class Lexicon {
         private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid", "Maybe", "List" };
-        private readonly Dictionary<string, AstNode> lexicon;
+        private readonly Dictionary<string, IIdentifierExpressionNode> lexicon;
         private readonly ErrorSink errorSink;
         private readonly IEnumerable<IIdentifierExpressionNode> ast;
         private readonly CompilationCache cache;
@@ -17,7 +17,7 @@ namespace Compiler.Linker {
             this.ast = ast.OfType<IIdentifierExpressionNode>();
             this.cache = cache;
             this.refereces = ast.OfType<OpenNode>().ToList();
-            this.lexicon = new Dictionary<string, AstNode>();
+            this.lexicon = new Dictionary<string, IIdentifierExpressionNode>();
         }
 
         private void AddRecordToLexicon(RecordNode record) {
@@ -165,20 +165,20 @@ namespace Compiler.Linker {
             }
         }
 
-        private AstNode? Get(string typeName) {
+        private IIdentifierExpressionNode? Get(string typeName) {
             if (lexicon.ContainsKey(typeName)) return lexicon[typeName];
-            AstNode? node = null;
+            IIdentifierExpressionNode? node = null;
             foreach (var openNode in refereces) {
                 var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
                 if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
-                    node = _cr.Lexicon[typeName];
+                    node = (IIdentifierExpressionNode)_cr.Lexicon[typeName];
                     break;
                 }
             }
             return node;
         }
 
-        public Dictionary<string, AstNode> CreateLexicon() {
+        public Dictionary<string, IIdentifierExpressionNode> CreateLexicon() {
 
             // becuase we do not want the order in which the nodes are written 
             // to cause problems in the lexicon lookup we will first add all of the types

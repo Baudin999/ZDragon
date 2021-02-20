@@ -11,6 +11,7 @@
     import Panel from "../Components/Panel.svelte";
     import ASTViewer from "../Components/ASTViewer.svelte";
     import { moduleStore } from "../Services/module.js";
+    import { stateStore, toggleAddFileDialog } from "../Services/state.js";
     import CreateDomain from "../Forms/CreateDomain.svelte";
 
     let iframe;
@@ -43,6 +44,12 @@
     });
 
     let showCreateDomain = false;
+    let showAddFileDialog = false;
+
+    stateStore.subscribe((s: any) => {
+        console.log(s);
+        showAddFileDialog = !!s.showAddFileDialog;
+    });
 
     let print = () => {
         iframe.contentWindow.focus();
@@ -112,6 +119,13 @@
     </div>
 
     <Modal title="Create Domain" show={showCreateDomain}>
+        <CreateDomain />
+    </Modal>
+
+    <Modal
+        title="Add File"
+        show={showAddFileDialog}
+        close={toggleAddFileDialog}>
         <CreateDomain />
     </Modal>
 </div>

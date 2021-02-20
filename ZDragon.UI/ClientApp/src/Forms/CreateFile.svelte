@@ -1,15 +1,15 @@
 <script>
     import { writable } from "svelte/store";
-    import { post } from "./../Services/http";
+    import { post } from "../Services/http";
 
-    var domain = writable({});
+    var file = writable({});
     const changeValue = (name) => (e) => {
-        $domain = { ...$domain, [name]: e.target.value };
+        $file = { ...$file, [name]: e.target.value };
     };
 
     const submitForm = async () => {
         try {
-            var result = await post("/domain", $domain);
+            var result = await post("/document", $file);
             console.log(result);
         } catch (err) {
             console.log(err);
@@ -21,6 +21,14 @@
     <div class="form--field">
         <label for="aaa1">Name</label>
         <input id="aaa1" on:change={changeValue("name")} />
+    </div>
+
+    <div class="form--field">
+        <label for="aaa2">Type</label>
+        <select id="aaa2" on:change={changeValue("type")}>
+            <option>Feature</option>
+            <option>Module</option>
+        </select>
     </div>
 
     <div class="form--field">

@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte";
     import { onMount, onDestroy, afterUpdate } from "svelte";
     import { writable } from "svelte/store";
-    import { selectWord } from "../Services/selection";
+    // import { selectWord } from "../Services/selection";
 
     const dispatch = createEventDispatcher();
 
@@ -119,11 +119,11 @@
     }
 </script>
 
+<div class="editor" {id} bind:this={editorContainer} />
+
 <style>
     .editor {
         height: 100%;
         width: 100%;
     }
 </style>
-
-<div class="editor" {id} bind:this={editorContainer} />

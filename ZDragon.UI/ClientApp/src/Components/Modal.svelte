@@ -2,11 +2,7 @@
     import { createEventDispatcher } from "svelte";
     export let title = "Unknown Modal";
     export let show = false;
-    const dispatch = createEventDispatcher();
-
-    let hide = () => {
-        dispatch("hide");
-    };
+    export let close = () => {};
 </script>
 
 <div class="background" class:show />
@@ -14,7 +10,7 @@
 <div class="modal" class:show>
     <div class="title">
         {title}
-        <i on:click|stopPropagation={hide} class="fa fa-times" />
+        <i on:click|stopPropagation={close} class="fa fa-times" />
     </div>
 
     <div class="content">

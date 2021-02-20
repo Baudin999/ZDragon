@@ -2219,8 +2219,8 @@ var zdragon = (function () {
     	let div2;
     	let current;
     	let dispose;
-    	const default_slot_template = /*$$slots*/ ctx[5].default;
-    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[4], null);
+    	const default_slot_template = /*$$slots*/ ctx[4].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[3], null);
 
     	const block = {
     		c: function create() {
@@ -2236,17 +2236,17 @@ var zdragon = (function () {
     			if (default_slot) default_slot.c();
     			attr_dev(div0, "class", "background svelte-ab2af5");
     			toggle_class(div0, "show", /*show*/ ctx[1]);
-    			add_location(div0, file$4, 11, 0, 255);
+    			add_location(div0, file$4, 7, 0, 181);
     			attr_dev(i, "class", "fa fa-times svelte-ab2af5");
-    			add_location(i, file$4, 16, 8, 378);
+    			add_location(i, file$4, 12, 8, 304);
     			attr_dev(div1, "class", "title svelte-ab2af5");
-    			add_location(div1, file$4, 14, 4, 332);
+    			add_location(div1, file$4, 10, 4, 258);
     			attr_dev(div2, "class", "content svelte-ab2af5");
-    			add_location(div2, file$4, 19, 4, 455);
+    			add_location(div2, file$4, 15, 4, 382);
     			attr_dev(div3, "class", "modal svelte-ab2af5");
     			toggle_class(div3, "show", /*show*/ ctx[1]);
-    			add_location(div3, file$4, 13, 0, 296);
-    			dispose = listen_dev(i, "click", stop_propagation(/*hide*/ ctx[2]), false, false, true);
+    			add_location(div3, file$4, 9, 0, 222);
+    			dispose = listen_dev(i, "click", stop_propagation(/*close*/ ctx[2]), false, false, true);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -2275,8 +2275,8 @@ var zdragon = (function () {
 
     			if (!current || dirty & /*title*/ 1) set_data_dev(t1, /*title*/ ctx[0]);
 
-    			if (default_slot && default_slot.p && dirty & /*$$scope*/ 16) {
-    				default_slot.p(get_slot_context(default_slot_template, ctx, /*$$scope*/ ctx[4], null), get_slot_changes(default_slot_template, /*$$scope*/ ctx[4], dirty, null));
+    			if (default_slot && default_slot.p && dirty & /*$$scope*/ 8) {
+    				default_slot.p(get_slot_context(default_slot_template, ctx, /*$$scope*/ ctx[3], null), get_slot_changes(default_slot_template, /*$$scope*/ ctx[3], dirty, null));
     			}
 
     			if (dirty & /*show*/ 2) {
@@ -2315,13 +2315,12 @@ var zdragon = (function () {
     function instance$7($$self, $$props, $$invalidate) {
     	let { title = "Unknown Modal" } = $$props;
     	let { show = false } = $$props;
-    	const dispatch = createEventDispatcher();
 
-    	let hide = () => {
-    		dispatch("hide");
-    	};
+    	let { close = () => {
+    		
+    	} } = $$props;
 
-    	const writable_props = ["title", "show"];
+    	const writable_props = ["title", "show", "close"];
 
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Modal> was created with unknown prop '${key}'`);
@@ -2332,26 +2331,27 @@ var zdragon = (function () {
     	$$self.$set = $$props => {
     		if ("title" in $$props) $$invalidate(0, title = $$props.title);
     		if ("show" in $$props) $$invalidate(1, show = $$props.show);
-    		if ("$$scope" in $$props) $$invalidate(4, $$scope = $$props.$$scope);
+    		if ("close" in $$props) $$invalidate(2, close = $$props.close);
+    		if ("$$scope" in $$props) $$invalidate(3, $$scope = $$props.$$scope);
     	};
 
     	$$self.$capture_state = () => {
-    		return { title, show, hide };
+    		return { title, show, close };
     	};
 
     	$$self.$inject_state = $$props => {
     		if ("title" in $$props) $$invalidate(0, title = $$props.title);
     		if ("show" in $$props) $$invalidate(1, show = $$props.show);
-    		if ("hide" in $$props) $$invalidate(2, hide = $$props.hide);
+    		if ("close" in $$props) $$invalidate(2, close = $$props.close);
     	};
 
-    	return [title, show, hide, dispatch, $$scope, $$slots];
+    	return [title, show, close, $$scope, $$slots];
     }
 
     class Modal extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { title: 0, show: 1 });
+    		init(this, options, instance$7, create_fragment$7, safe_not_equal, { title: 0, show: 1, close: 2 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -2374,6 +2374,14 @@ var zdragon = (function () {
     	}
 
     	set show(value) {
+    		throw new Error("<Modal>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get close() {
+    		throw new Error("<Modal>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set close(value) {
     		throw new Error("<Modal>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
@@ -3320,10 +3328,92 @@ var zdragon = (function () {
     	}
     }
 
-    /* src\Components\FileExplorer\FileExplorer.svelte generated by Svelte v3.16.7 */
-    const file$7 = "src\\Components\\FileExplorer\\FileExplorer.svelte";
+    // import { getText, get, post } from "./http";
+    var stateStore = writable({});
+    var toggleAddFileDialog = function () {
+        stateStore.update(function (s) { return (__assign(__assign({}, s), { showAddFileDialog: !!!s.showAddFileDialog })); });
+    };
+    //# sourceMappingURL=state.js.map
 
-    // (14:4) {#if domains}
+    /* src\Components\FileExplorer\FileToolbar.svelte generated by Svelte v3.16.7 */
+    const file$7 = "src\\Components\\FileExplorer\\FileToolbar.svelte";
+
+    function create_fragment$a(ctx) {
+    	let div2;
+    	let div0;
+    	let i0;
+    	let t;
+    	let div1;
+    	let i1;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div2 = element("div");
+    			div0 = element("div");
+    			i0 = element("i");
+    			t = space();
+    			div1 = element("div");
+    			i1 = element("i");
+    			attr_dev(i0, "class", "fa fa-file-o svelte-t36d98");
+    			add_location(i0, file$7, 5, 40, 154);
+    			add_location(div0, file$7, 5, 4, 118);
+    			attr_dev(i1, "class", "fa fa-folder-o svelte-t36d98");
+    			add_location(i1, file$7, 6, 9, 197);
+    			add_location(div1, file$7, 6, 4, 192);
+    			attr_dev(div2, "class", "toolbar svelte-t36d98");
+    			add_location(div2, file$7, 4, 0, 91);
+    			dispose = listen_dev(div0, "click", toggleAddFileDialog, false, false, false);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div2, anchor);
+    			append_dev(div2, div0);
+    			append_dev(div0, i0);
+    			append_dev(div2, t);
+    			append_dev(div2, div1);
+    			append_dev(div1, i1);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div2);
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$a.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    class FileToolbar extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$a, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "FileToolbar",
+    			options,
+    			id: create_fragment$a.name
+    		});
+    	}
+    }
+
+    /* src\Components\FileExplorer\FileExplorer.svelte generated by Svelte v3.16.7 */
+    const file$8 = "src\\Components\\FileExplorer\\FileExplorer.svelte";
+
+    // (17:4) {#if domains}
     function create_if_block$3(ctx) {
     	let current;
 
@@ -3367,30 +3457,36 @@ var zdragon = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(14:4) {#if domains}",
+    		source: "(17:4) {#if domains}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$a(ctx) {
+    function create_fragment$b(ctx) {
     	let div;
+    	let t;
     	let current;
+    	const filetoolbar = new FileToolbar({ $$inline: true });
     	let if_block = /*domains*/ ctx[0] && create_if_block$3(ctx);
 
     	const block = {
     		c: function create() {
     			div = element("div");
+    			create_component(filetoolbar.$$.fragment);
+    			t = space();
     			if (if_block) if_block.c();
     			attr_dev(div, "class", "file-explorer svelte-kfz6yl");
-    			add_location(div, file$7, 12, 0, 247);
+    			add_location(div, file$8, 13, 0, 300);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
+    			mount_component(filetoolbar, div, null);
+    			append_dev(div, t);
     			if (if_block) if_block.m(div, null);
     			current = true;
     		},
@@ -3417,22 +3513,25 @@ var zdragon = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
+    			transition_in(filetoolbar.$$.fragment, local);
     			transition_in(if_block);
     			current = true;
     		},
     		o: function outro(local) {
+    			transition_out(filetoolbar.$$.fragment, local);
     			transition_out(if_block);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
+    			destroy_component(filetoolbar);
     			if (if_block) if_block.d();
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$a.name,
+    		id: create_fragment$b.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3464,27 +3563,21 @@ var zdragon = (function () {
     class FileExplorer extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$a, create_fragment$a, safe_not_equal, {});
+    		init(this, options, instance$a, create_fragment$b, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "FileExplorer",
     			options,
-    			id: create_fragment$a.name
+    			id: create_fragment$b.name
     		});
     	}
     }
 
-    var selections = writable({});
-    var selectWord = function (word) {
-        selections.update(function (store) { return (__assign(__assign({}, store), { word: word })); });
-    };
-    //# sourceMappingURL=selection.js.map
-
     /* src\Components\Editor.svelte generated by Svelte v3.16.7 */
-    const file$8 = "src\\Components\\Editor.svelte";
+    const file$9 = "src\\Components\\Editor.svelte";
 
-    function create_fragment$b(ctx) {
+    function create_fragment$c(ctx) {
     	let div;
 
     	const block = {
@@ -3492,7 +3585,7 @@ var zdragon = (function () {
     			div = element("div");
     			attr_dev(div, "class", "editor svelte-1dng18m");
     			attr_dev(div, "id", /*id*/ ctx[1]);
-    			add_location(div, file$8, 128, 0, 4003);
+    			add_location(div, file$9, 121, 0, 3918);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3512,7 +3605,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$b.name,
+    		id: create_fragment$c.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3712,7 +3805,7 @@ var zdragon = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$b, create_fragment$b, safe_not_equal, {
+    		init(this, options, instance$b, create_fragment$c, safe_not_equal, {
     			onKeyPress: 2,
     			text: 3,
     			language: 4,
@@ -3725,7 +3818,7 @@ var zdragon = (function () {
     			component: this,
     			tagName: "Editor",
     			options,
-    			id: create_fragment$b.name
+    			id: create_fragment$c.name
     		});
     	}
 
@@ -3779,9 +3872,9 @@ var zdragon = (function () {
     }
 
     /* src\Components\DocumentEditor.svelte generated by Svelte v3.16.7 */
-    const file$9 = "src\\Components\\DocumentEditor.svelte";
+    const file$a = "src\\Components\\DocumentEditor.svelte";
 
-    function create_fragment$c(ctx) {
+    function create_fragment$d(ctx) {
     	let div2;
     	let div0;
 
@@ -3814,11 +3907,11 @@ var zdragon = (function () {
     			div1 = element("div");
     			create_component(editor.$$.fragment);
     			attr_dev(div0, "class", "header svelte-whjbup");
-    			add_location(div0, file$9, 56, 4, 2162);
+    			add_location(div0, file$a, 56, 4, 2162);
     			attr_dev(div1, "class", "editor svelte-whjbup");
-    			add_location(div1, file$9, 60, 4, 2271);
+    			add_location(div1, file$a, 60, 4, 2271);
     			attr_dev(div2, "class", "container svelte-whjbup");
-    			add_location(div2, file$9, 55, 0, 2133);
+    			add_location(div2, file$a, 55, 0, 2133);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3859,7 +3952,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$c.name,
+    		id: create_fragment$d.name,
     		type: "component",
     		source: "",
     		ctx
@@ -3974,21 +4067,21 @@ var zdragon = (function () {
     class DocumentEditor extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$c, create_fragment$c, safe_not_equal, {});
+    		init(this, options, instance$c, create_fragment$d, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "DocumentEditor",
     			options,
-    			id: create_fragment$c.name
+    			id: create_fragment$d.name
     		});
     	}
     }
 
     /* src\Components\ASTViewer.svelte generated by Svelte v3.16.7 */
-    const file$a = "src\\Components\\ASTViewer.svelte";
+    const file$b = "src\\Components\\ASTViewer.svelte";
 
-    // (47:0) {#if text}
+    // (40:0) {#if text}
     function create_if_block$4(ctx) {
     	let div2;
     	let div0;
@@ -4017,15 +4110,15 @@ var zdragon = (function () {
     			div1 = element("div");
     			create_component(editor.$$.fragment);
     			attr_dev(span, "class", "svelte-ewg7r3");
-    			add_location(span, file$a, 49, 12, 1313);
+    			add_location(span, file$b, 42, 12, 1135);
     			attr_dev(input_1, "class", "svelte-ewg7r3");
-    			add_location(input_1, file$a, 50, 12, 1347);
+    			add_location(input_1, file$b, 43, 12, 1169);
     			attr_dev(div0, "class", "json-viewer--search svelte-ewg7r3");
-    			add_location(div0, file$a, 48, 8, 1266);
+    			add_location(div0, file$b, 41, 8, 1088);
     			attr_dev(div1, "class", "json-viewer--editor svelte-ewg7r3");
-    			add_location(div1, file$a, 56, 8, 1530);
+    			add_location(div1, file$b, 49, 8, 1352);
     			attr_dev(div2, "class", "json-viewer svelte-ewg7r3");
-    			add_location(div2, file$a, 47, 4, 1231);
+    			add_location(div2, file$b, 40, 4, 1053);
 
     			dispose = [
     				listen_dev(input_1, "input", /*searchNode*/ ctx[3], false, false, false),
@@ -4076,14 +4169,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block$4.name,
     		type: "if",
-    		source: "(47:0) {#if text}",
+    		source: "(40:0) {#if text}",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$d(ctx) {
+    function create_fragment$e(ctx) {
     	let if_block_anchor;
     	let current;
     	let if_block = /*text*/ ctx[2] && create_if_block$4(ctx);
@@ -4139,7 +4232,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$d.name,
+    		id: create_fragment$e.name,
     		type: "component",
     		source: "",
     		ctx
@@ -4162,13 +4255,6 @@ var zdragon = (function () {
     		} else {
     			lexicon = {};
     			$$invalidate(2, text = "");
-    		}
-    	});
-
-    	selections.subscribe(s => {
-    		if (s.word && s.word != key) {
-    			$$invalidate(1, key = s.word);
-    			searchNode();
     		}
     	});
 
@@ -4223,21 +4309,21 @@ var zdragon = (function () {
     class ASTViewer extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$d, create_fragment$d, safe_not_equal, {});
+    		init(this, options, instance$d, create_fragment$e, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "ASTViewer",
     			options,
-    			id: create_fragment$d.name
+    			id: create_fragment$e.name
     		});
     	}
     }
 
     /* src\Forms\CreateDomain.svelte generated by Svelte v3.16.7 */
-    const file$b = "src\\Forms\\CreateDomain.svelte";
+    const file$c = "src\\Forms\\CreateDomain.svelte";
 
-    function create_fragment$e(ctx) {
+    function create_fragment$f(ctx) {
     	let form;
     	let div0;
     	let label0;
@@ -4269,22 +4355,22 @@ var zdragon = (function () {
     			t5 = space();
     			button = element("button");
     			button.textContent = "Submit";
-    			attr_dev(label0, "for", "1");
-    			add_location(label0, file$b, 21, 8, 544);
-    			attr_dev(input, "id", "1");
-    			add_location(input, file$b, 22, 8, 581);
+    			attr_dev(label0, "for", "aaa1");
+    			add_location(label0, file$c, 21, 8, 544);
+    			attr_dev(input, "id", "aaa1");
+    			add_location(input, file$c, 22, 8, 584);
     			attr_dev(div0, "class", "form--field");
-    			add_location(div0, file$b, 20, 4, 509);
-    			attr_dev(label1, "for", "2");
-    			add_location(label1, file$b, 26, 8, 684);
-    			attr_dev(textarea, "id", "2");
-    			add_location(textarea, file$b, 27, 8, 728);
+    			add_location(div0, file$c, 20, 4, 509);
+    			attr_dev(label1, "for", "aaa2");
+    			add_location(label1, file$c, 26, 8, 690);
+    			attr_dev(textarea, "id", "aaa2");
+    			add_location(textarea, file$c, 27, 8, 737);
     			attr_dev(div1, "class", "form--field");
-    			add_location(div1, file$b, 25, 4, 649);
+    			add_location(div1, file$c, 25, 4, 655);
     			attr_dev(button, "type", "button");
-    			add_location(button, file$b, 30, 4, 806);
+    			add_location(button, file$c, 30, 4, 818);
     			attr_dev(form, "class", "form");
-    			add_location(form, file$b, 19, 0, 484);
+    			add_location(form, file$c, 19, 0, 484);
 
     			dispose = [
     				listen_dev(input, "change", /*changeValue*/ ctx[1]("name"), false, false, false),
@@ -4320,7 +4406,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$e.name,
+    		id: create_fragment$f.name,
     		type: "component",
     		source: "",
     		ctx
@@ -4363,22 +4449,22 @@ var zdragon = (function () {
     class CreateDomain extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$e, create_fragment$e, safe_not_equal, {});
+    		init(this, options, instance$e, create_fragment$f, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "CreateDomain",
     			options,
-    			id: create_fragment$e.name
+    			id: create_fragment$f.name
     		});
     	}
     }
 
     /* src\Pages\EditorPage.svelte generated by Svelte v3.16.7 */
-    const file$c = "src\\Pages\\EditorPage.svelte";
+    const file$d = "src\\Pages\\EditorPage.svelte";
 
-    // (55:16) <Tab>
-    function create_default_slot_14(ctx) {
+    // (61:16) <Tab>
+    function create_default_slot_15(ctx) {
     	let t;
 
     	const block = {
@@ -4395,17 +4481,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_14.name,
+    		id: create_default_slot_15.name,
     		type: "slot",
-    		source: "(55:16) <Tab>",
+    		source: "(61:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (56:16) <Tab>
-    function create_default_slot_13(ctx) {
+    // (62:16) <Tab>
+    function create_default_slot_14(ctx) {
     	let t;
 
     	const block = {
@@ -4422,17 +4508,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_13.name,
+    		id: create_default_slot_14.name,
     		type: "slot",
-    		source: "(56:16) <Tab>",
+    		source: "(62:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (57:16) <Tab>
-    function create_default_slot_12(ctx) {
+    // (63:16) <Tab>
+    function create_default_slot_13(ctx) {
     	let t;
 
     	const block = {
@@ -4449,17 +4535,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_12.name,
+    		id: create_default_slot_13.name,
     		type: "slot",
-    		source: "(57:16) <Tab>",
+    		source: "(63:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (58:16) <Tab>
-    function create_default_slot_11(ctx) {
+    // (64:16) <Tab>
+    function create_default_slot_12(ctx) {
     	let t;
 
     	const block = {
@@ -4476,17 +4562,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_11.name,
+    		id: create_default_slot_12.name,
     		type: "slot",
-    		source: "(58:16) <Tab>",
+    		source: "(64:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (54:12) <TabList>
-    function create_default_slot_10(ctx) {
+    // (60:12) <TabList>
+    function create_default_slot_11(ctx) {
     	let t0;
     	let t1;
     	let t2;
@@ -4494,7 +4580,7 @@ var zdragon = (function () {
 
     	const tab0 = new Tab({
     			props: {
-    				$$slots: { default: [create_default_slot_14] },
+    				$$slots: { default: [create_default_slot_15] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4502,7 +4588,7 @@ var zdragon = (function () {
 
     	const tab1 = new Tab({
     			props: {
-    				$$slots: { default: [create_default_slot_13] },
+    				$$slots: { default: [create_default_slot_14] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4510,7 +4596,7 @@ var zdragon = (function () {
 
     	const tab2 = new Tab({
     			props: {
-    				$$slots: { default: [create_default_slot_12] },
+    				$$slots: { default: [create_default_slot_13] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4518,7 +4604,7 @@ var zdragon = (function () {
 
     	const tab3 = new Tab({
     			props: {
-    				$$slots: { default: [create_default_slot_11] },
+    				$$slots: { default: [create_default_slot_12] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4547,28 +4633,28 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const tab0_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 2048) {
     				tab0_changes.$$scope = { dirty, ctx };
     			}
 
     			tab0.$set(tab0_changes);
     			const tab1_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 2048) {
     				tab1_changes.$$scope = { dirty, ctx };
     			}
 
     			tab1.$set(tab1_changes);
     			const tab2_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 2048) {
     				tab2_changes.$$scope = { dirty, ctx };
     			}
 
     			tab2.$set(tab2_changes);
     			const tab3_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 2048) {
     				tab3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4602,16 +4688,16 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_10.name,
+    		id: create_default_slot_11.name,
     		type: "slot",
-    		source: "(54:12) <TabList>",
+    		source: "(60:12) <TabList>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (63:20) {#if svgUrl}
+    // (69:20) {#if svgUrl}
     function create_if_block_2$1(ctx) {
     	let img;
     	let img_src_value;
@@ -4622,7 +4708,7 @@ var zdragon = (function () {
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*componentUrl*/ ctx[2])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-l9ppwg");
-    			add_location(img, file$c, 63, 24, 2049);
+    			add_location(img, file$d, 69, 24, 2259);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4641,15 +4727,15 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(63:20) {#if svgUrl}",
+    		source: "(69:20) {#if svgUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (62:16) <Panel>
-    function create_default_slot_9(ctx) {
+    // (68:16) <Panel>
+    function create_default_slot_10(ctx) {
     	let if_block_anchor;
     	let if_block = /*svgUrl*/ ctx[1] && create_if_block_2$1(ctx);
 
@@ -4684,22 +4770,22 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_9.name,
+    		id: create_default_slot_10.name,
     		type: "slot",
-    		source: "(62:16) <Panel>",
+    		source: "(68:16) <Panel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:12) <TabPanel>
-    function create_default_slot_8(ctx) {
+    // (67:12) <TabPanel>
+    function create_default_slot_9(ctx) {
     	let current;
 
     	const panel = new Panel({
     			props: {
-    				$$slots: { default: [create_default_slot_9] },
+    				$$slots: { default: [create_default_slot_10] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4716,7 +4802,7 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 1030) {
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4738,16 +4824,16 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_8.name,
+    		id: create_default_slot_9.name,
     		type: "slot",
-    		source: "(61:12) <TabPanel>",
+    		source: "(67:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (71:20) {#if componentUrl}
+    // (77:20) {#if componentUrl}
     function create_if_block_1$2(ctx) {
     	let img;
     	let img_src_value;
@@ -4758,7 +4844,7 @@ var zdragon = (function () {
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*svgUrl*/ ctx[1])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-l9ppwg");
-    			add_location(img, file$c, 71, 24, 2280);
+    			add_location(img, file$d, 77, 24, 2490);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4777,15 +4863,15 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(71:20) {#if componentUrl}",
+    		source: "(77:20) {#if componentUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (70:16) <Panel>
-    function create_default_slot_7(ctx) {
+    // (76:16) <Panel>
+    function create_default_slot_8(ctx) {
     	let if_block_anchor;
     	let if_block = /*componentUrl*/ ctx[2] && create_if_block_1$2(ctx);
 
@@ -4820,22 +4906,22 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_7.name,
+    		id: create_default_slot_8.name,
     		type: "slot",
-    		source: "(70:16) <Panel>",
+    		source: "(76:16) <Panel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (69:12) <TabPanel>
-    function create_default_slot_6(ctx) {
+    // (75:12) <TabPanel>
+    function create_default_slot_7(ctx) {
     	let current;
 
     	const panel = new Panel({
     			props: {
-    				$$slots: { default: [create_default_slot_7] },
+    				$$slots: { default: [create_default_slot_8] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4852,7 +4938,7 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 1030) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4874,17 +4960,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_6.name,
+    		id: create_default_slot_7.name,
     		type: "slot",
-    		source: "(69:12) <TabPanel>",
+    		source: "(75:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (78:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
-    function create_default_slot_5(ctx) {
+    // (84:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
+    function create_default_slot_6(ctx) {
     	let current;
     	const astviewer = new ASTViewer({ $$inline: true });
 
@@ -4912,23 +4998,23 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_5.name,
+    		id: create_default_slot_6.name,
     		type: "slot",
-    		source: "(78:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;\\\">",
+    		source: "(84:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (77:12) <TabPanel>
-    function create_default_slot_4(ctx) {
+    // (83:12) <TabPanel>
+    function create_default_slot_5(ctx) {
     	let current;
 
     	const panel = new Panel({
     			props: {
     				style: "margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;",
-    				$$slots: { default: [create_default_slot_5] },
+    				$$slots: { default: [create_default_slot_6] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -4945,7 +5031,7 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 2048) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4967,23 +5053,23 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_4.name,
+    		id: create_default_slot_5.name,
     		type: "slot",
-    		source: "(77:12) <TabPanel>",
+    		source: "(83:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (85:16) {#if htmlUrl}
+    // (91:16) {#if htmlUrl}
     function create_if_block$5(ctx) {
     	let current;
 
     	const panel = new Panel({
     			props: {
     				style: "background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;",
-    				$$slots: { default: [create_default_slot_3] },
+    				$$slots: { default: [create_default_slot_4] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5000,7 +5086,7 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, htmlUrl, iframe*/ 1033) {
+    			if (dirty & /*$$scope, htmlUrl, iframe*/ 2057) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5024,15 +5110,15 @@ var zdragon = (function () {
     		block,
     		id: create_if_block$5.name,
     		type: "if",
-    		source: "(85:16) {#if htmlUrl}",
+    		source: "(91:16) {#if htmlUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (86:20) <Panel                          style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
-    function create_default_slot_3(ctx) {
+    // (92:20) <Panel                          style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+    function create_default_slot_4(ctx) {
     	let iframe_1;
     	let iframe_1_src_value;
 
@@ -5042,11 +5128,11 @@ var zdragon = (function () {
     			attr_dev(iframe_1, "class", "html-iframe svelte-l9ppwg");
     			if (iframe_1.src !== (iframe_1_src_value = /*htmlUrl*/ ctx[3])) attr_dev(iframe_1, "src", iframe_1_src_value);
     			attr_dev(iframe_1, "title", "Page");
-    			add_location(iframe_1, file$c, 88, 24, 2935);
+    			add_location(iframe_1, file$d, 94, 24, 3145);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, iframe_1, anchor);
-    			/*iframe_1_binding*/ ctx[9](iframe_1);
+    			/*iframe_1_binding*/ ctx[10](iframe_1);
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*htmlUrl*/ 8 && iframe_1.src !== (iframe_1_src_value = /*htmlUrl*/ ctx[3])) {
@@ -5055,23 +5141,23 @@ var zdragon = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(iframe_1);
-    			/*iframe_1_binding*/ ctx[9](null);
+    			/*iframe_1_binding*/ ctx[10](null);
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_3.name,
+    		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(86:20) <Panel                          style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
+    		source: "(92:20) <Panel                          style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (84:12) <TabPanel>
-    function create_default_slot_2(ctx) {
+    // (90:12) <TabPanel>
+    function create_default_slot_3(ctx) {
     	let if_block_anchor;
     	let current;
     	let if_block = /*htmlUrl*/ ctx[3] && create_if_block$5(ctx);
@@ -5124,17 +5210,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2.name,
+    		id: create_default_slot_3.name,
     		type: "slot",
-    		source: "(84:12) <TabPanel>",
+    		source: "(90:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (53:8) <Tabs>
-    function create_default_slot_1(ctx) {
+    // (59:8) <Tabs>
+    function create_default_slot_2(ctx) {
     	let t0;
     	let t1;
     	let t2;
@@ -5143,7 +5229,7 @@ var zdragon = (function () {
 
     	const tablist = new TabList({
     			props: {
-    				$$slots: { default: [create_default_slot_10] },
+    				$$slots: { default: [create_default_slot_11] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5151,7 +5237,7 @@ var zdragon = (function () {
 
     	const tabpanel0 = new TabPanel({
     			props: {
-    				$$slots: { default: [create_default_slot_8] },
+    				$$slots: { default: [create_default_slot_9] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5159,7 +5245,7 @@ var zdragon = (function () {
 
     	const tabpanel1 = new TabPanel({
     			props: {
-    				$$slots: { default: [create_default_slot_6] },
+    				$$slots: { default: [create_default_slot_7] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5167,7 +5253,7 @@ var zdragon = (function () {
 
     	const tabpanel2 = new TabPanel({
     			props: {
-    				$$slots: { default: [create_default_slot_4] },
+    				$$slots: { default: [create_default_slot_5] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5175,7 +5261,7 @@ var zdragon = (function () {
 
     	const tabpanel3 = new TabPanel({
     			props: {
-    				$$slots: { default: [create_default_slot_2] },
+    				$$slots: { default: [create_default_slot_3] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5208,35 +5294,35 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const tablist_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 2048) {
     				tablist_changes.$$scope = { dirty, ctx };
     			}
 
     			tablist.$set(tablist_changes);
     			const tabpanel0_changes = {};
 
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 1030) {
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
     				tabpanel0_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel0.$set(tabpanel0_changes);
     			const tabpanel1_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 1030) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
     				tabpanel1_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel1.$set(tabpanel1_changes);
     			const tabpanel2_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
+    			if (dirty & /*$$scope*/ 2048) {
     				tabpanel2_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel2.$set(tabpanel2_changes);
     			const tabpanel3_changes = {};
 
-    			if (dirty & /*$$scope, htmlUrl, iframe*/ 1033) {
+    			if (dirty & /*$$scope, htmlUrl, iframe*/ 2057) {
     				tabpanel3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5274,16 +5360,54 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_1.name,
+    		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(53:8) <Tabs>",
+    		source: "(59:8) <Tabs>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (104:4) <Modal title="Create Domain" show={showCreateDomain}>
+    // (110:4) <Modal title="Create Domain" show={showCreateDomain}>
+    function create_default_slot_1(ctx) {
+    	let current;
+    	const createdomain = new CreateDomain({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(createdomain.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(createdomain, target, anchor);
+    			current = true;
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(createdomain.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(createdomain.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(createdomain, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_1.name,
+    		type: "slot",
+    		source: "(110:4) <Modal title=\\\"Create Domain\\\" show={showCreateDomain}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (114:4) <Modal          title="Add File"          show={showAddFileDialog}          close={toggleAddFileDialog}>
     function create_default_slot(ctx) {
     	let current;
     	const createdomain = new CreateDomain({ $$inline: true });
@@ -5314,14 +5438,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(104:4) <Modal title=\\\"Create Domain\\\" show={showCreateDomain}>",
+    		source: "(114:4) <Modal          title=\\\"Add File\\\"          show={showAddFileDialog}          close={toggleAddFileDialog}>",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$f(ctx) {
+    function create_fragment$g(ctx) {
     	let div5;
     	let div0;
     	let t0;
@@ -5333,6 +5457,7 @@ var zdragon = (function () {
     	let div3;
     	let i;
     	let t3;
+    	let t4;
     	let current;
     	let dispose;
     	const fileexplorer = new FileExplorer({ $$inline: true });
@@ -5340,16 +5465,27 @@ var zdragon = (function () {
 
     	const tabs = new Tabs({
     			props: {
+    				$$slots: { default: [create_default_slot_2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const modal0 = new Modal({
+    			props: {
+    				title: "Create Domain",
+    				show: /*showCreateDomain*/ ctx[5],
     				$$slots: { default: [create_default_slot_1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
-    	const modal = new Modal({
+    	const modal1 = new Modal({
     			props: {
-    				title: "Create Domain",
-    				show: /*showCreateDomain*/ ctx[4],
+    				title: "Add File",
+    				show: /*showAddFileDialog*/ ctx[4],
+    				close: toggleAddFileDialog,
     				$$slots: { default: [create_default_slot] },
     				$$scope: { ctx }
     			},
@@ -5372,22 +5508,24 @@ var zdragon = (function () {
     			div3 = element("div");
     			i = element("i");
     			t3 = space();
-    			create_component(modal.$$.fragment);
+    			create_component(modal0.$$.fragment);
+    			t4 = space();
+    			create_component(modal1.$$.fragment);
     			attr_dev(div0, "class", "file-explorer--container svelte-l9ppwg");
-    			add_location(div0, file$c, 43, 4, 1509);
+    			add_location(div0, file$d, 49, 4, 1719);
     			attr_dev(div1, "class", "svelte-l9ppwg");
-    			add_location(div1, file$c, 47, 8, 1630);
+    			add_location(div1, file$d, 53, 8, 1840);
     			attr_dev(div2, "class", "document-editor svelte-l9ppwg");
-    			add_location(div2, file$c, 46, 4, 1591);
+    			add_location(div2, file$d, 52, 4, 1801);
     			attr_dev(i, "class", "fa fa-print svelte-l9ppwg");
-    			add_location(i, file$c, 99, 12, 3291);
+    			add_location(i, file$d, 105, 12, 3501);
     			attr_dev(div3, "class", "print-button svelte-l9ppwg");
-    			add_location(div3, file$c, 98, 8, 3234);
+    			add_location(div3, file$d, 104, 8, 3444);
     			attr_dev(div4, "class", "page-viewer svelte-l9ppwg");
-    			add_location(div4, file$c, 51, 4, 1701);
+    			add_location(div4, file$d, 57, 4, 1911);
     			attr_dev(div5, "class", "container svelte-l9ppwg");
-    			add_location(div5, file$c, 42, 0, 1480);
-    			dispose = listen_dev(div3, "click", /*print*/ ctx[5], false, false, false);
+    			add_location(div5, file$d, 48, 0, 1690);
+    			dispose = listen_dev(div3, "click", /*print*/ ctx[6], false, false, false);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5407,38 +5545,50 @@ var zdragon = (function () {
     			append_dev(div4, div3);
     			append_dev(div3, i);
     			append_dev(div5, t3);
-    			mount_component(modal, div5, null);
+    			mount_component(modal0, div5, null);
+    			append_dev(div5, t4);
+    			mount_component(modal1, div5, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
     			const tabs_changes = {};
 
-    			if (dirty & /*$$scope, htmlUrl, iframe, componentUrl, svgUrl*/ 1039) {
+    			if (dirty & /*$$scope, htmlUrl, iframe, componentUrl, svgUrl*/ 2063) {
     				tabs_changes.$$scope = { dirty, ctx };
     			}
 
     			tabs.$set(tabs_changes);
-    			const modal_changes = {};
+    			const modal0_changes = {};
 
-    			if (dirty & /*$$scope*/ 1024) {
-    				modal_changes.$$scope = { dirty, ctx };
+    			if (dirty & /*$$scope*/ 2048) {
+    				modal0_changes.$$scope = { dirty, ctx };
     			}
 
-    			modal.$set(modal_changes);
+    			modal0.$set(modal0_changes);
+    			const modal1_changes = {};
+    			if (dirty & /*showAddFileDialog*/ 16) modal1_changes.show = /*showAddFileDialog*/ ctx[4];
+
+    			if (dirty & /*$$scope*/ 2048) {
+    				modal1_changes.$$scope = { dirty, ctx };
+    			}
+
+    			modal1.$set(modal1_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
     			transition_in(fileexplorer.$$.fragment, local);
     			transition_in(documenteditor.$$.fragment, local);
     			transition_in(tabs.$$.fragment, local);
-    			transition_in(modal.$$.fragment, local);
+    			transition_in(modal0.$$.fragment, local);
+    			transition_in(modal1.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
     			transition_out(fileexplorer.$$.fragment, local);
     			transition_out(documenteditor.$$.fragment, local);
     			transition_out(tabs.$$.fragment, local);
-    			transition_out(modal.$$.fragment, local);
+    			transition_out(modal0.$$.fragment, local);
+    			transition_out(modal1.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -5446,14 +5596,15 @@ var zdragon = (function () {
     			destroy_component(fileexplorer);
     			destroy_component(documenteditor);
     			destroy_component(tabs);
-    			destroy_component(modal);
+    			destroy_component(modal0);
+    			destroy_component(modal1);
     			dispose();
     		}
     	};
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$f.name,
+    		id: create_fragment$g.name,
     		type: "component",
     		source: "",
     		ctx
@@ -5498,6 +5649,12 @@ var zdragon = (function () {
     	});
 
     	let showCreateDomain = false;
+    	let showAddFileDialog = false;
+
+    	stateStore.subscribe(s => {
+    		console.log(s);
+    		$$invalidate(4, showAddFileDialog = !!s.showAddFileDialog);
+    	});
 
     	let print = () => {
     		iframe.contentWindow.focus();
@@ -5521,8 +5678,9 @@ var zdragon = (function () {
     		if ("svgUrl" in $$props) $$invalidate(1, svgUrl = $$props.svgUrl);
     		if ("componentUrl" in $$props) $$invalidate(2, componentUrl = $$props.componentUrl);
     		if ("htmlUrl" in $$props) $$invalidate(3, htmlUrl = $$props.htmlUrl);
-    		if ("showCreateDomain" in $$props) $$invalidate(4, showCreateDomain = $$props.showCreateDomain);
-    		if ("print" in $$props) $$invalidate(5, print = $$props.print);
+    		if ("showCreateDomain" in $$props) $$invalidate(5, showCreateDomain = $$props.showCreateDomain);
+    		if ("showAddFileDialog" in $$props) $$invalidate(4, showAddFileDialog = $$props.showAddFileDialog);
+    		if ("print" in $$props) $$invalidate(6, print = $$props.print);
     	};
 
     	return [
@@ -5530,6 +5688,7 @@ var zdragon = (function () {
     		svgUrl,
     		componentUrl,
     		htmlUrl,
+    		showAddFileDialog,
     		showCreateDomain,
     		print,
     		timeout,
@@ -5542,72 +5701,20 @@ var zdragon = (function () {
     class EditorPage extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$f, create_fragment$f, safe_not_equal, {});
+    		init(this, options, instance$f, create_fragment$g, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "EditorPage",
-    			options,
-    			id: create_fragment$f.name
-    		});
-    	}
-    }
-
-    /* src\Pages\Home.svelte generated by Svelte v3.16.7 */
-
-    const file$d = "src\\Pages\\Home.svelte";
-
-    function create_fragment$g(ctx) {
-    	let div;
-
-    	const block = {
-    		c: function create() {
-    			div = element("div");
-    			div.textContent = "Home";
-    			add_location(div, file$d, 0, 0, 0);
-    		},
-    		l: function claim(nodes) {
-    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, div, anchor);
-    		},
-    		p: noop,
-    		i: noop,
-    		o: noop,
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(div);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_fragment$g.name,
-    		type: "component",
-    		source: "",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    class Home extends SvelteComponentDev {
-    	constructor(options) {
-    		super(options);
-    		init(this, options, null, create_fragment$g, safe_not_equal, {});
-
-    		dispatch_dev("SvelteRegisterComponent", {
-    			component: this,
-    			tagName: "Home",
     			options,
     			id: create_fragment$g.name
     		});
     	}
     }
 
-    /* src\Pages\About.svelte generated by Svelte v3.16.7 */
+    /* src\Pages\Home.svelte generated by Svelte v3.16.7 */
 
-    const file$e = "src\\Pages\\About.svelte";
+    const file$e = "src\\Pages\\Home.svelte";
 
     function create_fragment$h(ctx) {
     	let div;
@@ -5615,7 +5722,7 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			div = element("div");
-    			div.textContent = "About";
+    			div.textContent = "Home";
     			add_location(div, file$e, 0, 0, 0);
     		},
     		l: function claim(nodes) {
@@ -5643,22 +5750,74 @@ var zdragon = (function () {
     	return block;
     }
 
-    class About extends SvelteComponentDev {
+    class Home extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
     		init(this, options, null, create_fragment$h, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
-    			tagName: "About",
+    			tagName: "Home",
     			options,
     			id: create_fragment$h.name
     		});
     	}
     }
 
+    /* src\Pages\About.svelte generated by Svelte v3.16.7 */
+
+    const file$f = "src\\Pages\\About.svelte";
+
+    function create_fragment$i(ctx) {
+    	let div;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			div.textContent = "About";
+    			add_location(div, file$f, 0, 0, 0);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    		},
+    		p: noop,
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$i.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    class About extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, null, create_fragment$i, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "About",
+    			options,
+    			id: create_fragment$i.name
+    		});
+    	}
+    }
+
     /* src\Components\NavButton.svelte generated by Svelte v3.16.7 */
-    const file$f = "src\\Components\\NavButton.svelte";
+    const file$g = "src\\Components\\NavButton.svelte";
 
     // (42:0) {:else}
     function create_else_block$1(ctx) {
@@ -5673,7 +5832,7 @@ var zdragon = (function () {
     			attr_dev(span, "class", "nav-button svelte-6ucpud");
     			toggle_class(span, "selected", /*selected*/ ctx[1]);
     			toggle_class(span, "link", /*link*/ ctx[3]);
-    			add_location(span, file$f, 42, 4, 941);
+    			add_location(span, file$g, 42, 4, 941);
     			dispose = listen_dev(span, "click", /*click*/ ctx[4], false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -5728,12 +5887,12 @@ var zdragon = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			attr_dev(i, "class", i_class_value = "" + (null_to_empty(/*icon*/ ctx[2]) + " svelte-6ucpud"));
-    			add_location(i, file$f, 37, 8, 799);
-    			add_location(br, file$f, 38, 8, 827);
+    			add_location(i, file$g, 37, 8, 799);
+    			add_location(br, file$g, 38, 8, 827);
     			attr_dev(span, "class", "nav-button icon svelte-6ucpud");
     			toggle_class(span, "selected", /*selected*/ ctx[1]);
     			toggle_class(span, "link", /*link*/ ctx[3]);
-    			add_location(span, file$f, 36, 4, 716);
+    			add_location(span, file$g, 36, 4, 716);
     			dispose = listen_dev(span, "click", /*click*/ ctx[4], false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -5798,7 +5957,7 @@ var zdragon = (function () {
     			span = element("span");
     			t = text(/*title*/ ctx[0]);
     			attr_dev(span, "class", "title");
-    			add_location(span, file$f, 39, 39, 874);
+    			add_location(span, file$g, 39, 39, 874);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, span, anchor);
@@ -5823,7 +5982,7 @@ var zdragon = (function () {
     	return block;
     }
 
-    function create_fragment$i(ctx) {
+    function create_fragment$j(ctx) {
     	let if_block_anchor;
 
     	function select_block_type(ctx, dirty) {
@@ -5869,7 +6028,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$i.name,
+    		id: create_fragment$j.name,
     		type: "component",
     		source: "",
     		ctx
@@ -5941,7 +6100,7 @@ var zdragon = (function () {
     	constructor(options) {
     		super(options);
 
-    		init(this, options, instance$g, create_fragment$i, safe_not_equal, {
+    		init(this, options, instance$g, create_fragment$j, safe_not_equal, {
     			href: 5,
     			title: 0,
     			onClick: 6,
@@ -5955,7 +6114,7 @@ var zdragon = (function () {
     			component: this,
     			tagName: "NavButton",
     			options,
-    			id: create_fragment$i.name
+    			id: create_fragment$j.name
     		});
     	}
 
@@ -6017,9 +6176,9 @@ var zdragon = (function () {
     }
 
     /* src\Components\Menu.svelte generated by Svelte v3.16.7 */
-    const file$g = "src\\Components\\Menu.svelte";
+    const file$h = "src\\Components\\Menu.svelte";
 
-    function create_fragment$j(ctx) {
+    function create_fragment$k(ctx) {
     	let nav;
     	let t0;
     	let t1;
@@ -6061,7 +6220,7 @@ var zdragon = (function () {
     			t1 = space();
     			create_component(navbutton2.$$.fragment);
     			attr_dev(nav, "class", "svelte-1kf5xti");
-    			add_location(nav, file$g, 19, 0, 376);
+    			add_location(nav, file$h, 19, 0, 376);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -6099,7 +6258,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$j.name,
+    		id: create_fragment$k.name,
     		type: "component",
     		source: "",
     		ctx
@@ -6111,19 +6270,19 @@ var zdragon = (function () {
     class Menu extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$j, safe_not_equal, {});
+    		init(this, options, null, create_fragment$k, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "Menu",
     			options,
-    			id: create_fragment$j.name
+    			id: create_fragment$k.name
     		});
     	}
     }
 
     /* src\App.svelte generated by Svelte v3.16.7 */
-    const file$h = "src\\App.svelte";
+    const file$i = "src\\App.svelte";
 
     // (24:6) <Route path="/editor">
     function create_default_slot_2$1(ctx) {
@@ -6246,9 +6405,9 @@ var zdragon = (function () {
     			t2 = space();
     			create_component(route2.$$.fragment);
     			attr_dev(div0, "class", "page-content svelte-sl0cek");
-    			add_location(div0, file$h, 22, 4, 489);
+    			add_location(div0, file$i, 22, 4, 489);
     			attr_dev(div1, "class", "root svelte-sl0cek");
-    			add_location(div1, file$h, 20, 2, 451);
+    			add_location(div1, file$i, 20, 2, 451);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -6313,7 +6472,7 @@ var zdragon = (function () {
     	return block;
     }
 
-    function create_fragment$k(ctx) {
+    function create_fragment$l(ctx) {
     	let current;
 
     	const router = new Router({
@@ -6361,7 +6520,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$k.name,
+    		id: create_fragment$l.name,
     		type: "component",
     		source: "",
     		ctx
@@ -6387,13 +6546,13 @@ var zdragon = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$h, create_fragment$k, safe_not_equal, {});
+    		init(this, options, instance$h, create_fragment$l, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "App",
     			options,
-    			id: create_fragment$k.name
+    			id: create_fragment$l.name
     		});
     	}
     }

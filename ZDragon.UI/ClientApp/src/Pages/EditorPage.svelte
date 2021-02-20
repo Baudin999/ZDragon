@@ -9,12 +9,11 @@
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
-    import PageViewer from "../Components/PageViewer.svelte";
     import ASTViewer from "../Components/ASTViewer.svelte";
     import { moduleStore } from "../Services/module.js";
     import CreateDomain from "../Forms/CreateDomain.svelte";
-    import { get } from "./../Services/http";
 
+    let iframe;
     let timeout;
     let module;
     let svgUrl;
@@ -44,6 +43,11 @@
     });
 
     let showCreateDomain = false;
+
+    let print = () => {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+    };
 </script>
 
 <div class="container">
@@ -93,6 +97,7 @@
                         style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
                         <!-- <PageViewer url={htmlUrl} /> -->
                         <iframe
+                            bind:this={iframe}
                             class="html-iframe"
                             src={htmlUrl}
                             title="Page" />
@@ -100,6 +105,10 @@
                 {/if}
             </TabPanel>
         </Tabs>
+
+        <div class="print-button" on:click={print}>
+            <i class="fa fa-print" />
+        </div>
     </div>
 
     <Modal title="Create Domain" show={showCreateDomain}>
@@ -166,5 +175,13 @@
         background: white;
 
         margin-left: 2rem;
+    }
+    .print-button {
+        position: fixed;
+        z-index: 99999;
+        right: 1rem;
+        bottom: 1rem;
+        height: 32px;
+        width: 32px;
     }
 </style>

@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.23.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
   </ItemGroup>
 

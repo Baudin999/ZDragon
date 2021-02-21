@@ -2,20 +2,16 @@
     import { get } from "../../Services/http";
     import Domain from "./Domain.svelte";
     import FileToolbar from "./FileToolbar.svelte";
+    import { getFiles, stateStore } from "./../../Services/state";
 
-    let domains;
-
-    const getDocuments = async () => {
-        domains = await get("/domains");
-    };
-    getDocuments();
+    getFiles();
 </script>
 
 <div class="file-explorer">
     <FileToolbar />
 
-    {#if domains}
-        <Domain domain={domains} open={true} showSelf={false} />
+    {#if $stateStore.files}
+        <Domain domain={$stateStore.files} open={true} showSelf={false} />
     {/if}
 </div>
 

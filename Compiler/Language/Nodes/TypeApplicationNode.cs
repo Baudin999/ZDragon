@@ -9,5 +9,9 @@ namespace Compiler.Language.Nodes {
             //
             Parameters = tokens.ToList();
         }
+
+        public override string ToString() {
+            return "(" + string.Join(" ", Parameters) + ")";
+        }
     }
 }

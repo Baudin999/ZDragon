@@ -1,6 +1,6 @@
 
 import { writable } from "svelte/store";
-// import { getText, get, post } from "./http";
+import { get } from "./http";
 
 export const stateStore = writable({});
 
@@ -9,5 +9,14 @@ export const toggleAddFileDialog = () => {
     stateStore.update((s: any) => ({
         ...s,
         showAddFileDialog: !!!s.showAddFileDialog
+    }));
+}
+
+export const getFiles = async () => {
+    let files = await get("/domains");
+    console.log(files);
+    stateStore.update((s: any) => ({
+        ...s,
+        files
     }));
 }

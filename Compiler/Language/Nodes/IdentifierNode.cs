@@ -8,5 +8,9 @@ namespace Compiler.Language.Nodes {
         public IdentifierNode(ISourceSegment sourceSegment, Token id): base(sourceSegment, ExpressionKind.IdentifierExpression) {
             this.IdToken = id;
         }
+
+        public override string ToString() {
+            return Id;
+        }
     }
 }

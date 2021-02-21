@@ -5,9 +5,13 @@ using System.Linq;
 namespace Compiler.Language.Nodes {
     public class FunctionParameterNode : ExpressionNode {
         public List<ExpressionNode> Nodes { get; }
-        
+        public ExpressionNode Result { get; }
+        public List<ExpressionNode> Parameters { get; }
+
         public FunctionParameterNode(List<ExpressionNode> nodes) : base(Token.Range(nodes.First().Segment, nodes.Last().Segment), ExpressionKind.FunctionDefinitionExpression) {
             Nodes = nodes;
+            this.Result = Nodes.Last();
+            this.Parameters = Nodes.TakeWhile(n => n != this.Result).ToList();
         }
 
         public FunctionParameterNode(ExpressionNode node) : base(node.Segment, ExpressionKind.FunctionDefinitionExpression) {
@@ -44,6 +48,10 @@ namespace Compiler.Language.Nodes {
             else {
                 throw new System.Exception("");
             }
+        }
+
+        public override string ToString() {
+            return string.Join(" -> ", Nodes.Select(p => p.ToString()));
         }
     }
 }

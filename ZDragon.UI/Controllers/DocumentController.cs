@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Threading.Tasks;
+using ZDragon.Project.Components;
 using ZDragon.UI.Models;
 
 namespace ZDragon.UI.Controllers {
@@ -21,7 +22,7 @@ namespace ZDragon.UI.Controllers {
         public async Task<IActionResult> Index([FromRoute]string ns) {
             var realPath = WebUtility.UrlDecode(ns);
             if (Program.Project.IsValidProjectPath(realPath)) {
-                var moduleInteractor = _project.Find(ns);
+                var moduleInteractor = _project.Find<ModuleInteractor>(ns);
                 moduleInteractor.Verify();
                 var text = await moduleInteractor.GetText();
 
@@ -37,14 +38,14 @@ namespace ZDragon.UI.Controllers {
 
         [HttpPost("/document/{ns}")]
         public IActionResult SaveModule([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
-            var moduleInteractor = _project.Find(ns);
+            var moduleInteractor = _project.Find<ModuleInteractor>(ns);
             moduleInteractor.SaveModule(body.Code);
             return Ok(moduleInteractor.CompilationResult);
         }
 
         [HttpGet("/documents/{ns}/{file}.svg")]
         public async Task<IActionResult> GetContentSvg(string ns, string file) {
-            var moduleInteractor = _project.Find(ns);
+            var moduleInteractor = _project.Find<ModuleInteractor>(ns);
 
             if (file == "data") {
                 var bytes = await moduleInteractor.GetDataModelSvg();
@@ -62,7 +63,7 @@ namespace ZDragon.UI.Controllers {
 
         [HttpGet("/documents/{ns}/{file}.html")]
         public async Task<IActionResult> HetHtmlString(string ns, string file) {
-            var moduleInteractor = _project.Find(ns);
+            var moduleInteractor = _project.Find<ModuleInteractor>(ns);
             return File(await moduleInteractor.GetHtml(), "text/html");
         }
 

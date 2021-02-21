@@ -74,7 +74,7 @@
         })();
     }
 
-    $: if (text) {
+    $: if (text || text === "") {
         (() => {
             if (!editor) return;
 

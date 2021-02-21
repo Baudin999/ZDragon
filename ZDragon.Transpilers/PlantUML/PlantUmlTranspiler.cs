@@ -15,9 +15,35 @@ namespace ZDragon.Transpilers.PlantUML {
         private readonly List<string> relations = new List<string>();
 
         private void TranspileTypeAliasNode(TypeAliasNode node) {
-            types.Add($@"
+
+            if (node.Body is FunctionParameterNode fpn) {
+                // do function parameter
+                types.Add($@"
+class {node.Id} <<function>> {{
+    {node.Id} :: {fpn};
+}}
+");
+                foreach (var paramNode in fpn.Nodes) {
+                    if (paramNode is IdentifierNode idNode && !baseTypes.Contains(idNode.Id)) {
+                        relations.Add($"{node.Id} --* {idNode.Id}");
+                    }
+                    else if (paramNode is TypeApplicationNode tan) {
+                        foreach (var tanNode in tan.Parameters) {
+                            if (!baseTypes.Contains(tanNode.Value)) {
+                                relations.Add($"{node.Id} --* {tanNode.Value}");
+                            }
+                        }
+                    }
+                    else if (paramNode is FunctionParameterNode fpnNode) {
+                        //
+                    }
+                }
+            }
+            else {
+                types.Add($@"
 interface {node.Id} {{}}
 ");
+            }
         }
         private void TranspileRecordNode(RecordNode node) {
             var fields = node.Fields.OrderBy(f => f.Id).Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}: {string.Join(" ", f.Types)};");

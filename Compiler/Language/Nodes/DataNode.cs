@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Compiler.Language.Nodes {
-    public class DataNode : ExpressionNode, IIdentifierExpressionNode {
+    public class DataNode : ExpressionNode, ILanguageNode, IIdentifierExpressionNode {
         public AnnotationNode Annotation { get; }
         public string Description => Annotation.Annotation;
         public Token IdToken { get; }

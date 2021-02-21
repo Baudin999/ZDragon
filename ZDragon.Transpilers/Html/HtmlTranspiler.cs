@@ -2,7 +2,7 @@
 using Compiler.Language.Nodes;
 using Markdig;
 using System.Collections.Generic;
-
+using System.Linq;
 
 namespace ZDragon.Transpilers.Html {
     public class HtmlTranspiler {
@@ -103,12 +103,24 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add("</div>");
             }
             toc.Add("</div>");
-            parts.Insert(1, string.Join("\n\n", toc));
-            parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
-            parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" /></div>");
 
-            parts.Add("<div class='keep-together'><h1>Component Diagram</h1>");
-            parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" /></div>");
+            if (h1 > 2) {
+                // Don't put in the TOC if there are no chapters...
+                parts.Insert(1, string.Join("\n\n", toc));
+            }
+
+
+            if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Count() > 0) {
+                // Don't put in the logical data model if there are no entities defined
+                parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
+                parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" /></div>");
+            }
+
+            if (compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0) {
+                // Don't put in the architectural diagram if there are no architectural components defined
+                parts.Add("<div class='keep-together'><h1>Component Diagram</h1>");
+                parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" /></div>");
+            }
 
             parts.Add(@"
     <script src='prism.js'></script>

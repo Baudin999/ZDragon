@@ -14,7 +14,7 @@ namespace ZDragon.Project {
         private readonly string _root;
         private readonly string outpath;
         private readonly string dbPath;
-        public DirectoryInteractor DirectoryInteractor { get; }
+        public DirectoryInteractor DirectoryInteractor { get; private set;  }
 
 
         public Project(string root) {
@@ -30,16 +30,28 @@ namespace ZDragon.Project {
             DirectoryInteractor = new DirectoryInteractor(root, root, Cache);
         }
 
+        public DirectoryInteractor ResetDirectory() {
+            this.DirectoryInteractor = new DirectoryInteractor(_root, _root, Cache);
+            return this.DirectoryInteractor;
+        }
+
         public bool IsValidProjectPath(string path) {
             return true;
         }
 
         public async Task<string> GetTextByNamespace(string ns) {
             var moduleInteractor = DirectoryInteractor.Find(ns);
-            return await moduleInteractor.GetText();
+            if (moduleInteractor is ModuleInteractor mi)
+                return await mi.GetText();
+
+            throw new Exception("Cannot get the text of a non module interactor");
         }
 
-        public ModuleInteractor? Find(string ns) {
+        public T? Find<T>(string ns) where T: IInteractor {
+            var interactor =  DirectoryInteractor.Find(ns);
+            return (T)interactor;
+        }
+        public IInteractor? Find(string ns) {
             return DirectoryInteractor.Find(ns);
         }
     }

@@ -23,8 +23,22 @@ namespace ZDragon.Transpilers.Components {
             var tech = node.GetAttribute("Technology", "component");
             var version = node.GetAttribute("Version", "0");
 
-            if (types.TryAdd(node.Id, $@"Container({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})"))
-                ParseInteractions(node);
+            var type = node.GetAttribute("Type", "container").ToLower().Trim();
+            var componentType = type switch {
+                "database" => "ContainerDb",
+                "db" => "ContainerDb",
+                "queue" => "ContainerQueue",
+                _ => "Container"
+            };
+
+            if (componentType != "Container") {
+                if (types.TryAdd(node.Id, $@"{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})"))
+                    ParseInteractions(node);
+            }
+            else {
+                if (types.TryAdd(node.Id, $@"{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})"))
+                    ParseInteractions(node);
+            }
         }
 
         private void TranspileEndpointNode(EndpointNode node) {

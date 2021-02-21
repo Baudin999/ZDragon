@@ -25,6 +25,7 @@
     };
 
     moduleStore.subscribe((value: any) => {
+        console.log(value);
         if (!value || !value.modules || !value.selectedModule) return;
 
         module = value.modules[value.selectedModule];

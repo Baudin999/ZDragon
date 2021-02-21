@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Compiler.Language.Nodes {
-    public class TypeAliasNode : ExpressionNode, IIdentifierExpressionNode {
+    public class TypeAliasNode : ExpressionNode, ILanguageNode, IIdentifierExpressionNode {
         public Token IdToken { get; private set; }
         public string Id => IdToken.Value;
         public List<Token> GenericParameters { get; private set; }

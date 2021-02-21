@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Net;
 using System.Threading.Tasks;
 using ZDragon.UI.Models;
 
@@ -17,14 +16,16 @@ namespace ZDragon.UI.Controllers {
         }
     
 
-        [HttpGet("/file/{ns}")]
-        public async Task<IActionResult> AddFile([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
+        [HttpPost("/file")]
+        public async Task<IActionResult> AddFile([FromBody] CreateFileSubmitBody body) {
 
             // the namespace is the folder to which the fill will be added
             // the body is the FileSubmit
 
-
-            return Ok();
+            var app = _project.Find(body.AppName);
+            _ = await app.AddFile(body.Name, body.Type, body.Description);
+            _project.ResetDirectory();
+            return Ok(_project.DirectoryInteractor);
         }
 
     }

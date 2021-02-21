@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
+using ZDragon.Project.Templates;
 using ZDragon.Transpilers.Components;
 using ZDragon.Transpilers.Html;
 using ZDragon.Transpilers.PlantUML;
@@ -12,8 +13,9 @@ namespace ZDragon.Project.Components {
     /// like saving the file, compiling the module and gerally maintain
     /// the validity of the diagrams created by the module.
     /// </summary>
-    public class ModuleInteractor {
+    public class ModuleInteractor: IInteractor {
         public string RootPath { get; }
+        public string? DirectoryPath { get; }
         public string OutPath { get; }
         public string DataSvgPath { get; }
         public string ComponentsSvgPath { get; }
@@ -36,6 +38,7 @@ namespace ZDragon.Project.Components {
 
             this.RootPath = rootPath;
             this.FullName = file;
+            this.DirectoryPath = Path.GetDirectoryName(file);
             this.Namespace = Utilities.GetNamespaceFromPath(rootPath, file);
             this.OutPath = Path.Combine(rootPath, "out", this.Namespace);
             this.DataSvgPath = Path.Combine(this.OutPath, "data.svg");
@@ -140,6 +143,23 @@ namespace ZDragon.Project.Components {
         }
 
 
+        // IInteractor methods
+
+        public async Task<ModuleInteractor> AddFile(string name, string type, string? description) {
+            // Should be added to the application or directory of which this file is a part.
+            string fileName = name;
+            if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
+            var path = Path.Combine(this.DirectoryPath ?? this.RootPath, fileName);
+
+            var template = "";
+            if (type == "Feature") {
+                template = FeatureTemplates.Default(name);
+            }
+
+            await File.WriteAllTextAsync(path, template);
+            return new ModuleInteractor(this.RootPath, path, cache);
+
+        }
 
     }
 }

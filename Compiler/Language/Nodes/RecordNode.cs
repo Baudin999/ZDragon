@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler.Language.Nodes {
-    public class RecordNode : ExpressionNode, IIdentifierExpressionNode {
+    public class RecordNode : ExpressionNode, ILanguageNode, IIdentifierExpressionNode {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
         public AnnotationNode? AnnotationNode { get; }

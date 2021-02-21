@@ -12,7 +12,7 @@
     import ASTViewer from "../Components/ASTViewer.svelte";
     import { moduleStore } from "../Services/module.js";
     import { stateStore, toggleAddFileDialog } from "../Services/state.js";
-    import CreateDomain from "../Forms/CreateDomain.svelte";
+    import CreateFile from "../Forms/CreateFile.svelte";
 
     let iframe;
     let timeout;
@@ -118,15 +118,11 @@
         </div>
     </div>
 
-    <Modal title="Create Domain" show={showCreateDomain}>
-        <CreateDomain />
-    </Modal>
-
     <Modal
         title="Add File"
         show={showAddFileDialog}
         close={toggleAddFileDialog}>
-        <CreateDomain />
+        <CreateFile />
     </Modal>
 </div>
 

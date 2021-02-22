@@ -69,11 +69,25 @@
     <div class="page-viewer">
         <Tabs>
             <TabList>
+                <Tab>Document</Tab>
                 <Tab>Architecture</Tab>
                 <Tab>Data Model</Tab>
                 <Tab>AST</Tab>
-                <Tab>Document</Tab>
             </TabList>
+
+            <TabPanel>
+                {#if htmlUrl}
+                    <Panel
+                        style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+                        <!-- <PageViewer url={htmlUrl} /> -->
+                        <iframe
+                            bind:this={iframe}
+                            class="html-iframe"
+                            src={htmlUrl}
+                            title="Page" />
+                    </Panel>
+                {/if}
+            </TabPanel>
 
             <TabPanel>
                 <Panel>
@@ -96,20 +110,6 @@
                     style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
                     <ASTViewer />
                 </Panel>
-            </TabPanel>
-
-            <TabPanel>
-                {#if htmlUrl}
-                    <Panel
-                        style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
-                        <!-- <PageViewer url={htmlUrl} /> -->
-                        <iframe
-                            bind:this={iframe}
-                            class="html-iframe"
-                            src={htmlUrl}
-                            title="Page" />
-                    </Panel>
-                {/if}
             </TabPanel>
         </Tabs>
 

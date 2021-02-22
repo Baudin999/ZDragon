@@ -4555,7 +4555,7 @@ var zdragon = (function () {
 
     	const block = {
     		c: function create() {
-    			t = text("Architecture");
+    			t = text("Document");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -4582,7 +4582,7 @@ var zdragon = (function () {
 
     	const block = {
     		c: function create() {
-    			t = text("Data Model");
+    			t = text("Architecture");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -4609,7 +4609,7 @@ var zdragon = (function () {
 
     	const block = {
     		c: function create() {
-    			t = text("AST");
+    			t = text("Data Model");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -4636,7 +4636,7 @@ var zdragon = (function () {
 
     	const block = {
     		c: function create() {
-    			t = text("Document");
+    			t = text("AST");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, t, anchor);
@@ -4783,379 +4783,14 @@ var zdragon = (function () {
     	return block;
     }
 
-    // (69:20) {#if svgUrl}
+    // (68:16) {#if htmlUrl}
     function create_if_block_2$1(ctx) {
-    	let img;
-    	let img_src_value;
-
-    	const block = {
-    		c: function create() {
-    			img = element("img");
-    			attr_dev(img, "alt", "svg");
-    			if (img.src !== (img_src_value = /*componentUrl*/ ctx[2])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "class", "svelte-l9ppwg");
-    			add_location(img, file$c, 69, 24, 2255);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, img, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*componentUrl*/ 4 && img.src !== (img_src_value = /*componentUrl*/ ctx[2])) {
-    				attr_dev(img, "src", img_src_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(img);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_2$1.name,
-    		type: "if",
-    		source: "(69:20) {#if svgUrl}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (68:16) <Panel>
-    function create_default_slot_9(ctx) {
-    	let if_block_anchor;
-    	let if_block = /*svgUrl*/ ctx[1] && create_if_block_2$1(ctx);
-
-    	const block = {
-    		c: function create() {
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
-    		},
-    		m: function mount(target, anchor) {
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, if_block_anchor, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (/*svgUrl*/ ctx[1]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_2$1(ctx);
-    					if_block.c();
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(if_block_anchor);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_9.name,
-    		type: "slot",
-    		source: "(68:16) <Panel>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (67:12) <TabPanel>
-    function create_default_slot_8(ctx) {
-    	let current;
-
-    	const panel = new Panel({
-    			props: {
-    				$$slots: { default: [create_default_slot_9] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(panel.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(panel, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const panel_changes = {};
-
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
-    				panel_changes.$$scope = { dirty, ctx };
-    			}
-
-    			panel.$set(panel_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(panel.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(panel.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(panel, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_8.name,
-    		type: "slot",
-    		source: "(67:12) <TabPanel>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (77:20) {#if componentUrl}
-    function create_if_block_1$2(ctx) {
-    	let img;
-    	let img_src_value;
-
-    	const block = {
-    		c: function create() {
-    			img = element("img");
-    			attr_dev(img, "alt", "svg");
-    			if (img.src !== (img_src_value = /*svgUrl*/ ctx[1])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "class", "svelte-l9ppwg");
-    			add_location(img, file$c, 77, 24, 2486);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, img, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*svgUrl*/ 2 && img.src !== (img_src_value = /*svgUrl*/ ctx[1])) {
-    				attr_dev(img, "src", img_src_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(img);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block_1$2.name,
-    		type: "if",
-    		source: "(77:20) {#if componentUrl}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (76:16) <Panel>
-    function create_default_slot_7(ctx) {
-    	let if_block_anchor;
-    	let if_block = /*componentUrl*/ ctx[2] && create_if_block_1$2(ctx);
-
-    	const block = {
-    		c: function create() {
-    			if (if_block) if_block.c();
-    			if_block_anchor = empty();
-    		},
-    		m: function mount(target, anchor) {
-    			if (if_block) if_block.m(target, anchor);
-    			insert_dev(target, if_block_anchor, anchor);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (/*componentUrl*/ ctx[2]) {
-    				if (if_block) {
-    					if_block.p(ctx, dirty);
-    				} else {
-    					if_block = create_if_block_1$2(ctx);
-    					if_block.c();
-    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
-    				}
-    			} else if (if_block) {
-    				if_block.d(1);
-    				if_block = null;
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (if_block) if_block.d(detaching);
-    			if (detaching) detach_dev(if_block_anchor);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_7.name,
-    		type: "slot",
-    		source: "(76:16) <Panel>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (75:12) <TabPanel>
-    function create_default_slot_6(ctx) {
-    	let current;
-
-    	const panel = new Panel({
-    			props: {
-    				$$slots: { default: [create_default_slot_7] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(panel.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(panel, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const panel_changes = {};
-
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
-    				panel_changes.$$scope = { dirty, ctx };
-    			}
-
-    			panel.$set(panel_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(panel.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(panel.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(panel, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_6.name,
-    		type: "slot",
-    		source: "(75:12) <TabPanel>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (84:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
-    function create_default_slot_5(ctx) {
-    	let current;
-    	const astviewer = new ASTViewer({ $$inline: true });
-
-    	const block = {
-    		c: function create() {
-    			create_component(astviewer.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(astviewer, target, anchor);
-    			current = true;
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(astviewer.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(astviewer.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(astviewer, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_5.name,
-    		type: "slot",
-    		source: "(84:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;\\\">",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (83:12) <TabPanel>
-    function create_default_slot_4(ctx) {
-    	let current;
-
-    	const panel = new Panel({
-    			props: {
-    				style: "margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;",
-    				$$slots: { default: [create_default_slot_5] },
-    				$$scope: { ctx }
-    			},
-    			$$inline: true
-    		});
-
-    	const block = {
-    		c: function create() {
-    			create_component(panel.$$.fragment);
-    		},
-    		m: function mount(target, anchor) {
-    			mount_component(panel, target, anchor);
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const panel_changes = {};
-
-    			if (dirty & /*$$scope*/ 2048) {
-    				panel_changes.$$scope = { dirty, ctx };
-    			}
-
-    			panel.$set(panel_changes);
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			transition_in(panel.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			transition_out(panel.$$.fragment, local);
-    			current = false;
-    		},
-    		d: function destroy(detaching) {
-    			destroy_component(panel, detaching);
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_default_slot_4.name,
-    		type: "slot",
-    		source: "(83:12) <TabPanel>",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (91:16) {#if htmlUrl}
-    function create_if_block$5(ctx) {
     	let current;
 
     	const panel = new Panel({
     			props: {
     				style: "background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;",
-    				$$slots: { default: [create_default_slot_3] },
+    				$$slots: { default: [create_default_slot_9] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -5194,17 +4829,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_if_block$5.name,
+    		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(91:16) {#if htmlUrl}",
+    		source: "(68:16) {#if htmlUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (92:20) <Panel                          style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
-    function create_default_slot_3(ctx) {
+    // (69:20) <Panel                          style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+    function create_default_slot_9(ctx) {
     	let iframe_1;
     	let iframe_1_src_value;
 
@@ -5214,7 +4849,7 @@ var zdragon = (function () {
     			attr_dev(iframe_1, "class", "html-iframe svelte-l9ppwg");
     			if (iframe_1.src !== (iframe_1_src_value = /*htmlUrl*/ ctx[3])) attr_dev(iframe_1, "src", iframe_1_src_value);
     			attr_dev(iframe_1, "title", "Page");
-    			add_location(iframe_1, file$c, 94, 24, 3141);
+    			add_location(iframe_1, file$c, 71, 24, 2450);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, iframe_1, anchor);
@@ -5233,20 +4868,20 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_3.name,
+    		id: create_default_slot_9.name,
     		type: "slot",
-    		source: "(92:20) <Panel                          style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
+    		source: "(69:20) <Panel                          style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (90:12) <TabPanel>
-    function create_default_slot_2(ctx) {
+    // (67:12) <TabPanel>
+    function create_default_slot_8(ctx) {
     	let if_block_anchor;
     	let current;
-    	let if_block = /*htmlUrl*/ ctx[3] && create_if_block$5(ctx);
+    	let if_block = /*htmlUrl*/ ctx[3] && create_if_block_2$1(ctx);
 
     	const block = {
     		c: function create() {
@@ -5264,7 +4899,7 @@ var zdragon = (function () {
     					if_block.p(ctx, dirty);
     					transition_in(if_block, 1);
     				} else {
-    					if_block = create_if_block$5(ctx);
+    					if_block = create_if_block_2$1(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
     					if_block.m(if_block_anchor.parentNode, if_block_anchor);
@@ -5296,9 +4931,374 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
+    		id: create_default_slot_8.name,
+    		type: "slot",
+    		source: "(67:12) <TabPanel>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (83:20) {#if svgUrl}
+    function create_if_block_1$2(ctx) {
+    	let img;
+    	let img_src_value;
+
+    	const block = {
+    		c: function create() {
+    			img = element("img");
+    			attr_dev(img, "alt", "svg");
+    			if (img.src !== (img_src_value = /*componentUrl*/ ctx[2])) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "class", "svelte-l9ppwg");
+    			add_location(img, file$c, 83, 24, 2831);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, img, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*componentUrl*/ 4 && img.src !== (img_src_value = /*componentUrl*/ ctx[2])) {
+    				attr_dev(img, "src", img_src_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(img);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_1$2.name,
+    		type: "if",
+    		source: "(83:20) {#if svgUrl}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (82:16) <Panel>
+    function create_default_slot_7(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*svgUrl*/ ctx[1] && create_if_block_1$2(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*svgUrl*/ ctx[1]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block_1$2(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_7.name,
+    		type: "slot",
+    		source: "(82:16) <Panel>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (81:12) <TabPanel>
+    function create_default_slot_6(ctx) {
+    	let current;
+
+    	const panel = new Panel({
+    			props: {
+    				$$slots: { default: [create_default_slot_7] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(panel.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(panel, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const panel_changes = {};
+
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
+    				panel_changes.$$scope = { dirty, ctx };
+    			}
+
+    			panel.$set(panel_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(panel.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(panel.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(panel, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_6.name,
+    		type: "slot",
+    		source: "(81:12) <TabPanel>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (91:20) {#if componentUrl}
+    function create_if_block$5(ctx) {
+    	let img;
+    	let img_src_value;
+
+    	const block = {
+    		c: function create() {
+    			img = element("img");
+    			attr_dev(img, "alt", "svg");
+    			if (img.src !== (img_src_value = /*svgUrl*/ ctx[1])) attr_dev(img, "src", img_src_value);
+    			attr_dev(img, "class", "svelte-l9ppwg");
+    			add_location(img, file$c, 91, 24, 3062);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, img, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*svgUrl*/ 2 && img.src !== (img_src_value = /*svgUrl*/ ctx[1])) {
+    				attr_dev(img, "src", img_src_value);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(img);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block$5.name,
+    		type: "if",
+    		source: "(91:20) {#if componentUrl}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (90:16) <Panel>
+    function create_default_slot_5(ctx) {
+    	let if_block_anchor;
+    	let if_block = /*componentUrl*/ ctx[2] && create_if_block$5(ctx);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			if_block_anchor = empty();
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, if_block_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (/*componentUrl*/ ctx[2]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+    				} else {
+    					if_block = create_if_block$5(ctx);
+    					if_block.c();
+    					if_block.m(if_block_anchor.parentNode, if_block_anchor);
+    				}
+    			} else if (if_block) {
+    				if_block.d(1);
+    				if_block = null;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(if_block_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_5.name,
+    		type: "slot",
+    		source: "(90:16) <Panel>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (89:12) <TabPanel>
+    function create_default_slot_4(ctx) {
+    	let current;
+
+    	const panel = new Panel({
+    			props: {
+    				$$slots: { default: [create_default_slot_5] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(panel.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(panel, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const panel_changes = {};
+
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
+    				panel_changes.$$scope = { dirty, ctx };
+    			}
+
+    			panel.$set(panel_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(panel.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(panel.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(panel, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_4.name,
+    		type: "slot",
+    		source: "(89:12) <TabPanel>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (98:16) <Panel                      style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
+    function create_default_slot_3(ctx) {
+    	let current;
+    	const astviewer = new ASTViewer({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(astviewer.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(astviewer, target, anchor);
+    			current = true;
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(astviewer.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(astviewer.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(astviewer, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_3.name,
+    		type: "slot",
+    		source: "(98:16) <Panel                      style=\\\"margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (97:12) <TabPanel>
+    function create_default_slot_2(ctx) {
+    	let current;
+
+    	const panel = new Panel({
+    			props: {
+    				style: "margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;",
+    				$$slots: { default: [create_default_slot_3] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(panel.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(panel, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const panel_changes = {};
+
+    			if (dirty & /*$$scope*/ 2048) {
+    				panel_changes.$$scope = { dirty, ctx };
+    			}
+
+    			panel.$set(panel_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(panel.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(panel.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(panel, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(90:12) <TabPanel>",
+    		source: "(97:12) <TabPanel>",
     		ctx
     	});
 
@@ -5387,28 +5387,28 @@ var zdragon = (function () {
     			tablist.$set(tablist_changes);
     			const tabpanel0_changes = {};
 
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
+    			if (dirty & /*$$scope, htmlUrl, iframe*/ 2057) {
     				tabpanel0_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel0.$set(tabpanel0_changes);
     			const tabpanel1_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
     				tabpanel1_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel1.$set(tabpanel1_changes);
     			const tabpanel2_changes = {};
 
-    			if (dirty & /*$$scope*/ 2048) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
     				tabpanel2_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel2.$set(tabpanel2_changes);
     			const tabpanel3_changes = {};
 
-    			if (dirty & /*$$scope, htmlUrl, iframe*/ 2057) {
+    			if (dirty & /*$$scope*/ 2048) {
     				tabpanel3_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5586,7 +5586,7 @@ var zdragon = (function () {
     		p: function update(ctx, [dirty]) {
     			const tabs_changes = {};
 
-    			if (dirty & /*$$scope, htmlUrl, iframe, componentUrl, svgUrl*/ 2063) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl, htmlUrl, iframe*/ 2063) {
     				tabs_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6617,6 +6617,7 @@ var zdragon = (function () {
                             "choice": { token: "keyword", next: "@choice" },
                             "data": { token: "keyword", next: "@data" },
                             "component": { token: "keyword", next: "@attributes" },
+                            "interaction": { token: "keyword", next: "@attributes" },
                             "person": { token: "keyword", next: "@attributes" },
                             "system": { token: "keyword", next: "@attributes" },
                             "endpoint": { token: "keyword", next: "@attributes_endpoint" },

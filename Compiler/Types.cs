@@ -79,20 +79,26 @@ namespace Compiler {
 
 
         public static Dictionary<string, SyntaxKind> Keywords = new Dictionary<string, SyntaxKind> {
+                // type system 
                 { "record", SyntaxKind.RecordDeclarationToken },
                 { "type", SyntaxKind.TypeDeclarationToken },
                 { "data", SyntaxKind.DataDeclarationToken },
                 { "choice", SyntaxKind.ChoiceDeclarationToken },
                 { "open", SyntaxKind.OpenDeclarationToken },
+                { "extends", SyntaxKind.ExtendsToken },
+
+                // architecture
                 { "person", SyntaxKind.PersonDeclarationToken },
                 { "system", SyntaxKind.SystemDeclarationToken },
                 { "component", SyntaxKind.ComponentDeclarationToken },
                 { "endpoint", SyntaxKind.EndPointDeclarationToken },
+                { "interaction", SyntaxKind.InteractionDeclarationToken },
+
+                // flow
                 { "if", SyntaxKind.IfToken },
                 { "else", SyntaxKind.ElseToken },
                 { "where", SyntaxKind.WhereToken },
                 { "let", SyntaxKind.LetToken },
-                { "extends", SyntaxKind.ExtendsToken },
                 { "end", SyntaxKind.EndKeywordToken }
             };
 
@@ -271,7 +277,8 @@ namespace Compiler {
         AttributeFieldEnded,
 
 
-        None
+        None,
+        InteractionDeclarationToken
     }
 
     public enum CharacterCodes {

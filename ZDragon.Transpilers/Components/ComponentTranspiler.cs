@@ -97,23 +97,42 @@ namespace ZDragon.Transpilers.Components {
                     interactionParts.Add("");
                 }
 
-                relations.Add($"    Rel({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]})");
+                relations.Add($"Rel({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]})");
+            }
+        }
+
+        private void TranspileInteractionNode(InteractionNode node) {
+            var from = node.GetAttribute("From");
+            var to = node.GetAttribute("To");
+            var tech = node.GetAttribute("Technology", "");
+            var description = node.GetAttribute("Description");
+
+            var _status = node.GetAttribute("Status", "").ToLower();
+
+            var _relColor = _status switch {
+                "new" => $"-[#01470f]->",
+                "deprecated" => $"-[#750103]->",
+                "changed" => $"-[#990096]->",
+                "modified" => $"-[#990096]->",
+                _ => ""
+            };
+
+            if (from != null && to != null) {
+                    relations.Add($"Rel_({from}, {to}, {description ?? node.Id}, {tech}, {_relColor})");
             }
         }
 
         private string ParseTags(AttributesNode node) {
-            var _deprecated = bool.Parse(node.GetAttribute("Deprecated", "false").ToLower());
-            var _change = bool.Parse(node.GetAttribute("Change", "false").ToLower());
-            var _changed = bool.Parse(node.GetAttribute("Changed", "false").ToLower());
-            var _modified = bool.Parse(node.GetAttribute("Modified", "false").ToLower());
-            var _tags = "";
-            if (_deprecated) {
-                _tags = $", $tags=\"deprecated\"";
-            }
-            else if (!_deprecated && (_change || _changed || _modified)) {
-                _tags = $", $tags=\"change\"";
-            }
-            return _tags;
+            var _status = node.GetAttribute("Status", "").ToLower();
+
+            var _newTags = _status switch {
+                "new" => $", $tags=\"new\"",
+                "deprecated" => $", $tags=\"deprecated\"",
+                "changed" => $", $tags=\"change\"",
+                _ => ""
+            };
+
+            return _newTags;
         }
 
 
@@ -127,6 +146,7 @@ namespace ZDragon.Transpilers.Components {
                 case EndpointNode n: TranspileEndpointNode(n); break;
                 case PersonNode n: TranspilePersonNode(n); break;
                 case SystemNode n: TranspileSystemNode(n); break;
+                case InteractionNode n: TranspileInteractionNode(n); break;
                 default: break;
             }
         }
@@ -146,8 +166,9 @@ namespace ZDragon.Transpilers.Components {
 !define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
 
 
-AddTagSupport(""deprecated"", $bgColor=""#750103"", $fontColor=""#f7c0c1"", $borderColor=""#280000"")
-AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#ffbffd"", $borderColor=""#3a0039"")
+AddTagSupport(""deprecated"", $bgColor=""#750103"", $fontColor=""#fff"", $borderColor=""#280000"")
+AddTagSupport(""new"", $bgColor=""#01470f"", $fontColor=""#fff"", $borderColor=""#002808"")
+AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#3a0039"")
 
 " +
                 String.Join("\r\n", fff) +

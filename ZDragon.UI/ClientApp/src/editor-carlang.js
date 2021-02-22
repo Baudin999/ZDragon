@@ -35,6 +35,7 @@ export const tokenizer = {
                         "choice": { token: "keyword", next: "@choice" },
                         "data": { token: "keyword", next: "@data" },
                         "component": { token: "keyword", next: "@attributes" },
+                        "interaction": { token: "keyword", next: "@attributes" },
                         "person": { token: "keyword", next: "@attributes" },
                         "system": { token: "keyword", next: "@attributes" },
                         "endpoint": { token: "keyword", next: "@attributes_endpoint" },

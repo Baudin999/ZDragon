@@ -199,6 +199,7 @@ namespace Compiler.Linker {
                     case EndpointNode n: addToLexicon(n); break;
                     case SystemNode n: addToLexicon(n); break;
                     case PersonNode n: addToLexicon(n); break;
+                    case InteractionNode n: addToLexicon(n); break;
                     default: break;
                 }
             }

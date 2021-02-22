@@ -47,27 +47,6 @@ body {
 .fade-in {
   opacity: 1;
 }
-:root {
-  --color-primary: #fa6003;
-  --color-primary--dark: #803100;
-  --color-primary--alt: white;
-
-  --color-secundary: rgb(15, 82, 109);
-  --color-secundary--alt: white;
-
-  --color-warning: rgb(75, 5, 5);
-  --color-warning--alt: white;
-
-  --border-color: lightgray;
-
-  --background: white;
-  --color: rgb(31, 31, 31);
-}
-
-.dark {
-  --background: rgb(31, 31, 31);
-  --color: rgb(243, 243, 243);
-}
 /* FOMRS */
 .form {
   width: 100%;
@@ -124,33 +103,31 @@ textarea:focus {
 textarea {
   height: 150px;
 }
-table.table--glossary {
-  border-collapse: collapse;
-}
-table.table--glossary td,
-table.table--glossary th {
-  padding: 1rem;
-  text-align: left;
-}
-table.table--glossary td:last-child,
-table.table--glossary th:last-child {
-  padding-right: 4rem;
-}
-table.table--glossary td {
-  border-bottom: 1px solid lightgray;
-}
-table.table--glossary thead {
-  background: #fa6003;
-}
-table.table--glossary thead th {
-  font-weight: normal;
-  color: #ffffff;
+:root {
+  --color-primary: #fa6003;
+  --color-primary--dark: #803100;
+  --color-primary--alt: white;
+
+  --color-secundary: rgb(15, 82, 109);
+  --color-secundary--alt: white;
+
+  --color-warning: rgb(75, 5, 5);
+  --color-warning--alt: white;
+
+  --border-color: lightgray;
+
+  --background: white;
+  --color: rgb(31, 31, 31);
 }
 
-
-.content table {
-  border: 1px solid green;
-}/* Button Styling */
+.dark {
+  --background: rgb(31, 31, 31);
+  --color: rgb(243, 243, 243);
+}
+.mermaid > svg {
+  text-align: center;
+}
+/* Button Styling */
 
 button {
   border-radius: 0;
@@ -186,7 +163,33 @@ button.warning:hover {
   background: var(--color-primary);
   color: var(--color-primary--alt);
 }
+table.table--glossary {
+  border-collapse: collapse;
+}
+table.table--glossary td,
+table.table--glossary th {
+  padding: 1rem;
+  text-align: left;
+}
+table.table--glossary td:last-child,
+table.table--glossary th:last-child {
+  padding-right: 4rem;
+}
+table.table--glossary td {
+  border-bottom: 1px solid lightgray;
+}
+table.table--glossary thead {
+  background: #fa6003;
+}
+table.table--glossary thead th {
+  font-weight: normal;
+  color: #ffffff;
+}
 
+
+.content table {
+  border: 1px solid green;
+}
 .file-explorer {
     padding: 1rem;
 }
@@ -225,9 +228,6 @@ button.warning:hover {
     color: var(--color-secundary);
     font-weight: bolder;
     /* color: var(--color-secundary--alt); */
-}
-.mermaid > svg {
-  text-align: center;
 }
 .jsoneditor input,
 .jsoneditor input:not([type]),

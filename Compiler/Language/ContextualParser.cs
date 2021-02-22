@@ -51,6 +51,9 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.EndPointDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseEndPoint();
                 }
+                else if (tokenBlock.Context == ContextType.InteractionDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseInteraction();
+                }
 
                 // markdown
                 else if (tokenBlock.Context == ContextType.MarkdownChapterDeclaration) {

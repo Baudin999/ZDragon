@@ -142,6 +142,10 @@ namespace Compiler.Symbols {
                     //
                     yield return TokenizeAttributesDefinition(annotations, ContextType.EndPointDeclaration);
                 }
+                else if (Current?.Kind == SyntaxKind.InteractionDeclarationToken) {
+                    //
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.InteractionDeclaration);
+                }
                 else {
                     // We are probably in a markdown block and will interpert it like so...
                     yield return TokenizeMarkdown();
@@ -172,5 +176,6 @@ namespace Compiler.Symbols {
         DirectiveDeclaration,
         VariableDef,
         MarkupDeclaration,
+        InteractionDeclaration,
     }
 }

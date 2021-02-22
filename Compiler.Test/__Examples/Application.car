@@ -1,0 +1,23 @@
+
+component Carlos
+
+endpoint Something :: PersonId -> Person =
+    Name: Something
+
+system PersonalisationAccount =
+    Name: Personalisation AWS Account
+    Contains:
+        - Carlos
+        - Something
+
+component PersonHandler =
+    Name: Person Handler Changed
+
+# The type Defintions
+
+And a nice little paragraph
+
+type PersonId = Guid;
+
+record Person =
+    Id: PersonId;

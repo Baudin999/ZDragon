@@ -1,0 +1,42 @@
+# Simple Test
+
+
+With some content. This is now a normal Markdown document you can use to write your documentation.
+
+type PersonId = String;
+record Person
+type GetPerson = PersonId -> Person;
+type ValidatePerson = Person -> Boolean;
+
+component FromComponent =
+    Name: From Component
+    Interactions:
+        - GetDataFromToComponent; Get Data; HTTP(s)
+
+component ToComponent =
+    Name: To Component
+    Status: Deprecated
+
+component NewToComponent =
+    Name: New To Component
+    Status: New
+
+endpoint GetDataFromToComponent =
+    Name: Get data
+    Description: Get data from To-Component
+    Interactions:
+        - NewToComponent; Get the data; HTTP(s)
+
+system ToComponentSystem =
+    Name: To-Component System
+    Contains: 
+        - ToComponent
+        - NewToComponent
+        - GetDataFromToComponent
+
+interaction FromTo =
+    From: GetDataFromToComponent
+    To: ToComponent
+    Technology: HTTP(s)
+    Description: Gets data
+    Status: Deprecated

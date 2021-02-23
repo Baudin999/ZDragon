@@ -37,6 +37,10 @@ namespace Compiler {
         InvalidIdentifier,
         Unknown,
         InvalidTypeDefinition,
-        Generics_ApplicationMisMatch
+        Generics_ApplicationMisMatch,
+
+        // architecture
+        Architecture_Interaction_MissingFrom,
+        Architecture_Interaction_MissingTo
     }
 }

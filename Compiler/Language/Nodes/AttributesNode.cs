@@ -14,6 +14,10 @@ namespace Compiler.Language.Nodes {
             return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value;
         }
 
+        public AttributeNode? GetAttributeNode(string name) {
+            return this.Attributes.FirstOrDefault(a => a.Key == name);
+        }
+
         public List<string>? GetAttributeItems(string name) {
             return this.Attributes.FirstOrDefault(a => a.Key == name)?.Items;
         }

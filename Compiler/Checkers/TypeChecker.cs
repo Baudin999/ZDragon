@@ -12,7 +12,7 @@ namespace Compiler.Checkers {
         private readonly Dictionary<string, IIdentifierExpressionNode> externalLexicon = new Dictionary<string, IIdentifierExpressionNode>();
         private ErrorSink errorSink => cache.ErrorSink;
 
-       
+
         private void CheckDataNode(DataNode node) {
             // generate record if they do not exist.
             foreach (var field in node.Fields) {
@@ -98,29 +98,33 @@ Your List definitions seems to have {message} type parameters.
         }
 
         private void CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token) {
+            CheckToken(root, context, token, token.Value);
+        }
+
+        private void CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token, string typeName) {
             var rootName = context?.Id ?? root.Id;
-            if (baseTypes.Contains(token.Value)) return;
-            else if (lexicon.ContainsKey(token.Value)) return;
+            if (baseTypes.Contains(typeName)) return;
+            else if (lexicon.ContainsKey(typeName)) return;
             else if (token.Kind == SyntaxKind.GenericParameterToken) {
                 if (root is RecordNode rn) {
-                    if (!rn.GenericParameters.Any(e => e.Value == token.Value)) {
+                    if (!rn.GenericParameters.Any(e => e.Value == typeName)) {
                         errorSink.AddError(new Error(
                             ErrorType.GenericParameter_Undefined,
-                            $"Undeclared generic parameter \"{token.Value}\" on field '{context?.Id}' of record '{root.Id}'.",
+                            $"Undeclared generic parameter \"{typeName}\" on field '{context?.Id}' of record '{root.Id}'.",
                             token
                             ));
                         return;
                     }
                 }
                 else if (root is TypeAliasNode tan) {
-                    if (!tan.GenericParameters.Any(e => e.Value == token.Value)) {
+                    if (!tan.GenericParameters.Any(e => e.Value == typeName)) {
                         errorSink.AddError(new Error(
                             ErrorType.GenericParameter_Undefined,
-                            @$"Undeclared generic parameter {token.Value} on type alias '{root.Id}'. 
+                            @$"Undeclared generic parameter {typeName} on type alias '{root.Id}'. 
 
-We expect a generic type definition to at least contain {token.Value} as a generic parameter:
+We expect a generic type definition to at least contain {typeName} as a generic parameter:
 
-type {root.Id} {token.Value} = ...;
+type {root.Id} {typeName} = ...;
 ",
                             token
                             ));
@@ -226,6 +230,7 @@ type {root.Id} {token.Value} = ...;
                 case ComponentNode n: CheckComponentNode(n); break;
                 case EndpointNode n: CheckEndpointNode(n); break;
                 case SystemNode n: CheckSystemNode(n); break;
+                case InteractionNode n: CheckInteractionNode(n); break;
                 default: break;
             }
         }

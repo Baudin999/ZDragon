@@ -99,13 +99,10 @@ namespace ZDragon.Transpilers.Html {
                 else if (documentPart is MarkdownNode mdn) RenderMarkdownNode(mdn);
                 else RenderParagraph(documentPart);
             }
-            if (toc.Count > 0) {
-                parts.Add("</div>");
-            }
-            toc.Add("</div>");
-
+            
             if (h1 > 2) {
                 // Don't put in the TOC if there are no chapters...
+                parts.Add("</div>");
                 parts.Insert(1, string.Join("\n\n", toc));
             }
 

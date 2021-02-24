@@ -104,21 +104,23 @@ namespace ZDragon.Transpilers.Components {
         private void TranspileInteractionNode(InteractionNode node) {
             var from = node.GetAttribute("From");
             var to = node.GetAttribute("To");
-            var tech = node.GetAttribute("Technology", "");
+            var tech = node.GetAttribute("Technology", "\"\"");
+            var title = node.GetAttribute("Title");
+            var name = node.GetAttribute("Name");
             var description = node.GetAttribute("Description");
 
             var _status = node.GetAttribute("Status", "").ToLower();
 
             var _relColor = _status switch {
-                "new" => $"-[#01470f]->",
-                "deprecated" => $"-[#750103]->",
-                "changed" => $"-[#990096]->",
-                "modified" => $"-[#990096]->",
-                _ => ""
+                "new" => "-[#01470f]->",
+                "deprecated" => "-[#750103]->",
+                "changed" => "-[#990096]->",
+                "modified" => "-[#990096]->",
+                _ => "-[#353535]->"
             };
 
             if (from != null && to != null) {
-                    relations.Add($"Rel_({from}, {to}, {description ?? node.Id}, {tech}, {_relColor})");
+                relations.Add($"Rel_({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech}, {_relColor})");
             }
         }
 

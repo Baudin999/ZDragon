@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler.Symbols {
 
@@ -7,10 +9,17 @@ namespace Compiler.Symbols {
     ///
     /// </summary>
     internal partial class ContextualTokenizer {
+
         private TokenGroup TokenizeMarkdown() {
             var tokens = new List<Token>();
             while (index < max && Current != null) {
-                if (Current.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.NewLineToken) {
+
+                if (Current?.Kind == SyntaxKind.NewLineToken && Next != null &&  (
+                      Next?.Kind == SyntaxKind.NewLineToken ||
+                      Mappings.Keywords.Keys.Contains(Next?.Value))
+                    ) {
+
+                    // take the new-lines
                     tokens.Add(Take());
                     tokens.Add(Take());
                     break;
@@ -20,8 +29,8 @@ namespace Compiler.Symbols {
                 }
             }
 
-            
-            
+
+
             return new TokenGroup(ContextType.MarkdownDeclaration, tokens);
         }
 

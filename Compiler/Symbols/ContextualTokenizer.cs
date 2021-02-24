@@ -40,10 +40,15 @@ namespace Compiler.Symbols {
             }
             else if (depth > 0) {
                 if (Current?.Kind != SyntaxKind.NewLineToken) return false;
-                if (index + (depth + 1) > max) return false;
 
-                var valid = Tokens[index + depth + 1].Kind != SyntaxKind.IndentToken;
-                for (int i = 1; i < depth + 1; ++i) {
+                // the newline compensator
+                var nl = 1;
+                while (Next?.Kind == SyntaxKind.NewLineToken) nl++;
+
+
+                if (index + (depth + nl) > max) return false;
+                var valid = Tokens[index + depth + nl].Kind != SyntaxKind.IndentToken;
+                for (int i = nl; i < depth + nl; ++i) {
                     valid = Tokens[index + i].Kind == SyntaxKind.IndentToken && valid;
                 }
                 return valid;

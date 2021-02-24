@@ -1,6 +1,7 @@
 using ElectronNET.API;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System;
 using System.IO;
 
 namespace ZDragon.UI {
@@ -10,8 +11,16 @@ namespace ZDragon.UI {
 
         public static void Main(string[] args) {
             // init project
-            var path = args.Length > 0 ? args[0] : Directory.GetCurrentDirectory();
+            var path = "D:\\TEMP\\003";
+
+            //Console.WriteLine($"Current directory: {path}");
+            //if (args.Length > 0) {
+            //    if (Directory.Exists(args[0])) path = args[0];
+            //}
+
             Program.Project = new Project.Project(path);
+
+            //System.Console.WriteLine($"The final path is: {path}");
 
             CreateHostBuilder(args).Build().Run();
         }
@@ -20,8 +29,8 @@ namespace ZDragon.UI {
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => {
                     webBuilder
-                        .UseStartup<Startup>()
-                        .UseElectron(args);
+                        .UseElectron(args)
+                        .UseStartup<Startup>();
                 });
     }
 }

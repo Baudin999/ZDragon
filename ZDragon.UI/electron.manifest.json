@@ -1,15 +1,16 @@
 {
-  "executable": "ZDragon.UI",
+  "executable": "ZDragon",
   "splashscreen": {
     "imageFile": ""
   },
   "name": "ZDragon",
-  "author": "",
+  "author": "Carlos Kelkboom",
   "singleInstance": false,
+
   "environment": "Production",
   "build": {
-    "appId": "com.ZDragon.UI.app",
-    "productName": "ZDragon.UI",
+    "appId": "com.ZDragon.app",
+    "productName": "ZDragon",
     "copyright": "Copyright © 2020",
     "buildVersion": "1.0.0",
     "compression": "maximum",

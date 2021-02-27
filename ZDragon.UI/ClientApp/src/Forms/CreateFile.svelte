@@ -29,13 +29,13 @@
 
 <form class="form">
     <div class="form--field">
-        <label for="aaa1">File Name</label>
-        <input id="aaa1" on:change={changeValue("name")} />
+        <label for="cf_001">File Name</label>
+        <input id="cf_001" on:change={changeValue("name")} />
     </div>
 
     <div class="form--field">
-        <label for="aaa2">Type</label>
-        <select id="aaa2" on:change={changeValue("type")}>
+        <label for="cf_002">Type</label>
+        <select id="cf_002" on:change={changeValue("type")}>
             <option>Feature</option>
             <option>Module</option>
             <option>Empty</option>
@@ -43,13 +43,13 @@
     </div>
 
     <div class="form--field">
-        <label for="aaa1">Application Name</label>
-        <input id="aaa1" on:change={changeValue("appName")} />
+        <label for="cf_003">Application Name</label>
+        <input id="cf_003" on:change={changeValue("appName")} />
     </div>
 
     <div class="form--field">
-        <label for="aaa2">Description</label>
-        <textarea id="aaa2" on:change={changeValue("description")} />
+        <label for="cf_004">Description</label>
+        <textarea id="cf_004" on:change={changeValue("description")} />
     </div>
 
     <button on:click={submitForm} type="button">Submit</button>

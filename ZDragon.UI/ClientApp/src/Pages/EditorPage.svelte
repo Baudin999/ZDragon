@@ -11,8 +11,13 @@
     import Panel from "../Components/Panel.svelte";
     import ASTViewer from "../Components/ASTViewer.svelte";
     import { moduleStore } from "../Services/module.js";
-    import { stateStore, toggleAddFileDialog } from "../Services/state.js";
+    import {
+        stateStore,
+        toggleAddFileDialog,
+        toggleAddApplicationDialog,
+    } from "../Services/state.js";
     import CreateFile from "../Forms/CreateFile.svelte";
+    import CreateApplication from "../Forms/CreateApplication.svelte";
 
     let iframe;
     let timeout;
@@ -43,12 +48,12 @@
         }, 2000);
     });
 
-    let showCreateDomain = false;
+    let showAddApplicationDialog = false;
     let showAddFileDialog = false;
 
     stateStore.subscribe((s: any) => {
-        console.log(s);
         showAddFileDialog = !!s.showAddFileDialog;
+        showAddApplicationDialog = !!s.showAddApplicationDialog;
     });
 
     let print = () => {
@@ -123,6 +128,12 @@
         show={showAddFileDialog}
         close={toggleAddFileDialog}>
         <CreateFile />
+    </Modal>
+    <Modal
+        title="Add Application"
+        show={showAddApplicationDialog}
+        close={toggleAddApplicationDialog}>
+        <CreateApplication />
     </Modal>
 </div>
 

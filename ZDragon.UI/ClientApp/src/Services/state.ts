@@ -12,9 +12,16 @@ export const toggleAddFileDialog = () => {
     }));
 }
 
+
+export const toggleAddApplicationDialog = () => {
+    stateStore.update((s: any) => ({
+        ...s,
+        showAddApplicationDialog: !!!s.showAddApplicationDialog
+    }));
+}
+
 export const getFiles = async () => {
     let files = await get("/domains");
-    console.log(files);
     stateStore.update((s: any) => ({
         ...s,
         files

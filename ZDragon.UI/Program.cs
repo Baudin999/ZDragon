@@ -13,14 +13,12 @@ namespace ZDragon.UI {
             // init project
             var path = "D:\\TEMP\\003";
 
-            //Console.WriteLine($"Current directory: {path}");
-            //if (args.Length > 0) {
-            //    if (Directory.Exists(args[0])) path = args[0];
-            //}
+            if (args.Length > 0) {
+                if (Directory.Exists(args[0])) path = args[0];
+            }
 
             Program.Project = new Project.Project(path);
 
-            //System.Console.WriteLine($"The final path is: {path}");
 
             CreateHostBuilder(args).Build().Run();
         }

@@ -58,14 +58,14 @@ namespace ZDragon.UI {
                 var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions {
                     Width = 1600,
                     Height = 940,
-                    Show = false
+                    Show = true
                 });
 
                 await browserWindow.WebContents.Session.ClearCacheAsync();
 
+                browserWindow.RemoveMenu();
                 browserWindow.OnReadyToShow += () => browserWindow.Show();
-                browserWindow.SetTitle("Woezel");
-                //browserWindow.RemoveMenu();
+                browserWindow.SetTitle("ZDragon");
                 
                 browserWindow.OnClosed += lifetime.StopApplication;
 

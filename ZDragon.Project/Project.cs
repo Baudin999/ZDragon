@@ -47,6 +47,11 @@ namespace ZDragon.Project {
             throw new Exception("Cannot get the text of a non module interactor");
         }
 
+        public bool CreateApplication(string name) {
+            var appInteractor = ApplicationInteractor.Create(this._root, name, this.Cache);
+            return appInteractor != null;
+        }
+
         public T? Find<T>(string ns) where T: IInteractor {
             var interactor =  DirectoryInteractor.Find(ns);
             return (T)interactor;

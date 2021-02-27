@@ -1,10 +1,15 @@
 <script>
-    import { toggleAddFileDialog } from "../../Services/state.js";
+    import {
+        toggleAddApplicationDialog,
+        toggleAddFileDialog,
+    } from "../../Services/state.js";
 </script>
 
 <div class="toolbar">
     <div on:click={toggleAddFileDialog}><i class="fa fa-file-o" /></div>
-    <div><i class="fa fa-folder-o" /></div>
+    <div on:click={toggleAddApplicationDialog}>
+        <i class="fa fa-folder-o" />
+    </div>
 </div>
 
 <style type="less">

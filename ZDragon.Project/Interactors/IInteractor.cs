@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZDragon.Project.Components {
+namespace ZDragon.Project.Interactors {
     public interface IInteractor {
         Task<ModuleInteractor> AddFile(string name, string type, string? description);
     }

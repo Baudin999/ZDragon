@@ -7,13 +7,14 @@ using ZDragon.Transpilers.Components;
 using ZDragon.Transpilers.Html;
 using ZDragon.Transpilers.PlantUML;
 
-namespace ZDragon.Project.Components {
+namespace ZDragon.Project.Interactors {
     /// <summary>
     /// The module interactor gives us a way to interact with a module,
     /// like saving the file, compiling the module and gerally maintain
     /// the validity of the diagrams created by the module.
     /// </summary>
     public class ModuleInteractor: IInteractor {
+        public string Name { get; }
         public string RootPath { get; }
         public string? DirectoryPath { get; }
         public string OutPath { get; }
@@ -31,13 +32,20 @@ namespace ZDragon.Project.Components {
         public string HtmlPath { get; }
         public string FullName { get; }
         public string Namespace { get; }
+        public FileTypes FileType { get; }
+
+        public ModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType): this(rootPath, file, cache) {
+            this.FileType = fileType;
+        }
 
         public ModuleInteractor(string rootPath, string file, CompilationCache cache) {
 
             this.cache = cache;
 
+            this.FileType = FileTypes.Default;
             this.RootPath = rootPath;
             this.FullName = file;
+            this.Name = Path.GetFileNameWithoutExtension(file);
             this.DirectoryPath = Path.GetDirectoryName(file);
             this.Namespace = Utilities.GetNamespaceFromPath(rootPath, file);
             this.OutPath = Path.Combine(rootPath, "out", this.Namespace);

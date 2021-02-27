@@ -36,8 +36,11 @@
     <div class="form--field">
         <label for="cf_002">Type</label>
         <select id="cf_002" on:change={changeValue("type")}>
+            <option>Component</option>
             <option>Feature</option>
-            <option>Module</option>
+            <option>Database</option>
+            <option>Endpoint</option>
+            <option>Model</option>
             <option>Empty</option>
         </select>
     </div>

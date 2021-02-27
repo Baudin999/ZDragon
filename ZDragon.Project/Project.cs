@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using ZDragon.Project.Components;
+using ZDragon.Project.Interactors;
 using ZDragon.Transpilers.Components;
 using ZDragon.Transpilers.Html;
 using ZDragon.Transpilers.PlantUML;

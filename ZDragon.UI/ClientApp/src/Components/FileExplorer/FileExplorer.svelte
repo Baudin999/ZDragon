@@ -1,18 +1,31 @@
 <script>
-    import { get } from "../../Services/http";
     import Domain from "./Domain.svelte";
     import FileToolbar from "./FileToolbar.svelte";
     import { getFiles, stateStore } from "./../../Services/state";
+    import Application from "./Application.svelte";
 
     getFiles();
+
+    var applications = [];
+    stateStore.subscribe(({ files = {} }) => {
+        // var { applications = [], modules = [] } = files || {};
+
+        // console.log(applications);
+        applications = files.applications || [];
+        // console.log(modules);
+    });
 </script>
 
 <div class="file-explorer">
     <FileToolbar />
 
-    {#if $stateStore.files}
+    {#each applications as application}
+        <Application {application} />
+    {/each}
+
+    <!-- {#if $stateStore.files}
         <Domain domain={$stateStore.files} open={true} showSelf={false} />
-    {/if}
+    {/if} -->
 </div>
 
 <style>

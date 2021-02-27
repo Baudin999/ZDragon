@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ZDragon.Project.Templates;
 
-namespace ZDragon.Project.Components {
+namespace ZDragon.Project.Interactors {
     public class DirectoryInteractor : IInteractor {
         public string RootPath { get; }
         public string DirectoryPath { get; }

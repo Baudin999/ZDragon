@@ -22,6 +22,10 @@ export const selectModule = async module => {
     });
 };
 
+export const deleteModule = async module => {
+    console.log(module);
+}
+
 export const parseCode = async (module, code) => {
     if (!module || !code) return;
     var compilationResult = await post("/document/" + module.namespace, { code });

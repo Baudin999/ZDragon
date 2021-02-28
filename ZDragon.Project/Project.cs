@@ -10,10 +10,10 @@ using ZDragon.Transpilers.PlantUML;
 
 namespace ZDragon.Project {
     public class Project {
-        public readonly CompilationCache Cache;
-        private readonly string _root;
-        private readonly string outpath;
-        private readonly string dbPath;
+        public CompilationCache Cache { get; private set;}
+        private string _root { get; set; }
+        private string outpath { get; set; }
+        private string dbPath { get; set;}
         public DirectoryInteractor DirectoryInteractor { get; private set;  }
 
 
@@ -37,6 +37,13 @@ namespace ZDragon.Project {
 
         public bool IsValidProjectPath(string path) {
             return true;
+        }
+
+        public void Reload(string path) {
+            Cache = new CompilationCache(new ErrorSink());
+            _root = path;
+            DirectoryInteractor = new DirectoryInteractor(_root, _root, Cache);
+
         }
 
         public async Task<string> GetTextByNamespace(string ns) {

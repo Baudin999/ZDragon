@@ -155,6 +155,7 @@ namespace ZDragon.Project.Interactors {
 
         public async Task<ModuleInteractor> AddFile(string name, string type, string? description) {
             // Should be added to the application or directory of which this file is a part.
+            name = name.Replace(" ", "");
             string fileName = name;
             if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
             var path = Path.Combine(this.DirectoryPath ?? this.RootPath, fileName);

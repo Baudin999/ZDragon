@@ -35,7 +35,8 @@
 
     <div class="form--field">
         <label for="cf_002">Type</label>
-        <select id="cf_002" on:change={changeValue("type")}>
+        <select id="cf_002" value={$file.type} on:change={changeValue("type")}>
+            <option />
             <option>Component</option>
             <option>Feature</option>
             <option>Database</option>

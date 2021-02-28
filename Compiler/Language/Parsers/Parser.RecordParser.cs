@@ -31,7 +31,7 @@ namespace Compiler.Language {
             List<Token> extensions = new List<Token>();
             if (Current?.Kind == SyntaxKind.ExtendsToken) {
                 var extends = Take(SyntaxKind.ExtendsToken);
-                extensions = TakeWhile(SyntaxKind.IdentifierToken).ToList();
+                extensions = TakeWhile(SyntaxKind.IdentifierToken).OfType<Token>().ToList();
             }
 
             if (Current?.Kind == SyntaxKind.SemiColonToken || Current?.Kind == SyntaxKind.EndBlock) {

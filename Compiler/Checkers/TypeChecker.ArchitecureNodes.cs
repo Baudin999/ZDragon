@@ -10,13 +10,18 @@ namespace Compiler.Checkers {
         private void CheckComponentNode(ComponentNode node) {
 
             var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();
-            
+
             foreach (var interaction in interactions) {
                 var token = interaction.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
                 if (token != null) {
                     CheckToken(node, null, token);
                 }
             }
+
+            node.Extensions.ForEach(extension => {
+                if (extension is QualifiedToken qt) CheckQualifiedToken(node, null, qt);
+                else CheckToken(node, null, extension);
+            });
         }
 
 

@@ -134,16 +134,12 @@ namespace Compiler.Symbols {
         }
 
         public Token(List<Token?> tokens, SyntaxKind kind, int indentLevel = 0) :
-#pragma warning disable CS8604 // Possible null reference argument.
             this(
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-                string.Join("", tokens.Where(t => t != null).Select(t => t.Value)),
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                string.Join("", tokens.OfType<Token>().Select(t => t.Value)),
                 kind,
-                tokens.Where(t => t != null).First(),
-                tokens.Where(t => t != null).Last(),
+                tokens.OfType<Token>().First(),
+                tokens.OfType<Token>().Last(),
                 indentLevel) { }
-#pragma warning restore CS8604 // Possible null reference argument.
 
 
         public override string ToString() {

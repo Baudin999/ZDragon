@@ -15,6 +15,7 @@ namespace ZDragon.Project {
                 _path = Path.GetRelativePath(root, _path);
                 _path = _path.Replace(".", "_$_$_");
                 _path = _path.Replace("\\", ".");
+                _path = _path.Replace("\\", ".");
                 return _path;
             }
             else {

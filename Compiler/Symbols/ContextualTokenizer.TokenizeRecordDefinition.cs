@@ -24,12 +24,12 @@ namespace Compiler.Symbols {
                     break;
                 }
                 else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
-                    var identifierParts = new List<Token?>();
+                    var identifierParts = new List<Token>();
                     while (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
-                        identifierParts.Add(Take()); // add the part
+                        identifierParts.Add(TakeF(SyntaxKind.IdentifierToken)); // add the part
                         Take(); // skip the dot
                     }
-                    identifierParts.Add(Take());
+                    identifierParts.Add(TakeF(SyntaxKind.IdentifierToken));
 
                     tokens.Add(new QualifiedToken(identifierParts));
                 }

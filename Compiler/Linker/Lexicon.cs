@@ -136,6 +136,31 @@ namespace Compiler.Linker {
                     }
                 }
             }
+
+
+            // Import the extended fields from the other component
+            // and add these extensions to this components.
+            if (node is ComponentNode cn) {
+                foreach (var ext in cn.Extensions) {
+
+                    var id = ext switch {
+                        QualifiedToken qt => Get(qt),
+                        _ => Get(ext.Value)
+                    };
+
+                    if (id is AttributesNode an) {
+                        foreach (var a in an.Attributes) {
+                            if (!node.HasAttribute(a.Key)) {
+                                node.Attributes.Add(a);
+                            }
+                        }
+
+                    }
+                    else {
+                        throw new System.Exception("Not an attribute node");
+                    }
+                }
+            }
         }
 
         private void CheckTypeToken(Token token, IIdentifierExpressionNode root, string errorQualifier) {
@@ -174,6 +199,15 @@ namespace Compiler.Linker {
                     node = (IIdentifierExpressionNode)_cr.Lexicon[typeName];
                     break;
                 }
+            }
+            return node;
+        }
+
+        private IIdentifierExpressionNode? Get(QualifiedToken token) {
+            IIdentifierExpressionNode? node = null;
+            var _cr = cache.Has(token.Namespace) ? cache.Get(token.Namespace) : null;
+            if (_cr != null && _cr.Lexicon.ContainsKey(token.Id)) {
+                node = _cr.Lexicon[token.Id];
             }
             return node;
         }

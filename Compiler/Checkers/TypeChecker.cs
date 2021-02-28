@@ -185,6 +185,7 @@ type {root.Id} {typeName} = ...;
             return node;
         }
 
+
         private void Add(string key, IIdentifierExpressionNode node) {
             if (!this.externalLexicon.ContainsKey(key)) {
                 this.externalLexicon.Add(key, node);

@@ -77,7 +77,6 @@
                 <Tab>Document</Tab>
                 <Tab>Architecture</Tab>
                 <Tab>Data Model</Tab>
-                <Tab>AST</Tab>
             </TabList>
 
             <TabPanel>
@@ -107,13 +106,6 @@
                     {#if componentUrl}
                         <img alt="svg" src={svgUrl} />
                     {/if}
-                </Panel>
-            </TabPanel>
-
-            <TabPanel>
-                <Panel
-                    style="margin-top: 3rem; height: calc(100% - 3rem); overflow: hidden; padding: 0;">
-                    <ASTViewer />
                 </Panel>
             </TabPanel>
         </Tabs>

@@ -169,5 +169,33 @@ component Bar =
         }
 
 
+        [Fact(DisplayName = "Component - Extend")]
+        public void Component_Extend() {
+            var errorSink = new ErrorSink();
+            var codeFirst = @"
+component Foo =
+    Name: Footje
+";
+            var codeSecond = @"
+
+component Foo extends BaseComponents.Foo =
+    Title: New Foo
+
+";
+            var cache = new CompilationCache(errorSink);
+            var compilerResultFirst = new Compiler.Compiler(codeFirst, "BaseComponents", cache).Compile().Check();
+            var compilerResultSecond = new Compiler.Compiler(codeSecond, "Components", cache).Compile().Check();
+
+            Assert.NotNull(compilerResultFirst);
+            Assert.NotNull(compilerResultSecond);
+
+            Assert.Empty(errorSink.Errors);
+
+            var foo = (ComponentNode)compilerResultSecond.Lexicon["Foo"];
+            Assert.Single(foo.Extensions);
+            Assert.Equal(2, foo.Attributes.Count);
+        }
+
+
     }
 }

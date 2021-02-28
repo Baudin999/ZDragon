@@ -27,6 +27,11 @@ namespace Compiler.Symbols {
             if (Current?.Kind != kind) throw new Exception($"Expected token of kind '{kind}' but received token of kind'{Current.Kind}'.");
             return Take();
         }
+        private Token TakeF(SyntaxKind kind) {
+            var result = Take();
+            if (result is null) throw new Exception($"Expected token of kind '{kind}' but received token of kind'{Current.Kind}'.");
+            else return result;
+        }
         private IEnumerable<Token> TakeWhile(Predicate<Token> p, int indentLevel = 0) {
             while (Current != null && p(Current)) {
                 yield return Take().ChangeIndentLevel(indentLevel);

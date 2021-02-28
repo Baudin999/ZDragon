@@ -21,7 +21,17 @@ namespace Compiler.Symbols {
                     Take();
                     tokens.Add(new Token(" ", SyntaxKind.WhiteSpaceToken, Token.DefaultSourceSegment()));
                 }
-                else if (Current.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
+                else if (!fieldStarted && Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
+                    var identifierParts = new List<Token>();
+                    while (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
+                        identifierParts.Add(TakeF(SyntaxKind.IdentifierToken)); // add the part
+                        Take(); // skip the dot
+                    }
+                    identifierParts.Add(TakeF(SyntaxKind.IdentifierToken));
+
+                    tokens.Add(new QualifiedToken(identifierParts));
+                }
+                else if (Current?.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
                     tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.NextParameterToken, 1));
                 }
                 else if (Current?.Kind == SyntaxKind.IndentToken) {

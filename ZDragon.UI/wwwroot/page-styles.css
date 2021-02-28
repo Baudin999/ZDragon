@@ -1,27 +1,37 @@
-﻿
+﻿/* https://www.pagedjs.org/documentation/02-getting-started-with-paged-js/ */
 html, body {
-    font-family: sans-serif;
-    font-size: 12px;
+    font-family: "Computer Modern Sans", sans-serif;
+    font-size: 14px;
 }
 
 
 @media print {
     @page {
-        size: auto; /* auto is the initial value */
-        /* this affects the margin in the printer settings */
-        margin: 25mm 25mm 25mm 25mm;
+        size: A4; /* auto is the initial value */
+        /*         this affects the margin in the printer settings */
+        margin: 22mm 22mm 22mm 22mm;
+
+        orphans: 3;
+        widows: 3;
     }
+    @page :first {
+        background: orange;
+    }
+   
+
     html, body {
         margin: 0 !important;
         padding: 0 !important;
+        counter-reset: page-index;
     }
+
     .content {
-        margin: 0!important;
-        padding: 0!important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .keep-together {
-        page-break-inside: avoid!important;
+        page-break-inside: avoid !important;
     }
 }
 
@@ -34,7 +44,6 @@ h1 {
     counter-reset: sub-section;
     margin-top: 3rem;
     page-break-before: auto;
-    text-transform: uppercase;
     font-size: 1.5rem;
 }
 
@@ -74,6 +83,10 @@ h4:before {
     content: counter(section) "." counter(sub-section) "." counter(composite) "." counter(detail) " ";
 }
 
+p {
+    text-align: justify;
+}
+
 
 .content {
     padding: 2cm;
@@ -107,7 +120,7 @@ table {
     }
 
 
-/* TABLE OF CONTENTS */
+ TABLE OF CONTENTS 
 .toc {
 }
 

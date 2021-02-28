@@ -104,6 +104,7 @@ namespace ZDragon.Project.Interactors {
         }
 
         public static ApplicationInteractor Create(string root, string name, CompilationCache cache) {
+            name = name.Replace(" ", "");
             var fullPath = Path.Combine(Path.GetFullPath(root), name);
 
             // either create or load the ApplicationInteractor

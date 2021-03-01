@@ -1,10 +1,14 @@
 ﻿using Compiler.Checkers;
+using Compiler.Language.Nodes;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler {
     public class CompilationCache {
         private readonly Dictionary<string, CompilationResult> Cache = new Dictionary<string, CompilationResult>();
         public ErrorSink ErrorSink { get; }
+        public Dictionary<string, IIdentifierExpressionNode> Lexicon = new Dictionary<string, IIdentifierExpressionNode>();
 
         public CompilationCache(ErrorSink errorSink) {
             this.ErrorSink = errorSink;
@@ -40,6 +44,35 @@ namespace Compiler {
             foreach (var (key, compilationResult) in Cache) {
                 new TypeChecker(this, compilationResult).Check();
             }
+        }
+
+        public Index GenerateComponentIndex(params string[] namespaces) {
+            var result = new Index();
+
+            foreach (string ns in namespaces) {
+                if (Cache.ContainsKey(ns)) {
+                    foreach (var (key, value) in Cache[ns].Lexicon) {
+                        if (value is IArchitectureNode && !value.Imported)
+                            result.Add(key, ns + "." + key, value);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Index GenerateLanguageIndex(params string[] namespaces) {
+            var result = new Index();
+
+            foreach (string ns in namespaces) {
+                if (Cache.ContainsKey(ns)) {
+                    foreach (var (key, value) in Cache[ns].Lexicon) {
+                        if (value is ILanguageNode && !value.Imported) {
+                            result.Add(key, ns + "." + key, value);
+                        }
+                    }
+                }
+            }
+            return result;
         }
     }
 }

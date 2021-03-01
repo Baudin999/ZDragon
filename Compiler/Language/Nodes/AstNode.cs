@@ -10,8 +10,10 @@ namespace Compiler.Language.Nodes {
             this.Segment = Token.Range(start, end);
         }
 
-        [System.Text.Json.Serialization.JsonConstructor]
         public AstNode() { }
 
+        public virtual AstNode Copy() { 
+            return this; 
+        }
     }
 }

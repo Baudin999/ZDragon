@@ -1,7 +1,6 @@
 using Compiler.Checkers;
 using Compiler.Language;
 using Compiler.Language.Nodes;
-using Compiler.Linker;
 using Compiler.Symbols;
 using System.Linq;
 

@@ -12,6 +12,7 @@ namespace Compiler.Language.Nodes {
         public ExpressionNode(ISourceSegment startSegment, ISourceSegment endSegment, ExpressionKind expressionKind) : base(startSegment, endSegment) {
             this.ExpressionKind = expressionKind;
         }
+
     }
 
     public enum ExpressionKind {

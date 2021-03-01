@@ -10,12 +10,15 @@ namespace Compiler.Language.Nodes {
         public List<Token> TypeTokens { get; }
         public List<RestrictionNode> Restrictions { get; }
         public bool IsCloned { get; }
+        public string Type => string.Join(" ", Types);
 
         public List<string> Types => TypeTokens.Select(t => t.Value).ToList();
         public AnnotationNode? AnnotationNode { get; }
         public string Description => AnnotationNode?.Annotation ?? "";
+        public bool Imported { get; set; } = false;
+        public string? ImportedFrom { get; set; } = null;
 
-       
+
         public RecordFieldNode(AnnotationNode? annotation, Token identifierToken, IEnumerable<Token> types, IEnumerable<RestrictionNode> restrictions, bool cloned = false) : base(identifierToken, ExpressionKind.RecordExpressionField) {
             this.AnnotationNode = annotation;
             this.IdToken = identifierToken;
@@ -33,5 +36,10 @@ namespace Compiler.Language.Nodes {
                 true
             );
         }
+
+        public override AstNode Copy() {
+            return Clone();
+        }
+
     }
 }

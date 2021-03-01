@@ -9,6 +9,8 @@ namespace Compiler.Language.Nodes {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
         public List<AttributeNode> Attributes { get; }
+        public bool Imported { get; set; } = false;
+        public string? ImportedFrom { get; set; } = null;
 
         public string? GetAttribute(string name) {
             return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value;

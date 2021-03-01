@@ -178,7 +178,14 @@ type {root.Id} {typeName} = ...;
             foreach (var openNode in compilationResult.References) {
                 var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
                 if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
-                    node = _cr.Lexicon[typeName];
+                    node = (IIdentifierExpressionNode)_cr.Lexicon[typeName].Copy();
+                    if (_cr.Namespace != compilationResult.Namespace) {
+                        node.Imported = true;
+                        node.ImportedFrom = _cr.Namespace;
+                    }
+                    else {
+                        //
+                    }
                     break;
                 }
             }

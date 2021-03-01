@@ -10,8 +10,10 @@ namespace Compiler.Language.Nodes {
         public List<string> Types => TypesTokens.Select(t => t.Value).ToList();
         public AnnotationNode? AnnotationNode { get; }
         public string Description => AnnotationNode?.Annotation ?? "";
+        public bool Imported { get; set; } = false;
+        public string? ImportedFrom { get; set; } = null;
 
-       
+
         public DataFieldNode(AnnotationNode? annotation, Token id, List<Token> types) : base(id, ExpressionKind.DataExpression) {
             this.AnnotationNode = annotation;
             this.IdToken = id;

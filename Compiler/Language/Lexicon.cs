@@ -3,7 +3,7 @@ using Compiler.Symbols;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Compiler.Linker {
+namespace Compiler.Language {
     public class Lexicon {
         private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid", "Maybe", "List" };
         private readonly Dictionary<string, IIdentifierExpressionNode> lexicon;
@@ -196,7 +196,11 @@ namespace Compiler.Linker {
             foreach (var openNode in refereces) {
                 var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
                 if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
-                    node = (IIdentifierExpressionNode)_cr.Lexicon[typeName];
+                    node = (IIdentifierExpressionNode)_cr.Lexicon[typeName].Copy();
+                    if (_cr.Namespace != openNode.Namespace) {
+                        node.Imported = true;
+                        node.ImportedFrom = openNode.Namespace;
+                    }
                     break;
                 }
             }
@@ -207,7 +211,11 @@ namespace Compiler.Linker {
             IIdentifierExpressionNode? node = null;
             var _cr = cache.Has(token.Namespace) ? cache.Get(token.Namespace) : null;
             if (_cr != null && _cr.Lexicon.ContainsKey(token.Id)) {
-                node = _cr.Lexicon[token.Id];
+                node = (IIdentifierExpressionNode)_cr.Lexicon[token.Id].Copy();
+                if (_cr.Namespace != token.Namespace) {
+                    node.Imported = true;
+                    node.ImportedFrom = token.Namespace;
+                }
             }
             return node;
         }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ZDragon.Transpilers.Components {
     public class ComponentTranspiler {
-        private readonly CompilationResult compilationresult;
+        private readonly Dictionary<string, IIdentifierExpressionNode> lexicon;
         private readonly List<string> baseTypes = new List<string> {
             "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
         };
@@ -14,8 +14,6 @@ namespace ZDragon.Transpilers.Components {
         private readonly List<string> parts = new List<string>();
         private readonly List<string> relations = new List<string>();
         private readonly List<string> containedComponents = new List<string>();
-
-
 
         private void TranspileComponent(ComponentNode node) {
             var name = node.GetAttribute("Name") ?? node.Id;
@@ -74,8 +72,8 @@ namespace ZDragon.Transpilers.Components {
                 systemParts.Add($@"System_Boundary({node.Id}, ""{name}"", ""{description}"") {{");
 
                 foreach (var c in contains) {
-                    if (!types.ContainsKey(c) && this.compilationresult.Lexicon.ContainsKey(c)) {
-                        ParseNode((AttributesNode)this.compilationresult.Lexicon[c]);
+                    if (!types.ContainsKey(c) && this.lexicon.ContainsKey(c)) {
+                        ParseNode((AttributesNode)this.lexicon[c]);
                         containedComponents.Add(c);
                     }
                     if (types.ContainsKey(c)) systemParts.Add(types[c]);
@@ -97,7 +95,9 @@ namespace ZDragon.Transpilers.Components {
                     interactionParts.Add("");
                 }
 
-                relations.Add($"Rel({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]})");
+                if (lexicon.ContainsKey(interactionParts[0])) {
+                    relations.Add($"Rel({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]})");
+                }
             }
         }
 
@@ -112,7 +112,7 @@ namespace ZDragon.Transpilers.Components {
             var _status = node.GetAttribute("Status", "").ToLower();
 
             var _relColor = _status switch {
-                "new" => "-[#01470f]->",
+                "new" => "-[#ad6800]->",
                 "deprecated" => "-[#750103]->",
                 "changed" => "-[#990096]->",
                 "modified" => "-[#990096]->",
@@ -138,8 +138,20 @@ namespace ZDragon.Transpilers.Components {
         }
 
 
-        public ComponentTranspiler(CompilationResult compilationresult) {
-            this.compilationresult = compilationresult;
+        public ComponentTranspiler(Dictionary<string, IIdentifierExpressionNode> lexicon) {
+            this.lexicon = lexicon;
+        }
+
+        public ComponentTranspiler(CompilationResult result) {
+            this.lexicon = result.Lexicon;
+        }
+
+        public ComponentTranspiler(Compiler.Index index) {
+            var lex = new Dictionary<string, IIdentifierExpressionNode>();
+            foreach (var i in index) {
+                lex.Add(i.Key, i.Node);
+            }
+            this.lexicon = lex;
         }
 
         private void ParseNode(AttributesNode node) {
@@ -155,7 +167,7 @@ namespace ZDragon.Transpilers.Components {
 
         public string Transpile() {
 
-            var items = this.compilationresult.Lexicon.Values.OfType<AttributesNode>().OrderByDescending(n => n.GetAttributeItems("Contains", new List<string>()).Count);
+            var items = this.lexicon.Values.OfType<AttributesNode>().OrderByDescending(n => n.GetAttributeItems("Contains", new List<string>()).Count);
             foreach (IIdentifierExpressionNode node in items) {
                 ParseNode((AttributesNode)node);
             };
@@ -169,8 +181,8 @@ namespace ZDragon.Transpilers.Components {
 
 
 AddTagSupport(""deprecated"", $bgColor=""#750103"", $fontColor=""#fff"", $borderColor=""#280000"")
-AddTagSupport(""new"", $bgColor=""#01470f"", $fontColor=""#fff"", $borderColor=""#002808"")
-AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#3a0039"")
+AddTagSupport(""new"", $bgColor=""#ad6800"", $fontColor=""#fff"", $borderColor=""#002808"")
+AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#593500"")
 
 " +
                 String.Join("\r\n", fff) +

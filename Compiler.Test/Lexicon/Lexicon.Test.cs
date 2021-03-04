@@ -26,13 +26,15 @@ And some more info.
             var cache = new CompilationCache(errorSink);
             var compilerFirst = new Compiler.Compiler(codeFirst, "Address", cache).Compile().Check();
 
+            Assert.Empty(cache.Errors);
+
             Assert.Equal(6, compilerFirst.Ast.Count);
             Assert.Equal(3, compilerFirst.Lexicon.Count);
 
-            var languageIndex = cache.GenerateLanguageIndex("Address");
+            var languageIndex = cache.LanguageNodes;
             Assert.Equal(2, languageIndex.Count);
 
-            var componentIndex = cache.GenerateComponentIndex("Address");
+            var componentIndex = cache.ArchitectureNodes;
             Assert.Single(componentIndex);
         }
 

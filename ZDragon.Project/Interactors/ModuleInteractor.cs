@@ -1,6 +1,9 @@
 ﻿using Compiler;
+using Compiler.Language.Nodes;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ZDragon.Project.Templates;
 using ZDragon.Transpilers.Components;
@@ -35,11 +38,12 @@ namespace ZDragon.Project.Interactors {
         public FileTypes FileType { get; }
 
         public ModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType): this(rootPath, file, cache) {
+            if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.FileType = fileType;
         }
 
         public ModuleInteractor(string rootPath, string file, CompilationCache cache) {
-
+            if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.cache = cache;
 
             this.FileType = FileTypes.Default;
@@ -60,7 +64,7 @@ namespace ZDragon.Project.Interactors {
             if (File.Exists(this.FullName)) {
                 text = File.ReadAllText(this.FullName);
             }
-            this.DocumentHash = Utilities.HashString(text);
+            this.DocumentHash = Compiler.Utilities.HashString(text);
             this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile();
         }
 
@@ -70,13 +74,13 @@ namespace ZDragon.Project.Interactors {
         }
 
         public ModuleInteractor SaveModule(string s) {
-            var newHash = Utilities.HashString(s);
-            if (!Utilities.HashCompare(newHash, this.DocumentHash)) {
+            var newHash = Compiler.Utilities.HashString(s);
+            if (!Compiler.Utilities.HashCompare(newHash, this.DocumentHash)) {
                 _ = File.WriteAllTextAsync(this.FullName, s);
                 this.DocumentHash = newHash;
 
                 // reset the previous Compiltation Errors
-                this.cache.ErrorSink.Reset();
+                this.cache.Reset();
 
                 // also compile on save
                 this.CompilationResult = Compile(s);
@@ -97,7 +101,7 @@ namespace ZDragon.Project.Interactors {
 
         public async Task<CompilationResult> Compile() {
             // reset the previous Compiltation Errors
-            this.cache.ErrorSink.Reset();
+            this.cache.Reset();
 
             var text = await GetText();
             this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile().Check();
@@ -107,7 +111,7 @@ namespace ZDragon.Project.Interactors {
 
         public CompilationResult Compile(string s) {
             // reset the previous Compiltation Errors
-            this.cache.ErrorSink.Reset();
+            this.cache.Reset();
 
             this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile().Check();
             System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
@@ -130,19 +134,39 @@ namespace ZDragon.Project.Interactors {
         public async Task SaveComponentModelSvg() {
             System.Console.WriteLine("Generating new component model for: " + this.Namespace);
             var svgPath = Path.Combine(this.OutPath, "components.svg");
-            var puml = new ComponentTranspiler(this.CompilationResult).Transpile();
+            var puml = new ComponentTranspiler(this.CompilationResult.Lexicon).Transpile();
             _ = File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+
+
+
+            // Create the views
+            foreach (var view in this.CompilationResult.Lexicon.Where(l => l.Value is ViewNode).Select(l => (ViewNode)l.Value)) {
+                var viewLexicon = new Dictionary<string, IIdentifierExpressionNode>();
+                foreach (var node in view.Nodes) {
+                    if (this.CompilationResult.Lexicon.ContainsKey(node.Value)) {
+                        viewLexicon.Add(node.Value, this.CompilationResult.Lexicon[node.Value]);
+                    }
+                }
+                var _puml = new ComponentTranspiler(viewLexicon).Transpile();
+                var path = Path.Combine(this.OutPath, view.Hash + ".svg");
+                _ = File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml));
+            }
         }
         public async Task<byte[]> GetComponentModelSvg() {
             var svgPath = Path.Combine(this.OutPath, "components.svg");
             if (!File.Exists(svgPath)) await SaveComponentModelSvg();
             return await File.ReadAllBytesAsync(svgPath);
         }
+        public async Task<byte[]> GetSvg(string file) {
+            var svgPath = Path.Combine(this.OutPath, file + ".svg");
+            if (!File.Exists(svgPath)) return null;
+            else return await File.ReadAllBytesAsync(svgPath);
+        }
 
         public void SaveHtml() {
             var svgPath = Path.Combine(this.OutPath, "page.html");
             var html = new HtmlTranspiler(this.CompilationResult).Transpile();
-            _ = File.WriteAllBytesAsync(svgPath, Utilities.StringToByteArray(html));
+            _ = File.WriteAllBytesAsync(svgPath, Compiler.Utilities.StringToByteArray(html));
         }
         public async Task<byte[]> GetHtml() {
             var htmlPath = Path.Combine(this.OutPath, "page.html");

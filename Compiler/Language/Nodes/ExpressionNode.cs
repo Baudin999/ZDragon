@@ -37,15 +37,13 @@ namespace Compiler.Language.Nodes {
         EndExpressionGroup,
         AnnotationExpression,
         RestrictionExpression,
-
-
         RecordExpressionField,
         RecordExpression,
-
         DataExpression,
-
         ChoiceExpression,
         ChoiceFieldExpression,
+
+        ViewExpression,
 
         OpenExpression,
         ComponentExpression,

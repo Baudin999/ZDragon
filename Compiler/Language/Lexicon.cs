@@ -116,6 +116,15 @@ namespace Compiler.Language {
             }
         }
 
+        private void AddViewNodeToLexicon(ViewNode n) {
+            foreach (var node in n.Nodes) {
+                var link = Get(node.Value);
+                if (link != null && !lexicon.ContainsKey(link.Id)) {
+                    lexicon.Add(link.Id, link);
+                }
+            }
+        }
+
         private void AddAttributesNode(AttributesNode node) {
             var interactions = node.GetAttributeItems("Interactions", new List<string>());
             foreach (var interaction in interactions) {
@@ -236,6 +245,9 @@ namespace Compiler.Language {
                     case DataNode n: addToLexicon(n); break;
                     case ChoiceNode n: addToLexicon(n); break;
 
+                    // documentation
+                    case ViewNode n: addToLexicon(n); break;
+
                     // architecture
                     case ComponentNode n: addToLexicon(n); break;
                     case EndpointNode n: addToLexicon(n); break;
@@ -257,6 +269,9 @@ namespace Compiler.Language {
                     case RecordNode n: AddRecordToLexicon(n); break;
                     case DataNode n: AddDataNodeToLexicon(n); break;
                     case ChoiceNode n: AddChoiceNodeToLexicon(n); break;
+
+                    // documentation
+                    case ViewNode n: AddViewNodeToLexicon(n); break;
 
                     // architecture
                     case AttributesNode n: AddAttributesNode(n); break;

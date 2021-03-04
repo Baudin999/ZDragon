@@ -311,7 +311,7 @@ record Person =
             cache.TypeCheck();
 
             Assert.Equal(2, compilerResult.Ast.Count);
-            Assert.Empty(cache.ErrorSink.Errors);
+            Assert.Empty(cache.Errors);
         }
 
         [Fact(DisplayName = "Record - Reverse Definitions")]
@@ -328,7 +328,7 @@ type FirstName = String;
             cache.TypeCheck();
 
             Assert.Equal(2, compilerResult.Ast.Count);
-            Assert.Empty(cache.ErrorSink.Errors);
+            Assert.Empty(cache.Errors);
         }
 
         [Fact(DisplayName = "Record - Qualified Field Types 003")]

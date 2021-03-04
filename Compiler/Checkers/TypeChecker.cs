@@ -58,6 +58,13 @@ namespace Compiler.Checkers {
             }
         }
 
+        private void CheckViewNode(ViewNode view) {
+            CheckToken(view, null, view.IdToken);
+            foreach (var node in view.Nodes) {
+                CheckToken(view, null, node);
+            }
+        }
+
         private void CheckMaybe(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
             // Maybe can only have one type following the Maybe
             if (tokens.Count != 2) {
@@ -233,6 +240,9 @@ type {root.Id} {typeName} = ...;
                 case DataNode n: CheckDataNode(n); break;
                 case ChoiceNode n: CheckChoiceNode(n); break;
                 case OpenNode n: CheckOpenNode(n); break;
+
+                // documentation nodes
+                case ViewNode n: CheckViewNode(n); break;
 
                 // check architectural nodes
                 case ComponentNode n: CheckComponentNode(n); break;

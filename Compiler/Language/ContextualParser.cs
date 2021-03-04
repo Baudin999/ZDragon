@@ -55,6 +55,11 @@ namespace Compiler.Language {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseInteraction();
                 }
 
+                // documentation
+                else if (tokenBlock.Context == ContextType.ViewDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseView();
+                }
+
                 // markdown
                 else if (tokenBlock.Context == ContextType.MarkdownChapterDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());

@@ -75,6 +75,10 @@ namespace ZDragon.Transpilers.Html {
             parts.Add(Markdown.ToHtml(node.Content, pipeline));
         }
 
+        private void RenderViewNode(ViewNode node) {
+            parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/{node.Hash}.svg\" alt=\"data\" /></div>");
+        }
+
         public HtmlTranspiler(CompilationResult compilationResult) {
             this.compilationresult = compilationResult;
         }
@@ -97,6 +101,7 @@ namespace ZDragon.Transpilers.Html {
             foreach (var documentPart in this.compilationresult.Document) {
                 if (documentPart is MarkdownChapterNode mcn) RenderChapter(mcn);
                 else if (documentPart is MarkdownNode mdn) RenderMarkdownNode(mdn);
+                else if (documentPart is ViewNode viewNode) RenderViewNode(viewNode);
                 else RenderParagraph(documentPart);
             }
             
@@ -110,13 +115,13 @@ namespace ZDragon.Transpilers.Html {
             if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Count() > 0) {
                 // Don't put in the logical data model if there are no entities defined
                 parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
-                parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" /></div>");
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" /></div>");
             }
 
             if (compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0) {
                 // Don't put in the architectural diagram if there are no architectural components defined
                 parts.Add("<div class='keep-together'><h1>Component Diagram</h1>");
-                parts.Add($"<img src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" /></div>");
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" /></div>");
             }
 
             parts.Add(@"

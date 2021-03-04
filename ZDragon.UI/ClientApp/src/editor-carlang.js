@@ -29,11 +29,17 @@ export const tokenizer = {
             [/^([a-z][^ ]*)/, [
                 {
                     cases: {
+                        // language
                         "open": { token: "keyword" },
                         "record": { token: "keyword", next: "@record" },
                         "type": { token: "keyword", next: "@type" },
                         "choice": { token: "keyword", next: "@choice" },
                         "data": { token: "keyword", next: "@data" },
+
+                        // document
+                        "view": { token: "keyword", next: "@attributes" },
+
+                        // architecture
                         "component": { token: "keyword", next: "@attributes" },
                         "interaction": { token: "keyword", next: "@attributes" },
                         "person": { token: "keyword", next: "@attributes" },

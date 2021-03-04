@@ -119,6 +119,9 @@ namespace Compiler.Symbols {
                     yield return TokenizeOpenDefinition(annotations);
                     annotations = new List<Token>();
                 }
+                else if(Current?.Kind == SyntaxKind.ViewDeclarationToken) {
+                    yield return TokenizeViewDefinition(annotations);
+                }
                 else if (Current?.Kind == SyntaxKind.LessThenToken) {
                     // we'll have to start parsing markup
                     yield return TokenizeMarkupDefinition();
@@ -187,5 +190,6 @@ namespace Compiler.Symbols {
         VariableDef,
         MarkupDeclaration,
         InteractionDeclaration,
+        ViewDeclaration,
     }
 }

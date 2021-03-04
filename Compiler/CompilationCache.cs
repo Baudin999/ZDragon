@@ -7,11 +7,20 @@ using System.Linq;
 namespace Compiler {
     public class CompilationCache {
         private readonly Dictionary<string, CompilationResult> Cache = new Dictionary<string, CompilationResult>();
-        public ErrorSink ErrorSink { get; }
+        internal ErrorSink ErrorSink { get; }
         public Dictionary<string, IIdentifierExpressionNode> Lexicon = new Dictionary<string, IIdentifierExpressionNode>();
+        public List<Error> Errors => ErrorSink.Errors;
+
+        public Index ArchitectureNodes => GenerateComponentIndex(Cache.Keys.ToArray());
+        public Index LanguageNodes => GenerateLanguageIndex(Cache.Keys.ToArray());
+
 
         public CompilationCache(ErrorSink errorSink) {
             this.ErrorSink = errorSink;
+        }
+
+        public void Reset() {
+            this.ClearErrors();
         }
 
         public void ClearErrors() {

@@ -87,6 +87,9 @@ namespace Compiler {
                 { "open", SyntaxKind.OpenDeclarationToken },
                 { "extends", SyntaxKind.ExtendsToken },
 
+                // doc types
+                { "view", SyntaxKind.ViewDeclarationToken },
+
                 // architecture
                 { "person", SyntaxKind.PersonDeclarationToken },
                 { "system", SyntaxKind.SystemDeclarationToken },
@@ -188,6 +191,8 @@ namespace Compiler {
         MarkdownStartBlockToken,
         MarkdownEndBlockToken,
 
+        ViewDeclarationToken,
+
         // dual operator Tokens
         OperatorToken,          // The default operator token
         /// <summary>
@@ -275,10 +280,11 @@ namespace Compiler {
         EndPointDeclarationToken,
         AttributeFieldStarted,
         AttributeFieldEnded,
+        InteractionDeclarationToken,
 
 
         None,
-        InteractionDeclarationToken
+        
     }
 
     public enum CharacterCodes {

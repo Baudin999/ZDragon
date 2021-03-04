@@ -56,7 +56,9 @@ namespace ZDragon.UI.Controllers {
                 return File(bytes, "image/svg+xml");
             }
             else {
-                return NotFound();
+                var bytes = await moduleInteractor.GetSvg(file);
+                if (bytes == null) return NotFound();
+                else return File(bytes, "image/svg+xml");
             }
         }
 

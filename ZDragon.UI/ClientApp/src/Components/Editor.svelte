@@ -14,6 +14,9 @@
     export let theme = "carlangTheme";
     export let wordWrap = true;
     export let markers = writable([]);
+    export let context = [];
+
+    let f = context;
 
     let editorContainer;
 
@@ -30,13 +33,18 @@
             value: text || "",
             language: language,
             theme: theme,
-            scrollBeyondLastLine: false,
+            scrollBeyondLastLine: true,
             roundedSelection: true,
             fontSize: "16px",
             wordWrapColumn: 120,
             wordWrap: wordWrap ? "on" : "off",
             minimap: {
                 enabled: true,
+            },
+            quickSuggestions: {
+                other: false,
+                comments: false,
+                strings: false,
             },
         });
         editor.dragAndDrop = false;
@@ -54,6 +62,24 @@
             timeout = setTimeout(() => {
                 dispatch("change", editor.getValue());
             }, 200);
+        });
+
+        monaco.languages.registerCompletionItemProvider("carlang", {
+            //TODO: implement completion provider
+            // triggerCharacters: [""],
+            // provideCompletionItems: function (model, position) {
+            //     let suggestions = [
+            //         {
+            //             label: "component",
+            //             kind: monaco.languages.CompletionItemKind.Keyword,
+            //             documentation: "Initialize a component",
+            //             insertText: "component",
+            //         },
+            //     ];
+            //     var foo = context;
+            //     console.log(suggestions);
+            //     return suggestions;
+            // },
         });
     };
     onMount(() => {
@@ -110,7 +136,7 @@
                     .getWordAtPosition(editor.getPosition());
                 if (wordUnderCursor && wordUnderCursor.word) {
                     // console.log(wordUnderCursor.word);
-                    selectWord(wordUnderCursor.word);
+                    console.log(wordUnderCursor.word);
                 }
             } else {
                 // console.log(e);

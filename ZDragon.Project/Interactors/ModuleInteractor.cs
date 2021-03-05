@@ -37,9 +37,13 @@ namespace ZDragon.Project.Interactors {
         public string Namespace { get; }
         public FileTypes FileType { get; }
 
-        public ModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType): this(rootPath, file, cache) {
+        [JsonIgnore]
+        public ApplicationInteractor? ApplicationInteractor { get; }
+
+        public ModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType, ApplicationInteractor app): this(rootPath, file, cache) {
             if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.FileType = fileType;
+            this.ApplicationInteractor = app;
         }
 
         public ModuleInteractor(string rootPath, string file, CompilationCache cache) {
@@ -47,6 +51,8 @@ namespace ZDragon.Project.Interactors {
             this.cache = cache;
 
             this.FileType = FileTypes.Default;
+            this.ApplicationInteractor = null;
+
             this.RootPath = rootPath;
             this.FullName = file;
             this.Name = Path.GetFileNameWithoutExtension(file);
@@ -91,7 +97,7 @@ namespace ZDragon.Project.Interactors {
 
             return this;
         }
-
+        
         public async void Verify() {
             this.CompilationResult = await Compile();
             if (!File.Exists(this.DataSvgPath)) await SaveDataModelSvg();
@@ -113,7 +119,17 @@ namespace ZDragon.Project.Interactors {
             // reset the previous Compiltation Errors
             this.cache.Reset();
 
-            this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile().Check();
+            
+            this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile();
+
+            var index = this.ApplicationInteractor?.CreateIndex(this.FileType);
+            if (index != null) {
+                this.CompilationResult.Check(index);
+            }
+            else {
+                this.CompilationResult.Check();
+            }
+
             System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
             return this.CompilationResult;
         }
@@ -138,8 +154,12 @@ namespace ZDragon.Project.Interactors {
             _ = File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
 
 
-
             // Create the views
+            var names = new List<string> {
+                "components.svg",
+                "data.svg",
+                "page.html"
+            };
             foreach (var view in this.CompilationResult.Lexicon.Where(l => l.Value is ViewNode).Select(l => (ViewNode)l.Value)) {
                 var viewLexicon = new Dictionary<string, IIdentifierExpressionNode>();
                 foreach (var node in view.Nodes) {
@@ -150,6 +170,13 @@ namespace ZDragon.Project.Interactors {
                 var _puml = new ComponentTranspiler(viewLexicon).Transpile();
                 var path = Path.Combine(this.OutPath, view.Hash + ".svg");
                 _ = File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml));
+                names.Add(view.Hash + ".svg");
+            }
+
+            foreach (var file in Directory.GetFiles(this.OutPath)) {
+                if (!names.Contains(Path.GetFileName(file))) {
+                    File.Delete(file);
+                }
             }
         }
         public async Task<byte[]> GetComponentModelSvg() {

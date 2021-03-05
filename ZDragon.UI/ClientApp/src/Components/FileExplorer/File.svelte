@@ -1,11 +1,15 @@
 <script>
+    import { navigate } from "svelte-routing";
     import { selectModule } from "../../Services/module";
 
     export let module;
     export let selected = false;
 
     const moduleSelected = () => {
-        selectModule(module);
+        //selectModule(module);
+        let path = "/editor/" + module.namespace;
+        console.log(path);
+        navigate(path);
     };
 </script>
 

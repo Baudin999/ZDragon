@@ -20,6 +20,13 @@ export const toggleAddApplicationDialog = () => {
     }));
 }
 
+export const toggleRefactorDialog = () => {
+    stateStore.update((s: any) => ({
+        ...s,
+        showRefactorDialog: !!!s.showRefactorDialog
+    }));
+}
+
 export const getFiles = async () => {
     let files = await get("/domains");
     stateStore.update((s: any) => ({

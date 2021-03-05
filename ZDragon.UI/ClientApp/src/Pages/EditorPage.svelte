@@ -9,15 +9,22 @@
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
-    import ASTViewer from "../Components/ASTViewer.svelte";
-    import { moduleStore } from "../Services/module.js";
+    import {
+        moduleStore,
+        selectModuleByNamespace,
+    } from "../Services/module.js";
     import {
         stateStore,
         toggleAddFileDialog,
         toggleAddApplicationDialog,
+        toggleRefactorDialog,
     } from "../Services/state.js";
     import CreateFile from "../Forms/CreateFile.svelte";
     import CreateApplication from "../Forms/CreateApplication.svelte";
+    // import RefactorDialog from "../Forms/RefactorDialog.svelte";
+
+    export let namespace = "";
+    var oldNamespace = "";
 
     let iframe;
     let timeout;
@@ -26,9 +33,10 @@
     let componentUrl;
     let htmlUrl;
 
-    const generateUrls = () => {
-        if (!module || !module.namespace) return;
-        var ns = module.namespace;
+    let context = [];
+
+    const generateUrls = (ns) => {
+        if (!ns) return;
         svgUrl = `/documents/${ns}/data.svg?timestamp=${new Date().getMilliseconds()}`;
         componentUrl = `/documents/${ns}/components.svg?timestamp=${new Date().getMilliseconds()}`;
         htmlUrl = `/documents/${ns}/page.html?timestamp=${new Date().getMilliseconds()}`;
@@ -44,22 +52,38 @@
                 return;
             }
             module = s.modules[s.selectedModule];
-            generateUrls();
+
+            // fetch(`/application/lexicon/${module.namespace}`)
+            //     .then((r) => r.json())
+            //     .then((r) => (context = r));
+
+            generateUrls(module.namespace);
         }, 2000);
     });
 
     let showAddApplicationDialog = false;
     let showAddFileDialog = false;
+    let showRefactorDialog = false;
 
     stateStore.subscribe((s: any) => {
         showAddFileDialog = !!s.showAddFileDialog;
         showAddApplicationDialog = !!s.showAddApplicationDialog;
+        showRefactorDialog = !!s.showRefactorDialog;
     });
 
     let print = () => {
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
     };
+
+    $: {
+        if (moduleStore && oldNamespace !== namespace) {
+            console.log(namespace);
+            selectModuleByNamespace(namespace);
+            oldNamespace = namespace;
+            generateUrls(namespace);
+        }
+    }
 </script>
 
 <div class="container">
@@ -68,7 +92,7 @@
     </div>
     <div class="document-editor">
         <div>
-            <DocumentEditor />
+            <DocumentEditor {context} />
         </div>
     </div>
     <div class="page-viewer">
@@ -82,7 +106,7 @@
             <TabPanel>
                 {#if htmlUrl}
                     <Panel
-                        style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+                        style="background:lightgray; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
                         <!-- <PageViewer url={htmlUrl} /> -->
                         <iframe
                             bind:this={iframe}
@@ -127,6 +151,12 @@
         close={toggleAddApplicationDialog}>
         <CreateApplication />
     </Modal>
+    <!-- <Modal
+        title="Refactor"
+        show={showRefactorDialog}
+        close={toggleRefactorDialog}>
+        <RefactorDialog />
+    </Modal> -->
 </div>
 
 <style type="less">
@@ -193,7 +223,7 @@
         position: fixed;
         z-index: 99999;
         right: 1rem;
-        bottom: 1rem;
+        bottom: 0rem;
         height: 32px;
         width: 32px;
     }

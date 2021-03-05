@@ -1,4 +1,5 @@
 <script>
+    import { navigate } from "svelte-routing";
     import { moduleStore, selectModule } from "../../Services/module";
 
     // The application component
@@ -12,7 +13,11 @@
     let endpoints = f("Endpoint");
     let components = f("Component");
 
-    let onClick = (module) => () => selectModule(module);
+    let onClick = (module) => () => {
+        let path = "/editor/" + module.namespace;
+        navigate(path);
+        selectModule(module);
+    };
     let selectApplication = () => {
         if (selectedApplication) selectedApplication = null;
         else {

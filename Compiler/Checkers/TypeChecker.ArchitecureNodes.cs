@@ -6,7 +6,7 @@ using System.Linq;
 namespace Compiler.Checkers {
 
     public partial class TypeChecker {
-
+        
         private void CheckComponentNode(ComponentNode node) {
 
             var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();

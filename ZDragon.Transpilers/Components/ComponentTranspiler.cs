@@ -108,6 +108,7 @@ namespace ZDragon.Transpilers.Components {
             var title = node.GetAttribute("Title");
             var name = node.GetAttribute("Name");
             var description = node.GetAttribute("Description");
+            var direction = node.GetAttribute("Direction", "");
 
             var _status = node.GetAttribute("Status", "").ToLower();
 
@@ -119,8 +120,19 @@ namespace ZDragon.Transpilers.Components {
                 _ => "-[#353535]->"
             };
 
-            if (from != null && to != null) {
-                relations.Add($"Rel_({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech}, {_relColor})");
+            var d = direction switch {
+                "Up" => "Rel_U",
+                "Down" => "Rel_D",
+                "Left" => "Rel_L",
+                "Right" => "Rel_R",
+                _ => "Rel_"
+            };
+
+            if (from != null && to != null && d == "Rel_") {
+                relations.Add($"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech}, {_relColor})");
+            }
+            else if (from != null && to != null) {
+                relations.Add($"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech})");
             }
         }
 

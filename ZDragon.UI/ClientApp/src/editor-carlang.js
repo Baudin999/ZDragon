@@ -37,7 +37,7 @@ export const tokenizer = {
                         "data": { token: "keyword", next: "@data" },
 
                         // document
-                        "view": { token: "keyword", next: "@attributes" },
+                        "view": { token: "keyword", next: "@view" },
 
                         // architecture
                         "component": { token: "keyword", next: "@attributes" },
@@ -52,6 +52,10 @@ export const tokenizer = {
             [/extends/, "keyword"],
             [/=/, "number", "@field"],
             [/'[a-z]/, "generic-parameter"], // generic types
+            { include: "lang" }
+        ],
+        view: [
+            [/view/, "keyword"],
             { include: "lang" }
         ],
         type: [

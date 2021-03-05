@@ -3,6 +3,8 @@
     import Editor from "./Editor.svelte";
     import { moduleStore, parseCode, selectModule } from "../Services/module";
 
+    export let context = [];
+
     let module;
     let text = "";
     let type = "carlang";
@@ -53,7 +55,7 @@
     </div>
 
     <div class="editor">
-        <Editor {text} {markers} language={type} on:save={onSave} />
+        <Editor {context} {text} {markers} language={type} on:save={onSave} />
     </div>
 </div>
 

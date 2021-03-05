@@ -66,19 +66,19 @@ namespace ZDragon.Project.Interactors {
                 Modules.Add(new ModuleInteractor(this.RootPath, file, cache));
             }
             foreach (var file in Directory.GetFiles(this.ComponentsPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Component));
+                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Component, this));
             }
             foreach (var file in Directory.GetFiles(this.EndpointsPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Endpoint));
+                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Endpoint, this));
             }
             foreach (var file in Directory.GetFiles(this.DatabasesPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Database));
+                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Database, this));
             }
             foreach (var file in Directory.GetFiles(this.ModelsPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Model));
+                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Model, this));
             }
             foreach (var file in Directory.GetFiles(this.FeaturesPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Feature));
+                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Feature, this));
             }
         }
 
@@ -88,6 +88,12 @@ namespace ZDragon.Project.Interactors {
 
         public ModuleInteractor? Find(string ns) {
             return Modules.FirstOrDefault(m => m.Namespace == ns);
+        }
+
+        public Compiler.Index CreateIndex(FileTypes fileType) {
+            var modules = Modules.Where(m => m.FileType == fileType).Select(m => m.Namespace).ToArray();
+            var index = this.Cache.GenerateComponentIndex(modules);
+            return index;
         }
 
         public static List<ApplicationInteractor> FromDirectory(string root, string path, CompilationCache cache) {

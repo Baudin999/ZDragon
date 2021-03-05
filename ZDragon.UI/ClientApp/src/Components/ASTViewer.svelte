@@ -1,6 +1,6 @@
 <script type="ts">
     import { onMount } from "svelte";
-    import { moduleStore } from "./../Services/module";
+    import { moduleStore } from "../Services/module";
     import Editor from "./Editor.svelte";
 
     let input;

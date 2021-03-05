@@ -266,6 +266,8 @@ var zdragon = (function () {
         }
     }
 
+    const globals = (typeof window !== 'undefined' ? window : global);
+
     function get_spread_update(levels, updates) {
         const update = {};
         const to_null_out = {};
@@ -2525,64 +2527,70 @@ var zdragon = (function () {
     }); };
     //# sourceMappingURL=http.js.map
 
-    var moduleStore = writable({});
-    var selectModule = function (module) { return __awaiter(void 0, void 0, void 0, function () {
-        var result, text, compilationResult;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, getModuleText(module)];
-                case 1:
-                    result = _a.sent();
-                    text = result.text;
-                    compilationResult = result.compilationResult;
-                    moduleStore.update(function (s) {
-                        var nm = ((s === null || s === void 0 ? void 0 : s.modules) || {})[module.namespace] || module;
-                        var m = __assign(__assign({}, nm), { text: text, compilationResult: compilationResult });
-                        var modules = (s === null || s === void 0 ? void 0 : s.modules) || {};
-                        modules[module.namespace] = m;
-                        return __assign(__assign({}, s), { selectedModule: module.namespace, modules: modules });
-                    });
-                    return [2 /*return*/];
-            }
+    const moduleStore = writable({
+        modules: []
+    });
+
+    const selectModuleByNamespace = async namespace => {
+        if (!namespace) return;
+        let result = await getModuleText(namespace);
+        let text = result.text;
+        let compilationResult = result.compilationResult;
+        moduleStore.update(s => {
+            var m = { text, compilationResult };
+            let modules = (s || {}).modules || {};
+            modules[namespace] = m;
+
+            return {
+                ...s,
+                selectedModule: namespace,
+                modules
+            };
         });
-    }); };
-    var parseCode = function (module, code) { return __awaiter(void 0, void 0, void 0, function () {
-        var compilationResult;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!module || !code)
-                        return [2 /*return*/];
-                    return [4 /*yield*/, post("/document/" + module.namespace, { code: code })];
-                case 1:
-                    compilationResult = _a.sent();
-                    moduleStore.update(function (s) {
-                        var _a;
-                        var m = __assign(__assign({}, module), { compilationResult: compilationResult });
-                        var modules = __assign(__assign({}, s.modules), (_a = {}, _a[module.namespace] = m, _a));
-                        return __assign(__assign({}, s), { modules: modules });
-                    });
-                    return [2 /*return*/];
-            }
+
+    };
+
+    const selectModule = async module => {
+        if (!module || !module.namespace) return;
+        let result = await getModuleText(module.namespace);
+        let text = result.text;
+        let compilationResult = result.compilationResult;
+        moduleStore.update(s => {
+            var nm = ((s || {}).modules || {})[module.namespace] || module;
+            var m = { ...nm, text, compilationResult };
+            let modules = (s || {}).modules || {};
+            modules[module.namespace] = m;
+
+            return {
+                ...s,
+                selectedModule: module.namespace,
+                modules
+            };
         });
-    }); };
-    var getModuleText = function (module) { return __awaiter(void 0, void 0, void 0, function () {
-        var encodedURI, url, result;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (!module)
-                        return [2 /*return*/];
-                    encodedURI = encodeURI(module.namespace);
-                    url = "/document/" + encodedURI;
-                    return [4 /*yield*/, get(url)];
-                case 1:
-                    result = _a.sent();
-                    return [2 /*return*/, result];
-            }
+    };
+
+    const parseCode = async (module, code) => {
+        if (!module || !code) return;
+        var compilationResult = await post("/document/" + module.namespace, { code });
+
+        moduleStore.update(s => {
+            let m = { ...module, compilationResult };
+            let modules = { ...s.modules, [module.namespace]: m };
+            return {
+                ...s,
+                modules
+            };
         });
-    }); };
-    //# sourceMappingURL=module.js.map
+    };
+
+    const getModuleText = async (namespace) => {
+        if (!namespace) return;
+        var encodedURI = encodeURI(namespace);
+        var url = `/document/${encodedURI}`;
+        var result = await get(url);
+
+        return result;
+    };
 
     var stateStore = writable({});
     var toggleAddFileDialog = function () {
@@ -2700,7 +2708,7 @@ var zdragon = (function () {
     	return child_ctx;
     }
 
-    // (24:0) {#if application}
+    // (29:0) {#if application}
     function create_if_block$2(ctx) {
     	let div;
     	let title;
@@ -2720,11 +2728,11 @@ var zdragon = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			attr_dev(i, "class", "fa fa-institution svelte-1w95vbt");
-    			add_location(i, file$6, 26, 13, 794);
+    			add_location(i, file$6, 31, 13, 937);
     			attr_dev(title, "class", "svelte-1w95vbt");
-    			add_location(title, file$6, 25, 8, 744);
+    			add_location(title, file$6, 30, 8, 887);
     			attr_dev(div, "class", "application svelte-1w95vbt");
-    			add_location(div, file$6, 24, 4, 709);
+    			add_location(div, file$6, 29, 4, 852);
     			dispose = listen_dev(title, "click", /*selectApplication*/ ctx[6], false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -2762,14 +2770,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block$2.name,
     		type: "if",
-    		source: "(24:0) {#if application}",
+    		source: "(29:0) {#if application}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (28:8) {#if selectedApplication === application.namespace}
+    // (33:8) {#if selectedApplication === application.namespace}
     function create_if_block_1$1(ctx) {
     	let div;
     	let t;
@@ -2783,7 +2791,7 @@ var zdragon = (function () {
     			t = space();
     			if (if_block1) if_block1.c();
     			attr_dev(div, "class", "application--details svelte-1w95vbt");
-    			add_location(div, file$6, 28, 12, 926);
+    			add_location(div, file$6, 33, 12, 1069);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -2806,14 +2814,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(28:8) {#if selectedApplication === application.namespace}",
+    		source: "(33:8) {#if selectedApplication === application.namespace}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (30:16) {#if components.length > 0}
+    // (35:16) {#if components.length > 0}
     function create_if_block_3(ctx) {
     	let h2;
     	let t1;
@@ -2837,7 +2845,7 @@ var zdragon = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(h2, "class", "svelte-1w95vbt");
-    			add_location(h2, file$6, 30, 20, 1027);
+    			add_location(h2, file$6, 35, 20, 1170);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -2885,14 +2893,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(30:16) {#if components.length > 0}",
+    		source: "(35:16) {#if components.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (32:20) {#each components as node}
+    // (37:20) {#each components as node}
     function create_each_block_1(ctx) {
     	let div;
     	let i;
@@ -2908,10 +2916,10 @@ var zdragon = (function () {
     			t0 = text(t0_value);
     			t1 = space();
     			attr_dev(i, "class", "fa fa-cogs svelte-1w95vbt");
-    			add_location(i, file$6, 37, 28, 1387);
+    			add_location(i, file$6, 42, 28, 1530);
     			attr_dev(div, "class", "item item--node svelte-1w95vbt");
     			toggle_class(div, "selected", /*node*/ ctx[10].namespace == /*$moduleStore*/ ctx[2].selectedModule);
-    			add_location(div, file$6, 32, 24, 1120);
+    			add_location(div, file$6, 37, 24, 1263);
     			dispose = listen_dev(div, "click", /*onClick*/ ctx[5](/*node*/ ctx[10]), false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -2937,14 +2945,14 @@ var zdragon = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(32:20) {#each components as node}",
+    		source: "(37:20) {#each components as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (43:16) {#if features.length > 0}
+    // (48:16) {#if features.length > 0}
     function create_if_block_2(ctx) {
     	let h2;
     	let t1;
@@ -2968,7 +2976,7 @@ var zdragon = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(h2, "class", "svelte-1w95vbt");
-    			add_location(h2, file$6, 43, 20, 1573);
+    			add_location(h2, file$6, 48, 20, 1716);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3016,14 +3024,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(43:16) {#if features.length > 0}",
+    		source: "(48:16) {#if features.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:20) {#each features as node}
+    // (50:20) {#each features as node}
     function create_each_block(ctx) {
     	let div;
     	let i;
@@ -3039,10 +3047,10 @@ var zdragon = (function () {
     			t0 = text(t0_value);
     			t1 = space();
     			attr_dev(i, "class", "fa fa-diamond svelte-1w95vbt");
-    			add_location(i, file$6, 50, 28, 1929);
+    			add_location(i, file$6, 55, 28, 2072);
     			attr_dev(div, "class", "item item--node svelte-1w95vbt");
     			toggle_class(div, "selected", /*node*/ ctx[10].namespace == /*$moduleStore*/ ctx[2].selectedModule);
-    			add_location(div, file$6, 45, 24, 1662);
+    			add_location(div, file$6, 50, 24, 1805);
     			dispose = listen_dev(div, "click", /*onClick*/ ctx[5](/*node*/ ctx[10]), false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -3068,7 +3076,7 @@ var zdragon = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(45:20) {#each features as node}",
+    		source: "(50:20) {#each features as node}",
     		ctx
     	});
 
@@ -3135,7 +3143,12 @@ var zdragon = (function () {
     	let databases = f("Database");
     	let endpoints = f("Endpoint");
     	let components = f("Component");
-    	let onClick = module => () => selectModule(module);
+
+    	let onClick = module => () => {
+    		let path = "/editor/" + module.namespace;
+    		navigate(path);
+    		selectModule(module);
+    	};
 
     	let selectApplication = () => {
     		if (selectedApplication) $$invalidate(1, selectedApplication = null); else {
@@ -3413,6 +3426,8 @@ var zdragon = (function () {
     }
 
     /* src\Components\Editor.svelte generated by Svelte v3.16.7 */
+
+    const { console: console_1 } = globals;
     const file$8 = "src\\Components\\Editor.svelte";
 
     function create_fragment$b(ctx) {
@@ -3423,21 +3438,21 @@ var zdragon = (function () {
     			div = element("div");
     			attr_dev(div, "class", "editor svelte-1dng18m");
     			attr_dev(div, "id", /*id*/ ctx[1]);
-    			add_location(div, file$8, 121, 0, 3933);
+    			add_location(div, file$8, 147, 0, 4889);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
-    			/*div_binding*/ ctx[13](div);
+    			/*div_binding*/ ctx[15](div);
     		},
     		p: noop,
     		i: noop,
     		o: noop,
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
-    			/*div_binding*/ ctx[13](null);
+    			/*div_binding*/ ctx[15](null);
     		}
     	};
 
@@ -3466,6 +3481,8 @@ var zdragon = (function () {
     	let { theme = "carlangTheme" } = $$props;
     	let { wordWrap = true } = $$props;
     	let { markers = writable([]) } = $$props;
+    	let { context = [] } = $$props;
+    	let f = context;
     	let editorContainer;
 
     	if (markers) {
@@ -3479,19 +3496,24 @@ var zdragon = (function () {
     	let timeout;
 
     	const initEditor = () => {
-    		$$invalidate(8, editor = monaco.editor.create(document.getElementById(id), {
+    		$$invalidate(9, editor = monaco.editor.create(document.getElementById(id), {
     			value: text || "",
     			language,
     			theme,
-    			scrollBeyondLastLine: false,
+    			scrollBeyondLastLine: true,
     			roundedSelection: true,
     			fontSize: "16px",
     			wordWrapColumn: 120,
     			wordWrap: wordWrap ? "on" : "off",
-    			minimap: { enabled: true }
+    			minimap: { enabled: true },
+    			quickSuggestions: {
+    				other: false,
+    				comments: false,
+    				strings: false
+    			}
     		}));
 
-    		$$invalidate(8, editor.dragAndDrop = false, editor);
+    		$$invalidate(9, editor.dragAndDrop = false, editor);
     		window.addEventListener("keydown", keyTrap, true);
 
     		editor.onMouseDown(function (e) {
@@ -3511,6 +3533,8 @@ var zdragon = (function () {
     				200
     			);
     		});
+
+    		monaco.languages.registerCompletionItemProvider("carlang", {});
     	};
 
     	onMount(() => {
@@ -3538,16 +3562,16 @@ var zdragon = (function () {
     				var wordUnderCursor = editor.getModel().getWordAtPosition(editor.getPosition());
 
     				if (wordUnderCursor && wordUnderCursor.word) {
-    					selectWord(wordUnderCursor.word);
+    					console.log(wordUnderCursor.word);
     				}
     			}
     		}
     	}
 
-    	const writable_props = ["onKeyPress", "text", "language", "theme", "wordWrap", "markers"];
+    	const writable_props = ["onKeyPress", "text", "language", "theme", "wordWrap", "markers", "context"];
 
     	Object.keys($$props).forEach(key => {
-    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<Editor> was created with unknown prop '${key}'`);
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1.warn(`<Editor> was created with unknown prop '${key}'`);
     	});
 
     	function div_binding($$value) {
@@ -3563,6 +3587,7 @@ var zdragon = (function () {
     		if ("theme" in $$props) $$invalidate(5, theme = $$props.theme);
     		if ("wordWrap" in $$props) $$invalidate(6, wordWrap = $$props.wordWrap);
     		if ("markers" in $$props) $$invalidate(7, markers = $$props.markers);
+    		if ("context" in $$props) $$invalidate(8, context = $$props.context);
     	};
 
     	$$self.$capture_state = () => {
@@ -3575,6 +3600,8 @@ var zdragon = (function () {
     			theme,
     			wordWrap,
     			markers,
+    			context,
+    			f,
     			editorContainer,
     			timeout
     		};
@@ -3583,18 +3610,20 @@ var zdragon = (function () {
     	$$self.$inject_state = $$props => {
     		if ("onKeyPress" in $$props) $$invalidate(2, onKeyPress = $$props.onKeyPress);
     		if ("id" in $$props) $$invalidate(1, id = $$props.id);
-    		if ("editor" in $$props) $$invalidate(8, editor = $$props.editor);
+    		if ("editor" in $$props) $$invalidate(9, editor = $$props.editor);
     		if ("text" in $$props) $$invalidate(3, text = $$props.text);
     		if ("language" in $$props) $$invalidate(4, language = $$props.language);
     		if ("theme" in $$props) $$invalidate(5, theme = $$props.theme);
     		if ("wordWrap" in $$props) $$invalidate(6, wordWrap = $$props.wordWrap);
     		if ("markers" in $$props) $$invalidate(7, markers = $$props.markers);
+    		if ("context" in $$props) $$invalidate(8, context = $$props.context);
+    		if ("f" in $$props) f = $$props.f;
     		if ("editorContainer" in $$props) $$invalidate(0, editorContainer = $$props.editorContainer);
     		if ("timeout" in $$props) timeout = $$props.timeout;
     	};
 
     	$$self.$$.update = () => {
-    		if ($$self.$$.dirty & /*language, editor*/ 272) {
+    		if ($$self.$$.dirty & /*language, editor*/ 528) {
     			 if (language) {
     				(() => {
     					if (!editor) return;
@@ -3603,7 +3632,7 @@ var zdragon = (function () {
     			}
     		}
 
-    		if ($$self.$$.dirty & /*text, editor*/ 264) {
+    		if ($$self.$$.dirty & /*text, editor*/ 520) {
     			 if (text || text === "") {
     				(() => {
     					if (!editor) return;
@@ -3630,9 +3659,11 @@ var zdragon = (function () {
     		theme,
     		wordWrap,
     		markers,
+    		context,
     		editor,
     		timeout,
     		dispatch,
+    		f,
     		initEditor,
     		keyTrap,
     		div_binding
@@ -3649,7 +3680,8 @@ var zdragon = (function () {
     			language: 4,
     			theme: 5,
     			wordWrap: 6,
-    			markers: 7
+    			markers: 7,
+    			context: 8
     		});
 
     		dispatch_dev("SvelteRegisterComponent", {
@@ -3707,6 +3739,14 @@ var zdragon = (function () {
     	set markers(value) {
     		throw new Error("<Editor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
+
+    	get context() {
+    		throw new Error("<Editor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set context(value) {
+    		throw new Error("<Editor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
     }
 
     /* src\Components\DocumentEditor.svelte generated by Svelte v3.16.7 */
@@ -3716,8 +3756,8 @@ var zdragon = (function () {
     	let div2;
     	let div0;
 
-    	let t0_value = (/*module*/ ctx[0]
-    	? /*module*/ ctx[0].namespace || /*module*/ ctx[0].path
+    	let t0_value = (/*module*/ ctx[1]
+    	? /*module*/ ctx[1].namespace || /*module*/ ctx[1].path
     	: "unknown file") + "";
 
     	let t0;
@@ -3727,14 +3767,15 @@ var zdragon = (function () {
 
     	const editor = new Editor({
     			props: {
-    				text: /*text*/ ctx[1],
-    				markers: /*markers*/ ctx[3],
-    				language: /*type*/ ctx[2]
+    				context: /*context*/ ctx[0],
+    				text: /*text*/ ctx[2],
+    				markers: /*markers*/ ctx[4],
+    				language: /*type*/ ctx[3]
     			},
     			$$inline: true
     		});
 
-    	editor.$on("save", /*onSave*/ ctx[4]);
+    	editor.$on("save", /*onSave*/ ctx[5]);
 
     	const block = {
     		c: function create() {
@@ -3745,11 +3786,11 @@ var zdragon = (function () {
     			div1 = element("div");
     			create_component(editor.$$.fragment);
     			attr_dev(div0, "class", "header svelte-whjbup");
-    			add_location(div0, file$9, 56, 4, 2162);
+    			add_location(div0, file$9, 57, 4, 2188);
     			attr_dev(div1, "class", "editor svelte-whjbup");
-    			add_location(div1, file$9, 60, 4, 2271);
+    			add_location(div1, file$9, 61, 4, 2297);
     			attr_dev(div2, "class", "container svelte-whjbup");
-    			add_location(div2, file$9, 55, 0, 2133);
+    			add_location(div2, file$9, 56, 0, 2159);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -3764,13 +3805,14 @@ var zdragon = (function () {
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
-    			if ((!current || dirty & /*module*/ 1) && t0_value !== (t0_value = (/*module*/ ctx[0]
-    			? /*module*/ ctx[0].namespace || /*module*/ ctx[0].path
+    			if ((!current || dirty & /*module*/ 2) && t0_value !== (t0_value = (/*module*/ ctx[1]
+    			? /*module*/ ctx[1].namespace || /*module*/ ctx[1].path
     			: "unknown file") + "")) set_data_dev(t0, t0_value);
 
     			const editor_changes = {};
-    			if (dirty & /*text*/ 2) editor_changes.text = /*text*/ ctx[1];
-    			if (dirty & /*type*/ 4) editor_changes.language = /*type*/ ctx[2];
+    			if (dirty & /*context*/ 1) editor_changes.context = /*context*/ ctx[0];
+    			if (dirty & /*text*/ 4) editor_changes.text = /*text*/ ctx[2];
+    			if (dirty & /*type*/ 8) editor_changes.language = /*type*/ ctx[3];
     			editor.$set(editor_changes);
     		},
     		i: function intro(local) {
@@ -3836,6 +3878,7 @@ var zdragon = (function () {
     			});
     	});
 
+    	let { context = [] } = $$props;
     	let module;
     	let text = "";
     	let type = "carlang";
@@ -3860,15 +3903,15 @@ var zdragon = (function () {
     	moduleStore.subscribe(value => {
     		var _a;
     		if (!value || !value.modules || !value.selectedModule) return;
-    		$$invalidate(0, module = value.modules[value.selectedModule]);
+    		$$invalidate(1, module = value.modules[value.selectedModule]);
 
     		if (!module) {
-    			$$invalidate(1, text = "");
+    			$$invalidate(2, text = "");
     			markers.set([]);
     			return;
     		}
 
-    		$$invalidate(1, text = module.text);
+    		$$invalidate(2, text = module.text);
 
     		var errors = ((_a = module.compilationResult) === null || _a === void 0
     		? void 0
@@ -3878,34 +3921,54 @@ var zdragon = (function () {
     		markers.set(mappedErrors);
 
     		if (module && module.path && module.path.endsWith(".json")) {
-    			$$invalidate(2, type = "json");
-    			$$invalidate(1, text = JSON.stringify(JSON.parse(text), null, 4));
+    			$$invalidate(3, type = "json");
+    			$$invalidate(2, text = JSON.stringify(JSON.parse(text), null, 4));
     		} else {
-    			$$invalidate(2, type = "carlang");
+    			$$invalidate(3, type = "carlang");
     		}
     	});
 
+    	const writable_props = ["context"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<DocumentEditor> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ("context" in $$props) $$invalidate(0, context = $$props.context);
+    	};
+
     	$$self.$capture_state = () => {
-    		return {};
+    		return {
+    			__awaiter,
+    			context,
+    			module,
+    			text,
+    			type,
+    			markers,
+    			onSave,
+    			mapErrorToken
+    		};
     	};
 
     	$$self.$inject_state = $$props => {
     		if ("__awaiter" in $$props) __awaiter = $$props.__awaiter;
-    		if ("module" in $$props) $$invalidate(0, module = $$props.module);
-    		if ("text" in $$props) $$invalidate(1, text = $$props.text);
-    		if ("type" in $$props) $$invalidate(2, type = $$props.type);
-    		if ("markers" in $$props) $$invalidate(3, markers = $$props.markers);
-    		if ("onSave" in $$props) $$invalidate(4, onSave = $$props.onSave);
+    		if ("context" in $$props) $$invalidate(0, context = $$props.context);
+    		if ("module" in $$props) $$invalidate(1, module = $$props.module);
+    		if ("text" in $$props) $$invalidate(2, text = $$props.text);
+    		if ("type" in $$props) $$invalidate(3, type = $$props.type);
+    		if ("markers" in $$props) $$invalidate(4, markers = $$props.markers);
+    		if ("onSave" in $$props) $$invalidate(5, onSave = $$props.onSave);
     		if ("mapErrorToken" in $$props) mapErrorToken = $$props.mapErrorToken;
     	};
 
-    	return [module, text, type, markers, onSave];
+    	return [context, module, text, type, markers, onSave];
     }
 
     class DocumentEditor extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$b, create_fragment$c, safe_not_equal, {});
+    		init(this, options, instance$b, create_fragment$c, safe_not_equal, { context: 0 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -3913,6 +3976,14 @@ var zdragon = (function () {
     			options,
     			id: create_fragment$c.name
     		});
+    	}
+
+    	get context() {
+    		throw new Error("<DocumentEditor>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set context(value) {
+    		throw new Error("<DocumentEditor>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -4309,9 +4380,11 @@ var zdragon = (function () {
     }
 
     /* src\Pages\EditorPage.svelte generated by Svelte v3.16.7 */
+
+    const { console: console_1$1 } = globals;
     const file$b = "src\\Pages\\EditorPage.svelte";
 
-    // (62:16) <Tab>
+    // (77:16) <Tab>
     function create_default_slot_12(ctx) {
     	let t;
 
@@ -4331,14 +4404,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_12.name,
     		type: "slot",
-    		source: "(62:16) <Tab>",
+    		source: "(77:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (63:16) <Tab>
+    // (78:16) <Tab>
     function create_default_slot_11(ctx) {
     	let t;
 
@@ -4358,14 +4431,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_11.name,
     		type: "slot",
-    		source: "(63:16) <Tab>",
+    		source: "(78:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (64:16) <Tab>
+    // (79:16) <Tab>
     function create_default_slot_10(ctx) {
     	let t;
 
@@ -4385,14 +4458,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_10.name,
     		type: "slot",
-    		source: "(64:16) <Tab>",
+    		source: "(79:16) <Tab>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (61:12) <TabList>
+    // (76:12) <TabList>
     function create_default_slot_9(ctx) {
     	let t0;
     	let t1;
@@ -4441,21 +4514,21 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const tab0_changes = {};
 
-    			if (dirty & /*$$scope*/ 2048) {
+    			if (dirty & /*$$scope*/ 32768) {
     				tab0_changes.$$scope = { dirty, ctx };
     			}
 
     			tab0.$set(tab0_changes);
     			const tab1_changes = {};
 
-    			if (dirty & /*$$scope*/ 2048) {
+    			if (dirty & /*$$scope*/ 32768) {
     				tab1_changes.$$scope = { dirty, ctx };
     			}
 
     			tab1.$set(tab1_changes);
     			const tab2_changes = {};
 
-    			if (dirty & /*$$scope*/ 2048) {
+    			if (dirty & /*$$scope*/ 32768) {
     				tab2_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4487,20 +4560,20 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_9.name,
     		type: "slot",
-    		source: "(61:12) <TabList>",
+    		source: "(76:12) <TabList>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (68:16) {#if htmlUrl}
+    // (83:16) {#if htmlUrl}
     function create_if_block_2$1(ctx) {
     	let current;
 
     	const panel = new Panel({
     			props: {
-    				style: "background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;",
+    				style: "background:lightgray; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;",
     				$$slots: { default: [create_default_slot_8] },
     				$$scope: { ctx }
     			},
@@ -4518,7 +4591,7 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, htmlUrl, iframe*/ 2057) {
+    			if (dirty & /*$$scope, htmlUrl, iframe*/ 32777) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4542,14 +4615,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_2$1.name,
     		type: "if",
-    		source: "(68:16) {#if htmlUrl}",
+    		source: "(83:16) {#if htmlUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (69:20) <Panel                          style="background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;">
+    // (84:20) <Panel                          style="background:lightgray; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
     function create_default_slot_8(ctx) {
     	let iframe_1;
     	let iframe_1_src_value;
@@ -4557,14 +4630,14 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			iframe_1 = element("iframe");
-    			attr_dev(iframe_1, "class", "html-iframe svelte-l9ppwg");
+    			attr_dev(iframe_1, "class", "html-iframe svelte-1pwsn1t");
     			if (iframe_1.src !== (iframe_1_src_value = /*htmlUrl*/ ctx[3])) attr_dev(iframe_1, "src", iframe_1_src_value);
     			attr_dev(iframe_1, "title", "Page");
-    			add_location(iframe_1, file$b, 71, 24, 2564);
+    			add_location(iframe_1, file$b, 86, 24, 3103);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, iframe_1, anchor);
-    			/*iframe_1_binding*/ ctx[10](iframe_1);
+    			/*iframe_1_binding*/ ctx[14](iframe_1);
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*htmlUrl*/ 8 && iframe_1.src !== (iframe_1_src_value = /*htmlUrl*/ ctx[3])) {
@@ -4573,7 +4646,7 @@ var zdragon = (function () {
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(iframe_1);
-    			/*iframe_1_binding*/ ctx[10](null);
+    			/*iframe_1_binding*/ ctx[14](null);
     		}
     	};
 
@@ -4581,14 +4654,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_8.name,
     		type: "slot",
-    		source: "(69:20) <Panel                          style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 3rem; padding: 0; padding-top: 2rem;\\\">",
+    		source: "(84:20) <Panel                          style=\\\"background:lightgray; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (67:12) <TabPanel>
+    // (82:12) <TabPanel>
     function create_default_slot_7(ctx) {
     	let if_block_anchor;
     	let current;
@@ -4644,14 +4717,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_7.name,
     		type: "slot",
-    		source: "(67:12) <TabPanel>",
+    		source: "(82:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (83:20) {#if svgUrl}
+    // (98:20) {#if svgUrl}
     function create_if_block_1$2(ctx) {
     	let img;
     	let img_src_value;
@@ -4661,8 +4734,8 @@ var zdragon = (function () {
     			img = element("img");
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*componentUrl*/ ctx[2])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "class", "svelte-l9ppwg");
-    			add_location(img, file$b, 83, 24, 2945);
+    			attr_dev(img, "class", "svelte-1pwsn1t");
+    			add_location(img, file$b, 98, 24, 3484);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4681,14 +4754,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_1$2.name,
     		type: "if",
-    		source: "(83:20) {#if svgUrl}",
+    		source: "(98:20) {#if svgUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (82:16) <Panel>
+    // (97:16) <Panel>
     function create_default_slot_6(ctx) {
     	let if_block_anchor;
     	let if_block = /*svgUrl*/ ctx[1] && create_if_block_1$2(ctx);
@@ -4726,14 +4799,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_6.name,
     		type: "slot",
-    		source: "(82:16) <Panel>",
+    		source: "(97:16) <Panel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (81:12) <TabPanel>
+    // (96:12) <TabPanel>
     function create_default_slot_5(ctx) {
     	let current;
 
@@ -4756,7 +4829,7 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 32774) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4780,14 +4853,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_5.name,
     		type: "slot",
-    		source: "(81:12) <TabPanel>",
+    		source: "(96:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (91:20) {#if componentUrl}
+    // (106:20) {#if componentUrl}
     function create_if_block$3(ctx) {
     	let img;
     	let img_src_value;
@@ -4797,8 +4870,8 @@ var zdragon = (function () {
     			img = element("img");
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*svgUrl*/ ctx[1])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "class", "svelte-l9ppwg");
-    			add_location(img, file$b, 91, 24, 3176);
+    			attr_dev(img, "class", "svelte-1pwsn1t");
+    			add_location(img, file$b, 106, 24, 3715);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4817,14 +4890,14 @@ var zdragon = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(91:20) {#if componentUrl}",
+    		source: "(106:20) {#if componentUrl}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (90:16) <Panel>
+    // (105:16) <Panel>
     function create_default_slot_4(ctx) {
     	let if_block_anchor;
     	let if_block = /*componentUrl*/ ctx[2] && create_if_block$3(ctx);
@@ -4862,14 +4935,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(90:16) <Panel>",
+    		source: "(105:16) <Panel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (89:12) <TabPanel>
+    // (104:12) <TabPanel>
     function create_default_slot_3(ctx) {
     	let current;
 
@@ -4892,7 +4965,7 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const panel_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 32774) {
     				panel_changes.$$scope = { dirty, ctx };
     			}
 
@@ -4916,14 +4989,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_3.name,
     		type: "slot",
-    		source: "(89:12) <TabPanel>",
+    		source: "(104:12) <TabPanel>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (60:8) <Tabs>
+    // (75:8) <Tabs>
     function create_default_slot_2(ctx) {
     	let t0;
     	let t1;
@@ -4985,28 +5058,28 @@ var zdragon = (function () {
     		p: function update(ctx, dirty) {
     			const tablist_changes = {};
 
-    			if (dirty & /*$$scope*/ 2048) {
+    			if (dirty & /*$$scope*/ 32768) {
     				tablist_changes.$$scope = { dirty, ctx };
     			}
 
     			tablist.$set(tablist_changes);
     			const tabpanel0_changes = {};
 
-    			if (dirty & /*$$scope, htmlUrl, iframe*/ 2057) {
+    			if (dirty & /*$$scope, htmlUrl, iframe*/ 32777) {
     				tabpanel0_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel0.$set(tabpanel0_changes);
     			const tabpanel1_changes = {};
 
-    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 2054) {
+    			if (dirty & /*$$scope, svgUrl, componentUrl*/ 32774) {
     				tabpanel1_changes.$$scope = { dirty, ctx };
     			}
 
     			tabpanel1.$set(tabpanel1_changes);
     			const tabpanel2_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 2054) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl*/ 32774) {
     				tabpanel2_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5042,14 +5115,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(60:8) <Tabs>",
+    		source: "(75:8) <Tabs>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (103:4) <Modal          title="Add File"          show={showAddFileDialog}          close={toggleAddFileDialog}>
+    // (118:4) <Modal          title="Add File"          show={showAddFileDialog}          close={toggleAddFileDialog}>
     function create_default_slot_1(ctx) {
     	let current;
     	const createfile = new CreateFile({ $$inline: true });
@@ -5080,14 +5153,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_1.name,
     		type: "slot",
-    		source: "(103:4) <Modal          title=\\\"Add File\\\"          show={showAddFileDialog}          close={toggleAddFileDialog}>",
+    		source: "(118:4) <Modal          title=\\\"Add File\\\"          show={showAddFileDialog}          close={toggleAddFileDialog}>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (109:4) <Modal          title="Add Application"          show={showAddApplicationDialog}          close={toggleAddApplicationDialog}>
+    // (124:4) <Modal          title="Add Application"          show={showAddApplicationDialog}          close={toggleAddApplicationDialog}>
     function create_default_slot(ctx) {
     	let current;
     	const createapplication = new CreateApplication({ $$inline: true });
@@ -5118,7 +5191,7 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot.name,
     		type: "slot",
-    		source: "(109:4) <Modal          title=\\\"Add Application\\\"          show={showAddApplicationDialog}          close={toggleAddApplicationDialog}>",
+    		source: "(124:4) <Modal          title=\\\"Add Application\\\"          show={showAddApplicationDialog}          close={toggleAddApplicationDialog}>",
     		ctx
     	});
 
@@ -5141,7 +5214,11 @@ var zdragon = (function () {
     	let current;
     	let dispose;
     	const fileexplorer = new FileExplorer({ $$inline: true });
-    	const documenteditor = new DocumentEditor({ $$inline: true });
+
+    	const documenteditor = new DocumentEditor({
+    			props: { context: /*context*/ ctx[6] },
+    			$$inline: true
+    		});
 
     	const tabs = new Tabs({
     			props: {
@@ -5192,21 +5269,21 @@ var zdragon = (function () {
     			create_component(modal0.$$.fragment);
     			t4 = space();
     			create_component(modal1.$$.fragment);
-    			attr_dev(div0, "class", "file-explorer--container svelte-l9ppwg");
-    			add_location(div0, file$b, 50, 4, 1861);
-    			attr_dev(div1, "class", "svelte-l9ppwg");
-    			add_location(div1, file$b, 54, 8, 1982);
-    			attr_dev(div2, "class", "document-editor svelte-l9ppwg");
-    			add_location(div2, file$b, 53, 4, 1943);
-    			attr_dev(i, "class", "fa fa-print svelte-l9ppwg");
-    			add_location(i, file$b, 98, 12, 3370);
-    			attr_dev(div3, "class", "print-button svelte-l9ppwg");
-    			add_location(div3, file$b, 97, 8, 3313);
-    			attr_dev(div4, "class", "page-viewer svelte-l9ppwg");
-    			add_location(div4, file$b, 58, 4, 2053);
-    			attr_dev(div5, "class", "container svelte-l9ppwg");
-    			add_location(div5, file$b, 49, 0, 1832);
-    			dispose = listen_dev(div3, "click", /*print*/ ctx[6], false, false, false);
+    			attr_dev(div0, "class", "file-explorer--container svelte-1pwsn1t");
+    			add_location(div0, file$b, 65, 4, 2395);
+    			attr_dev(div1, "class", "svelte-1pwsn1t");
+    			add_location(div1, file$b, 69, 8, 2516);
+    			attr_dev(div2, "class", "document-editor svelte-1pwsn1t");
+    			add_location(div2, file$b, 68, 4, 2477);
+    			attr_dev(i, "class", "fa fa-print svelte-1pwsn1t");
+    			add_location(i, file$b, 113, 12, 3909);
+    			attr_dev(div3, "class", "print-button svelte-1pwsn1t");
+    			add_location(div3, file$b, 112, 8, 3852);
+    			attr_dev(div4, "class", "page-viewer svelte-1pwsn1t");
+    			add_location(div4, file$b, 73, 4, 2597);
+    			attr_dev(div5, "class", "container svelte-1pwsn1t");
+    			add_location(div5, file$b, 64, 0, 2366);
+    			dispose = listen_dev(div3, "click", /*print*/ ctx[7], false, false, false);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -5234,7 +5311,7 @@ var zdragon = (function () {
     		p: function update(ctx, [dirty]) {
     			const tabs_changes = {};
 
-    			if (dirty & /*$$scope, componentUrl, svgUrl, htmlUrl, iframe*/ 2063) {
+    			if (dirty & /*$$scope, componentUrl, svgUrl, htmlUrl, iframe*/ 32783) {
     				tabs_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5242,7 +5319,7 @@ var zdragon = (function () {
     			const modal0_changes = {};
     			if (dirty & /*showAddFileDialog*/ 32) modal0_changes.show = /*showAddFileDialog*/ ctx[5];
 
-    			if (dirty & /*$$scope*/ 2048) {
+    			if (dirty & /*$$scope*/ 32768) {
     				modal0_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5250,7 +5327,7 @@ var zdragon = (function () {
     			const modal1_changes = {};
     			if (dirty & /*showAddApplicationDialog*/ 16) modal1_changes.show = /*showAddApplicationDialog*/ ctx[4];
 
-    			if (dirty & /*$$scope*/ 2048) {
+    			if (dirty & /*$$scope*/ 32768) {
     				modal1_changes.$$scope = { dirty, ctx };
     			}
 
@@ -5296,16 +5373,18 @@ var zdragon = (function () {
     }
 
     function instance$e($$self, $$props, $$invalidate) {
+    	let { namespace = "" } = $$props;
+    	var oldNamespace = "";
     	let iframe;
     	let timeout;
     	let module;
     	let svgUrl;
     	let componentUrl;
     	let htmlUrl;
+    	let context = [];
 
-    	const generateUrls = () => {
-    		if (!module || !module.namespace) return;
-    		var ns = module.namespace;
+    	const generateUrls = ns => {
+    		if (!ns) return;
     		$$invalidate(1, svgUrl = `/documents/${ns}/data.svg?timestamp=${new Date().getMilliseconds()}`);
     		$$invalidate(2, componentUrl = `/documents/${ns}/components.svg?timestamp=${new Date().getMilliseconds()}`);
     		$$invalidate(3, htmlUrl = `/documents/${ns}/page.html?timestamp=${new Date().getMilliseconds()}`);
@@ -5324,7 +5403,7 @@ var zdragon = (function () {
     				}
 
     				module = s.modules[s.selectedModule];
-    				generateUrls();
+    				generateUrls(module.namespace);
     			},
     			2000
     		);
@@ -5332,10 +5411,12 @@ var zdragon = (function () {
 
     	let showAddApplicationDialog = false;
     	let showAddFileDialog = false;
+    	let showRefactorDialog = false;
 
     	stateStore.subscribe(s => {
     		$$invalidate(5, showAddFileDialog = !!s.showAddFileDialog);
     		$$invalidate(4, showAddApplicationDialog = !!s.showAddApplicationDialog);
+    		showRefactorDialog = !!s.showRefactorDialog;
     	});
 
     	let print = () => {
@@ -5343,26 +5424,67 @@ var zdragon = (function () {
     		iframe.contentWindow.print();
     	};
 
+    	const writable_props = ["namespace"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console_1$1.warn(`<EditorPage> was created with unknown prop '${key}'`);
+    	});
+
     	function iframe_1_binding($$value) {
     		binding_callbacks[$$value ? "unshift" : "push"](() => {
     			$$invalidate(0, iframe = $$value);
     		});
     	}
 
+    	$$self.$set = $$props => {
+    		if ("namespace" in $$props) $$invalidate(8, namespace = $$props.namespace);
+    	};
+
     	$$self.$capture_state = () => {
-    		return {};
+    		return {
+    			namespace,
+    			oldNamespace,
+    			iframe,
+    			timeout,
+    			module,
+    			svgUrl,
+    			componentUrl,
+    			htmlUrl,
+    			context,
+    			showAddApplicationDialog,
+    			showAddFileDialog,
+    			showRefactorDialog,
+    			print
+    		};
     	};
 
     	$$self.$inject_state = $$props => {
+    		if ("namespace" in $$props) $$invalidate(8, namespace = $$props.namespace);
+    		if ("oldNamespace" in $$props) $$invalidate(9, oldNamespace = $$props.oldNamespace);
     		if ("iframe" in $$props) $$invalidate(0, iframe = $$props.iframe);
     		if ("timeout" in $$props) timeout = $$props.timeout;
     		if ("module" in $$props) module = $$props.module;
     		if ("svgUrl" in $$props) $$invalidate(1, svgUrl = $$props.svgUrl);
     		if ("componentUrl" in $$props) $$invalidate(2, componentUrl = $$props.componentUrl);
     		if ("htmlUrl" in $$props) $$invalidate(3, htmlUrl = $$props.htmlUrl);
+    		if ("context" in $$props) $$invalidate(6, context = $$props.context);
     		if ("showAddApplicationDialog" in $$props) $$invalidate(4, showAddApplicationDialog = $$props.showAddApplicationDialog);
     		if ("showAddFileDialog" in $$props) $$invalidate(5, showAddFileDialog = $$props.showAddFileDialog);
-    		if ("print" in $$props) $$invalidate(6, print = $$props.print);
+    		if ("showRefactorDialog" in $$props) showRefactorDialog = $$props.showRefactorDialog;
+    		if ("print" in $$props) $$invalidate(7, print = $$props.print);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*oldNamespace, namespace*/ 768) {
+    			 {
+    				if (moduleStore && oldNamespace !== namespace) {
+    					console.log(namespace);
+    					selectModuleByNamespace(namespace);
+    					$$invalidate(9, oldNamespace = namespace);
+    					generateUrls(namespace);
+    				}
+    			}
+    		}
     	};
 
     	return [
@@ -5372,9 +5494,13 @@ var zdragon = (function () {
     		htmlUrl,
     		showAddApplicationDialog,
     		showAddFileDialog,
+    		context,
     		print,
+    		namespace,
+    		oldNamespace,
     		timeout,
     		module,
+    		showRefactorDialog,
     		generateUrls,
     		iframe_1_binding
     	];
@@ -5383,7 +5509,7 @@ var zdragon = (function () {
     class EditorPage extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, instance$e, create_fragment$f, safe_not_equal, {});
+    		init(this, options, instance$e, create_fragment$f, safe_not_equal, { namespace: 8 });
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
@@ -5391,6 +5517,14 @@ var zdragon = (function () {
     			options,
     			id: create_fragment$f.name
     		});
+    	}
+
+    	get namespace() {
+    		throw new Error("<EditorPage>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set namespace(value) {
+    		throw new Error("<EditorPage>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
     	}
     }
 
@@ -5966,8 +6100,8 @@ var zdragon = (function () {
     /* src\App.svelte generated by Svelte v3.16.7 */
     const file$g = "src\\App.svelte";
 
-    // (24:6) <Route path="/editor">
-    function create_default_slot_2$1(ctx) {
+    // (22:6) <Route path="/editor">
+    function create_default_slot_3$1(ctx) {
     	let current;
     	const editorpage = new EditorPage({ $$inline: true });
 
@@ -5995,16 +6129,63 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2$1.name,
+    		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(24:6) <Route path=\\\"/editor\\\">",
+    		source: "(22:6) <Route path=\\\"/editor\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (28:6) <Route path="/">
+    // (25:6) <Route path="/editor/:namespace" let:params>
+    function create_default_slot_2$1(ctx) {
+    	let current;
+
+    	const editorpage = new EditorPage({
+    			props: { namespace: /*params*/ ctx[1].namespace },
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			create_component(editorpage.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(editorpage, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const editorpage_changes = {};
+    			if (dirty & /*params*/ 2) editorpage_changes.namespace = /*params*/ ctx[1].namespace;
+    			editorpage.$set(editorpage_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(editorpage.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(editorpage.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(editorpage, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2$1.name,
+    		type: "slot",
+    		source: "(25:6) <Route path=\\\"/editor/:namespace\\\" let:params>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (29:6) <Route path="/">
     function create_default_slot_1$1(ctx) {
     	let current;
     	const home = new Home({ $$inline: true });
@@ -6035,38 +6216,54 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_1$1.name,
     		type: "slot",
-    		source: "(28:6) <Route path=\\\"/\\\">",
+    		source: "(29:6) <Route path=\\\"/\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (20:0) <Router {url}>
+    // (18:0) <Router {url}>
     function create_default_slot$1(ctx) {
     	let div1;
     	let t0;
     	let div0;
     	let t1;
     	let t2;
+    	let t3;
     	let current;
     	const menu = new Menu({ $$inline: true });
 
     	const route0 = new Route({
     			props: {
     				path: "/editor",
-    				$$slots: { default: [create_default_slot_2$1] },
+    				$$slots: { default: [create_default_slot_3$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
     	const route1 = new Route({
-    			props: { path: "/about", component: About },
+    			props: {
+    				path: "/editor/:namespace",
+    				$$slots: {
+    					default: [
+    						create_default_slot_2$1,
+    						({ params }) => ({ 1: params }),
+    						({ params }) => params ? 2 : 0
+    					]
+    				},
+    				$$scope: { ctx }
+    			},
     			$$inline: true
     		});
 
     	const route2 = new Route({
+    			props: { path: "/about", component: About },
+    			$$inline: true
+    		});
+
+    	const route3 = new Route({
     			props: {
     				path: "/",
     				$$slots: { default: [create_default_slot_1$1] },
@@ -6086,10 +6283,12 @@ var zdragon = (function () {
     			create_component(route1.$$.fragment);
     			t2 = space();
     			create_component(route2.$$.fragment);
+    			t3 = space();
+    			create_component(route3.$$.fragment);
     			attr_dev(div0, "class", "page-content svelte-sl0cek");
-    			add_location(div0, file$g, 22, 4, 489);
+    			add_location(div0, file$g, 20, 4, 444);
     			attr_dev(div1, "class", "root svelte-sl0cek");
-    			add_location(div1, file$g, 20, 2, 451);
+    			add_location(div1, file$g, 18, 2, 406);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div1, anchor);
@@ -6101,23 +6300,32 @@ var zdragon = (function () {
     			mount_component(route1, div0, null);
     			append_dev(div0, t2);
     			mount_component(route2, div0, null);
+    			append_dev(div0, t3);
+    			mount_component(route3, div0, null);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
     			const route0_changes = {};
 
-    			if (dirty & /*$$scope*/ 2) {
+    			if (dirty & /*$$scope*/ 4) {
     				route0_changes.$$scope = { dirty, ctx };
     			}
 
     			route0.$set(route0_changes);
-    			const route2_changes = {};
+    			const route1_changes = {};
 
-    			if (dirty & /*$$scope*/ 2) {
-    				route2_changes.$$scope = { dirty, ctx };
+    			if (dirty & /*$$scope, params*/ 6) {
+    				route1_changes.$$scope = { dirty, ctx };
     			}
 
-    			route2.$set(route2_changes);
+    			route1.$set(route1_changes);
+    			const route3_changes = {};
+
+    			if (dirty & /*$$scope*/ 4) {
+    				route3_changes.$$scope = { dirty, ctx };
+    			}
+
+    			route3.$set(route3_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -6125,6 +6333,7 @@ var zdragon = (function () {
     			transition_in(route0.$$.fragment, local);
     			transition_in(route1.$$.fragment, local);
     			transition_in(route2.$$.fragment, local);
+    			transition_in(route3.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
@@ -6132,6 +6341,7 @@ var zdragon = (function () {
     			transition_out(route0.$$.fragment, local);
     			transition_out(route1.$$.fragment, local);
     			transition_out(route2.$$.fragment, local);
+    			transition_out(route3.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -6140,6 +6350,7 @@ var zdragon = (function () {
     			destroy_component(route0);
     			destroy_component(route1);
     			destroy_component(route2);
+    			destroy_component(route3);
     		}
     	};
 
@@ -6147,7 +6358,7 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot$1.name,
     		type: "slot",
-    		source: "(20:0) <Router {url}>",
+    		source: "(18:0) <Router {url}>",
     		ctx
     	});
 
@@ -6180,7 +6391,7 @@ var zdragon = (function () {
     		p: function update(ctx, [dirty]) {
     			const router_changes = {};
 
-    			if (dirty & /*$$scope*/ 2) {
+    			if (dirty & /*$$scope*/ 4) {
     				router_changes.$$scope = { dirty, ctx };
     			}
 
@@ -6213,6 +6424,10 @@ var zdragon = (function () {
 
     function instance$g($$self) {
     	let url = "";
+
+    	window.onkeypress = e => {
+    		
+    	};
 
     	$$self.$capture_state = () => {
     		return {};
@@ -6270,11 +6485,17 @@ var zdragon = (function () {
                 [/^([a-z][^ ]*)/, [
                     {
                         cases: {
+                            // language
                             "open": { token: "keyword" },
                             "record": { token: "keyword", next: "@record" },
                             "type": { token: "keyword", next: "@type" },
                             "choice": { token: "keyword", next: "@choice" },
                             "data": { token: "keyword", next: "@data" },
+
+                            // document
+                            "view": { token: "keyword", next: "@view" },
+
+                            // architecture
                             "component": { token: "keyword", next: "@attributes" },
                             "interaction": { token: "keyword", next: "@attributes" },
                             "person": { token: "keyword", next: "@attributes" },
@@ -6287,6 +6508,10 @@ var zdragon = (function () {
                 [/extends/, "keyword"],
                 [/=/, "number", "@field"],
                 [/'[a-z]/, "generic-parameter"], // generic types
+                { include: "lang" }
+            ],
+            view: [
+                [/view/, "keyword"],
                 { include: "lang" }
             ],
             type: [

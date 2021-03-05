@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ZDragon.Project.Interactors;
 using ZDragon.UI.Models;
 
 namespace ZDragon.UI.Controllers {
@@ -24,6 +25,15 @@ namespace ZDragon.UI.Controllers {
             _project.CreateApplication(body.Name);
             _project.ResetDirectory();
             return Ok(_project.DirectoryInteractor);
+
+        }
+
+
+        [HttpGet("/application/lexicon/{ns}")]
+        public IActionResult GetLexiconForApplication([FromRoute]string ns) {
+            var moduleInteractor = _project.Find<ModuleInteractor>(ns);
+            var index = moduleInteractor.ApplicationInteractor.CreateIndex(moduleInteractor.FileType);
+            return Ok(index);
 
         }
 

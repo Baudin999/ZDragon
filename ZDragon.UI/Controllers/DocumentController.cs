@@ -23,12 +23,11 @@ namespace ZDragon.UI.Controllers {
             var realPath = WebUtility.UrlDecode(ns);
             if (Program.Project.IsValidProjectPath(realPath)) {
                 var moduleInteractor = _project.Find<ModuleInteractor>(ns);
-                moduleInteractor.Verify();
                 var text = await moduleInteractor.GetText();
 
                 return Ok(new {
                     text,
-                    compilationResult = moduleInteractor.CompilationResult
+                    compilationResult = moduleInteractor.Compile(text)
                 });
             }
             else {

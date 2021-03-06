@@ -173,4 +173,9 @@
     <None Include="wwwroot\standalone-icon.png" />
     <None Include="wwwroot\styles.css" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="PlantUml\plantuml.jar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

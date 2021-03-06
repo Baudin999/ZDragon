@@ -118,7 +118,7 @@
             </TabPanel>
 
             <TabPanel>
-                <Panel>
+                <Panel style="height: calc(100% - 3rem);">
                     {#if svgUrl}
                         <img alt="svg" src={componentUrl} />
                     {/if}
@@ -126,7 +126,7 @@
             </TabPanel>
 
             <TabPanel>
-                <Panel>
+                <Panel style="height: calc(100% - 3rem);">
                     {#if componentUrl}
                         <img alt="svg" src={svgUrl} />
                     {/if}

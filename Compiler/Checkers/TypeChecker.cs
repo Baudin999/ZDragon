@@ -24,7 +24,7 @@ namespace Compiler.Checkers {
                                         field.TypesTokens.Where(t => t.Kind == SyntaxKind.GenericParameterToken).ToList(),
                                         new List<Token>(),
                                         new List<RecordFieldNode>());
-                    lexicon.Add(field.Id, record);
+                    Add(field.Id, record);
                 }
             }
         }

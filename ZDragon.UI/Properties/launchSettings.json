@@ -8,18 +8,11 @@
     }
   },
   "profiles": {
-    "Electron.NET App": {
+    "ZDragon Electron": {
       "commandName": "Executable",
       "executablePath": "electronize",
-      "commandLineArgs": "start",
+      "commandLineArgs": "start /watch",
       "workingDirectory": "."
-    },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
     },
     "ZDragon.UI": {
       "commandName": "Project",

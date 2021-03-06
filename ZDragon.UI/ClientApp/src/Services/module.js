@@ -12,7 +12,7 @@ export const selectModuleByNamespace = async namespace => {
     let text = result.text;
     let compilationResult = result.compilationResult;
     moduleStore.update(s => {
-        var m = { text, compilationResult };
+        var m = { namespace, text, compilationResult };
         let modules = (s || {}).modules || {};
         modules[namespace] = m;
 
@@ -49,7 +49,12 @@ export const deleteModule = async module => {
 };
 
 export const parseCode = async (module, code) => {
-    if (!module || !code) return;
+
+    if (!module || !module.namespace || !code) {
+        console.log("Invalid \"Parse Code\"", module, code);
+
+        return;
+    }
     var compilationResult = await post("/document/" + module.namespace, { code });
 
     moduleStore.update(s => {

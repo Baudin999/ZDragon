@@ -19,9 +19,16 @@ monaco.editor.defineTheme("carlangTheme", theme);
 // json editor
 // import "./../node_modules/jsoneditor/dist/jsoneditor.min.js";
 import "./../node_modules/jsoneditor/dist/jsoneditor.css";
+import "./../node_modules/@microsoft/signalr/dist/browser/signalr.min.js";
 
 const app = new App({
   target: document.body
 });
+
+var connection = new signalR.HubConnectionBuilder().withUrl("/project").build();
+connection.on("ReceiveMessage", function (data) {
+  console.log("Ready from SignalR: " + data);
+});
+connection.start();
 
 export default app;

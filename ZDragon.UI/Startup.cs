@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
-using System.Threading.Tasks; 
+using System.Threading.Tasks;
 
 namespace ZDragon.UI {
     public class Startup {
@@ -25,7 +25,9 @@ namespace ZDragon.UI {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
                 });
+            services.AddSingleton<Controllers.ProjectHub>();
             services.AddSingleton<Project.Project>(sp => Program.Project);
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,6 +41,7 @@ namespace ZDragon.UI {
                 // for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
 
             app.UseStatusCodePagesWithReExecute("/");
             app.UseHttpsRedirection();
@@ -47,6 +50,7 @@ namespace ZDragon.UI {
             app.UseRouting();
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
+                endpoints.MapHub<Controllers.ProjectHub>("/project");
             });
 
             // Open the Electron-Window here

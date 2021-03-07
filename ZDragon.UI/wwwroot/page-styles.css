@@ -1,4 +1,25 @@
 ﻿/* https://www.pagedjs.org/documentation/02-getting-started-with-paged-js/ */
+
+
+
+:root {
+    --color-1: #303D4D;
+    --color-1--light: #5c7ba0;
+    --color-1--border: #39485f;
+    --color-1--bg: #273241;
+    --color-1--dark: #1b232e;
+    --color-2--icon: #C2C5CC;
+    --color-1--font: white;
+    --color-1--alt: white;
+    --color-2: #ff6c00;
+    --color-2--dark: #803100;
+    --color-2--alt: white;
+    --color-3: #22A652;
+    --color-3--font: #dfffea;
+    --color-3--border: #76BD45;
+    --color-3--alt: white;
+}
+
 html, body {
     font-family: "Computer Modern Sans", sans-serif;
     font-size: 14px;
@@ -10,14 +31,14 @@ html, body {
         size: A4; /* auto is the initial value */
         /*         this affects the margin in the printer settings */
         margin: 22mm 22mm 22mm 22mm;
-
         orphans: 3;
         widows: 3;
     }
+
     @page :first {
         background: orange;
     }
-   
+
 
     html, body {
         margin: 0 !important;
@@ -32,6 +53,13 @@ html, body {
 
     .keep-together {
         page-break-inside: avoid !important;
+    }
+
+    .title-page {
+        display: block!important;
+        visibility: visible !important;
+        margin-top: 9rem;
+        page-break-after: always;
     }
 }
 
@@ -123,29 +151,29 @@ table {
     }
 
 
- TABLE OF CONTENTS 
-.toc {
+    TABLE OF CONTENTS
+    .toc {
+    }
+
+.toc .toc-1 {
+    margin-left: 0rem;
 }
 
-    .toc .toc-1 {
-        margin-left: 0rem;
-    }
+.toc .toc-2 {
+    margin-left: 1rem;
+}
 
-    .toc .toc-2 {
-        margin-left: 1rem;
-    }
+.toc .toc-3 {
+    margin-left: 2rem;
+}
 
-    .toc .toc-3 {
-        margin-left: 2rem;
-    }
+.toc .toc-4 {
+    margin-left: 4rem;
+}
 
-    .toc .toc-4 {
-        margin-left: 4rem;
-    }
-
-    .toc .toc-5 {
-        margin-left: 5rem;
-    }
+.toc .toc-5 {
+    margin-left: 5rem;
+}
 
 blockquote {
     background: #f9f9f9;
@@ -167,3 +195,56 @@ blockquote {
     blockquote p {
         display: inline;
     }
+
+.guideline {
+    border: 1px solid var(--color-3);
+    margin: 0 4rem;
+}
+
+    .guideline title {
+        display: block;
+        background-color: var(--color-3);
+        padding: 0.5rem 1rem;
+        color: var(--color-3--font);
+    }
+
+    .guideline dl {
+        margin: 0;
+        padding: 1rem 1rem 0 1rem;
+    }
+
+        .guideline dl dt {
+            font-weight: bold;
+        }
+
+        .guideline dl dd:not(last-child) {
+            margin: 0;
+            margin-bottom: 1rem;
+        }
+
+
+.title-page {
+    visibility: hidden;
+    display: none;
+}
+
+.title-page--title,
+.title-page--author,
+.title-page--date {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.title-page--title {
+    font-size: 5rem;
+    margin-bottom: 2rem;
+}
+
+.title-page--author {
+    font-size: 2rem;
+}
+
+.title-page--date {
+    font-size: 1rem;
+}

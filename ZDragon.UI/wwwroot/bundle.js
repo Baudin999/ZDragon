@@ -6841,8 +6841,8 @@ var zdragon = (function () {
             chapter: [[/#.*/, "chapter"]],
             annotation: [[/@.*/, "annotation"]],
             directive: [
-                [/(%)([^:]*)(:)/, ["number", "annotation", "number"], "@directive_inner.$1"],
-                [/(%)([^:]*)/, ["number", "annotation"]],
+                [/(%)([^:]*)(:)/, ["number", "type.identifier", "number"], "@directive_inner.$1"],
+                [/(%)([^:]*)/, ["number", "type.identifier"]],
             ],
             directive_inner: [
                 [/.+/, "number", "@pop"],
@@ -6861,6 +6861,7 @@ var zdragon = (function () {
 
                             // document
                             "view": { token: "keyword", next: "@view" },
+                            "guideline": { token: "keyword", next: "@attributes" },
 
                             // architecture
                             "component": { token: "keyword", next: "@attributes" },

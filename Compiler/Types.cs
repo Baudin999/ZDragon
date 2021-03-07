@@ -89,6 +89,7 @@ namespace Compiler {
 
                 // doc types
                 { "view", SyntaxKind.ViewDeclarationToken },
+                { "guideline", SyntaxKind.GuidelineDeclarationToken },
 
                 // architecture
                 { "person", SyntaxKind.PersonDeclarationToken },
@@ -192,6 +193,7 @@ namespace Compiler {
         MarkdownEndBlockToken,
 
         ViewDeclarationToken,
+        GuidelineDeclarationToken,
 
         // dual operator Tokens
         OperatorToken,          // The default operator token
@@ -284,7 +286,6 @@ namespace Compiler {
 
 
         None,
-        
     }
 
     public enum CharacterCodes {

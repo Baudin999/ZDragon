@@ -80,6 +80,23 @@ namespace ZDragon.Transpilers.Html {
             parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/{node.Hash}.svg\" alt=\"data\" />");
         }
 
+        private void RenderGuidelineNode(GuidelineNode node) {
+            var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
+            var description = node.GetAttribute("Description", "");
+            var rationale = node.GetAttribute("Rationale", "");
+            var number = node.GetAttribute("Number", "000");
+
+            parts.Add(@$"<div class='guideline'>
+<title>GUIDELINE {number}: {title}</title>
+<dl>
+    <dt>Description</dt>
+    <dd>{description}</dd>
+    <dt>Rationale</dt>
+    <dd>{rationale}</dd>
+</dl>
+</div>");
+        }
+
         public HtmlTranspiler(CompilationResult compilationResult) {
             this.compilationresult = compilationResult;
         }
@@ -102,10 +119,28 @@ namespace ZDragon.Transpilers.Html {
 <body>
 <div class='content'>
 ");
+            var tocIndex = 1;
+            var directiveNodes = this.compilationresult.Ast.TakeWhile(node => node is DirectiveNode).OfType<DirectiveNode>().ToList();
+            if (directiveNodes.Count > 0) {
+                tocIndex = 2;
+                var doc_title = directiveNodes.FirstOrDefault(d => d.Id == "Title")?.Literal ?? "No title";
+                var doc_author = directiveNodes.FirstOrDefault(d => d.Id == "Author")?.Literal ?? "No author";
+                var doc_date = directiveNodes.FirstOrDefault(d => d.Id == "Date")?.Literal ?? "No date";
+
+                parts.Add($@"
+<div class='title-page'>
+    <div class='title-page--title'>{doc_title}</div>
+    <div class='title-page--author'>{doc_author}</div>
+    <div class='title-page--date'>{doc_date}</div>
+</div>
+");
+            }
+
             foreach (var documentPart in this.compilationresult.Document) {
-                if (documentPart is MarkdownChapterNode mcn) RenderChapter(mcn);
-                else if (documentPart is MarkdownNode mdn) RenderMarkdownNode(mdn);
+                if (documentPart is MarkdownChapterNode markdownChapterNode) RenderChapter(markdownChapterNode);
+                else if (documentPart is MarkdownNode markdownNode) RenderMarkdownNode(markdownNode);
                 else if (documentPart is ViewNode viewNode) RenderViewNode(viewNode);
+                else if (documentPart is GuidelineNode guidelineNode) RenderGuidelineNode(guidelineNode);
                 else RenderParagraph(documentPart);
             }
             
@@ -119,7 +154,7 @@ namespace ZDragon.Transpilers.Html {
                 if (compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0) {
                     toc.Add($"<div class='toc-1'>{++h1} Component Diagram<div>");
                 }
-                parts.Insert(1, string.Join("\n\n", toc));
+                parts.Insert(tocIndex, string.Join("\n\n", toc));
             }
 
 

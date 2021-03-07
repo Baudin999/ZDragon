@@ -122,6 +122,9 @@ namespace Compiler.Symbols {
                 else if(Current?.Kind == SyntaxKind.ViewDeclarationToken) {
                     yield return TokenizeViewDefinition(annotations);
                 }
+                else if (Current?.Kind == SyntaxKind.GuidelineDeclarationToken) {
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.GuidelineDeclaration);
+                }
                 else if (Current?.Kind == SyntaxKind.LessThenToken) {
                     // we'll have to start parsing markup
                     yield return TokenizeMarkupDefinition();
@@ -191,5 +194,6 @@ namespace Compiler.Symbols {
         MarkupDeclaration,
         InteractionDeclaration,
         ViewDeclaration,
+        GuidelineDeclaration,
     }
 }

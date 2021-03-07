@@ -249,6 +249,7 @@ namespace Compiler.Language {
 
                     // documentation
                     case ViewNode n: addToLexicon(n); break;
+                    case GuidelineNode n: addToLexicon(n); break;
 
                     // architecture
                     case ComponentNode n: addToLexicon(n); break;

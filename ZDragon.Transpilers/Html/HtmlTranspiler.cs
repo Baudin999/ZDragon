@@ -77,7 +77,7 @@ namespace ZDragon.Transpilers.Html {
         }
 
         private void RenderViewNode(ViewNode node) {
-            parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/{node.Hash}.svg\" alt=\"data\" /></div>");
+            parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/{node.Hash}.svg\" alt=\"data\" />");
         }
 
         public HtmlTranspiler(CompilationResult compilationResult) {
@@ -109,7 +109,7 @@ namespace ZDragon.Transpilers.Html {
                 else RenderParagraph(documentPart);
             }
             
-            if (h1 > 2) {
+            if (h1 > 1) {
                 // Don't put in the TOC if there are no chapters...
                 parts.Add("</div>");
 

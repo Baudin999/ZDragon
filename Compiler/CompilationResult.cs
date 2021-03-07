@@ -32,10 +32,10 @@ namespace Compiler {
             return this;
         }
 
-        public CompilationResult Check(Index index) {
-            new TypeChecker(this.CompilationCache, this, index).Check();
-            return this;
-        }
+        //public CompilationResult Check(Index index) {
+        //    new TypeChecker(this.CompilationCache, this, index).Check();
+        //    return this;
+        //}
 
 
     }

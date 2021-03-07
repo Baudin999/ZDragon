@@ -11,13 +11,15 @@ namespace Compiler.Language {
         private readonly IEnumerable<IIdentifierExpressionNode> ast;
         private readonly CompilationCache cache;
         private readonly List<OpenNode> refereces;
+        private readonly string Namespace;
 
-        public Lexicon(IEnumerable<AstNode> ast, CompilationCache cache) {
+        public Lexicon(IEnumerable<AstNode> ast, CompilationCache cache, string ns) {
             this.errorSink = cache.ErrorSink;
             this.ast = ast.OfType<IIdentifierExpressionNode>();
             this.cache = cache;
             this.refereces = ast.OfType<OpenNode>().ToList();
             this.lexicon = new Dictionary<string, IIdentifierExpressionNode>();
+            this.Namespace = ns;
         }
 
         private void AddRecordToLexicon(RecordNode record) {
@@ -206,7 +208,7 @@ namespace Compiler.Language {
                 var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
                 if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
                     node = (IIdentifierExpressionNode)_cr.Lexicon[typeName].Copy();
-                    if (_cr.Namespace != openNode.Namespace) {
+                    if (_cr.Namespace != this.Namespace) {
                         node.Imported = true;
                         node.ImportedFrom = openNode.Namespace;
                     }

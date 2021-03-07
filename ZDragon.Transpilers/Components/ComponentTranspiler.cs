@@ -11,8 +11,10 @@ namespace ZDragon.Transpilers.Components {
             "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
         };
         private readonly Dictionary<string, string> types = new Dictionary<string, string>();
-        private readonly List<string> parts = new List<string>();
+        //private readonly List<string> parts = new List<string>();
         private readonly List<string> relations = new List<string>();
+        private HashSet<string> nonRootNodes = new HashSet<string>();
+        //private readonly List<string> rootNodes = new List<string>();
         private readonly List<string> containedComponents = new List<string>();
         private readonly List<string> reservedAttributes  = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
 
@@ -44,7 +46,7 @@ namespace ZDragon.Transpilers.Components {
 {attributes}{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})
 ' END COMPONENT: {node.Id}
 "))
-                    ParseInteractions(node);
+                    if (!node.Imported) ParseInteractions(node);
             }
             else {
                 if (types.TryAdd(node.Id, $@"
@@ -52,7 +54,7 @@ namespace ZDragon.Transpilers.Components {
 {attributes}{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})
 ' END COMPONENT: {node.Id}
 "))
-                    ParseInteractions(node);
+                    if (!node.Imported) ParseInteractions(node);
             }
         }
 
@@ -99,28 +101,33 @@ namespace ZDragon.Transpilers.Components {
             };
 
             if (contains.Count == 0) {
-                types.Add(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"", """")");
+                types.Add(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"")");
             }
             else {
-                systemParts.Add($@"{attributes}{componentName}({node.Id}, ""{name}"", ""{description}"", """") {{");
+                systemParts.Add($@"{attributes}{componentName}({node.Id}, ""{name}"", ""{description}"") {{");
 
                 foreach (var c in contains) {
                     if (!types.ContainsKey(c) && this.lexicon.ContainsKey(c)) {
                         ParseNode((AttributesNode)this.lexicon[c]);
-                        containedComponents.Add(c);
                     }
+                    containedComponents.Add(c);
+                }
+
+                foreach (var c in contains) {
                     if (types.ContainsKey(c)) systemParts.Add(types[c]);
                 }
 
                 systemParts.Add("}");
             }
 
-            if (types.TryAdd(node.Id, string.Join("\r\n", systemParts))) {
+            if (!containedComponents.Contains(node.Id) && types.TryAdd(node.Id, string.Join("\r\n", systemParts))) {
                 ParseInteractions(node);
             }
         }
 
         private void ParseInteractions(AttributesNode node) {
+            if (node.Imported) return;
+
             var interactions = node.GetAttributeItems("Interactions", new List<string>());
             foreach (var interaction in interactions) {
                 var interactionParts = interaction.Split(";").ToList();
@@ -191,14 +198,6 @@ namespace ZDragon.Transpilers.Components {
             this.lexicon = result.Lexicon;
         }
 
-        public ComponentTranspiler(Compiler.Index index) {
-            var lex = new Dictionary<string, IIdentifierExpressionNode>();
-            foreach (var i in index) {
-                lex.Add(i.Key, i.Node);
-            }
-            this.lexicon = lex;
-        }
-
         private void ParseNode(AttributesNode node) {
             switch (node) {
                 case ComponentNode n: TranspileComponent(n); break;
@@ -212,13 +211,27 @@ namespace ZDragon.Transpilers.Components {
 
         public string Transpile() {
 
-            var items = this.lexicon.Values.OfType<AttributesNode>().OrderByDescending(n => n.GetAttributeItems("Contains", new List<string>()).Count);
+            var items = this
+                .lexicon
+                .Values
+                .OfType<AttributesNode>()
+                .OrderByDescending(n => n.GetAttributeItems("Contains", new List<string>()).Count);
+
+            nonRootNodes =
+                    this.lexicon
+                    .Values
+                    .OfType<AttributesNode>()
+                    .SelectMany(n => n.GetAttributeItems("Contains", new List<string>()))
+                    .ToHashSet();
+
+
             foreach (IIdentifierExpressionNode node in items) {
                 ParseNode((AttributesNode)node);
             };
 
 
-            var fff = types.Where(kvp => !containedComponents.Contains(kvp.Key)).Select(kvp => kvp.Value).ToList();
+            // && !nonRootNodes.Contains(kvp.Key)
+            var validParts = types.Where(kvp => !containedComponents.Contains(kvp.Key)).Select(kvp => kvp.Value).ToList();
 
             return @"
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
@@ -232,7 +245,7 @@ AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColo
 
 
 " +
-                String.Join("\r\n", fff) +
+                String.Join("\r\n", validParts) +
                 "\r\n\r\n" +
                 string.Join("\r\n", relations) +
                 "\r\n\r\nSHOW_DYNAMIC_LEGEND()";

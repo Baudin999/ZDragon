@@ -121,15 +121,8 @@ namespace ZDragon.Project.Interactors {
 
             
             this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile();
-
-            var index = this.ApplicationInteractor?.CreateIndex(this.FileType);
-            if (index != null) {
-                this.CompilationResult.Check(index);
-            }
-            else {
-                this.CompilationResult.Check();
-            }
-
+            this.CompilationResult.Check();
+            
             System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
             return this.CompilationResult;
         }

@@ -43,7 +43,7 @@ namespace Compiler {
             return _list.FirstOrDefault(q => q.QualifiedName == qualifiedName);
         }
         public List<IndexItem> FindByName(string name) {
-            return _list.FindAll(q => q.Key == name);
+            return _list.FindAll(q => q.Key == name).ToList();
         }
         public IndexItem? Find(Func<IndexItem, bool> where) {
             return _list.FirstOrDefault(where);

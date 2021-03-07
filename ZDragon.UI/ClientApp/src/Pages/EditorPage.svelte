@@ -61,8 +61,7 @@
             }
             module = s.modules[s.selectedModule];
             generateUrls(module.namespace);
-            console.log("urls generated");
-        }, 400);
+        }, 1500);
     });
 
     let showAddApplicationDialog = false;

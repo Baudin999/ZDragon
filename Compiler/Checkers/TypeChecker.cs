@@ -8,7 +8,7 @@ namespace Compiler.Checkers {
         private readonly List<string> baseTypes = new List<string> { "String", "Number", "Boolean", "Date", "DateTime", "Time", "Money", "Guid", "Maybe", "List" };
         private readonly CompilationCache cache;
         private readonly CompilationResult compilationResult;
-        private readonly Index? index = null;
+        //private readonly Index? index = null;
         private readonly Dictionary<string, IIdentifierExpressionNode> lexicon;
         private readonly Dictionary<string, IIdentifierExpressionNode> externalLexicon = new Dictionary<string, IIdentifierExpressionNode>();
         private ErrorSink errorSink => cache.ErrorSink;
@@ -159,11 +159,8 @@ type {root.Id} {typeName} = ...;
         }
 
         private void CheckQualifiedToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, QualifiedToken qt) {
-            // check the namespace
-            if (index != null && index.Contains(qt.QualifiedName)) {
-                Add(qt.QualifiedName, index.Find(qt.QualifiedName).Node);
-            }
-            else if (!cache.Has(qt.Namespace)) {
+
+            if (!cache.Has(qt.Namespace)) {
                 errorSink.AddError(new Error(
                     $"Module '{qt.Namespace}' does not exist",
                     Token.Range(qt.NamespaceParts.First(), qt.NamespaceParts.Last())
@@ -186,9 +183,6 @@ type {root.Id} {typeName} = ...;
 
         private IIdentifierExpressionNode? Get(string typeName) {
             IIdentifierExpressionNode? node = null;
-
-            // check the index
-            if (index != null) node = index.FindByName(typeName)?.FirstOrDefault()?.Node;
 
             // run through the compilation results
             foreach (var openNode in compilationResult.References) {
@@ -221,13 +215,6 @@ type {root.Id} {typeName} = ...;
             this.compilationResult = cr;
         }
         
-
-        public TypeChecker(CompilationCache? cache, CompilationResult cr, Index index) : this(cache, cr) {
-            this.cache = cache ?? new CompilationCache(new ErrorSink());
-            this.lexicon = cr.Lexicon;
-            this.index = index;
-        }
-
 
         public void Check() {
             // check all the types

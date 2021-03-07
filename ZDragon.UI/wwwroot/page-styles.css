@@ -56,7 +56,7 @@ html, body {
     }
 
     .title-page {
-        display: block!important;
+        display: block !important;
         visibility: visible !important;
         margin-top: 9rem;
         page-break-after: always;
@@ -228,23 +228,44 @@ blockquote {
     display: none;
 }
 
-.title-page--title,
-.title-page--author,
-.title-page--date {
-    display: block;
-    width: 100%;
-    text-align: center;
-}
+    .title-page .title-page--title,
+    .title-page .title-page--author,
+    .title-page .title-page--date {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
 
-.title-page--title {
-    font-size: 5rem;
-    margin-bottom: 2rem;
-}
+    .title-page .title-page--title {
+        font-size: 5rem;
+        margin-bottom: 2rem;
+    }
+        .title-page .title-page--title:after {
+            content: "Powered by: ZDragon";
+            display: block;
+            font-weight: bold;
+            color: orange;
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            font-size: 1rem;
 
-.title-page--author {
-    font-size: 2rem;
-}
+        }
 
-.title-page--date {
-    font-size: 1rem;
-}
+    .title-page .title-page--author {
+        font-size: 2rem;
+    }
+
+    .title-page .title-page--date {
+        font-size: 1rem;
+    }
+
+    .title-page img {
+        margin-top: 5rem;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .title-page img:after {
+        
+    }

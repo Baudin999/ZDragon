@@ -4,7 +4,13 @@ using System.Threading.Tasks;
 namespace ZDragon.UI.Controllers {
     public class ProjectHub : Hub {
         public async Task SendMessage(string message) {
-            await Clients.All.SendAsync("ReceiveMessage", message);
+            try {
+
+                await Clients.All.SendAsync("ReceiveMessage", message);
+            }
+            catch (System.Exception) {
+                // do nothing
+            }
         }
     }
 }

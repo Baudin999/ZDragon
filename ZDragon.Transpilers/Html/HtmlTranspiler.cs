@@ -132,6 +132,7 @@ namespace ZDragon.Transpilers.Html {
     <div class='title-page--title'>{doc_title}</div>
     <div class='title-page--author'>{doc_author}</div>
     <div class='title-page--date'>{doc_date}</div>
+    <img src='/standalone-icon.png' />
 </div>
 ");
             }

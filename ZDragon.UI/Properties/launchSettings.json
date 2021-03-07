@@ -11,7 +11,7 @@
     "ZDragon Electron": {
       "commandName": "Executable",
       "executablePath": "electronize",
-      "commandLineArgs": "start /watch",
+      "commandLineArgs": "start",
       "workingDirectory": "."
     },
     "ZDragon Web": {

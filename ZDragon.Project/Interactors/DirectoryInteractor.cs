@@ -25,6 +25,7 @@ namespace ZDragon.Project.Interactors {
 
             foreach (var dir in Directory.GetDirectories(this.DirectoryPath)) {
                 if (dir.EndsWith("out")) continue;
+                if (dir.EndsWith("Images")) continue;
                 Applications.Add(new ApplicationInteractor(this.RootPath, dir, cache));
             }
 

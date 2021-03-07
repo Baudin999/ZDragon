@@ -33,14 +33,21 @@
     let svgUrl;
     let componentUrl;
     let htmlUrl;
+    let scrollY = 0;
 
     let context = [];
 
     const generateUrls = (ns) => {
+        scrollY = iframe?.contentWindow.scrollY ?? 0;
+
         if (!ns) return;
         svgUrl = `/documents/${ns}/data.svg?timestamp=${new Date().getMilliseconds()}`;
         componentUrl = `/documents/${ns}/components.svg?timestamp=${new Date().getMilliseconds()}`;
         htmlUrl = `/documents/${ns}/page.html?timestamp=${new Date().getMilliseconds()}`;
+
+        setTimeout(() => {
+            iframe?.contentWindow.scroll(0, scrollY);
+        }, 500);
     };
 
     moduleStore.subscribe((s: any) => {

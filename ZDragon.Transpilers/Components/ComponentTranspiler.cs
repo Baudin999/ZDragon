@@ -14,6 +14,7 @@ namespace ZDragon.Transpilers.Components {
         private readonly List<string> parts = new List<string>();
         private readonly List<string> relations = new List<string>();
         private readonly List<string> containedComponents = new List<string>();
+        private readonly List<string> reservedAttributes  = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
 
         private void TranspileComponent(ComponentNode node) {
             var name = node.GetAttribute("Name") ?? node.Id;
@@ -29,19 +30,18 @@ namespace ZDragon.Transpilers.Components {
                 _ => "Container"
             };
 
-            var reservedAttributes = new List<string> { "Name", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
             var attribs = node
                 .Attributes
                 .Where(a => !reservedAttributes.Contains(a.Key))
                 .Where(a => a.Value.Length < 30)
                 .Select(a => $"AddProperty({a.Key}, {Compiler.Utilities.WordWrap(a.Value, 20)})");
-            var attributes = string.Join("\n", attribs);
+            var attributes = string.Join("\n", attribs).Trim();
+            if (attributes.Length > 0) attributes += "\n";
 
             if (componentType != "Container") {
                 if (types.TryAdd(node.Id, $@"
 ' COMPONENT: {node.Id}
-{attributes}
-{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})
+{attributes}{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})
 ' END COMPONENT: {node.Id}
 "))
                     ParseInteractions(node);
@@ -49,8 +49,7 @@ namespace ZDragon.Transpilers.Components {
             else {
                 if (types.TryAdd(node.Id, $@"
 ' COMPONENT: {node.Id}
-{attributes}
-{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})
+{attributes}{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})
 ' END COMPONENT: {node.Id}
 "))
                     ParseInteractions(node);
@@ -83,11 +82,27 @@ namespace ZDragon.Transpilers.Components {
             var version = node.GetAttribute("Version", "0");
             var contains = node.GetAttributeItems("Contains") ?? new List<string>();
 
+            var attribs = node
+                .Attributes
+                .Where(a => !reservedAttributes.Contains(a.Key))
+                .Where(a => a.Value.Length < 30)
+                .Select(a => $"AddProperty({a.Key}, {Compiler.Utilities.WordWrap(a.Value, 20)})");
+            var attributes = string.Join("\n", attribs).Trim();
+            if (attributes.Length > 0) attributes += "\n";
+
+
+            var type = node.GetAttribute("Type", "System");
+            var componentName = type switch {
+                "System" => "System_Boundary",
+                "Deployment" => "Deployment_Node",
+                _ => "System_Boundary"
+            };
+
             if (contains.Count == 0) {
-                types.Add(node.Id, $@"System_Boundary({node.Id}, ""{name}"", ""v{version},system"")");
+                types.Add(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"", """")");
             }
             else {
-                systemParts.Add($@"System_Boundary({node.Id}, ""{name}"", ""{description}"") {{");
+                systemParts.Add($@"{attributes}{componentName}({node.Id}, ""{name}"", ""{description}"", """") {{");
 
                 foreach (var c in contains) {
                     if (!types.ContainsKey(c) && this.lexicon.ContainsKey(c)) {
@@ -207,6 +222,7 @@ namespace ZDragon.Transpilers.Components {
 
             return @"
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
 !define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
 
 

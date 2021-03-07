@@ -6,9 +6,7 @@
     export let selected = false;
 
     const moduleSelected = () => {
-        //selectModule(module);
         let path = "/editor/" + module.namespace;
-        console.log(path);
         navigate(path);
     };
 </script>

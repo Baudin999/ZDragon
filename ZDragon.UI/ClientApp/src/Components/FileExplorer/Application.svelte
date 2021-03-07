@@ -24,6 +24,14 @@
             selectedApplication = application.namespace;
         }
     };
+
+    moduleStore.subscribe((s) => {
+        if (application && s && s.selectedModule) {
+            if (s.selectedModule.indexOf(application.namespace) === 0) {
+                selectedApplication = application.namespace;
+            }
+        }
+    });
 </script>
 
 {#if application}
@@ -69,6 +77,12 @@
         margin: 0;
         border-bottom: 1px solid var(--color-1--bg);
         font-size: 12px;
+
+        user-select: none;
+
+        & * {
+            user-select: none;
+        }
 
         .application--details {
             padding-left: 1rem;

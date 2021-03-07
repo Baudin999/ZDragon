@@ -166,7 +166,7 @@ namespace Compiler.Language {
 
                     }
                     else {
-                        throw new System.Exception("Not an attribute node");
+                        //throw new System.Exception("Not an attribute node");
                     }
                 }
             }

@@ -68,6 +68,17 @@ namespace ZDragon.UI.Controllers {
             return File(await moduleInteractor.GetHtml(), "text/html");
         }
 
+        [HttpGet("/images/{file}")]
+        public async Task<IActionResult> GetImage(string file) {
+            try {
+                var bytes = await _project.GetImage(file);
+                return File(bytes, "image/png");
+            }
+            catch (System.Exception) {
+                return NotFound();
+            }
+        }
+
 
     }
 

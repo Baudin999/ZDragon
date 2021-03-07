@@ -14,6 +14,7 @@ namespace ZDragon.Project {
         private string _root { get; set; }
         private string outpath { get; set; }
         private string dbPath { get; set;}
+        private string imagesPath { get; set; }
         public DirectoryInteractor DirectoryInteractor { get; private set;  }
 
 
@@ -22,10 +23,14 @@ namespace ZDragon.Project {
             _root = root;
             outpath = Path.Combine(_root, "out");
             dbPath = Path.Combine(outpath, "store.db");
+            imagesPath = Path.Combine(_root, "Images");
 
 
             if (!Directory.Exists(outpath))
                 Directory.CreateDirectory(outpath);
+
+            if (!Directory.Exists(imagesPath))
+                Directory.CreateDirectory(imagesPath);
 
             DirectoryInteractor = new DirectoryInteractor(root, root, Cache);
         }
@@ -65,6 +70,17 @@ namespace ZDragon.Project {
         }
         public IInteractor? Find(string ns) {
             return DirectoryInteractor.Find(ns);
+        }
+
+        public Task<byte[]> GetImage(string file) {
+            var fileName = Path.GetFileName(file);
+            var imageFilePath = Path.Combine(imagesPath, fileName);
+            if (File.Exists(imageFilePath)) {
+                return File.ReadAllBytesAsync(imageFilePath);
+            }
+
+
+            throw new Exception("Not a valid file");
         }
     }
 

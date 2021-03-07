@@ -72,7 +72,7 @@
             // padding: 0.5rem;
             color: var(--color-1--font);
             background: var(--color-1);
-            border-right: 1px solid lightgray;
+            // border-right: 1px solid var(--color-1--border);
             height: 2rem;
             line-height: 2rem;
             padding-left: 1rem;
@@ -80,15 +80,15 @@
         }
         .header {
             grid-row: 1;
-            border-bottom: 1px solid lightgray;
+            border-bottom: 1px solid var(--color-1--border);
         }
         .footer {
             grid-row: 3;
-            border-top: 1px solid lightgray;
+            border-top: 1px solid var(--color-1--border);
         }
         .editor {
             grid-row: 2;
-            border-right: 1px solid lightgray;
+            // border-right: 1px solid var(--color-1--border);
         }
 
         .sep {

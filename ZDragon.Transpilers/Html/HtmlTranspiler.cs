@@ -69,10 +69,11 @@ namespace ZDragon.Transpilers.Html {
             var pipeline = new MarkdownPipelineBuilder()
                 .UsePipeTables()
                 .UseTaskLists()
+                .UseMediaLinks()
                 .UseAdvancedExtensions()
                 .Build();
 
-            parts.Add(Markdown.ToHtml(node.Content, pipeline));
+            parts.Add(Markdown.ToHtml(System.Web.HttpUtility.HtmlEncode(node.Content), pipeline));
         }
 
         private void RenderViewNode(ViewNode node) {
@@ -84,6 +85,9 @@ namespace ZDragon.Transpilers.Html {
         }
 
         public string Transpile() {
+
+            
+
             parts.Add($@"
 <!DOCTYPE html>
 <html lang=""en"">
@@ -108,6 +112,13 @@ namespace ZDragon.Transpilers.Html {
             if (h1 > 2) {
                 // Don't put in the TOC if there are no chapters...
                 parts.Add("</div>");
+
+                if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0) {
+                    toc.Add($"<div class='toc-1'>{++h1} Logical Data Model<div>");
+                }
+                if (compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0) {
+                    toc.Add($"<div class='toc-1'>{++h1} Component Diagram<div>");
+                }
                 parts.Insert(1, string.Join("\n\n", toc));
             }
 

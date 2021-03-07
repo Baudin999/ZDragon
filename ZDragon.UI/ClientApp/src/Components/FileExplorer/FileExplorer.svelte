@@ -17,7 +17,7 @@
 </script>
 
 <div class="file-explorer">
-    <FileToolbar />
+    <!-- <FileToolbar /> -->
 
     {#each applications as application}
         <Application {application} />
@@ -31,6 +31,9 @@
 <style>
     .file-explorer {
         height: 100%;
-        border-right: 1px solid lightgray;
+        border-right: 1px solid var(--color-1--border);
+        background-color: var(--color-1--bg);
+        overflow: hidden;
+        padding-top: 2rem;
     }
 </style>

@@ -65,13 +65,18 @@
         width: 100%;
         display: grid;
         grid-template-rows: min-content auto min-content;
+        grid-gap: 0;
 
         .header,
         .footer {
-            padding: 0.5rem;
-            color: var(--color-secundary);
-            background: var(--color-secundary--alt);
+            // padding: 0.5rem;
+            color: var(--color-1--font);
+            background: var(--color-1);
             border-right: 1px solid lightgray;
+            height: 2rem;
+            line-height: 2rem;
+            padding-left: 1rem;
+            font-size: 0.8rem;
         }
         .header {
             grid-row: 1;

@@ -26,7 +26,7 @@
         bottom: 0;
         right: 0;
         z-index: 9998;
-        background: rgba(20, 20, 20, 0.2);
+        background: rgba(20, 20, 20, 0.6);
         display: none;
     }
     .background.show {
@@ -35,23 +35,23 @@
     .modal {
         position: fixed;
         z-index: 9999;
-        border: 1px solid gray;
+        border: 1px solid var(--color-1--border);
         padding: 0;
         margin: 0;
 
         width: 600px;
-        top: 50px;
+        top: 50%;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%, -50%);
         display: none;
-        background: white;
+        background: var(--color-1);
     }
     .modal.show {
         display: block;
     }
     .title {
-        background: var(--color-primary);
-        color: var(--color-primary--alt);
+        background: var(--color-1--bg);
+        color: var(--color-1--font);
         padding: 0;
         padding: 1rem 2rem;
     }

@@ -14,10 +14,11 @@
       "commandLineArgs": "start /watch",
       "workingDirectory": "."
     },
-    "ZDragon.UI": {
+    "ZDragon Web": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\TEMP\\003",
+      "commandLineArgs": "watch run D:\\TEMP\\003",
       "launchBrowser": true,
+      "launchUrl": "https://localhost:5001",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

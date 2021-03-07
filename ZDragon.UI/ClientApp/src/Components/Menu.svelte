@@ -3,12 +3,18 @@
     import NavButton from "./NavButton.svelte";
 </script>
 
+<nav>
+    <NavButton href="/" icon="fa fa-home" title="Home" />
+    <NavButton href="editor" icon="fa fa-file" title="Editor" />
+</nav>
+
 <style type="less">
     nav {
         flex: 0;
-        width: 150px;
-        background: var(--color-secundary);
-        color: var(--color-secundary--alt);
+        height: 100%;
+
+        background: var(--color-1);
+        color: var(--color-1--alt);
         padding: 1rem;
         padding-top: 2rem;
 
@@ -19,9 +25,3 @@
         row-gap: 1rem;
     }
 </style>
-
-<nav>
-    <NavButton href="/" icon="fa fa-home" title="Home" />
-    <NavButton href="about" icon="fa fa-cogs" title="Abount" />
-    <NavButton href="editor" icon="fa fa-file" title="Editor" />
-</nav>

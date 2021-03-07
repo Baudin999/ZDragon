@@ -6,7 +6,7 @@
 
 <style>
     .tab-list {
-        background: white;
+        background: var(--color-1);
         position: absolute;
         top: 0;
         left: 0;

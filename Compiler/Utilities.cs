@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Compiler {
     public static class Utilities {
@@ -32,6 +34,23 @@ namespace Compiler {
         public static byte[] HashString(string s) {
             var sha256 = System.Security.Cryptography.SHA256.Create();
             return sha256.ComputeHash(StringToByteArray(s));
+        }
+
+        public static string WordWrap(string text, int maxLineLength) {
+            var list = new List<string>();
+
+            int currentIndex;
+            var lastWrap = 0;
+            var whitespace = new[] { ' ', '\r', '\n', '\t' };
+            do {
+                currentIndex = lastWrap + maxLineLength > text.Length ? text.Length : (text.LastIndexOfAny(new[] { ' ', ',', '.', '?', '!', ':', ';', '-', '\n', '\r', '\t' }, Math.Min(text.Length - 1, lastWrap + maxLineLength)) + 1);
+                if (currentIndex <= lastWrap)
+                    currentIndex = Math.Min(lastWrap + maxLineLength, text.Length);
+                list.Add(text.Substring(lastWrap, currentIndex - lastWrap).Trim(whitespace));
+                lastWrap = currentIndex;
+            } while (currentIndex < text.Length);
+
+            return string.Join("\\n",list);
         }
     }
 }

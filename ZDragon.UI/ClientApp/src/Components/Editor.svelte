@@ -39,7 +39,7 @@
             wordWrapColumn: 120,
             wordWrap: wordWrap ? "on" : "off",
             minimap: {
-                enabled: true,
+                enabled: false,
             },
             quickSuggestions: {
                 other: false,
@@ -64,23 +64,23 @@
             }, 200);
         });
 
-        monaco.languages.registerCompletionItemProvider("carlang", {
-            //TODO: implement completion provider
-            // triggerCharacters: [""],
-            // provideCompletionItems: function (model, position) {
-            //     let suggestions = [
-            //         {
-            //             label: "component",
-            //             kind: monaco.languages.CompletionItemKind.Keyword,
-            //             documentation: "Initialize a component",
-            //             insertText: "component",
-            //         },
-            //     ];
-            //     var foo = context;
-            //     console.log(suggestions);
-            //     return suggestions;
-            // },
-        });
+        // monaco.languages.registerCompletionItemProvider("carlang", {
+        //     //TODO: implement completion provider
+        //     // triggerCharacters: [""],
+        //     // provideCompletionItems: function (model, position) {
+        //     //     let suggestions = [
+        //     //         {
+        //     //             label: "component",
+        //     //             kind: monaco.languages.CompletionItemKind.Keyword,
+        //     //             documentation: "Initialize a component",
+        //     //             insertText: "component",
+        //     //         },
+        //     //     ];
+        //     //     var foo = context;
+        //     //     console.log(suggestions);
+        //     //     return suggestions;
+        //     // },
+        // });
     };
     onMount(() => {
         initEditor();

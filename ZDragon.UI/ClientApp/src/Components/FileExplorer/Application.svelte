@@ -67,7 +67,8 @@
         display: block;
         padding: 0;
         margin: 0;
-        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--color-1--bg);
+        font-size: 12px;
 
         .application--details {
             padding-left: 1rem;
@@ -76,8 +77,7 @@
         title {
             padding: 0;
             margin: 0;
-            background: var(--color-primary);
-            color: var(--color-primary--alt);
+            background: var(--color-1--border);
             padding: 0.5rem;
             display: block;
             width: 100%;
@@ -91,7 +91,9 @@
         h2 {
             margin: 0;
             padding: 0;
-            font-size: 1rem;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            margin-top: 10px;
         }
 
         .item {
@@ -99,7 +101,7 @@
             padding: 0.5rem 0.5rem 0.5rem 1.5rem;
             &:hover {
                 cursor: pointer;
-                color: var(--color-secundary);
+                color: var(--color-3);
             }
             .fa {
                 display: inline-block;
@@ -107,8 +109,8 @@
             }
 
             &.selected {
-                background: var(--color-secundary);
-                color: var(--color-secundary--alt);
+                background: var(--color-3);
+                color: var(--color-3--text);
             }
         }
     }

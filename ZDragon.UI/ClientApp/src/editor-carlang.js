@@ -56,7 +56,8 @@ export const tokenizer = {
         ],
         view: [
             [/view/, "keyword"],
-            { include: "lang" }
+            { include: "lang" },
+            { include: "root" },
         ],
         type: [
             [/->/, "number"],
@@ -106,8 +107,11 @@ export const tokenizer = {
 };
 
 export const theme = {
-    base: "vs",
+    base: "vs-dark",
     inherit: true,
+    colors: {
+        "editor.background": "#273241"
+    },
     rules: [
         { token: "chapter", foreground: "#ea5dd5" },
         { token: "annotation", foreground: "#800000" },

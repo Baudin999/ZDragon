@@ -2,14 +2,20 @@
     import { onMount } from "svelte";
     import Page from "./Page.svelte";
 
-    export let url;
-
     let container;
     function resize() {
         if (!container) return;
         var scaleX = container.clientWidth / 900;
+        var height = container.parentElement.clientHeight;
         if (scaleX < 1) {
             container.setAttribute("style", `transform: scale(${scaleX})`);
+            height = height / scaleX;
+        }
+        if (container.firstElementChild) {
+            var value = "calc(" + height + "px - 7rem)";
+            container.firstElementChild.style.height = value;
+            container.firstElementChild.style.minHeight = value;
+            container.firstElementChild.style.maxHeight = value;
         }
     }
 
@@ -27,8 +33,8 @@
 </script>
 
 <div class="page-wrapper" bind:this={container}>
-    <iframe scrolling="no" class="html-frame" src={url} title="Page" />
-    <div class="bottom" />
+    <slot />
+    <!-- <div class="bottom" /> -->
 </div>
 
 <style>

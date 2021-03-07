@@ -10,7 +10,6 @@ namespace ZDragon.Project {
             try {
                 var currentPath = Directory.GetCurrentDirectory();
                 var plantUmlPath = Path.Combine(currentPath, "PlantUml/");
-                Console.WriteLine("CURRENT DIRECTORY: " + currentPath);
 
                 var factory = new RendererFactory();
                 var settings = new PlantUmlSettings {

@@ -6,42 +6,49 @@
   import About from "./Pages/About.svelte";
   import Menu from "./Components/Menu.svelte";
 
-  let url = "";
-
-  // key-trappings
-  window.onkeypress = (e) => {
-    // console.log(e);
-    // debugger;
-  };
+  import Toolbar from "./Components/App/Toolbar.svelte";
 </script>
 
-<Router {url}>
-  <div class="root">
-    <Menu />
-    <div class="page-content">
-      <Route path="/editor">
-        <EditorPage />
-      </Route>
-      <Route path="/editor/:namespace" let:params>
-        <EditorPage namespace={params.namespace} />
-      </Route>
-      <Route path="/about" component={About} />
-      <Route path="/">
-        <Home />
-      </Route>
+<Router>
+  <div class="app--main">
+    <Toolbar />
+    <div class="content-container">
+      <Menu />
+      <div class="panel">
+        <Route path="/editor">
+          <EditorPage />
+        </Route>
+        <Route path="/editor/:namespace" let:params>
+          <EditorPage namespace={params.namespace} />
+        </Route>
+        <Route path="/about" component={About} />
+        <Route path="/">
+          <Home />
+        </Route>
+      </div>
     </div>
   </div>
 </Router>
 
 <style type="less">
-  .root {
+  .app--main {
     height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
+    overflow: hidden;
+    background: var(--color-1);
+    color: var(--color-1--alt);
 
-    .page-content {
+    display: flex;
+    flex-direction: column;
+
+    .content-container {
       flex: 1;
+      display: flex;
+      flex-direction: row;
+
+      .panel {
+        flex: 1;
+        background-color: var(--color-1--bg);
+      }
     }
   }
 </style>

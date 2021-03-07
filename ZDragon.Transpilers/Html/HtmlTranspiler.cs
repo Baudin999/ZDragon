@@ -112,7 +112,7 @@ namespace ZDragon.Transpilers.Html {
             }
 
 
-            if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Count() > 0) {
+            if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0) {
                 // Don't put in the logical data model if there are no entities defined
                 parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" /></div>");

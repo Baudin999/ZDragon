@@ -6,6 +6,7 @@
         Tab,
         Modal,
     } from "../Components/components.js";
+    import PageViewer from "../Components/PageViewer.svelte";
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
@@ -52,13 +53,9 @@
                 return;
             }
             module = s.modules[s.selectedModule];
-
-            // fetch(`/application/lexicon/${module.namespace}`)
-            //     .then((r) => r.json())
-            //     .then((r) => (context = r));
-
             generateUrls(module.namespace);
-        }, 2000);
+            console.log("urls generated");
+        }, 400);
     });
 
     let showAddApplicationDialog = false;
@@ -78,10 +75,8 @@
 
     $: {
         if (moduleStore && oldNamespace !== namespace) {
-            console.log(namespace);
             selectModuleByNamespace(namespace);
             oldNamespace = namespace;
-            generateUrls(namespace);
         }
     }
 </script>
@@ -106,13 +101,15 @@
             <TabPanel>
                 {#if htmlUrl}
                     <Panel
-                        style="background:lightgray; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
-                        <!-- <PageViewer url={htmlUrl} /> -->
-                        <iframe
-                            bind:this={iframe}
-                            class="html-iframe"
-                            src={htmlUrl}
-                            title="Page" />
+                        style="background:var(--color-1); overflow:hidden!important; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
+                        <PageViewer>
+                            <!-- <PageViewer url={htmlUrl} /> -->
+                            <iframe
+                                bind:this={iframe}
+                                class="html-iframe"
+                                src={htmlUrl}
+                                title="Page" />
+                        </PageViewer>
                     </Panel>
                 {/if}
             </TabPanel>

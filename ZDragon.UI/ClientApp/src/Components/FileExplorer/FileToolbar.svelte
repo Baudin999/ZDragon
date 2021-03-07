@@ -17,6 +17,7 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
+
         i {
             display: inline-block;
             margin-left: 0.5rem;

@@ -29,12 +29,30 @@ namespace ZDragon.Transpilers.Components {
                 _ => "Container"
             };
 
+            var reservedAttributes = new List<string> { "Name", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
+            var attribs = node
+                .Attributes
+                .Where(a => !reservedAttributes.Contains(a.Key))
+                .Where(a => a.Value.Length < 30)
+                .Select(a => $"AddProperty({a.Key}, {Compiler.Utilities.WordWrap(a.Value, 20)})");
+            var attributes = string.Join("\n", attribs);
+
             if (componentType != "Container") {
-                if (types.TryAdd(node.Id, $@"{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})"))
+                if (types.TryAdd(node.Id, $@"
+' COMPONENT: {node.Id}
+{attributes}
+{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})
+' END COMPONENT: {node.Id}
+"))
                     ParseInteractions(node);
             }
             else {
-                if (types.TryAdd(node.Id, $@"{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})"))
+                if (types.TryAdd(node.Id, $@"
+' COMPONENT: {node.Id}
+{attributes}
+{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})
+' END COMPONENT: {node.Id}
+"))
                     ParseInteractions(node);
             }
         }
@@ -195,6 +213,7 @@ namespace ZDragon.Transpilers.Components {
 AddTagSupport(""deprecated"", $bgColor=""#750103"", $fontColor=""#fff"", $borderColor=""#280000"")
 AddTagSupport(""new"", $bgColor=""#ad6800"", $fontColor=""#fff"", $borderColor=""#002808"")
 AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#593500"")
+
 
 " +
                 String.Join("\r\n", fff) +

@@ -22,6 +22,7 @@
     } from "../Services/state.js";
     import CreateFile from "../Forms/CreateFile.svelte";
     import CreateApplication from "../Forms/CreateApplication.svelte";
+    import { onMount, onDestroy } from "svelte";
     // import RefactorDialog from "../Forms/RefactorDialog.svelte";
 
     export let namespace = "";
@@ -37,31 +38,21 @@
 
     let context = [];
 
-    const generateUrls = (ns) => {
+    const generateUrls = (event) => {
         scrollY = iframe?.contentWindow.scrollY ?? 0;
 
-        if (!ns) return;
-        svgUrl = `/documents/${ns}/data.svg?timestamp=${new Date().getMilliseconds()}`;
-        componentUrl = `/documents/${ns}/components.svg?timestamp=${new Date().getMilliseconds()}`;
-        htmlUrl = `/documents/${ns}/page.html?timestamp=${new Date().getMilliseconds()}`;
-
-        setTimeout(() => {
-            iframe?.contentWindow.scroll(0, scrollY);
-        }, 500);
+        if (!namespace) return;
+        svgUrl = `/documents/${namespace}/data.svg?timestamp=${new Date().getMilliseconds()}`;
+        componentUrl = `/documents/${namespace}/components.svg?timestamp=${new Date().getMilliseconds()}`;
+        htmlUrl = `/documents/${namespace}/page.html?timestamp=${new Date().getMilliseconds()}`;
     };
 
-    moduleStore.subscribe((s: any) => {
-        if (timeout) clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            if (!s || !s.selectedModule || !s.modules) {
-                svgUrl = undefined;
-                componentUrl = undefined;
-                htmlUrl = undefined;
-                return;
-            }
-            module = s.modules[s.selectedModule];
-            generateUrls(module.namespace);
-        }, 1500);
+    onMount(() => {
+        window.addEventListener("module_changed", generateUrls, false);
+        generateUrls({});
+    });
+    onDestroy(() => {
+        window.removeEventListener("module_changed", generateUrls, false);
     });
 
     let showAddApplicationDialog = false;
@@ -82,7 +73,15 @@
     $: {
         if (moduleStore && oldNamespace !== namespace) {
             selectModuleByNamespace(namespace);
+            generateUrls(namespace);
             oldNamespace = namespace;
+        }
+        if (iframe && !iframe.onload) {
+            iframe.onload = function () {
+                setTimeout(() => {
+                    iframe?.contentWindow.scroll(0, scrollY);
+                });
+            };
         }
     }
 </script>

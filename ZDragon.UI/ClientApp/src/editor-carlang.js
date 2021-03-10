@@ -39,6 +39,7 @@ export const tokenizer = {
                         // document
                         "view": { token: "keyword", next: "@view" },
                         "guideline": { token: "keyword", next: "@attributes" },
+                        "requirement": { token: "keyword", next: "@attributes" },
 
                         // architecture
                         "component": { token: "keyword", next: "@attributes" },

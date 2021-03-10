@@ -6,8 +6,8 @@ using System.Linq;
 namespace Compiler.Language {
     public partial class Parser {
 
-        internal ExpressionNode ParseInteraction() {
-            var start = Take(SyntaxKind.InteractionDeclarationToken);
+        internal ExpressionNode ParseRequirement() {
+            var start = Take(SyntaxKind.RequirementDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
                 ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", name));
@@ -21,6 +21,7 @@ namespace Compiler.Language {
 
                 extensions = TakeWhile(SyntaxKind.IdentifierToken).OfType<Token>().ToList();
             }
+
 
 
             var attributes = new List<AttributeNode>();
@@ -61,7 +62,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new InteractionNode(Token.Range(start, end), name, extensions, attributes);
+            return new RequirementNode(Token.Range(start, end), name, extensions, attributes);
         }
     }
 }

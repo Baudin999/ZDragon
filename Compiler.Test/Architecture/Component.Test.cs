@@ -196,6 +196,21 @@ component Foo extends BaseComponents.Foo =
             Assert.Equal(2, foo.Attributes.Count);
         }
 
+        [Fact(DisplayName = "System - EmptyContains")]
+        public void System_EmptyContains() {
+            var errorSink = new ErrorSink();
+            var codeFirst = @"
+system Foo =
+    Contains:
+";
+            
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Empty(result.Errors);
+            var contains = ((SystemNode)result.Lexicon["Foo"]).GetAttributeItems("Contains");
+            Assert.NotNull(contains);
+            Assert.Empty(contains);
+        }
+
 
     }
 }

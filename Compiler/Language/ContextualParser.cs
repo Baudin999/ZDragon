@@ -62,6 +62,9 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.GuidelineDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseGuideline();
                 }
+                else if (tokenBlock.Context == ContextType.RequirementDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseRequirement();
+                }
 
                 // markdown
                 else if (tokenBlock.Context == ContextType.MarkdownChapterDeclaration) {

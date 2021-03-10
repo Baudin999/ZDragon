@@ -11,10 +11,12 @@ namespace ZDragon.UI.Controllers {
 
         private readonly Project.Project _project;
         private readonly ILogger<DocumentController> _logger;
+        private readonly ProjectHub _projectHub;
 
-        public DocumentController(ILogger<DocumentController> logger, Project.Project project) {
+        public DocumentController(ILogger<DocumentController> logger, Project.Project project, ProjectHub projectHub) {
             _logger = logger;
             _project = project;
+            _projectHub = projectHub;
         }
     
 
@@ -36,10 +38,13 @@ namespace ZDragon.UI.Controllers {
         }
 
         [HttpPost("/document/{ns}")]
-        public IActionResult SaveModule([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
+        public async Task<IActionResult> SaveModule([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
             var moduleInteractor = _project.Find<ModuleInteractor>(ns);
-            moduleInteractor.SaveModule(body.Code);
-            return Ok(moduleInteractor.CompilationResult);
+            var result = await moduleInteractor.SaveModule(body.Code);
+
+            _ = _projectHub.ModuleChanged(result.Namespace);
+
+            return Ok(result.CompilationResult);
         }
 
         [HttpGet("/documents/{ns}/{file}.svg")]
@@ -63,9 +68,14 @@ namespace ZDragon.UI.Controllers {
 
 
         [HttpGet("/documents/{ns}/{file}.html")]
-        public async Task<IActionResult> HetHtmlString(string ns, string file) {
+        public async Task<IActionResult> GetHtmlString(string ns, string file) {
             var moduleInteractor = _project.Find<ModuleInteractor>(ns);
-            return File(await moduleInteractor.GetHtml(), "text/html");
+            if (moduleInteractor != null) {
+                return File(await moduleInteractor.GetHtml(), "text/html");
+            }
+            else {
+                return NotFound();
+            }
         }
 
         [HttpGet("/images/{file}")]

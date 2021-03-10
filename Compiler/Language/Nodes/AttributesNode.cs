@@ -11,6 +11,7 @@ namespace Compiler.Language.Nodes {
         public List<AttributeNode> Attributes { get; }
         public bool Imported { get; set; } = false;
         public string? ImportedFrom { get; set; } = null;
+        public List<Token> Extensions { get; }
 
         public string? GetAttribute(string name) {
             return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value;
@@ -34,9 +35,10 @@ namespace Compiler.Language.Nodes {
             return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value ?? _default;
         }
 
-        public AttributesNode(ISourceSegment segment, Token name, IEnumerable<AttributeNode> attributes, ExpressionKind kind) : base(segment, kind) {
+        public AttributesNode(ISourceSegment segment, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes, ExpressionKind kind) : base(segment, kind) {
             this.IdToken = name;
             this.Attributes = attributes.ToList();
+            this.Extensions = extensions;
         }
     }
 
@@ -49,7 +51,7 @@ namespace Compiler.Language.Nodes {
         public IEnumerable<IEnumerable<Token>> ItemsTokens { get; }
         public List<string> Items { get; }
 
-        public AttributeNode(Token key, IEnumerable<Token> value, IEnumerable<IEnumerable<Token>> items) : base(Token.Range(key, value.Last())) {
+        public AttributeNode(Token key, IEnumerable<Token> value, IEnumerable<IEnumerable<Token>> items) : base(value.Count() > 0 ? Token.Range(key, value.Last()) : key) {
             this.KeyToken = key;
             this.ValueToken = value.ToList();
             this.Value = string.Join("", value.Select(v => v.Value)).Trim();

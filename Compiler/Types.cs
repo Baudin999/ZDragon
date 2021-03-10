@@ -90,6 +90,7 @@ namespace Compiler {
                 // doc types
                 { "view", SyntaxKind.ViewDeclarationToken },
                 { "guideline", SyntaxKind.GuidelineDeclarationToken },
+                { "requirement", SyntaxKind.RequirementDeclarationToken },
 
                 // architecture
                 { "person", SyntaxKind.PersonDeclarationToken },
@@ -194,6 +195,7 @@ namespace Compiler {
 
         ViewDeclarationToken,
         GuidelineDeclarationToken,
+        RequirementDeclarationToken,
 
         // dual operator Tokens
         OperatorToken,          // The default operator token

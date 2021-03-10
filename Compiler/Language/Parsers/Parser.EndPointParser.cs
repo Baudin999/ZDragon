@@ -14,6 +14,14 @@ namespace Compiler.Language {
             }
             Token end = name;
 
+            // extensions
+            List<Token> extensions = new List<Token>();
+            if (Current?.Kind == SyntaxKind.ExtendsToken) {
+                var extends = Take(SyntaxKind.ExtendsToken);
+
+                extensions = TakeWhile(SyntaxKind.IdentifierToken).OfType<Token>().ToList();
+            }
+
 
             ExpressionNode? expression = null;
             if (Current?.Kind == SyntaxKind.ColonToken && Next?.Kind == SyntaxKind.ColonToken) {
@@ -61,7 +69,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new EndpointNode(Token.Range(start, end), name, attributes, expression);
+            return new EndpointNode(Token.Range(start, end), name, extensions, attributes, expression);
         }
     }
 }

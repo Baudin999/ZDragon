@@ -13,6 +13,8 @@ namespace Compiler.Language.Nodes {
         public string Type => string.Join(" ", Types);
 
         public List<string> Types => TypeTokens.Select(t => t.Value).ToList();
+        public bool IsList => Types.Count > 0 && Types.First() == "List";
+        public bool IsMaybe => Types.Count > 0 && Types.First() == "Maybe";
         public AnnotationNode? AnnotationNode { get; }
         public string Description => AnnotationNode?.Annotation ?? "";
         public bool Imported { get; set; } = false;

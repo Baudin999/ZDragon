@@ -19,18 +19,19 @@ namespace ZDragon.Transpilers.Components {
         private readonly List<string> reservedAttributes  = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
 
         private void TranspileComponent(ComponentNode node) {
-            var name = node.GetAttribute("Name") ?? node.Id;
+            var name = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
             var description = node.GetAttribute("Description") ?? "";
             var tech = node.GetAttribute("Technology", "component");
             var version = node.GetAttribute("Version", "0");
 
             var type = node.GetAttribute("Type", "container").ToLower().Trim();
-            var componentType = type switch {
+            var componentName = type switch {
                 "database" => "ContainerDb",
                 "db" => "ContainerDb",
                 "queue" => "ContainerQueue",
                 _ => "Container"
             };
+            if (node.Imported) componentName = componentName + "_Ext";
 
             var attribs = node
                 .Attributes
@@ -40,10 +41,10 @@ namespace ZDragon.Transpilers.Components {
             var attributes = string.Join("\n", attribs).Trim();
             if (attributes.Length > 0) attributes += "\n";
 
-            if (componentType != "Container") {
+            if (componentName != "Container") {
                 if (types.TryAdd(node.Id, $@"
 ' COMPONENT: {node.Id}
-{attributes}{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})
+{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},{tech}"", ""[{type}]\n\n{description}""{ParseTags(node)})
 ' END COMPONENT: {node.Id}
 "))
                     if (!node.Imported) ParseInteractions(node);
@@ -51,7 +52,7 @@ namespace ZDragon.Transpilers.Components {
             else {
                 if (types.TryAdd(node.Id, $@"
 ' COMPONENT: {node.Id}
-{attributes}{componentType}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})
+{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},{tech}"", ""{description}""{ParseTags(node)})
 ' END COMPONENT: {node.Id}
 "))
                     if (!node.Imported) ParseInteractions(node);
@@ -79,7 +80,7 @@ namespace ZDragon.Transpilers.Components {
         private void TranspileSystemNode(SystemNode node) {
             var systemParts = new List<string>();
 
-            var name = node.GetAttribute("Name") ?? node.Id;
+            var name = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
             var description = node.GetAttribute("Description") ?? "";
             var version = node.GetAttribute("Version", "0");
             var contains = node.GetAttributeItems("Contains") ?? new List<string>();
@@ -100,7 +101,11 @@ namespace ZDragon.Transpilers.Components {
                 _ => "System_Boundary"
             };
 
-            if (contains.Count == 0) {
+            if (node.Imported) {
+                if (type == "System")  componentName += "_Ext";
+                types.Add(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"")");
+            }
+            else if (contains.Count == 0 && !types.ContainsKey(node.Id)) {
                 types.Add(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"")");
             }
             else {

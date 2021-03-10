@@ -79,10 +79,12 @@ namespace ZDragon.Project.Interactors {
             return text;
         }
 
-        public ModuleInteractor SaveModule(string s) {
+        public async Task<ModuleInteractor> SaveModule(string s) {
+            List<Task> tasks = new List<Task>();
+
             var newHash = Compiler.Utilities.HashString(s);
             if (!Compiler.Utilities.HashCompare(newHash, this.DocumentHash)) {
-                _ = File.WriteAllTextAsync(this.FullName, s);
+                tasks.Add(File.WriteAllTextAsync(this.FullName, s));
                 this.DocumentHash = newHash;
 
                 // reset the previous Compiltation Errors
@@ -90,19 +92,21 @@ namespace ZDragon.Project.Interactors {
 
                 // also compile on save
                 this.CompilationResult = Compile(s);
-                _ = SaveDataModelSvg();
-                _ = SaveComponentModelSvg();
-                SaveHtml();
+                tasks.Add(SaveDataModelSvg());
+                tasks.Add(SaveComponentModelSvg());
+                tasks.Add(SaveHtml());
             }
+
+            await Task.WhenAll(tasks.ToArray());
 
             return this;
         }
         
-        public async void Verify() {
+        public async Task Verify() {
             this.CompilationResult = await Compile();
             if (!File.Exists(this.DataSvgPath)) await SaveDataModelSvg();
             if (!File.Exists(this.ComponentsSvgPath)) await SaveComponentModelSvg();
-            if (!File.Exists(this.HtmlPath)) SaveHtml();
+            if (!File.Exists(this.HtmlPath)) await SaveHtml();
         }
 
         public async Task<CompilationResult> Compile() {
@@ -128,11 +132,9 @@ namespace ZDragon.Project.Interactors {
         }
 
         public async Task SaveDataModelSvg() {
-
-            System.Console.WriteLine("Generating new data model for: " + this.Namespace);
             var svgPath = Path.Combine(this.OutPath, "data.svg");
-            var puml = new PlantUmlTranspiler(this.CompilationResult).Transpile();
-            _ = File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            var puml = new PlantUmlTranspiler(this.CompilationResult.Lexicon).Transpile();
+            await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
         }
         public async Task<byte[]> GetDataModelSvg() {
             var svgPath = Path.Combine(this.OutPath, "data.svg");
@@ -141,10 +143,11 @@ namespace ZDragon.Project.Interactors {
         }
 
         public async Task SaveComponentModelSvg() {
-            System.Console.WriteLine("Generating new component model for: " + this.Namespace);
+            List<Task> tasks = new List<Task>();
+
             var svgPath = Path.Combine(this.OutPath, "components.svg");
             var puml = new ComponentTranspiler(this.CompilationResult.Lexicon).Transpile();
-            _ = File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            tasks.Add(File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml)));
 
 
             // Create the views
@@ -160,10 +163,20 @@ namespace ZDragon.Project.Interactors {
                         viewLexicon.Add(node.Value, this.CompilationResult.Lexicon[node.Value]);
                     }
                 }
-                var _puml = new ComponentTranspiler(viewLexicon).Transpile();
-                var path = Path.Combine(this.OutPath, view.Hash + ".svg");
-                _ = File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml));
-                names.Add(view.Hash + ".svg");
+
+                
+                if (viewLexicon?.FirstOrDefault().Value is IArchitectureNode) {
+                    var _puml = new ComponentTranspiler(viewLexicon).Transpile();
+                    var path = Path.Combine(this.OutPath, view.Hash + ".svg");
+                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml)));
+                    names.Add(view.Hash + ".svg");
+                }
+                else {
+                    var _puml = new PlantUmlTranspiler(viewLexicon).Transpile();
+                    var path = Path.Combine(this.OutPath, view.Hash + ".svg");
+                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml)));
+                    names.Add(view.Hash + ".svg");
+                }
             }
 
             foreach (var file in Directory.GetFiles(this.OutPath)) {
@@ -171,26 +184,29 @@ namespace ZDragon.Project.Interactors {
                     File.Delete(file);
                 }
             }
+
+            await Task.WhenAll(tasks);
         }
+
         public async Task<byte[]> GetComponentModelSvg() {
             var svgPath = Path.Combine(this.OutPath, "components.svg");
             if (!File.Exists(svgPath)) await SaveComponentModelSvg();
             return await File.ReadAllBytesAsync(svgPath);
         }
-        public async Task<byte[]> GetSvg(string file) {
+        public async Task<byte[]?> GetSvg(string file) {
             var svgPath = Path.Combine(this.OutPath, file + ".svg");
             if (!File.Exists(svgPath)) return null;
             else return await File.ReadAllBytesAsync(svgPath);
         }
 
-        public void SaveHtml() {
+        public async Task SaveHtml() {
             var svgPath = Path.Combine(this.OutPath, "page.html");
             var html = new HtmlTranspiler(this.CompilationResult).Transpile();
-            _ = File.WriteAllBytesAsync(svgPath, Compiler.Utilities.StringToByteArray(html));
+            await File.WriteAllBytesAsync(svgPath, Compiler.Utilities.StringToByteArray(html));
         }
         public async Task<byte[]> GetHtml() {
             var htmlPath = Path.Combine(this.OutPath, "page.html");
-            if (!File.Exists(htmlPath)) SaveHtml();
+            if (!File.Exists(htmlPath)) await SaveHtml();
             return await File.ReadAllBytesAsync(htmlPath);
         }
 

@@ -27,7 +27,12 @@ const app = new App({
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/project").build();
 connection.on("ReceiveMessage", function (data) {
-  console.log("Ready from SignalR: " + data);
+  // console.log("Ready from SignalR: " + data);
+});
+connection.on("ModuleChanged", function (ns) {
+  console.log("ModuleChanged");
+  var event = new CustomEvent("module_changed", {});
+  window.dispatchEvent(event);
 });
 connection.start();
 

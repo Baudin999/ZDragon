@@ -6,9 +6,8 @@ using System.Linq;
 namespace Compiler.Checkers {
 
     public partial class TypeChecker {
-        
-        private void CheckComponentNode(ComponentNode node) {
 
+        private void CheckAttributesNode(AttributesNode node) {
             var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();
 
             foreach (var interaction in interactions) {
@@ -18,10 +17,22 @@ namespace Compiler.Checkers {
                 }
             }
 
+            var contains = node.Attributes.FirstOrDefault(a => a.Key == "Contains")?.ItemsTokens ?? new List<List<Token>>();
+            foreach (var c in contains) {
+                var token = c.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
+                if (token != null) {
+                    CheckToken(node, null, token);
+                }
+            }
+
             node.Extensions.ForEach(extension => {
                 if (extension is QualifiedToken qt) CheckQualifiedToken(node, null, qt);
                 else CheckToken(node, null, extension);
             });
+        }
+
+        private void CheckComponentNode(ComponentNode node) {
+            CheckAttributesNode(node);
         }
 
 
@@ -54,33 +65,11 @@ namespace Compiler.Checkers {
                 bodyChecker(node, node.TypeDefinition, usedParams);
             }
 
-            var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();
-
-            foreach (var interaction in interactions) {
-                var token = interaction.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
-                if (token != null) {
-                    CheckToken(node, null, token);
-                }
-            }
+            CheckAttributesNode(node);
         }
 
         private void CheckSystemNode(SystemNode node) {
-
-            var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();
-            foreach (var interaction in interactions) {
-                var token = interaction.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
-                if (token != null) {
-                    CheckToken(node, null, token);
-                }
-            }
-
-            var contains = node.Attributes.FirstOrDefault(a => a.Key == "Contains")?.ItemsTokens ?? new List<List<Token>>();
-            foreach (var c in contains) {
-                var token = c.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
-                if (token != null) {
-                    CheckToken(node, null, token);
-                }
-            }
+            CheckAttributesNode(node);
         }
 
 

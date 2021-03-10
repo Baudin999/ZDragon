@@ -14,7 +14,16 @@ namespace Compiler.Language {
             }
             Token end = name;
 
-           
+            // extensions
+            List<Token> extensions = new List<Token>();
+            if (Current?.Kind == SyntaxKind.ExtendsToken) {
+                var extends = Take(SyntaxKind.ExtendsToken);
+
+                extensions = TakeWhile(SyntaxKind.IdentifierToken).OfType<Token>().ToList();
+            }
+
+
+
             var attributes = new List<AttributeNode>();
             if (Current?.Kind == SyntaxKind.EqualsToken) {
                 Take(SyntaxKind.EqualsToken);
@@ -53,7 +62,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new GuidelineNode(Token.Range(start, end), name, attributes);
+            return new GuidelineNode(Token.Range(start, end), name, extensions, attributes);
         }
     }
 }

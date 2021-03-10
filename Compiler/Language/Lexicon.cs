@@ -130,7 +130,12 @@ namespace Compiler.Language {
         private void AddAttributesNode(AttributesNode node) {
             var interactions = node.GetAttributeItems("Interactions", new List<string>());
             foreach (var interaction in interactions) {
-                var link = Get(interaction);
+
+                // a contains attribute consists of parts which are split with a ';' we only want 
+                // the first part because that is the type we want.
+                var cName = interaction.Split(";").First();
+
+                var link = Get(cName);
                 if (link != null && link is IIdentifierExpressionNode) {
                     if (!lexicon.ContainsKey(interaction)) {
                         lexicon.Add(interaction, link);
@@ -140,9 +145,14 @@ namespace Compiler.Language {
 
             var contains = node.GetAttributeItems("Contains", new List<string>());
             foreach (var c in contains) {
-                var link = Get(c);
+
+                // a contains attribute consists of parts which are split with a ';' we only want 
+                // the first part because that is the type we want.
+                var cName = c.Split(";").First();
+
+                var link = Get(cName);
                 if (link != null && link is IIdentifierExpressionNode) {
-                    if (!lexicon.ContainsKey(c)) {
+                    if (!lexicon.ContainsKey(cName)) {
                         lexicon.Add(c, link);
                     }
                 }
@@ -250,6 +260,7 @@ namespace Compiler.Language {
                     // documentation
                     case ViewNode n: addToLexicon(n); break;
                     case GuidelineNode n: addToLexicon(n); break;
+                    case RequirementNode n: addToLexicon(n); break;
 
                     // architecture
                     case ComponentNode n: addToLexicon(n); break;

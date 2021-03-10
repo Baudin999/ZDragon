@@ -1,48 +1,3 @@
-:root {
-  --color-primary: #ff6c00;
-  --color-primary--dark: #803100;
-  --color-primary--alt: white;
-
-  --color-secundary: #282d4f;
-  --color-secundary--alt: white;
-
-
-  
-
-  --color-1: #303D4D;
-  --color-1--light: #5c7ba0;
-  --color-1--border: #39485f;
-  --color-1--bg: #273241;
-  --color-1--dark: #1b232e;
-  --color-2--icon: #C2C5CC;
-  --color-1--font: white;
-  --color-1--alt: white;
-
-  --color-2: #ff6c00;
-  --color-2--dark: #803100;
-  --color-2--alt: white;
-
-  --color-3: #22A652;
-  --color-3--font: #dfffea;
-  --color-3--border: #76BD45;
-  --color-3--alt: white;
-  
-
-  --color-warning: rgb(75, 5, 5);
-  --color-warning--alt: white;
-
-  --border-color: lightgray;
-
-  --background: white;
-  --color: rgb(31, 31, 31);
-
-  --color-first: white;
-}
-
-.dark {
-  --background: rgb(31, 31, 31);
-  --color: rgb(243, 243, 243);
-}
 *,
 *:before,
 *:after {
@@ -207,6 +162,51 @@ textarea:focus {
 
 textarea {
   height: 150px;
+}
+:root {
+  --color-primary: #ff6c00;
+  --color-primary--dark: #803100;
+  --color-primary--alt: white;
+
+  --color-secundary: #282d4f;
+  --color-secundary--alt: white;
+
+
+  
+
+  --color-1: #303D4D;
+  --color-1--light: #5c7ba0;
+  --color-1--border: #39485f;
+  --color-1--bg: #273241;
+  --color-1--dark: #1b232e;
+  --color-2--icon: #C2C5CC;
+  --color-1--font: white;
+  --color-1--alt: white;
+
+  --color-2: #ff6c00;
+  --color-2--dark: #803100;
+  --color-2--alt: white;
+
+  --color-3: #22A652;
+  --color-3--font: #dfffea;
+  --color-3--border: #76BD45;
+  --color-3--alt: white;
+  
+
+  --color-warning: rgb(75, 5, 5);
+  --color-warning--alt: white;
+
+  --border-color: lightgray;
+
+  --background: white;
+  --color: rgb(31, 31, 31);
+
+  --color-first: white;
+}
+
+.dark {
+  --background: rgb(31, 31, 31);
+  --color: rgb(243, 243, 243);
 }
 .mermaid > svg {
   text-align: center;

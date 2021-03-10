@@ -69,11 +69,12 @@ namespace ZDragon.Transpilers.Html {
             var pipeline = new MarkdownPipelineBuilder()
                 .UsePipeTables()
                 .UseTaskLists()
-                .UseMediaLinks()
+                //.UseCitations()
+                //.UseMediaLinks()
                 .UseAdvancedExtensions()
                 .Build();
 
-            parts.Add(Markdown.ToHtml(System.Web.HttpUtility.HtmlEncode(node.Content), pipeline));
+            parts.Add(Markdown.ToHtml(node.Content, pipeline));
         }
 
         private void RenderViewNode(ViewNode node) {
@@ -88,6 +89,23 @@ namespace ZDragon.Transpilers.Html {
 
             parts.Add(@$"<div class='guideline'>
 <title>GUIDELINE {number}: {title}</title>
+<dl>
+    <dt>Description</dt>
+    <dd>{description}</dd>
+    <dt>Rationale</dt>
+    <dd>{rationale}</dd>
+</dl>
+</div>");
+        }
+
+        private void RenderRequirementNode(RequirementNode node) {
+            var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
+            var description = node.GetAttribute("Description", "");
+            var rationale = node.GetAttribute("Rationale", "");
+            var number = node.GetAttribute("Number", "000");
+
+            parts.Add(@$"<div class='requirement'>
+<title>REQUIREMENT {number}: {title}</title>
 <dl>
     <dt>Description</dt>
     <dd>{description}</dd>
@@ -142,6 +160,7 @@ namespace ZDragon.Transpilers.Html {
                 else if (documentPart is MarkdownNode markdownNode) RenderMarkdownNode(markdownNode);
                 else if (documentPart is ViewNode viewNode) RenderViewNode(viewNode);
                 else if (documentPart is GuidelineNode guidelineNode) RenderGuidelineNode(guidelineNode);
+                else if (documentPart is RequirementNode requriementNode) RenderRequirementNode(requriementNode);
                 else RenderParagraph(documentPart);
             }
             

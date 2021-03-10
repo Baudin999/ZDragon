@@ -48,6 +48,7 @@ namespace Compiler.Language.Nodes {
 
         OpenExpression,
         ComponentExpression,
+        InteractionExpression,
         SystemExpression,
         PersonExpression,
         EndPointExpression,

@@ -6,7 +6,7 @@ namespace Compiler.Language.Nodes {
     public class SystemNode : AttributesNode, IArchitectureNode {
 
         
-        public SystemNode(ISourceSegment segment, Token name, IEnumerable<AttributeNode> attributes) : base(segment, name, attributes, ExpressionKind.SystemExpression) {
+        public SystemNode(ISourceSegment segment, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes) : base(segment, name, extensions, attributes, ExpressionKind.ComponentExpression) {
         }
     }
 }

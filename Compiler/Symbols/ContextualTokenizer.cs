@@ -125,6 +125,9 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.GuidelineDeclarationToken) {
                     yield return TokenizeAttributesDefinition(annotations, ContextType.GuidelineDeclaration);
                 }
+                else if (Current?.Kind == SyntaxKind.RequirementDeclarationToken) {
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.RequirementDeclaration);
+                }
                 else if (Current?.Kind == SyntaxKind.LessThenToken) {
                     // we'll have to start parsing markup
                     yield return TokenizeMarkupDefinition();
@@ -195,5 +198,6 @@ namespace Compiler.Symbols {
         InteractionDeclaration,
         ViewDeclaration,
         GuidelineDeclaration,
+        RequirementDeclaration,
     }
 }

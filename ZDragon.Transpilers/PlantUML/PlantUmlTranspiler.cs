@@ -7,12 +7,13 @@ using System.Linq;
 
 namespace ZDragon.Transpilers.PlantUML {
     public class PlantUmlTranspiler {
-        private readonly CompilationResult compilationresult;
+        //private readonly CompilationResult compilationresult;
         private readonly List<string> baseTypes = new List<string> {
             "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
         };
         private readonly List<string> types = new List<string>();
         private readonly List<string> relations = new List<string>();
+        private readonly Dictionary<string, IIdentifierExpressionNode> lexicon;
 
         private void TranspileTypeAliasNode(TypeAliasNode node) {
 
@@ -60,7 +61,14 @@ class {node.Id} {{
                         // we might want to treat generic parameters differently in the future.
                     }
                     else if (!baseTypes.Contains(t)) {
-                        relations.Add($"{node.Id} -- {t}");
+                        if (field.IsList) {
+                            var min = field.Restrictions.FirstOrDefault(r => r.Key == "min")?.Value ?? "0";
+                            var max = field.Restrictions.FirstOrDefault(r => r.Key == "max")?.Value ?? "*";
+                            relations.Add($"{node.Id} \"{1}\" -- \"{min}-{max}\" {t}");
+                        }
+                        else {
+                            relations.Add($"{node.Id} -- {t}");
+                        }
                     }
                 }
             }
@@ -97,14 +105,14 @@ enum {node.Id} {{
         }
 
 
-        public PlantUmlTranspiler(CompilationResult compilationresult) {
-            this.compilationresult = compilationresult;
+        public PlantUmlTranspiler(Dictionary<string, IIdentifierExpressionNode> lexicon) {
+            this.lexicon = lexicon;
         }
-
+            
         public string Transpile() {
             
             // check all the types
-            foreach (var node in this.compilationresult.Lexicon.Values) {
+            foreach (var node in lexicon.Values) {
                 switch (node) {
                     case TypeAliasNode n: TranspileTypeAliasNode(n); break;
                     case RecordNode n: TranspileRecordNode(n); break;

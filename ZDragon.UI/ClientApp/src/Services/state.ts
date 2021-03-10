@@ -29,7 +29,7 @@ export const toggleRefactorDialog = () => {
 
 export const getFiles = async () => {
     let files = await get("/domains");
-    console.log(files);
+    // console.log(files);
     stateStore.update((s: any) => ({
         ...s,
         files

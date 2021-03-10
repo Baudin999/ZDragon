@@ -9,10 +9,11 @@
         var height = container.parentElement.clientHeight;
         if (scaleX < 1) {
             container.setAttribute("style", `transform: scale(${scaleX})`);
+            // let rest = height - height / scaleX;
             height = height / scaleX;
         }
         if (container.firstElementChild) {
-            var value = "calc(" + height + "px - 7rem)";
+            var value = "calc(" + height + "px - 5rem)";
             container.firstElementChild.style.height = value;
             container.firstElementChild.style.minHeight = value;
             container.firstElementChild.style.maxHeight = value;
@@ -48,10 +49,10 @@
         justify-content: flex-start;
         align-content: flex-start;
 
-        padding-bottom: 2cm;
+        padding-bottom: 1cm;
     }
     .bottom {
         display: block;
-        height: 2cm;
+        height: 1cm;
     }
 </style>

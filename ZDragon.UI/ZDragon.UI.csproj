@@ -6,10 +6,12 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <UserSecretsId>cec811ee-e322-4792-a411-2d674de19c0e</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="9.31.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.0" />
     <PackageReference Include="PlantUml.Net" Version="1.2.48" />
   </ItemGroup>
@@ -169,7 +171,9 @@
     <None Include="wwwroot\monaco\vs\language\typescript\tsMode.js" />
     <None Include="wwwroot\monaco\vs\language\typescript\tsWorker.js" />
     <None Include="wwwroot\monaco\vs\loader.js" />
-    <None Include="wwwroot\favicon.ico" />
+    <None Include="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\standalone-icon.png" />
     <None Include="wwwroot\styles.css" />
   </ItemGroup>

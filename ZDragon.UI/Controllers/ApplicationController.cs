@@ -9,10 +9,12 @@ namespace ZDragon.UI.Controllers {
 
         private readonly Project.Project _project;
         private readonly ILogger<ApplicationController> _logger;
+        private readonly ProjectHub _projectHub;
 
-        public ApplicationController(ILogger<ApplicationController> logger, Project.Project project) {
+        public ApplicationController(ILogger<ApplicationController> logger, Project.Project project, ProjectHub hub) {
             _logger = logger;
             _project = project;
+            _projectHub = hub;
         }
 
 
@@ -24,6 +26,7 @@ namespace ZDragon.UI.Controllers {
 
             _project.CreateApplication(body.Name);
             _project.ResetDirectory();
+            _ = _projectHub.ProjectChanged(_project.DirectoryInteractor);
             return Ok(_project.DirectoryInteractor);
 
         }

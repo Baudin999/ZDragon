@@ -9,10 +9,12 @@ namespace ZDragon.UI.Controllers {
 
         private readonly Project.Project _project;
         private readonly ILogger<FileController> _logger;
+        private readonly ProjectHub _projectHub;
 
-        public FileController(ILogger<FileController> logger, Project.Project project) {
+        public FileController(ILogger<FileController> logger, Project.Project project, ProjectHub hub) {
             _logger = logger;
             _project = project;
+            _projectHub = hub;
         }
     
 
@@ -25,6 +27,7 @@ namespace ZDragon.UI.Controllers {
             var app = _project.Find(body.AppName);
             _ = await app.AddFile(body.Name, body.Type, body.Description);
             _project.ResetDirectory();
+            _ = _projectHub.ProjectChanged(_project.DirectoryInteractor);
             return Ok(_project.DirectoryInteractor);
         }
 

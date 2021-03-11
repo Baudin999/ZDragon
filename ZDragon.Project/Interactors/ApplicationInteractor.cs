@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using ZDragon.Project.Templates;
 
 namespace ZDragon.Project.Interactors {
-    public class ApplicationInteractor: IEquatable<ApplicationInteractor>, IInteractor {
+    public class ApplicationInteractor : IEquatable<ApplicationInteractor>, IInteractor {
         public string RootPath { get; }
 
         [JsonIgnore]
@@ -56,34 +56,28 @@ namespace ZDragon.Project.Interactors {
             this.ModelsPath = Path.Join(this.FullPath, "Models");
             this.FeaturesPath = Path.Join(this.FullPath, "Features");
 
-            if (!Directory.Exists(this.ComponentsPath)) Directory.CreateDirectory(this.ComponentsPath);
-            if (!Directory.Exists(this.EndpointsPath)) Directory.CreateDirectory(this.EndpointsPath);
-            if (!Directory.Exists(this.DatabasesPath)) Directory.CreateDirectory(this.DatabasesPath);
-            if (!Directory.Exists(this.ModelsPath)) Directory.CreateDirectory(this.ModelsPath);
-            if (!Directory.Exists(this.FeaturesPath)) Directory.CreateDirectory(this.FeaturesPath);
+            this.ParseDirectory(this.RootPath, cache, FileTypes.Default);
+            this.ParseDirectory(this.ComponentsPath, cache, FileTypes.Component);
+            this.ParseDirectory(this.FeaturesPath, cache, FileTypes.Feature);
+            this.ParseDirectory(this.EndpointsPath, cache, FileTypes.Endpoint);
+            this.ParseDirectory(this.ModelsPath, cache, FileTypes.Model);
+            this.ParseDirectory(this.DatabasesPath, cache, FileTypes.Database);
+        }
 
-            foreach (var file in Directory.GetFiles(this.FullPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache));
-            }
-            foreach (var file in Directory.GetFiles(this.ComponentsPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Component, this));
-            }
-            foreach (var file in Directory.GetFiles(this.EndpointsPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Endpoint, this));
-            }
-            foreach (var file in Directory.GetFiles(this.DatabasesPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Database, this));
-            }
-            foreach (var file in Directory.GetFiles(this.ModelsPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Model, this));
-            }
-            foreach (var file in Directory.GetFiles(this.FeaturesPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache, FileTypes.Feature, this));
+        private void ParseDirectory(string path, CompilationCache cache, FileTypes type) {
+            if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+            foreach (var file in Directory.GetFiles(path)) {
+                if (Path.GetExtension(file) == ".car") {
+                    Modules.Add(new ModuleInteractor(this.RootPath, file, cache, type, this));
+                }
             }
         }
 
-        public void Verify() {
-            foreach (var module in Modules) module.Verify();
+        public async Task Verify() {
+            foreach (var module in Modules) {
+                if (module != null)
+                    await module.Verify();
+            }
         }
 
         public ModuleInteractor? Find(string ns) {
@@ -97,7 +91,7 @@ namespace ZDragon.Project.Interactors {
         }
 
         public static List<ApplicationInteractor> FromDirectory(string root, string path, CompilationCache cache) {
-            
+
             var applications = new List<ApplicationInteractor>();
             if (Directory.Exists(path)) {
                 var directory = new DirectoryInfo(path);
@@ -118,7 +112,18 @@ namespace ZDragon.Project.Interactors {
                 Directory.Exists(fullPath) ?
                     new DirectoryInfo(fullPath) :
                     Directory.CreateDirectory(fullPath);
-            return new ApplicationInteractor(root, dirInfo, cache);        }
+
+            var configPath = Path.Combine(fullPath, "app.config");
+            if (!File.Exists(configPath)) File.Create(configPath);
+
+            return new ApplicationInteractor(root, dirInfo, cache);
+        }
+
+        public static bool IsApplication(string root, string name) {
+            name = name.Replace(" ", "");
+            var fullPath = Path.Combine(Path.GetFullPath(root), name, "app.config");
+            return File.Exists(fullPath);
+        }
 
         public bool Equals(ApplicationInteractor other) {
             return other.FullPath == this.FullPath;

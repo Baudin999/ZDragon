@@ -27,7 +27,10 @@ namespace ZDragon.UI {
                 });
             services.AddSingleton<Controllers.ProjectHub>();
             services.AddSingleton<Project.Project>(sp => Program.Project);
-            services.AddSignalR();
+            services.AddSignalR().AddNewtonsoftJsonProtocol(options => {
+                options.PayloadSerializerSettings.Converters.Add(new StringEnumConverter());
+                options.PayloadSerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,7 +57,10 @@ namespace ZDragon.UI {
             });
 
             // Open the Electron-Window here
-            _ = BootstrapElectron(lifetime);
+            var task = BootstrapElectron(lifetime);
+            task.ContinueWith(t => {
+                System.Console.WriteLine("DONE!");
+            });
         }
 
         private async Task BootstrapElectron(IHostApplicationLifetime lifetime) {
@@ -62,15 +68,19 @@ namespace ZDragon.UI {
                 var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions {
                     Width = 1600,
                     Height = 940,
-                    Show = true
+                    AutoHideMenuBar= true,
+                    Show = true,
+                    //Frame = false,
+                    TitleBarStyle = TitleBarStyle.hiddenInset
                 });
 
                 await browserWindow.WebContents.Session.ClearCacheAsync();
 
                 browserWindow.RemoveMenu();
+                
                 browserWindow.OnReadyToShow += () => browserWindow.Show();
                 browserWindow.SetTitle("ZDragon");
-                
+                //browserWindow.WebContents.OpenDevTools();
                 browserWindow.OnClosed += lifetime.StopApplication;
 
             } catch(System.Exception ex) {

@@ -6,6 +6,12 @@ export const moduleStore = writable({
     modules: []
 });
 
+export const reset = () => {
+    moduleStore.update(() => {
+        return { modules: [] };
+    });
+};
+
 export const selectModuleByNamespace = async namespace => {
     if (!namespace) return;
     let result = await getModuleText(namespace);

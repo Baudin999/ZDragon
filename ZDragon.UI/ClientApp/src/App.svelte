@@ -25,6 +25,9 @@
         <Route path="/">
           <Home />
         </Route>
+        <Route path="/home">
+          <Home />
+        </Route>
       </div>
     </div>
   </div>

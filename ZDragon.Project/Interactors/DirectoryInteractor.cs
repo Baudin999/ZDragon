@@ -24,19 +24,22 @@ namespace ZDragon.Project.Interactors {
             this.Namespace = Utilities.GetNamespaceFromPath(root, path);
 
             foreach (var dir in Directory.GetDirectories(this.DirectoryPath)) {
-                if (dir.EndsWith("out")) continue;
-                if (dir.EndsWith("Images")) continue;
-                Applications.Add(new ApplicationInteractor(this.RootPath, dir, cache));
+                if (ApplicationInteractor.IsApplication(this.DirectoryPath, dir)) {
+                    System.Console.WriteLine($"Initializing Application: {dir}");
+                    Applications.Add(new ApplicationInteractor(this.RootPath, dir, cache));
+                }
             }
 
             foreach (var file in Directory.GetFiles(this.DirectoryPath)) {
-                Modules.Add(new ModuleInteractor(this.RootPath, file, cache));
+                if (Path.GetExtension(file) == ".car") {
+                    Modules.Add(new ModuleInteractor(this.RootPath, file, cache));
+                }
             }
         }
 
-        public void Verify() {
-            foreach (var module in Modules) module.Verify();
-            foreach (var application in Applications) application.Verify();
+        public async Task Verify() {
+            foreach (var module in Modules) await module.Verify();
+            foreach (var application in Applications) await application.Verify();
         }
 
         public DirectoryInteractor CreateApplication(string name) {
@@ -57,7 +60,7 @@ namespace ZDragon.Project.Interactors {
                 foreach (var application in Applications.Where(a => ns.StartsWith(a.Namespace))) {
                     if (application.Namespace == ns) return application;
 
-                    // check each module in teh application
+                    // check each module in the application
                     module = application.Find(ns);
                     if (module != null) return module;
                 }

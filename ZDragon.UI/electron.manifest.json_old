@@ -4,14 +4,14 @@
     "imageFile": ""
   },
   "name": "ZDragon",
-  "author": "",
+  "author": "Carlos Kelkboom",
   "singleInstance": true,
   "environment": "Production",
   "build": {
-    "appId": "com.ZDragon.UI.app",
+    "appId": "com.ZDragon.app",
     "productName": "ZDragon",
     "copyright": "Copyright © 2020",
-    "buildVersion": "1.0.0",
+    "buildVersion": "0.0.1",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"
@@ -20,14 +20,18 @@
       {
         "from": "./bin",
         "to": "bin",
-        "filter": [ "**/*" ]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "files": [
       {
         "from": "./ElectronHostHook/node_modules",
         "to": "ElectronHostHook/node_modules",
-        "filter": [ "**/*" ]
+        "filter": [
+          "**/*"
+        ]
       },
       "**/*"
     ]

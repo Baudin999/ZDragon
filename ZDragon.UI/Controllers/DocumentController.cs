@@ -25,12 +25,17 @@ namespace ZDragon.UI.Controllers {
             var realPath = WebUtility.UrlDecode(ns);
             if (Program.Project.IsValidProjectPath(realPath)) {
                 var moduleInteractor = _project.Find<ModuleInteractor>(ns);
-                var text = await moduleInteractor.GetText();
+                if (moduleInteractor != null) {
+                    var text = await moduleInteractor.GetText();
 
-                return Ok(new {
-                    text,
-                    compilationResult = moduleInteractor.Compile(text)
-                });
+                    return Ok(new {
+                        text,
+                        compilationResult = moduleInteractor.Compile(text)
+                    });
+                }
+                else {
+                    return NotFound($"\"{ns}\" not found");
+                }
             }
             else {
                 return Unauthorized("Unauthorized path");

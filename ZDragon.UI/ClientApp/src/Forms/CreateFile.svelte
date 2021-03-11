@@ -1,7 +1,7 @@
 <script>
     import { writable } from "svelte/store";
     import { post } from "../Services/http";
-    import { getFiles, toggleAddFileDialog } from "../Services/state";
+    import { toggleAddFileDialog } from "../Services/state";
 
     var file = writable({
         type: "Feature",
@@ -19,7 +19,6 @@
             if (isValid) {
                 await post("/file/.", $file);
                 toggleAddFileDialog();
-                getFiles();
             }
         } catch (err) {
             console.log(err);

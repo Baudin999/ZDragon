@@ -1,5 +1,7 @@
 import App from "./App.svelte";
 
+import { setFiles } from "./Services/state";
+
 // import styling
 import "./Styling/settings.css";
 import "./Styling/styles.css";
@@ -33,6 +35,9 @@ connection.on("ModuleChanged", function (ns) {
   console.log("ModuleChanged");
   var event = new CustomEvent("module_changed", {});
   window.dispatchEvent(event);
+});
+connection.on("ProjectChanged", function (di) {
+  setFiles(di);
 });
 connection.start();
 

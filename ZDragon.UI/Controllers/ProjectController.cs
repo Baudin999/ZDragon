@@ -17,17 +17,12 @@ namespace ZDragon.UI.Controllers {
         }
 
 
-        [HttpGet("/domains")]
-        public IActionResult GetDomains() {
-            ProjectHub.SendMessage("Hello, from SignalR");
-            return Ok(_project.DirectoryInteractor);
-        }
-
 
         [HttpPost("/project/init/{path}")]
         public IActionResult InitProject(string path) {
-            //
-            _project.Reload(path);
+            var actualPath = path.Replace("__$__", "\\");
+            _project.Reload(actualPath);
+            _ = ProjectHub.ProjectChanged(_project.DirectoryInteractor);
             return Ok(_project.DirectoryInteractor);
         }
 

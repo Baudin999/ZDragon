@@ -1,10 +1,10 @@
 <script>
     import Domain from "./Domain.svelte";
     import FileToolbar from "./FileToolbar.svelte";
-    import { getFiles, stateStore } from "./../../Services/state";
+    import { stateStore } from "./../../Services/state";
     import Application from "./Application.svelte";
 
-    getFiles();
+    // getFiles();
 
     var applications = [];
     stateStore.subscribe(({ files = {} }) => {

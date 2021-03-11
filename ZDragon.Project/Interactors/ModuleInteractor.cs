@@ -16,7 +16,7 @@ namespace ZDragon.Project.Interactors {
     /// like saving the file, compiling the module and gerally maintain
     /// the validity of the diagrams created by the module.
     /// </summary>
-    public class ModuleInteractor: IInteractor {
+    public class ModuleInteractor : IInteractor {
         public string Name { get; }
         public string RootPath { get; }
         public string? DirectoryPath { get; }
@@ -40,7 +40,7 @@ namespace ZDragon.Project.Interactors {
         [JsonIgnore]
         public ApplicationInteractor? ApplicationInteractor { get; }
 
-        public ModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType, ApplicationInteractor app): this(rootPath, file, cache) {
+        public ModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType, ApplicationInteractor app) : this(rootPath, file, cache) {
             if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.FileType = fileType;
             this.ApplicationInteractor = app;
@@ -101,7 +101,7 @@ namespace ZDragon.Project.Interactors {
 
             return this;
         }
-        
+
         public async Task Verify() {
             this.CompilationResult = await Compile();
             if (!File.Exists(this.DataSvgPath)) await SaveDataModelSvg();
@@ -110,25 +110,39 @@ namespace ZDragon.Project.Interactors {
         }
 
         public async Task<CompilationResult> Compile() {
-            // reset the previous Compiltation Errors
-            this.cache.Reset();
+            try {
+                // reset the previous Compiltation Errors
+                this.cache.Reset();
 
-            var text = await GetText();
-            this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile().Check();
-            System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
-            return this.CompilationResult;
+                var text = await GetText();
+                this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile().Check();
+                System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
+                return this.CompilationResult;
+            }
+            catch (System.Exception ex) {
+                System.Console.WriteLine($"Failed to compile '{this.Namespace}'.");
+                System.Console.WriteLine(ex.Message);
+                return this.CompilationResult;
+            }
         }
 
         public CompilationResult Compile(string s) {
-            // reset the previous Compiltation Errors
-            this.cache.Reset();
+            try {
+                // reset the previous Compiltation Errors
+                this.cache.Reset();
 
-            
-            this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile();
-            this.CompilationResult.Check();
-            
-            System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
-            return this.CompilationResult;
+
+                this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile();
+                this.CompilationResult.Check();
+
+                System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
+                return this.CompilationResult;
+            }
+            catch (System.Exception ex) {
+                System.Console.WriteLine($"Failed to compile '{this.Namespace}'.");
+                System.Console.WriteLine(ex.Message);
+                return this.CompilationResult;
+            }
         }
 
         public async Task SaveDataModelSvg() {
@@ -164,7 +178,7 @@ namespace ZDragon.Project.Interactors {
                     }
                 }
 
-                
+
                 if (viewLexicon?.FirstOrDefault().Value is IArchitectureNode) {
                     var _puml = new ComponentTranspiler(viewLexicon).Transpile();
                     var path = Path.Combine(this.OutPath, view.Hash + ".svg");

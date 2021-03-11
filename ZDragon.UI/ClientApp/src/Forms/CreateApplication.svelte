@@ -1,7 +1,7 @@
 <script>
     import { writable } from "svelte/store";
     import { post } from "../Services/http";
-    import { getFiles, toggleAddApplicationDialog } from "../Services/state";
+    import { toggleAddApplicationDialog } from "../Services/state";
 
     var app = writable();
     const changeValue = (name) => (e) => {
@@ -17,7 +17,6 @@
             if (isValid) {
                 await post("/application", $app);
                 toggleAddApplicationDialog();
-                getFiles();
             }
         } catch (err) {
             console.log(err);

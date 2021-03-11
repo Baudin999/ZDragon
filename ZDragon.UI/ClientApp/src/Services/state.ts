@@ -1,6 +1,6 @@
-
+import { navigate } from "svelte-routing";
 import { writable } from "svelte/store";
-import { get } from "./http";
+import { reset } from "./module";
 
 export const stateStore = writable({});
 
@@ -27,11 +27,14 @@ export const toggleRefactorDialog = () => {
     }));
 }
 
-export const getFiles = async () => {
-    let files = await get("/domains");
-    // console.log(files);
-    stateStore.update((s: any) => ({
-        ...s,
-        files
-    }));
+export const setFiles = files => {
+    navigate("/home")
+    reset();
+    setTimeout(() => {
+        stateStore.update((s: any) => ({
+            ...s,
+            files
+        }));
+    });
+
 }

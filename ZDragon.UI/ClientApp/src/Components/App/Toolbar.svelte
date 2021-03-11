@@ -1,9 +1,16 @@
 <script>
+    import SelectFolder from "../../Forms/SelectFolder.svelte";
     import {
         toggleAddApplicationDialog,
         toggleAddFileDialog,
     } from "../../Services/state";
+    import Modal from "../Modal.svelte";
     import ToolbarItem from "./ToolbarItem.svelte";
+
+    let show = false;
+    let selectDirectory = () => {
+        show = !show;
+    };
 </script>
 
 <div class="app--toolbar">
@@ -11,13 +18,25 @@
         <img style="height:1.5rem;" src="favicon.ico" alt="fav" />
         ZDragon
     </div>
-    <ToolbarItem icon="fa fa-plus" title="New" on:click={toggleAddFileDialog} />
     <ToolbarItem
-        icon="fa fa-folder"
-        title="Open"
+        icon="fa fa-plus"
+        title="New App"
         on:click={toggleAddApplicationDialog} />
+    <ToolbarItem
+        icon="fa fa-plus"
+        title="New File"
+        on:click={toggleAddFileDialog} />
+    <ToolbarItem icon="fa fa-folder" title="Open" on:click={selectDirectory} />
     <ToolbarItem icon="fa fa-floppy-o" title="Save" />
+
+    <div class="app--toolbar--close">
+        <i class="fa fa-times" />
+    </div>
 </div>
+
+<Modal title="Select Directory" {show} close={() => (show = false)}>
+    <SelectFolder close={() => (show = false)} />
+</Modal>
 
 <style type="less">
     .filler {
@@ -46,5 +65,22 @@
 
         align-items: flex-start;
         justify-content: flex-start;
+
+        -webkit-app-region: drag !important;
+
+        &--close {
+            display: inline-block;
+            position: absolute;
+            right: 1rem;
+            color: var(--color-1--font);
+            height: 1rem;
+            width: 1rem;
+            // background: maroon;
+            top: 1rem;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
     }
 </style>

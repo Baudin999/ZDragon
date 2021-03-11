@@ -21,7 +21,7 @@
     .app--toole-bar--item {
         margin: 0;
         padding: 0;
-        width: 7rem;
+        width: 10rem;
         border-left: 1px solid var(--color-1--border);
         border-right: 1px solid var(--color-1--border);
         height: 100%;
@@ -46,6 +46,9 @@
                 display: inline-block;
                 margin-right: 0.5rem;
                 margin-top: 1px;
+            }
+            span {
+                white-space: nowrap;
             }
         }
     }

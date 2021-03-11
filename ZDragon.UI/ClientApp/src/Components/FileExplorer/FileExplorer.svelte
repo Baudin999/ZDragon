@@ -7,25 +7,19 @@
     // getFiles();
 
     var applications = [];
+    var selectedApplication = null;
     stateStore.subscribe(({ files = {} }) => {
-        // var { applications = [], modules = [] } = files || {};
-
-        // console.log(applications);
-        applications = files.applications || [];
-        // console.log(modules);
+        applications = [];
+        setTimeout(() => {
+            applications = files.applications || [];
+        });
     });
 </script>
 
 <div class="file-explorer">
-    <!-- <FileToolbar /> -->
-
     {#each applications as application}
-        <Application {application} />
+        <Application {application} bind:selectedApplication />
     {/each}
-
-    <!-- {#if $stateStore.files}
-        <Domain domain={$stateStore.files} open={true} showSelf={false} />
-    {/if} -->
 </div>
 
 <style>

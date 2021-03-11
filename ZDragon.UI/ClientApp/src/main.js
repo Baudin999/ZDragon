@@ -37,8 +37,9 @@ connection.on("ModuleChanged", function (ns) {
   var event = new CustomEvent("module_changed", {});
   window.dispatchEvent(event);
 });
-connection.on("ProjectChanged", function (di) {
-  setFiles(di);
+connection.on("ProjectChanged", function (result) {
+  console.log(result);
+  setFiles(result);
 });
 connection.start();
 

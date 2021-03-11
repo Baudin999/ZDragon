@@ -7,7 +7,7 @@
 
     var a = localStorage.getItem("applications");
     if (a != null) {
-        applications = JSON.parse(a);
+        applications = JSON.parse(a).sort();
     }
 
     let sa = async (app) => {

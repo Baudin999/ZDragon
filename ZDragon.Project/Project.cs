@@ -15,6 +15,7 @@ namespace ZDragon.Project {
         private string outpath { get; set; }
         private string dbPath { get; set;}
         private string imagesPath { get; set; }
+        public string RootPath => _root;
         public DirectoryInteractor DirectoryInteractor { get; private set;  }
 
 

@@ -22,8 +22,8 @@ namespace ZDragon.UI.Controllers {
         public IActionResult InitProject(string path) {
             var actualPath = path.Replace("__$__", "\\");
             _project.Reload(actualPath);
-            _ = ProjectHub.ProjectChanged(_project.DirectoryInteractor);
-            return Ok(_project.DirectoryInteractor);
+            _ = ProjectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
+            return Ok();
         }
 
     }

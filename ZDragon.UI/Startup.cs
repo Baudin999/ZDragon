@@ -80,7 +80,7 @@ namespace ZDragon.UI {
                 
                 browserWindow.OnReadyToShow += () => browserWindow.Show();
                 browserWindow.SetTitle("ZDragon");
-                browserWindow.WebContents.OpenDevTools();
+                //browserWindow.WebContents.OpenDevTools();
                 browserWindow.OnClosed += lifetime.StopApplication;
 
             } catch(System.Exception ex) {

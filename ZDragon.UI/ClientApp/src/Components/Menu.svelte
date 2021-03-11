@@ -1,11 +1,19 @@
 <script>
     import { Link } from "svelte-routing";
     import NavButton from "./NavButton.svelte";
+    import { stateStore } from "./../Services/state";
+
+    let selectedApp;
+    stateStore.subscribe((s) => {
+        selectedApp = s.application;
+    });
 </script>
 
 <nav>
     <NavButton href="/" icon="fa fa-home" title="Home" />
-    <NavButton href="editor" icon="fa fa-file" title="Editor" />
+    {#if selectedApp}
+        <NavButton href="editor" icon="fa fa-file" title="Editor" />
+    {/if}
 </nav>
 
 <style type="less">

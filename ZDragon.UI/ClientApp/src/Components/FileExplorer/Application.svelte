@@ -4,8 +4,7 @@
 
     // The application component
     export let application = null;
-
-    let selectedApplication = null;
+    export let selectedApplication = null;
 
     let f = (n) => (application.modules || []).filter((m) => m.fileType === n);
     let features = f("Feature");

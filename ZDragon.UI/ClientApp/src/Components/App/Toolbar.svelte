@@ -8,12 +8,12 @@
     import ToolbarItem from "./ToolbarItem.svelte";
     import { stateStore } from "./../../Services/state";
 
-    let selectedApp;
-
     let show = false;
     let selectDirectory = () => {
         show = !show;
     };
+
+    let selectedApp;
     stateStore.subscribe((s) => {
         selectedApp = s.application;
     });

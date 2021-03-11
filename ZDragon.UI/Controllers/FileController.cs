@@ -27,8 +27,15 @@ namespace ZDragon.UI.Controllers {
             var app = _project.Find(body.AppName);
             _ = await app.AddFile(body.Name, body.Type, body.Description);
             _project.ResetDirectory();
-            _ = _projectHub.ProjectChanged(_project.DirectoryInteractor);
-            return Ok(_project.DirectoryInteractor);
+
+            _ = RefreshProjectStructure();
+
+            return Ok();
+        }
+
+        private async Task RefreshProjectStructure() {
+            await Task.Delay(1000);
+            _ = _projectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
         }
 
     }

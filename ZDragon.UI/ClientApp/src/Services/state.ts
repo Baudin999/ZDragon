@@ -1,5 +1,5 @@
 import { navigate } from "svelte-routing";
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import { post } from "./http";
 import { reset } from "./module";
 
@@ -29,20 +29,30 @@ export const toggleRefactorDialog = () => {
 }
 
 export const selectApplication = app => {
-    console.log("selecting application: " + app)
+
+    var appJson = localStorage.getItem("applications");
+    if (appJson != null) {
+        var applications = (JSON.parse(appJson) as string[]).filter(a => a != app);
+        applications.unshift(app);
+        localStorage.setItem("applications", JSON.stringify(applications));
+    }
+
     stateStore.update(s => ({
         ...s,
         application: app
     }));
 }
 
-export const setFiles = files => {
-    navigate("/home");
-    reset();
+export const setFiles = ({ rootPath, dir }) => {
+    var sts = get(stateStore);
+    if (rootPath != sts.application) {
+        navigate("/home");
+        reset();
+    }
     setTimeout(() => {
         stateStore.update((s: any) => ({
             ...s,
-            files
+            files: dir
         }));
     });
 }

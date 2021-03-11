@@ -99,6 +99,11 @@ namespace Compiler {
                 { "endpoint", SyntaxKind.EndPointDeclarationToken },
                 { "interaction", SyntaxKind.InteractionDeclarationToken },
 
+                // planning
+                { "roadmap",    SyntaxKind.RoadmapDeclarationToken },
+                { "milestone",  SyntaxKind.MilestoneDeclarationToken },
+                { "task",       SyntaxKind.TaskDeclarationToken },
+
                 // flow
                 { "if", SyntaxKind.IfToken },
                 { "else", SyntaxKind.ElseToken },
@@ -285,6 +290,11 @@ namespace Compiler {
         AttributeFieldStarted,
         AttributeFieldEnded,
         InteractionDeclarationToken,
+
+        // planning definitions
+        RoadmapDeclarationToken,
+        MilestoneDeclarationToken,
+        TaskDeclarationToken,
 
 
         None,

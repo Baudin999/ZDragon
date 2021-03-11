@@ -52,6 +52,10 @@ namespace Compiler.Language.Nodes {
         SystemExpression,
         PersonExpression,
         EndPointExpression,
-        EmptyExpression
+        EmptyExpression,
+
+        RoadmapExpression, 
+        MilestoneExpression,
+        TaskExpression
     }
 }

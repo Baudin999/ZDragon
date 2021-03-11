@@ -66,6 +66,17 @@ namespace Compiler.Language {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseRequirement();
                 }
 
+                // planning
+                else if (tokenBlock.Context == ContextType.RoadmapDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseRoadmap();
+                }
+                else if (tokenBlock.Context == ContextType.MilestoneDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseMilestone();
+                }
+                else if (tokenBlock.Context == ContextType.TaskDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseTask();
+                }
+
                 // markdown
                 else if (tokenBlock.Context == ContextType.MarkdownChapterDeclaration) {
                     var sourceSection = Token.Range(tokenBlock.Tokens.First(), tokenBlock.Tokens.Last());

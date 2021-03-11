@@ -145,6 +145,8 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.HashToken) {
                     yield return TokenizeChapter();
                 }
+
+                // Architecture
                 else if (Current?.Kind == SyntaxKind.PersonDeclarationToken) {
                     //
                     yield return TokenizeAttributesDefinition(annotations, ContextType.PersonDeclaration);
@@ -165,6 +167,18 @@ namespace Compiler.Symbols {
                     //
                     yield return TokenizeAttributesDefinition(annotations, ContextType.InteractionDeclaration);
                 }
+
+                // planning
+                else if (Current?.Kind == SyntaxKind.RoadmapDeclarationToken) {
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.RoadmapDeclaration);
+                }
+                else if (Current?.Kind == SyntaxKind.MilestoneDeclarationToken) {
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.MilestoneDeclaration);
+                }
+                else if (Current?.Kind == SyntaxKind.TaskDeclarationToken) {
+                    yield return TokenizeAttributesDefinition(annotations, ContextType.TaskDeclaration);
+                }
+
                 else {
                     // We are probably in a markdown block and will interpert it like so...
                     yield return TokenizeMarkdown();
@@ -199,5 +213,10 @@ namespace Compiler.Symbols {
         ViewDeclaration,
         GuidelineDeclaration,
         RequirementDeclaration,
+
+        // planning
+        RoadmapDeclaration,
+        MilestoneDeclaration,
+        TaskDeclaration
     }
 }

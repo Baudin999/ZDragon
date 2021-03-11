@@ -262,6 +262,11 @@ namespace Compiler.Language {
                     case GuidelineNode n: addToLexicon(n); break;
                     case RequirementNode n: addToLexicon(n); break;
 
+                    // planning
+                    case RoadmapNode n: addToLexicon(n); break;
+                    case MilestoneNode n: addToLexicon(n); break;
+                    case TaskNode n: addToLexicon(n); break;
+
                     // architecture
                     case ComponentNode n: addToLexicon(n); break;
                     case EndpointNode n: addToLexicon(n); break;

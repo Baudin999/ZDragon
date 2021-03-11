@@ -62,5 +62,7 @@ namespace Compiler.Language {
 
             return new ComponentNode(Token.Range(start, end), name, extensions, attributes);
         }
+   
+
     }
 }

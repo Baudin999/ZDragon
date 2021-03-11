@@ -13,7 +13,7 @@ namespace Planning {
         public void CreateRoadmap() {
 
             var code = @"
-raodmap MyRoadmap =
+roadmap MyRoadmap =
     Contains:
         - Foo
         - Bar

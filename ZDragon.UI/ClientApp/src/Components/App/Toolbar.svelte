@@ -6,11 +6,17 @@
     } from "../../Services/state";
     import Modal from "../Modal.svelte";
     import ToolbarItem from "./ToolbarItem.svelte";
+    import { stateStore } from "./../../Services/state";
+
+    let selectedApp;
 
     let show = false;
     let selectDirectory = () => {
         show = !show;
     };
+    stateStore.subscribe((s) => {
+        selectedApp = s.application;
+    });
 </script>
 
 <div class="app--toolbar">
@@ -18,16 +24,18 @@
         <img style="height:1.5rem;" src="favicon.ico" alt="fav" />
         ZDragon
     </div>
-    <ToolbarItem
-        icon="fa fa-plus"
-        title="New App"
-        on:click={toggleAddApplicationDialog} />
-    <ToolbarItem
-        icon="fa fa-plus"
-        title="New File"
-        on:click={toggleAddFileDialog} />
+    {#if selectedApp}
+        <ToolbarItem
+            icon="fa fa-plus"
+            title="New App"
+            on:click={toggleAddApplicationDialog} />
+        <ToolbarItem
+            icon="fa fa-plus"
+            title="New File"
+            on:click={toggleAddFileDialog} />
+    {/if}
     <ToolbarItem icon="fa fa-folder" title="Open" on:click={selectDirectory} />
-    <ToolbarItem icon="fa fa-floppy-o" title="Save" />
+    <!-- <ToolbarItem icon="fa fa-floppy-o" title="Save" /> -->
 
     <div class="app--toolbar--close">
         <i class="fa fa-times" />

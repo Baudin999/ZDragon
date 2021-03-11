@@ -1,5 +1,6 @@
 <script>
     import { writable } from "svelte/store";
+    import Application from "../Components/FileExplorer/Application.svelte";
     import { post } from "../Services/http";
 
     export let close;
@@ -14,13 +15,23 @@
             let validateApp = ({ path }) => {
                 return path;
             };
-            let isValid = validateApp($app);
-            if (isValid) {
-                let path = $app.path
-                    .replace(/\//g, "__$__")
-                    .replace(/\\/g, "__$__");
 
-                await post("/project/init/" + path, {});
+            let isValid = validateApp($app);
+            let path = $app.path;
+            if (isValid) {
+                var applications = localStorage.getItem("applications");
+                if (applications == null) applications = [];
+                else applications = JSON.parse(applications);
+                if (applications.indexOf(path) < 0) {
+                    applications.unshift(path);
+                    localStorage.setItem(
+                        "applications",
+                        JSON.stringify(applications)
+                    );
+                }
+
+                let pUrl = path.replace(/\//g, "__$__").replace(/\\/g, "__$__");
+                await post("/project/init/" + pUrl, {});
                 close();
             }
         } catch (err) {

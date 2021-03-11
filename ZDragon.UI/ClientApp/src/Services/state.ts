@@ -1,5 +1,6 @@
 import { navigate } from "svelte-routing";
 import { writable } from "svelte/store";
+import { post } from "./http";
 import { reset } from "./module";
 
 export const stateStore = writable({});
@@ -27,8 +28,16 @@ export const toggleRefactorDialog = () => {
     }));
 }
 
+export const selectApplication = app => {
+    console.log("selecting application: " + app)
+    stateStore.update(s => ({
+        ...s,
+        application: app
+    }));
+}
+
 export const setFiles = files => {
-    navigate("/home")
+    navigate("/home");
     reset();
     setTimeout(() => {
         stateStore.update((s: any) => ({
@@ -36,5 +45,5 @@ export const setFiles = files => {
             files
         }));
     });
-
 }
+

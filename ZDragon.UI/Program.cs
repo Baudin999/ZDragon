@@ -16,9 +16,9 @@ namespace ZDragon.UI {
 
             var path = Directory.GetCurrentDirectory();
 
-            foreach (var arg in args) {
-                if (Directory.Exists(arg)) path = arg;
-            }
+            //foreach (var arg in args) {
+            //    if (Directory.Exists(arg)) path = arg;
+            //}
 
             Program.Project = new Project.Project(path);
 

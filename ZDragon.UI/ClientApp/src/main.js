@@ -1,6 +1,7 @@
 import App from "./App.svelte";
 
-import { setFiles } from "./Services/state";
+import { selectApplication, setFiles } from "./Services/state";
+import { post } from "./Services/http";
 
 // import styling
 import "./Styling/settings.css";
@@ -42,3 +43,20 @@ connection.on("ProjectChanged", function (di) {
 connection.start();
 
 export default app;
+
+
+// Initialize the application
+setTimeout(() => {
+  var applications = localStorage.getItem("applications");
+  if (applications != null) {
+    applications = JSON.parse(applications);
+    if (applications.length > 0) {
+      let path = applications[0]
+        .replace(/\//g, "__$__")
+        .replace(/\\/g, "__$__");
+
+      selectApplication(applications[0]);
+      post("/project/init/" + path, {});
+    }
+  }
+}, 500);

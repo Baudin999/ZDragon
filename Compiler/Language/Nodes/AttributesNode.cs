@@ -13,6 +13,8 @@ namespace Compiler.Language.Nodes {
         public string? ImportedFrom { get; set; } = null;
         public List<Token> Extensions { get; }
 
+        public string Title => GetAttribute("Title") ?? GetAttribute("Name") ?? Id;
+
         public string? GetAttribute(string name) {
             return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value;
         }

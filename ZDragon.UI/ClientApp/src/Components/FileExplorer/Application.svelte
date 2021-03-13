@@ -52,6 +52,19 @@
                     {/each}
                 {/if}
 
+                {#if endpoints.length > 0}
+                    <h2>Endpoints</h2>
+                    {#each endpoints as node}
+                        <div
+                            class="item item--node"
+                            class:selected={node.namespace ==
+                                $moduleStore.selectedModule}
+                            on:click={onClick(node)}>
+                            <i class="fa fa-envelope" />{node.name}
+                        </div>
+                    {/each}
+                {/if}
+
                 {#if features.length > 0}
                     <h2>Features</h2>
                     {#each features as node}
@@ -61,6 +74,19 @@
                                 $moduleStore.selectedModule}
                             on:click={onClick(node)}>
                             <i class="fa fa-diamond" />{node.name}
+                        </div>
+                    {/each}
+                {/if}
+
+                {#if databases.length > 0}
+                    <h2>Databases</h2>
+                    {#each databases as node}
+                        <div
+                            class="item item--node"
+                            class:selected={node.namespace ==
+                                $moduleStore.selectedModule}
+                            on:click={onClick(node)}>
+                            <i class="fa fa-database" />{node.name}
                         </div>
                     {/each}
                 {/if}

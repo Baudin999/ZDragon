@@ -137,8 +137,8 @@ namespace Compiler.Language {
 
                 var link = Get(cName);
                 if (link != null && link is IIdentifierExpressionNode) {
-                    if (!lexicon.ContainsKey(interaction)) {
-                        lexicon.Add(interaction, link);
+                    if (!lexicon.ContainsKey(cName)) {
+                        lexicon.Add(cName, link);
                     }
                 }
             }

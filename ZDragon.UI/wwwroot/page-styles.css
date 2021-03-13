@@ -253,6 +253,35 @@ blockquote {
             margin-bottom: 1rem;
         }
 
+.endpoint {
+    border: 1px solid var(--color-1);
+    margin: 0 4rem 4rem 4rem;
+}
+
+    .endpoint .title {
+        display: block;
+        background-color: var(--color-1);
+        padding: 0.5rem 1rem;
+        color: var(--color-1--font);
+    }
+
+    .endpoint dl {
+        margin: 0;
+        padding: 1rem 1rem 0 1rem;
+    }
+
+        .endpoint dl dt {
+            font-weight: bold;
+            display: inline-block;
+            width: 70px;
+        }
+
+        .endpoint dl dd {
+            display: inline-block;
+            margin: 0;
+        }
+
+
 .title-page {
     visibility: hidden;
     display: none;

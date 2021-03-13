@@ -3,6 +3,7 @@ using Compiler.Language.Nodes;
 using Markdig;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace ZDragon.Transpilers.Html {
     public class HtmlTranspiler {
@@ -20,7 +21,7 @@ namespace ZDragon.Transpilers.Html {
         private int h4 = 0;
         private int h5 = 0;
 
-        private void RenderChapter(MarkdownChapterNode mcn) {
+        private void RenderChapterNode(MarkdownChapterNode mcn) {
             if (mcn.Depth == 1) {
                 h1 = h1 + 1;
                 h2 = 0;
@@ -61,7 +62,7 @@ namespace ZDragon.Transpilers.Html {
             parts.Add($"<h{mcn.Depth}>{mcn.Content}</h{mcn.Depth}>");
         }
 
-        private void RenderParagraph(IDocumentNode node) {
+        private void RenderParagraphNode(IDocumentNode node) {
             parts.Add($"<p>{node.Content}</p>");
         }
 
@@ -113,6 +114,58 @@ namespace ZDragon.Transpilers.Html {
 </div>");
         }
 
+
+        private void RenderEndpointNode(EndpointNode node) {
+
+            var description = node.GetAttribute("Description");
+            var method = node.GetAttribute("Method", "GET").ToUpper();
+
+            var parameters = new List<string>();
+            var url = node.GetAttribute("Url");
+            if (url != null) {
+                var regex = new Regex("\\{(.*?)\\}");
+                var matches = regex.Matches(url);
+                foreach (Match match in matches) {
+                    parameters.Add(match.Value);
+                }
+            }
+            var parametersString = string.Join(", ", parameters);
+            if (parametersString == string.Empty) parametersString = "none";
+
+            var typeDefinition = node.TypeDefinition is null ? "missing" : node.TypeDefinition.ToString();
+
+            toc.Add($"<div class='toc-1'>{++h2} {node.Title}<div>");
+            parts.Add($@"
+<div class='keep-together'>
+    <h2>{node.Title}</h2>
+    <div class='endpoint'>
+    <div class='title'><span class='endpoint--method'>{method}</span> {url}</div>
+    <table>
+        <tbody>
+            <tr>
+                <td>Url</td>
+                <td>{url ?? "missing"}</td>    
+            </tr>
+            <tr>
+                <td>Parameters</td>
+                <td>{parametersString}</td>    
+            </tr>
+            <tr>
+                <td>Function</td>
+                <td>{typeDefinition}</td>    
+            </tr>
+            <tr>
+                <td>Description</td>
+                <td>{description ?? "missing"}</td>    
+            </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+");
+
+        }
+
         public HtmlTranspiler(CompilationResult compilationResult) {
             this.compilationresult = compilationResult;
         }
@@ -140,7 +193,7 @@ namespace ZDragon.Transpilers.Html {
 
         public string Transpile() {
 
-
+            var endpoints = compilationresult.Lexicon.Values.OfType<EndpointNode>().ToList();
 
             parts.Add($@"
 <!DOCTYPE html>
@@ -169,17 +222,29 @@ namespace ZDragon.Transpilers.Html {
             }
 
             foreach (var documentPart in this.compilationresult.Document) {
-                if (documentPart is MarkdownChapterNode markdownChapterNode) RenderChapter(markdownChapterNode);
+                if (documentPart is MarkdownChapterNode markdownChapterNode) RenderChapterNode(markdownChapterNode);
                 else if (documentPart is MarkdownNode markdownNode) RenderMarkdownNode(markdownNode);
                 else if (documentPart is ViewNode viewNode) RenderViewNode(viewNode);
                 else if (documentPart is GuidelineNode guidelineNode) RenderGuidelineNode(guidelineNode);
                 else if (documentPart is RequirementNode requriementNode) RenderRequirementNode(requriementNode);
-                else RenderParagraph(documentPart);
+                else if (documentPart is EndpointNode endpointNode) { 
+                    /* Do nothing, we will render the endpoints at the back of the document */ 
+                }
+                else RenderParagraphNode(documentPart);
             }
 
             if (h1 > 1) {
                 // Don't put in the TOC if there are no chapters...
                 parts.Add("</div>");
+
+                if (endpoints.Count > 0) {
+                    toc.Add($"<div class='toc-1'>{++h1} Endpoints</div>");
+                    h2 = 0;
+                    h3 = 3;
+                    foreach (var ep in endpoints) {
+                        toc.Add($"<div class='toc-2'>{h1}.{++h2} {ep.Title}</div>");
+                    }
+                }
 
                 if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0) {
                     toc.Add($"<div class='toc-1'>{++h1} Logical Data Model<div>");
@@ -187,9 +252,17 @@ namespace ZDragon.Transpilers.Html {
                 if (compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0) {
                     toc.Add($"<div class='toc-1'>{++h1} Component Diagram<div>");
                 }
+                
                 parts.Insert(tocIndex, string.Join("\n\n", toc));
             }
 
+
+            
+            if (endpoints.Count > 0) {
+                parts.Add($"<h1>Endpoints</h1>");
+                parts.Add($"<p>This segment describes the endpoints defined in the document.</p>");
+                endpoints.ForEach(RenderEndpointNode);
+            }
 
             if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0) {
                 // Don't put in the logical data model if there are no entities defined
@@ -215,13 +288,5 @@ namespace ZDragon.Transpilers.Html {
             return string.Join("\n\n", parts);
         }
 
-       
-
-        //        private static readonly string html_markup = @"
-        //<style>
-
-
-        //</style>
-        //";
     }
 }

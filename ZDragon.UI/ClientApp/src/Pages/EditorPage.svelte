@@ -14,16 +14,7 @@
         moduleStore,
         selectModuleByNamespace,
     } from "../Services/module.js";
-    import {
-        stateStore,
-        toggleAddFileDialog,
-        toggleAddApplicationDialog,
-        toggleRefactorDialog,
-    } from "../Services/state.js";
-    import CreateFile from "../Forms/CreateFile.svelte";
-    import CreateApplication from "../Forms/CreateApplication.svelte";
     import { onMount, onDestroy } from "svelte";
-    // import RefactorDialog from "../Forms/RefactorDialog.svelte";
 
     export let namespace = "";
     var oldNamespace = "";
@@ -33,6 +24,7 @@
     let module;
     let svgUrl;
     let componentUrl;
+    let planningSvgUrl;
     let htmlUrl;
     let scrollY = 0;
 
@@ -44,6 +36,7 @@
         if (!namespace) return;
         svgUrl = `/documents/${namespace}/data.svg?timestamp=${new Date().getMilliseconds()}`;
         componentUrl = `/documents/${namespace}/components.svg?timestamp=${new Date().getMilliseconds()}`;
+        planningSvgUrl = `/documents/${namespace}/roadmap.svg?timestamp=${new Date().getMilliseconds()}`;
         htmlUrl = `/documents/${namespace}/page.html?timestamp=${new Date().getMilliseconds()}`;
     };
 
@@ -53,16 +46,6 @@
     });
     onDestroy(() => {
         window.removeEventListener("module_changed", generateUrls, false);
-    });
-
-    let showAddApplicationDialog = false;
-    let showAddFileDialog = false;
-    let showRefactorDialog = false;
-
-    stateStore.subscribe((s: any) => {
-        showAddFileDialog = !!s.showAddFileDialog;
-        showAddApplicationDialog = !!s.showAddApplicationDialog;
-        showRefactorDialog = !!s.showRefactorDialog;
     });
 
     let print = () => {
@@ -101,6 +84,7 @@
                 <Tab>Document</Tab>
                 <Tab>Architecture</Tab>
                 <Tab>Data Model</Tab>
+                <Tab>Planning</Tab>
             </TabList>
 
             <TabPanel>
@@ -129,8 +113,16 @@
 
             <TabPanel>
                 <Panel style="height: calc(100% - 3rem);">
-                    {#if componentUrl}
+                    {#if svgUrl}
                         <img alt="svg" src={svgUrl} />
+                    {/if}
+                </Panel>
+            </TabPanel>
+
+            <TabPanel>
+                <Panel style="height: calc(100% - 3rem);">
+                    {#if planningSvgUrl}
+                        <img alt="svg" src={planningSvgUrl} />
                     {/if}
                 </Panel>
             </TabPanel>
@@ -140,25 +132,6 @@
             <i class="fa fa-print" />
         </div>
     </div>
-
-    <Modal
-        title="Add File"
-        show={showAddFileDialog}
-        close={toggleAddFileDialog}>
-        <CreateFile />
-    </Modal>
-    <Modal
-        title="Add Application"
-        show={showAddApplicationDialog}
-        close={toggleAddApplicationDialog}>
-        <CreateApplication />
-    </Modal>
-    <!-- <Modal
-        title="Refactor"
-        show={showRefactorDialog}
-        close={toggleRefactorDialog}>
-        <RefactorDialog />
-    </Modal> -->
 </div>
 
 <style type="less">

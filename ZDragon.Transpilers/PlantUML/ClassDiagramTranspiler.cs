@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace ZDragon.Transpilers.PlantUML {
-    public class PlantUmlTranspiler {
+    public class ClassDiagramTranspiler {
         //private readonly CompilationResult compilationresult;
         private readonly List<string> baseTypes = new List<string> {
             "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
@@ -105,7 +105,7 @@ enum {node.Id} {{
         }
 
 
-        public PlantUmlTranspiler(Dictionary<string, IIdentifierExpressionNode> lexicon) {
+        public ClassDiagramTranspiler(Dictionary<string, IIdentifierExpressionNode> lexicon) {
             this.lexicon = lexicon;
         }
             

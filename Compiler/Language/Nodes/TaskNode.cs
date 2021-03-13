@@ -4,23 +4,9 @@ using System.Linq;
 
 namespace Compiler.Language.Nodes {
 
-    public interface IPlanningNode { }
-
     public class TaskNode : AttributesNode, IPlanningNode {
         public TaskNode(ISourceSegment segment, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes) : base(segment, name, extensions, attributes, ExpressionKind.TaskExpression) {
             
-        }
-    }
-
-    public class RoadmapNode : AttributesNode, IPlanningNode {
-        public RoadmapNode(ISourceSegment segment, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes) : base(segment, name, extensions, attributes, ExpressionKind.RoadmapExpression) {
-
-        }
-    }
-
-    public class MilestoneNode : AttributesNode, IPlanningNode {
-        public MilestoneNode(ISourceSegment segment, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes) : base(segment, name, extensions, attributes, ExpressionKind.MilestoneExpression) {
-
         }
     }
 

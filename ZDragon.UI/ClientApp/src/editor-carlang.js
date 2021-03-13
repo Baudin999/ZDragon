@@ -41,6 +41,12 @@ export const tokenizer = {
                         "guideline": { token: "keyword", next: "@attributes" },
                         "requirement": { token: "keyword", next: "@attributes" },
 
+                        // planning
+                        "roadmap": { token: "keyword", next: "@attributes" },
+                        "task": { token: "keyword", next: "@attributes" },
+                        "milestone": { token: "keyword", next: "@attributes" },
+
+
                         // architecture
                         "component": { token: "keyword", next: "@attributes" },
                         "interaction": { token: "keyword", next: "@attributes" },

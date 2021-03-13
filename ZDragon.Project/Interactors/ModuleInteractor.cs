@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ZDragon.Project.Templates;
 using ZDragon.Transpilers.Components;
 using ZDragon.Transpilers.Html;
+using ZDragon.Transpilers.Planning;
 using ZDragon.Transpilers.PlantUML;
 
 namespace ZDragon.Project.Interactors {
@@ -87,13 +88,12 @@ namespace ZDragon.Project.Interactors {
                 tasks.Add(File.WriteAllTextAsync(this.FullName, s));
                 this.DocumentHash = newHash;
 
-                // reset the previous Compiltation Errors
-                this.cache.Reset();
-
                 // also compile on save
                 this.CompilationResult = Compile(s);
                 tasks.Add(SaveDataModelSvg());
                 tasks.Add(SaveComponentModelSvg());
+                tasks.Add(SaveRoadmapSvg());
+                tasks.Add(SaveViews());
                 tasks.Add(SaveHtml());
             }
 
@@ -130,11 +130,7 @@ namespace ZDragon.Project.Interactors {
             try {
                 // reset the previous Compiltation Errors
                 this.cache.Reset();
-
-
-                this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile();
-                this.CompilationResult.Check();
-
+                this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile().Check();
                 System.Console.WriteLine($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
                 return this.CompilationResult;
             }
@@ -147,7 +143,7 @@ namespace ZDragon.Project.Interactors {
 
         public async Task SaveDataModelSvg() {
             var svgPath = Path.Combine(this.OutPath, "data.svg");
-            var puml = new PlantUmlTranspiler(this.CompilationResult.Lexicon).Transpile();
+            var puml = new ClassDiagramTranspiler(this.CompilationResult.Lexicon).Transpile();
             await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
         }
         public async Task<byte[]> GetDataModelSvg() {
@@ -157,17 +153,25 @@ namespace ZDragon.Project.Interactors {
         }
 
         public async Task SaveComponentModelSvg() {
-            List<Task> tasks = new List<Task>();
-
             var svgPath = Path.Combine(this.OutPath, "components.svg");
             var puml = new ComponentTranspiler(this.CompilationResult.Lexicon).Transpile();
-            tasks.Add(File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml)));
+            await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+        }
 
+        public async Task SaveRoadmapSvg() {
+            var svgPath = Path.Combine(this.OutPath, "roadmap.svg");
+            var lexicon = this.CompilationResult.Lexicon.Select(x => x.Value).OfType<IPlanningNode>().ToList();
+            var puml = new PlanningTranspiler(lexicon).Transpile();
+            await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+        }
 
+        public async Task SaveViews() {
+            List<Task> tasks = new List<Task>();
             // Create the views
             var names = new List<string> {
                 "components.svg",
                 "data.svg",
+                "roadmap.svg",
                 "page.html"
             };
             foreach (var view in this.CompilationResult.Lexicon.Where(l => l.Value is ViewNode).Select(l => (ViewNode)l.Value)) {
@@ -186,7 +190,7 @@ namespace ZDragon.Project.Interactors {
                     names.Add(view.Hash + ".svg");
                 }
                 else {
-                    var _puml = new PlantUmlTranspiler(viewLexicon).Transpile();
+                    var _puml = new ClassDiagramTranspiler(viewLexicon).Transpile();
                     var path = Path.Combine(this.OutPath, view.Hash + ".svg");
                     tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml)));
                     names.Add(view.Hash + ".svg");

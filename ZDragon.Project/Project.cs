@@ -48,8 +48,11 @@ namespace ZDragon.Project {
         public void Reload(string path) {
             Cache = new CompilationCache(new ErrorSink());
             _root = path;
-            DirectoryInteractor = new DirectoryInteractor(_root, _root, Cache);
+            outpath = Path.Combine(_root, "out");
+            dbPath = Path.Combine(outpath, "store.db");
+            imagesPath = Path.Combine(_root, "Images");
 
+            DirectoryInteractor = new DirectoryInteractor(_root, _root, Cache);
         }
 
         public async Task<string> GetTextByNamespace(string ns) {

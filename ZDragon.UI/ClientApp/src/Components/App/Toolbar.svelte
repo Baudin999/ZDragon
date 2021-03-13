@@ -3,7 +3,11 @@
     import {
         toggleAddApplicationDialog,
         toggleAddFileDialog,
+        toggleRefactorDialog,
     } from "../../Services/state";
+
+    import CreateFile from "../../Forms/CreateFile.svelte";
+    import CreateApplication from "../../Forms/CreateApplication.svelte";
     import Modal from "../Modal.svelte";
     import ToolbarItem from "./ToolbarItem.svelte";
     import { stateStore } from "./../../Services/state";
@@ -16,6 +20,16 @@
     let selectedApp;
     stateStore.subscribe((s) => {
         selectedApp = s.application;
+    });
+
+    let showAddApplicationDialog = false;
+    let showAddFileDialog = false;
+    let showRefactorDialog = false;
+
+    stateStore.subscribe((s) => {
+        showAddFileDialog = !!s.showAddFileDialog;
+        showAddApplicationDialog = !!s.showAddApplicationDialog;
+        showRefactorDialog = !!s.showRefactorDialog;
     });
 </script>
 
@@ -44,6 +58,15 @@
 
 <Modal title="Select Directory" {show} close={() => (show = false)}>
     <SelectFolder close={() => (show = false)} />
+</Modal>
+<Modal title="Add File" show={showAddFileDialog} close={toggleAddFileDialog}>
+    <CreateFile />
+</Modal>
+<Modal
+    title="Add Application"
+    show={showAddApplicationDialog}
+    close={toggleAddApplicationDialog}>
+    <CreateApplication />
 </Modal>
 
 <style type="less">

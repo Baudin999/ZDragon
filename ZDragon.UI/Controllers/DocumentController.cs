@@ -64,6 +64,10 @@ namespace ZDragon.UI.Controllers {
                 var bytes = await moduleInteractor.GetComponentModelSvg();
                 return File(bytes, "image/svg+xml");
             }
+            else if (file == "roadmap") {
+                var bytes = await moduleInteractor.GetSvg(file);
+                return File(bytes, "image/svg+xml");
+            }
             else {
                 var bytes = await moduleInteractor.GetSvg(file);
                 if (bytes == null) return NotFound();

@@ -69,8 +69,6 @@ namespace ZDragon.Transpilers.Html {
             var pipeline = new MarkdownPipelineBuilder()
                 .UsePipeTables()
                 .UseTaskLists()
-                //.UseCitations()
-                //.UseMediaLinks()
                 .UseAdvancedExtensions()
                 .Build();
 
@@ -119,9 +117,30 @@ namespace ZDragon.Transpilers.Html {
             this.compilationresult = compilationResult;
         }
 
+        private int RenderTitlePage(int tocIndex) {
+            var directiveNodes = this.compilationresult.Ast.TakeWhile(node => node is DirectiveNode).OfType<DirectiveNode>().ToList();
+            if (directiveNodes.Count > 0) {
+                tocIndex++;
+                var doc_title = directiveNodes.FirstOrDefault(d => d.Id == "Title")?.Literal ?? "No title";
+                var doc_author = directiveNodes.FirstOrDefault(d => d.Id == "Author")?.Literal ?? "No author";
+                var doc_date = directiveNodes.FirstOrDefault(d => d.Id == "Date")?.Literal ?? "No date";
+
+                parts.Add($@"
+<div class='title-page'>
+    <div class='title-page--title'>{doc_title}</div>
+    <div class='title-page--author'>{doc_author}</div>
+    <div class='title-page--date'>{doc_date}</div>
+    <img src='/standalone-icon.png' />
+</div>
+");
+            }
+
+            return tocIndex;
+        }
+
         public string Transpile() {
 
-            
+
 
             parts.Add($@"
 <!DOCTYPE html>
@@ -138,21 +157,15 @@ namespace ZDragon.Transpilers.Html {
 <div class='content'>
 ");
             var tocIndex = 1;
-            var directiveNodes = this.compilationresult.Ast.TakeWhile(node => node is DirectiveNode).OfType<DirectiveNode>().ToList();
-            if (directiveNodes.Count > 0) {
-                tocIndex = 2;
-                var doc_title = directiveNodes.FirstOrDefault(d => d.Id == "Title")?.Literal ?? "No title";
-                var doc_author = directiveNodes.FirstOrDefault(d => d.Id == "Author")?.Literal ?? "No author";
-                var doc_date = directiveNodes.FirstOrDefault(d => d.Id == "Date")?.Literal ?? "No date";
+            tocIndex = RenderTitlePage(tocIndex);
 
-                parts.Add($@"
-<div class='title-page'>
-    <div class='title-page--title'>{doc_title}</div>
-    <div class='title-page--author'>{doc_author}</div>
-    <div class='title-page--date'>{doc_date}</div>
-    <img src='/standalone-icon.png' />
-</div>
-");
+            if (compilationresult.Lexicon.Values.OfType<IPlanningNode>().Count() > 0) {
+
+                toc.Add($"<div class='toc-1'>{++h1} Roadmap<div>");
+
+                // Don't put in the roadmap in if there are no planning nodes defined
+                parts.Add("<div class='keep-together'><h1>Roadmap</h1>");
+                parts.Add($"<img style='max-width:100%;min-width:100%;' src=\"/documents/{compilationresult.Namespace}/roadmap.svg\" alt=\"data\" /></div>");
             }
 
             foreach (var documentPart in this.compilationresult.Document) {
@@ -163,7 +176,7 @@ namespace ZDragon.Transpilers.Html {
                 else if (documentPart is RequirementNode requriementNode) RenderRequirementNode(requriementNode);
                 else RenderParagraph(documentPart);
             }
-            
+
             if (h1 > 1) {
                 // Don't put in the TOC if there are no chapters...
                 parts.Add("</div>");
@@ -190,6 +203,8 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" /></div>");
             }
 
+
+
             parts.Add(@"
     <script src='prism.js'></script>
 
@@ -200,11 +215,13 @@ namespace ZDragon.Transpilers.Html {
             return string.Join("\n\n", parts);
         }
 
-//        private static readonly string html_markup = @"
-//<style>
+       
+
+        //        private static readonly string html_markup = @"
+        //<style>
 
 
-//</style>
-//";
+        //</style>
+        //";
     }
 }

@@ -11,22 +11,15 @@ namespace Compiler.Symbols {
     internal partial class ContextualTokenizer {
 
         private TokenGroup TokenizeMarkdown() {
-            var tokens = new List<Token>();
-            while (index < max && Current != null) {
+            var tokens = new List<Token?>();
+            while (index < max && Current?.Kind != SyntaxKind.StartBlock) {
 
-                if (Current?.Kind == SyntaxKind.NewLineToken && Next != null &&  (
-                      Next?.Kind == SyntaxKind.NewLineToken ||
-                      Mappings.Keywords.Keys.Contains(Next?.Value))
-                    ) {
-
-                    // take the new-lines
-                    tokens.Add(Take());
-                    tokens.Add(Take());
+                // we'll want to put chapters into a different block becuase 
+                // we'll want to create a table of contents.
+                if (Current?.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.HashToken) {
                     break;
                 }
-                else {
-                    tokens.Add(Take());
-                }
+                tokens.Add(Take());
             }
 
 

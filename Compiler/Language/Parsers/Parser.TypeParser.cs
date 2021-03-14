@@ -27,8 +27,9 @@ namespace Compiler.Language {
 
             TakeWhile(SyntaxKind.AnnotationToken).ToList();
             var restrictions = new List<RestrictionNode>();
-            while (Current?.Kind == SyntaxKind.AndToken) {
-                Take();
+            while (Current != null && Current.Kind == SyntaxKind.ContextualIndent1 && Next?.Kind == SyntaxKind.AndToken) {
+                Take(); // ContextualIndent1
+                Take(); // AndToken
                 var key = Take(SyntaxKind.IdentifierToken);
                 var value = Take();
                 restrictions.Add(new RestrictionNode(key, value));

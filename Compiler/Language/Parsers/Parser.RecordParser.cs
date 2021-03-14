@@ -25,7 +25,7 @@ namespace Compiler.Language {
             }
 
             // generic parameters
-            var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();
+            var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).OfType<Token>().ToList();
 
             // extensions
             List<Token> extensions = new List<Token>();
@@ -60,14 +60,14 @@ namespace Compiler.Language {
                         fieldType.Add(Take());
                     }
 
-                    TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                    var restrictionAnnotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
                     var restrictions = new List<RestrictionNode>();
                     while (Current?.Kind == SyntaxKind.AndToken) {
                         Take();
                         var key = Take(SyntaxKind.IdentifierToken);
                         var value = Take();
                         restrictions.Add(new RestrictionNode(key, value));
-                        TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                        restrictionAnnotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
                     }
 
                     Take(SyntaxKind.SemiColonToken);

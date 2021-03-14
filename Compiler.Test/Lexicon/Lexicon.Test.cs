@@ -5,7 +5,7 @@ namespace Lexicon {
     public class Lexicon {
 
         [Fact(DisplayName = "Lexicon - Default")]
-        public void Imports_Default() {
+        public void Lexicon_Default() {
             var errorSink = new ErrorSink();
             var codeFirst = @"
 # Chapter
@@ -13,7 +13,7 @@ namespace Lexicon {
 This is an paragraph
 
 record Address =
-    Street: String;
+    Street: Street;
 record Person =
     Address: Address;
 
@@ -21,6 +21,8 @@ component Component001 =
     Name: Component 001
 
 And some more info.
+@ another type
+type Street = String;
 ";
 
             var cache = new CompilationCache(errorSink);
@@ -28,18 +30,56 @@ And some more info.
 
             Assert.Empty(cache.Errors);
 
-            Assert.Equal(6, compilerFirst.Ast.Count);
-            Assert.Equal(3, compilerFirst.Lexicon.Count);
+            Assert.Equal(7, compilerFirst.Ast.Count);
+            Assert.Equal(4, compilerFirst.Lexicon.Count);
 
             var languageIndex = cache.LanguageNodes;
-            Assert.Equal(2, languageIndex.Count);
+            Assert.Equal(3, languageIndex.Count);
 
             var componentIndex = cache.ArchitectureNodes;
             Assert.Single(componentIndex);
         }
 
+        [Fact(DisplayName = "Lexicon - Annotation after Paragraph")]
+        public void Lexicon_AnnotationAfterParagraph() {
+            var codeFirst = @"
+paragraph
+@ a
+type Street = String;
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Empty(result.Errors);
+            Assert.Equal(2, result.Ast.Count);
+        }
+
+        [Fact(DisplayName = "Lexicon - Default 002")]
+        public void Lexicon_Default_002() {
+            var codeFirst = @"
+# Chapter
+
+This is an paragraph
+
+record Address =
+    Street: Street;
+record Person =
+    Address: Address;
+
+component Component001 =
+    Name: Component 001
+
+And some more info.
+
+type Street = String;
+";
+
+            var compilerFirst = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Empty(compilerFirst.Errors);
+            Assert.Equal(7, compilerFirst.Ast.Count);
+        }
+
         [Fact(DisplayName = "Lexicon - Build an Index")]
-        public void Imports_BuildAnIndex() {
+        public void Lexicon_BuildAnIndex() {
             var errorSink = new ErrorSink();
             var codeFirst = @"
 record Address =

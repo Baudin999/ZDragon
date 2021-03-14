@@ -74,5 +74,30 @@ record Person =
             Assert.Equal(4, compilerResult.Tokens.Count());
             
         }
+
+
+        [Fact(DisplayName = "Data - Annotations")]
+        public void Data_Annotations() {
+            var code = @"
+data Request =
+    | Person
+
+    @ When we can't find the Person
+    @ we will return a 404
+    | Error404
+
+record Person =
+    FirstName: Name;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            Assert.Empty(compilerResult.Errors);
+            Assert.Equal(2, compilerResult.Tokens.Count());
+
+        }
+
+
+
     }
 }

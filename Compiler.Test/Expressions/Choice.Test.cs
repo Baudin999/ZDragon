@@ -5,10 +5,12 @@ using Xunit;
 namespace Expressions {
     public class Choice {
         [Fact(DisplayName = "Choice - Gender")]
-        public void Data_Maybe() {
+        public void Choice_Gender() {
             var code = @"
 choice Gender =
     | ""Male""
+
+    @ The female gender
     | ""Female""
     | ""Other""
 ";
@@ -25,10 +27,13 @@ choice Gender =
             Assert.Equal("\"Female\"", gender.Fields[1].Value);
             Assert.Equal("\"Other\"", gender.Fields[2].Value);
 
+
+            Assert.Equal("The female gender", gender.Fields[1].AnnotationNode?.Annotation ?? "");
+
         }
 
         [Fact(DisplayName = "Choice - Same Type Error")]
-        public void Data_SameTypeError() {
+        public void Choice_SameTypeError() {
             var code = @"
 choice Gender =
     | ""Male""

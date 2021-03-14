@@ -3,10 +3,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Compiler.Symbols
-{
-    public class Lexer
-    {
+namespace Compiler.Symbols {
+    public class Lexer {
         private SourceCode SourceCode { get; }
         public ErrorSink ErrorSink { get; }
 
@@ -22,8 +20,7 @@ namespace Compiler.Symbols
         private int currentCode => (int)this.code[this.index];
         private char next => this.index + 1 < max ? this.code[this.index + 1] : char.MaxValue;
 
-        public Lexer(SourceCode sourceCode, ErrorSink errorSink)
-        {
+        public Lexer(SourceCode sourceCode, ErrorSink errorSink) {
             this.SourceCode = sourceCode;
             this.ErrorSink = errorSink;
             this.max = this.SourceCode.Max;
@@ -38,8 +35,7 @@ namespace Compiler.Symbols
             lineTokenIndex = 0;
             lineTokenStartIndex = 0;
         }
-        private char take()
-        {
+        private char take() {
             var c = current;
             value += c;
             moveNext();
@@ -47,13 +43,12 @@ namespace Compiler.Symbols
         }
 
         private string takeWhile(Predicate<char> check) {
-            while(check(current)) {
+            while (check(current)) {
                 take();
             }
             return value;
         }
-        private Token pushToken(SyntaxKind kind, string v)
-        {
+        private Token pushToken(SyntaxKind kind, string v) {
             var token = new Token(
                 value = v,
                 kind,
@@ -70,15 +65,12 @@ namespace Compiler.Symbols
 
             return token;
         }
-        private Token pushToken(SyntaxKind kind)
-        {
+        private Token pushToken(SyntaxKind kind) {
             return pushToken(kind, value);
         }
 
-        private Token parseWhiteSpace()
-        {
-            while (isWhiteSpace(current))
-            {
+        private Token parseWhiteSpace() {
+            while (isWhiteSpace(current)) {
                 take();
                 if (value.Length == 4) {
                     return pushToken(SyntaxKind.IndentToken);
@@ -86,8 +78,7 @@ namespace Compiler.Symbols
             }
             return pushToken(SyntaxKind.WhiteSpaceToken);
         }
-        private Token parseNewline()
-        {
+        private Token parseNewline() {
             if (current == '\r' && next == '\n') {
                 take();
                 take();
@@ -99,11 +90,9 @@ namespace Compiler.Symbols
             moveNextLine();
             return token;
         }
-        private Token parseWord()
-        {
+        private Token parseWord() {
             if (isCharacter(current)) take();
-            while (isCharacter(current) || isNumber(current))
-            {
+            while (isCharacter(current) || isNumber(current)) {
                 take();
             }
 
@@ -115,10 +104,8 @@ namespace Compiler.Symbols
             return pushToken(kind);
         }
 
-        private Token parseOperator()
-        {
-            if (isOperator(current))
-            {
+        private Token parseOperator() {
+            if (isOperator(current)) {
                 take();
             }
             Mappings.SingleOperatorDefinitions.TryGetValue(value, out SyntaxKind kind);
@@ -126,7 +113,7 @@ namespace Compiler.Symbols
 
                 kind = SyntaxKind.OperatorToken;
             }
-            
+
             return pushToken(kind);
         }
 
@@ -141,42 +128,40 @@ namespace Compiler.Symbols
             return pushToken(SyntaxKind.NumberLiteralToken);
         }
 
-        private bool isWhiteSpace(char c)
-        {
+        private bool isWhiteSpace(char c) {
             return c == ' ';
         }
-        private bool isNewline(char c)
-        {
+        private bool isNewline(char c) {
             return c == '\n' || c == '\r';
         }
-        private bool isCharacter(char c)
-        {
+        private bool isCharacter(char c) {
             return Mappings.Letters.Contains(c) || c == '_';
         }
         private bool isNumber(char c) {
             return Mappings.Numbers.Contains(c);
         }
-        private bool isOperator(char c)
-        {
+        private bool isOperator(char c) {
             return Mappings.Operators.Contains(c);
         }
 
         public IEnumerable<Token> Tokenize(ContextType contextType) {
+            var tokens = new List<Token>();
+
             while (index < max) {
                 if (isWhiteSpace(current)) {
-                    yield return parseWhiteSpace();
+                    tokens.Add(parseWhiteSpace());
                 }
                 else if (isNewline(current)) {
-                    yield return parseNewline();
+                    tokens.Add(parseNewline());
                 }
                 else if (isCharacter(current)) {
-                    yield return parseWord();
+                    tokens.Add(parseWord());
                 }
                 else if (isNumber(current)) {
-                    yield return parseNumber();
+                    tokens.Add(parseNumber());
                 }
                 else if (isOperator(current)) {
-                    yield return parseOperator();
+                    tokens.Add(parseOperator());
                 }
                 else if (current == Convert.ToChar(0x7F)) {
                     index++;
@@ -186,9 +171,80 @@ namespace Compiler.Symbols
                     throw new Exception("Invalid token");
                 }
             }
+
+            return GenerateBlocks(tokens);
         }
 
-       
+
+        public IEnumerable<Token> GenerateBlocks(IEnumerable<Token> tokens) {
+
+            var t = tokens.ToList();
+            var max = t.Count;
+            var inContext = false;
+            for (int i = 0; i < max; ++i) {
+                var token = t[i];
+
+                if (!inContext && (Mappings.Keywords.ContainsKey(token.Value) || token.Kind == SyntaxKind.PercentageToken || token.Kind == SyntaxKind.AmpersandToken)) {
+                    yield return new Token(SyntaxKind.StartBlock);
+                    inContext = true;
+                    yield return token;
+                }
+                else if (token.Kind == SyntaxKind.NewLineToken && i + 1 < max && t[i + 1].Kind == SyntaxKind.NewLineToken) {
+                    yield return token;
+                }
+                else if (token.Kind == SyntaxKind.NewLineToken) {
+                    int depth = 0;
+                    var depthTokens = new List<Token?> { token };
+                    Token? next = i + 1 < max ? t[i + 1] : null;
+
+                    while (i + 1 < max && t[i + 1].Kind == SyntaxKind.IndentToken) {
+                        depth++;
+                        i++;
+                        depthTokens.Add(t[i]);
+                    }
+
+                    if (depth == 0 && (Mappings.Keywords.ContainsKey(next?.Value ?? "--undef__") || next?.Kind == SyntaxKind.PercentageToken || next?.Kind == SyntaxKind.AmpersandToken)) {
+                        yield return token;
+                        if (inContext) {
+                            yield return new Token(SyntaxKind.EndBlock);
+                            inContext = false;
+                        }
+                    }
+                    else if (depth == 0 && i + 1 < max) {
+                        yield return token;
+                        if (inContext) {
+                            yield return new Token(SyntaxKind.EndBlock);
+                            inContext = false;
+                        }
+                    }
+                    else if (inContext && depth == 1) {
+                        yield return new Token(depthTokens, SyntaxKind.ContextualIndent1);
+                    }
+                    else if (inContext && depth == 2) {
+                        yield return new Token(depthTokens, SyntaxKind.ContextualIndent2);
+                    }
+                    else if (inContext && depth == 3) {
+                        yield return new Token(depthTokens, SyntaxKind.ContextualIndent3);
+                    }
+                    else if (inContext && depth == 4) {
+                        yield return new Token(depthTokens, SyntaxKind.ContextualIndent4);
+                    }
+                    else if (inContext && depth == 5) {
+                        yield return new Token(depthTokens, SyntaxKind.ContextualIndent5);
+                    }
+                    else yield return token;
+                }
+                else {
+                    yield return token;
+                }
+
+
+            }
+            if (inContext) {
+                yield return new Token(SyntaxKind.EndBlock);
+            }
+
+        }
 
 
     }

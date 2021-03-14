@@ -7,7 +7,6 @@ namespace Views {
 
         [Fact(DisplayName = "Views - Simple")]
         public void Views_Simple() {
-            var errorSink = new ErrorSink();
             var codeFirst = @"
 view PersonView = 
     Person
@@ -30,7 +29,6 @@ record Address
 
         [Fact(DisplayName = "Views - Missing link")]
         public void Views_MissingLink() {
-            var errorSink = new ErrorSink();
             var codeFirst = @"
 view PersonView = 
     Person

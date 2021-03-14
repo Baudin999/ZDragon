@@ -1,6 +1,4 @@
-﻿using Compiler.Language.Nodes;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 
 namespace Compiler.Symbols {
 
@@ -16,11 +14,8 @@ namespace Compiler.Symbols {
                 if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
                     tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
                 }
-                else if (Current?.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.NewLineToken) {
+                else if (Current?.Kind == SyntaxKind.EndBlock) {
                     Take();
-                }
-                else if (Current?.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
-                    // end the context
                     break;
                 }
                 else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
@@ -33,6 +28,7 @@ namespace Compiler.Symbols {
 
                     tokens.Add(new QualifiedToken(identifierParts));
                 }
+
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
                     tokens.Add(AggregateStringLiteralToken());
                 }
@@ -48,6 +44,24 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                 }
+
+                // Skip contextual Tokens
+                else if (Current?.Kind == SyntaxKind.ContextualIndent1) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent2) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent3) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent4) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent5) {
+                    Take();
+                }
+
                 else {
                     tokens.Add(Take());
                 }
@@ -72,11 +86,8 @@ namespace Compiler.Symbols {
                 if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
                     tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
                 }
-                else if (Current?.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.NewLineToken) {
+                else if (Current?.Kind == SyntaxKind.EndBlock) {
                     Take();
-                }
-                else if (Current?.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
-                    // end the context
                     break;
                 }
                 else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
@@ -104,6 +115,24 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                 }
+
+                // Skip contextual Tokens
+                else if (Current?.Kind == SyntaxKind.ContextualIndent1) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent2) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent3) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent4) {
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent5) {
+                    Take();
+                }
+
                 else {
                     tokens.Add(Take());
                 }

@@ -211,6 +211,17 @@ system Foo =
             Assert.Empty(contains);
         }
 
+        [Fact(DisplayName = "Component - Paragraph after Component")]
+        public void Component_Paragraph_after_Component() {
+            var code = @"
+component Comp =
+    Name: First Application
+With a pragraph
+";
+            var result = new Compiler.Compiler(code).Compile().Check();
+            Assert.Equal(2, result.Ast.Count);
+        }
+
 
     }
 }

@@ -23,7 +23,7 @@ namespace Compiler.Language {
 
             var fields = new List<DataFieldNode>();
             while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
-                               
+                                               
                 AnnotationNode? annotation = null;
                 while (Current.Kind == SyntaxKind.AnnotationToken) {
                     if (annotation == null) annotation = new AnnotationNode(Take());

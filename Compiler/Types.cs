@@ -297,6 +297,14 @@ namespace Compiler {
         TaskDeclarationToken,
 
 
+        // contextual indentations
+        ContextualIndent1,
+        ContextualIndent2,
+        ContextualIndent3,
+        ContextualIndent4,
+        ContextualIndent5,
+        ContextualIndent6,
+
         None,
     }
 

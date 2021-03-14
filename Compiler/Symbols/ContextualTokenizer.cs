@@ -24,17 +24,24 @@ namespace Compiler.Symbols {
             return c;
         }
         private Token? Take(SyntaxKind kind) {
-            if (Current?.Kind != kind) throw new Exception($"Expected token of kind '{kind}' but received token of kind'{Current.Kind}'.");
+            if (Current?.Kind != kind) throw new Exception($"Expected token of kind '{kind}' but received token of kind '{Current?.Kind}'.");
             return Take();
         }
+
+        /// <summary>
+        /// Force the collection of the token and throw an exception if it fails. 
+        /// Use TakeF only if you want the execution to break on error.
+        /// </summary>
+        /// <param name="kind"></param>
+        /// <returns></returns>
         private Token TakeF(SyntaxKind kind) {
             var result = Take();
-            if (result is null) throw new Exception($"Expected token of kind '{kind}' but received token of kind'{Current.Kind}'.");
+            if (result is null) throw new Exception($"Expected token of kind '{kind}' but received token of kind '{Current?.Kind}'.");
             else return result;
         }
-        private IEnumerable<Token> TakeWhile(Predicate<Token> p, int indentLevel = 0) {
+        private IEnumerable<Token?> TakeWhile(Predicate<Token> p, int indentLevel = 0) {
             while (Current != null && p(Current)) {
-                yield return Take().ChangeIndentLevel(indentLevel);
+                yield return Take()?.ChangeIndentLevel(indentLevel);
             }
         }
 
@@ -47,16 +54,31 @@ namespace Compiler.Symbols {
                 if (Current?.Kind != SyntaxKind.NewLineToken) return false;
 
                 // the newline compensator
+                // skip newlines because they are not important and should be ignored.
                 var nl = 1;
                 while (Next?.Kind == SyntaxKind.NewLineToken) nl++;
 
-
+                // check if we are at the end of the token stream
                 if (index + (depth + nl) > max) return false;
-                var valid = Tokens[index + depth + nl].Kind != SyntaxKind.IndentToken;
-                for (int i = nl; i < depth + nl; ++i) {
-                    valid = Tokens[index + i].Kind == SyntaxKind.IndentToken && valid;
+
+                // check if we are at the end of the block
+                var inNewline = false;
+                var indent = 0;
+                for (int i = index; i < max; ++i) {
+                    var t = Tokens[i];
+                    if (t.Kind == SyntaxKind.NewLineToken) {
+                        inNewline = true;
+                        indent = 0;
+                    }
+                    else if (inNewline && t.Kind == SyntaxKind.IndentToken) {
+                        inNewline = false;
+                        indent++;
+                    }
+                    else {
+                        return indent < depth;
+                    }
                 }
-                return valid;
+                return true;
             }
             else {
                 return false;
@@ -91,15 +113,18 @@ namespace Compiler.Symbols {
         }
 
         private Token ParseAnnotation() {
-            var attributeTokens = TakeWhile(t => t.Kind != SyntaxKind.NewLineToken).ToList();
+            var attributeTokens = TakeWhile(t => t.Kind != SyntaxKind.NewLineToken && t.Kind != SyntaxKind.ContextualIndent1 && t.Kind != SyntaxKind.ContextualIndent2).ToList();
             var annotationToken = new Token(attributeTokens, SyntaxKind.AnnotationToken);
             return annotationToken;
         }
 
         internal IEnumerable<TokenGroup> Tokenize(ContextType contextType = ContextType.None) {
+
             List<Token> annotations = new List<Token>();
             while (index < max) {
-                if (Current?.Kind == SyntaxKind.TypeDeclarationToken) {
+                if (Current?.Kind == SyntaxKind.StartBlock) Take();
+                else if (Current?.Kind == SyntaxKind.EndBlock) Take();
+                else if (Current?.Kind == SyntaxKind.TypeDeclarationToken) {
                     yield return TokenizeTypeDefinition(annotations);
                     annotations = new List<Token>();
                 }
@@ -181,7 +206,8 @@ namespace Compiler.Symbols {
 
                 else {
                     // We are probably in a markdown block and will interpert it like so...
-                    yield return TokenizeMarkdown();
+                    var markdownBlock = TokenizeMarkdown();
+                    if (markdownBlock.Tokens.Count() > 0) yield return markdownBlock;
                 }
             }
         }

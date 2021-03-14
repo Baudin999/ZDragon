@@ -39,7 +39,7 @@ namespace Compiler.Language {
                     List<List<Token>> items = new List<List<Token>>();
                     if (fieldDescription.FirstOrDefault()?.Kind == SyntaxKind.MinusToken ||
                         (fieldDescription.Count > 1 && fieldDescription[1]?.Kind == SyntaxKind.MinusToken)) {
-                        // we now assume taht we're in a list definition
+                        // we now assume that we're in a list definition
 
                         List<Token>? currentItem = null;
                         foreach (var item in fieldDescription) {

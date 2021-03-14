@@ -45,11 +45,14 @@ namespace ZDragon.UI.Controllers {
         [HttpPost("/document/{ns}")]
         public async Task<IActionResult> SaveModule([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
             var moduleInteractor = _project.Find<ModuleInteractor>(ns);
-            var result = await moduleInteractor.SaveModule(body.Code);
-
-            _ = _projectHub.ModuleChanged(result.Namespace);
-
-            return Ok(result.CompilationResult);
+            if (moduleInteractor != null) {
+                var result = await moduleInteractor.SaveModule(body.Code);
+                _ = _projectHub.ModuleChanged(result.Namespace);
+                return Ok(result.CompilationResult);
+            }
+            else {
+                return NotFound();
+            }
         }
 
         [HttpGet("/documents/{ns}/{file}.svg")]

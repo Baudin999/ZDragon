@@ -22,8 +22,8 @@ happen to the output:
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
-            Assert.Equal(3, compilerResult.Tokens.Count());
-            Assert.Equal(3, compilerResult.Ast.Count());
+            Assert.Equal(2, compilerResult.Tokens.Count());
+            Assert.Equal(2, compilerResult.Ast.Count());
         }
 
 
@@ -60,8 +60,8 @@ let peterPan =
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile();
 
-            Assert.Equal(7, compilerResult.Tokens.Count());
-            Assert.Equal(7, compilerResult.Ast.Count());
+            Assert.Equal(6, compilerResult.Tokens.Count());
+            Assert.Equal(6, compilerResult.Ast.Count());
         }
     }
 }

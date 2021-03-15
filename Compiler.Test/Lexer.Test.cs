@@ -101,6 +101,64 @@ namespace Lexer {
             Assert.Equal(code, ((MarkdownNode)compilerResult.Ast[0]).Literal);
         }
 
+        [Fact(DisplayName = "Lexer - Annotation after Paragraph")]
+        public void Lexer_AnnotationAfterParagraph() {
+            var codeFirst = @"
+paragraph
+@ a
+type Street = String;
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Empty(result.Errors);
+            Assert.Equal(2, result.Ast.Count);
+        }
+
+        [Fact(DisplayName = "Lexer - Annotation record after Paragraph")]
+        public void Lexer_AnnotationAfterParagraph_2() {
+            var codeFirst = @"
+paragraph
+@ a person
+record Person;
+@ a street
+type Street = String;
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Empty(result.Errors);
+            Assert.Equal(3, result.Ast.Count);
+            Assert.IsType<MarkdownNode>(result.Ast[0]);
+            Assert.IsType<RecordNode>(result.Ast[1]);
+            Assert.IsType<TypeAliasNode>(result.Ast[2]);
+
+            Assert.Equal("a person", ((RecordNode)result.Ast[1]).Description);
+        }
+
+        [Fact(DisplayName = "Lexer - Alternating")]
+        public void Lexer_Alternating() {
+            var codeFirst = @"
+paragraph
+@ a person
+record Person;
+Another paragraph
+type Street = String;
+record Foo
+Another another paragraph
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Empty(result.Errors);
+            Assert.Equal(6, result.Ast.Count);
+            Assert.IsType<MarkdownNode>(result.Ast[0]);
+            Assert.IsType<RecordNode>(result.Ast[1]);
+            Assert.IsType<MarkdownNode>(result.Ast[2]);
+            Assert.IsType<TypeAliasNode>(result.Ast[3]);
+            Assert.IsType<RecordNode>(result.Ast[4]);
+            Assert.IsType<MarkdownNode>(result.Ast[5]);
+
+            Assert.Equal("a person", ((RecordNode)result.Ast[1]).Description);
+        }
+
 
         [Fact(DisplayName = "Lex - Word on new line")]
         public void WordOnNewLine() {

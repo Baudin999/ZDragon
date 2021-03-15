@@ -7,7 +7,7 @@ using System.Linq;
 namespace Compiler.Language.Nodes {
     public class AttributesNode : ExpressionNode, IIdentifierExpressionNode {
         public Token IdToken { get; }
-        public string Id => IdToken.Value;
+        public string Id => IdToken.Value.Trim();
         public List<AttributeNode> Attributes { get; }
         public bool Imported { get; set; } = false;
         public string? ImportedFrom { get; set; } = null;
@@ -16,7 +16,7 @@ namespace Compiler.Language.Nodes {
         public string Title => GetAttribute("Title") ?? GetAttribute("Name") ?? Id;
 
         public string? GetAttribute(string name) {
-            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value;
+            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value.Trim();
         }
         public bool HasAttribute(string name) {
             return this.Attributes.FirstOrDefault(a => a.Key == name) != null;
@@ -27,7 +27,7 @@ namespace Compiler.Language.Nodes {
         }
 
         public List<string>? GetAttributeItems(string name) {
-            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Items;
+            return this.Attributes.FirstOrDefault(a => a.Key == name)?.Items.Select(i => i.Trim()).ToList();
         }
         public List<string> GetAttributeItems(string name, List<string> def) {
             return GetAttributeItems(name) ?? def;

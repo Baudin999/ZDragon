@@ -223,5 +223,27 @@ With a pragraph
         }
 
 
+        [Fact(DisplayName = "Component - Component in Document")]
+        public void Component_ComponentInDocument() {
+            var code = @"
+# Catalog
+
+This is a component template.
+
+component Catalog =
+    Name: Catalog
+    Description: The component description, this
+        can be multiline with indentation based 
+        syntax rules!
+
+";
+            var result = new Compiler.Compiler(code).Compile().Check();
+            Assert.Equal(3, result.Ast.Count);
+
+            Assert.IsType<MarkdownChapterNode>(result.Ast[0]);
+            Assert.IsType<MarkdownNode>(result.Ast[1]);
+            Assert.IsType<ComponentNode>(result.Ast[2]);
+        }
+
     }
 }

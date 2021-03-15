@@ -182,9 +182,11 @@ namespace Compiler.Symbols {
             var max = t.Count;
             var inContext = false;
             for (int i = 0; i < max; ++i) {
+                var previous = i > 0 ? t[i - 1] : null;
                 var token = t[i];
+                var next = i + 1 < max ? t[i + 1] : null;
 
-                if (!inContext && (Mappings.Keywords.ContainsKey(token.Value) || token.Kind == SyntaxKind.PercentageToken || token.Kind == SyntaxKind.AmpersandToken)) {
+                if (!inContext && previous?.Kind == SyntaxKind.NewLineToken && (Mappings.Keywords.ContainsKey(token.Value) || token.Kind == SyntaxKind.PercentageToken || token.Kind == SyntaxKind.AmpersandToken)) {
                     yield return new Token(SyntaxKind.StartBlock);
                     inContext = true;
                     yield return token;
@@ -195,7 +197,6 @@ namespace Compiler.Symbols {
                 else if (token.Kind == SyntaxKind.NewLineToken) {
                     int depth = 0;
                     var depthTokens = new List<Token?> { token };
-                    Token? next = i + 1 < max ? t[i + 1] : null;
 
                     while (i + 1 < max && t[i + 1].Kind == SyntaxKind.IndentToken) {
                         depth++;

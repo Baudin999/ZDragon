@@ -1,4 +1,5 @@
 ﻿using Compiler;
+using Compiler.Language.Nodes;
 using Xunit;
 
 namespace Lexicon {
@@ -38,19 +39,6 @@ type Street = String;
 
             var componentIndex = cache.ArchitectureNodes;
             Assert.Single(componentIndex);
-        }
-
-        [Fact(DisplayName = "Lexicon - Annotation after Paragraph")]
-        public void Lexicon_AnnotationAfterParagraph() {
-            var codeFirst = @"
-paragraph
-@ a
-type Street = String;
-";
-
-            var result = new Compiler.Compiler(codeFirst).Compile().Check();
-            Assert.Empty(result.Errors);
-            Assert.Equal(2, result.Ast.Count);
         }
 
         [Fact(DisplayName = "Lexicon - Default 002")]

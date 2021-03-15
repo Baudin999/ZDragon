@@ -20,17 +20,23 @@ namespace ZDragon.UI.Controllers {
 
         [HttpPost("/file")]
         public async Task<IActionResult> AddFile([FromBody] CreateFileSubmitBody body) {
+            try {
+                // the namespace is the folder to which the fill will be added
+                // the body is the FileSubmit
 
-            // the namespace is the folder to which the fill will be added
-            // the body is the FileSubmit
+                var app = _project.Find(body.AppName);
+                _ = await app.AddFile(body.Name, body.Type, body.Description);
+                _project.ResetDirectory();
 
-            var app = _project.Find(body.AppName);
-            _ = await app.AddFile(body.Name, body.Type, body.Description);
-            _project.ResetDirectory();
+                _ = RefreshProjectStructure();
 
-            _ = RefreshProjectStructure();
-
-            return Ok();
+                return Ok();
+            } catch (System.Exception ex) {
+                return Problem(
+                   title: $"Failed to add a file to the project: {body.AppName}.{body.Type}.{body.Name}",
+                   detail: ex.Message
+                   );
+            }
         }
 
         private async Task RefreshProjectStructure() {

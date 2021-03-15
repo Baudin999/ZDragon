@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace ZDragon.UI.Controllers {
 
@@ -20,10 +21,17 @@ namespace ZDragon.UI.Controllers {
 
         [HttpPost("/project/init/{path}")]
         public IActionResult InitProject(string path) {
-            var actualPath = path.Replace("__$__", "\\");
-            _project.Reload(actualPath);
-            _ = ProjectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
-            return Ok();
+            try {
+                var actualPath = path.Replace("__$__", "\\");
+                _project.Reload(actualPath);
+                _ = ProjectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
+                return Ok();
+            } catch (Exception ex) {
+                return Problem(
+                    title: $"Failed to initialize project: {path}",
+                    detail: ex.Message
+                    );
+            }
         }
 
     }

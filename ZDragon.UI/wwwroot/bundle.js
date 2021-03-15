@@ -8241,7 +8241,7 @@ var zdragon = (function () {
       target: document.body
     });
 
-    var connection = new signalR.HubConnectionBuilder().withUrl("/project").build();
+    var connection = new signalR.HubConnectionBuilder().withUrl("/project").withAutomaticReconnect().build();
     connection.on("ReceiveMessage", function (data) {
       // console.log("Ready from SignalR: " + data);
     });

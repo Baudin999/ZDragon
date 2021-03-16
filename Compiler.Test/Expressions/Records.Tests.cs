@@ -291,7 +291,7 @@ record Person =
     FirstName: Address.Street;
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile(true);
+            var compilerResult = compiler.Compile();
 
             Assert.Single(compilerResult.Ast);
             Assert.Single(compilerResult.ErrorSink.Errors);

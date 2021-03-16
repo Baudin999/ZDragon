@@ -64,6 +64,16 @@ namespace Compiler.Checkers {
                 HashSet<string> usedParams = new HashSet<string>();
                 bodyChecker(node, node.TypeDefinition, usedParams);
             }
+            else {
+                errorSink.AddWarning(new Warning(WarningType.Default, $"Endpoint '{node.Id}' does not have a type definition.", node.IdToken));
+            }
+
+            if (node.GetAttribute("Url") is null) {
+                errorSink.AddWarning(new Warning(WarningType.Default, $"Endpoint '{node.Id}' does not have a 'Url' attribute.", node.IdToken));
+            }
+            if (node.GetAttribute("Description") is null) {
+                errorSink.AddWarning(new Warning(WarningType.Default, $"Endpoint '{node.Id}' does not have a 'Description' attribute.", node.IdToken));
+            }
 
             CheckAttributesNode(node);
         }

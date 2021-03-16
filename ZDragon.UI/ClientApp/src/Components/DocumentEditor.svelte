@@ -36,6 +36,7 @@
             return;
         }
         text = module.text;
+
         var errors = module.compilationResult?.errors || [];
         var mappedErrors = errors.map(mapErrorToken);
         markers.set(mappedErrors);

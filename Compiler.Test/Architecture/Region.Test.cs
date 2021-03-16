@@ -23,7 +23,7 @@ Just the ""Description"" field is not enough!
 
 
 component Something =
-    Name: SOmething
+    Name: Something Title
     Description: %something
 
 ";

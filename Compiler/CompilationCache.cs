@@ -58,7 +58,7 @@ namespace Compiler {
         public Index GenerateComponentIndex(params string[] namespaces) {
             var result = new Index();
 
-            foreach (string ns in namespaces) {
+            foreach (string ns in namespaces.Where(n => n != null)) {
                 if (Cache.ContainsKey(ns)) {
                     foreach (var (key, value) in Cache[ns].Lexicon) {
                         if (value is IArchitectureNode && !value.Imported)

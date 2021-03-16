@@ -42,6 +42,10 @@ namespace Compiler.Language.Nodes {
             this.Attributes = attributes.ToList();
             this.Extensions = extensions;
         }
+
+        public override string ToString() {
+            return Id;
+        }
     }
 
     public class AttributeNode : AstNode {

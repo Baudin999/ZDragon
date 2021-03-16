@@ -13,6 +13,7 @@ namespace Compiler {
         public Dictionary<string, IIdentifierExpressionNode> Lexicon { get; }
         public IEnumerable<IDocumentNode> Document { get; }
         public List<Error> Errors => ErrorSink.Errors;
+        public List<Warning> Warnings => ErrorSink.Warnings;
         public string Namespace { get; }
         public List<OpenNode> References { get; }
 

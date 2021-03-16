@@ -245,5 +245,26 @@ component Catalog =
             Assert.IsType<ComponentNode>(result.Ast[2]);
         }
 
+
+        [Fact(DisplayName = "Component - Empty Lines")]
+        public void Component_EmptyLines() {
+            var code = @"
+component Catalog =
+
+    Name: Catalog
+
+    Description: The component description, this
+        can be multiline with indentation based 
+        syntax rules!
+
+        
+    Something: Else
+
+";
+            var result = new Compiler.Compiler(code).Compile().Check();
+            Assert.Single(result.Ast);
+            Assert.IsType<ComponentNode>(result.Ast[0]);
+        }
+
     }
 }

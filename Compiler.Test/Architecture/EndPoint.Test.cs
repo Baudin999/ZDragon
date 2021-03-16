@@ -10,6 +10,8 @@ namespace Architecture {
 endpoint GetProfile :: ProfileId -> Maybe Profile =
     Name: Get Profile
     Title: Get Profile by ProfileId
+    Url: /api/v0/profile/{profileId}
+    Method: GET
     Description: Get the right Profile by the Profile ProfileId,
         and return the right Profile
 
@@ -20,6 +22,7 @@ type ProfileId = Guid;
             var compilerResult = compiler.Compile().Check();
 
             Assert.Empty(compilerResult.Errors);
+            Assert.Empty(compilerResult.Warnings);
             Assert.Equal(3, compilerResult.Tokens.Count());
             Assert.IsType<EndpointNode>(compilerResult.Ast.First());
 
@@ -38,7 +41,6 @@ type ProfileId = Guid;
             Assert.Equal("Maybe", tan.Parameters[0].Value);
             Assert.Equal("Profile", tan.Parameters[1].Value);
 
-
         }
 
         [Fact(DisplayName = "EndPoint - Type Error")]
@@ -51,13 +53,10 @@ endpoint GetProfile :: ProfileId -> Maybe Profile =
             var compilerResult = compiler.Compile().Check();
 
             Assert.Equal(2, compilerResult.Errors.Count);
-            
+            Assert.Equal(2, compilerResult.Warnings.Count);
+
         }
     }
 }
 
 
-/*
- * 
-
-*/

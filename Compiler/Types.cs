@@ -250,26 +250,16 @@ namespace Compiler {
         // Keywords
         WhereToken,
         RecordDeclarationToken,
-        /// <summary>
-        /// type
-        /// </summary>
         TypeDeclarationToken,
         DataDeclarationToken,
         ChoiceDeclarationToken,
         OpenDeclarationToken,
         EndKeywordToken,
-        /// <summary>
-        /// func
-        /// </summary>
         FuncDefinitionToken,
         IfToken,
         ElseToken,
-        LetToken,
-        ExtendsToken,
-        /// <summary>
-        /// 'a 
-        /// :apos:letters:
-        /// </summary>
+        LetToken,                   // let
+        ExtendsToken,               // extends
         GenericParameterToken,
 
         // literals
@@ -304,6 +294,8 @@ namespace Compiler {
         ContextualIndent4,
         ContextualIndent5,
         ContextualIndent6,
+
+        EndDirective,
 
         None,
     }

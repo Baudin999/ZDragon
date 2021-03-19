@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler.Symbols {
 
@@ -27,6 +28,12 @@ namespace Compiler.Symbols {
                     identifierParts.Add(TakeF(SyntaxKind.IdentifierToken));
 
                     tokens.Add(new QualifiedToken(identifierParts));
+                }
+                else if (Current?.Kind == SyntaxKind.PercentageToken && Previous?.Kind == SyntaxKind.ContextualIndent1) {
+                    // manage directive
+                    var directiveTokens = TakeWhile(t => t.Kind != SyntaxKind.ContextualIndent1).ToList();
+                    tokens.AddRange(directiveTokens);
+                    tokens.Add(new Token(SyntaxKind.EndDirective));
                 }
 
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {

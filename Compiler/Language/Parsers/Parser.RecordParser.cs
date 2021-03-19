@@ -53,6 +53,13 @@ namespace Compiler.Language {
                         else annotation.Add(Take());
                     }
 
+                    var directives = new List<DirectiveNode>();
+                    while (Current.Kind == SyntaxKind.PercentageToken) {
+                        var directive = ParseDirective();
+                        directives.Add(directive);
+                        Take(SyntaxKind.EndDirective);
+                    }
+
                     var fieldId = Take(SyntaxKind.IdentifierToken);
                     Take(SyntaxKind.ColonToken);
                     var fieldType = new List<Token>();
@@ -72,7 +79,7 @@ namespace Compiler.Language {
 
                     Take(SyntaxKind.SemiColonToken);
 
-                    fields.Add(new RecordFieldNode(annotation, fieldId, fieldType, restrictions));
+                    fields.Add(new RecordFieldNode(annotation, directives, fieldId, fieldType, restrictions));
                 }
             }
 

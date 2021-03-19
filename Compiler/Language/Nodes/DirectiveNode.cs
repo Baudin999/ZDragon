@@ -15,5 +15,12 @@ namespace Compiler.Language.Nodes {
             this.Literal = string.Join("", ValueTokens.Select(value => value.Value)).Trim();
         }
 
+
+        public DirectiveNode Clone() {
+            return new DirectiveNode(
+                this.IdToken.Clone(),
+                this.ValueTokens.Select(vt => vt.Clone())
+                );
+        }
     }
 }

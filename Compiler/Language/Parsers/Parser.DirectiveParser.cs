@@ -6,7 +6,7 @@ using System.Linq;
 namespace Compiler.Language {
     public partial class Parser
     {
-        public ExpressionNode ParseDirective()
+        public DirectiveNode ParseDirective()
         {
             var openDirective = Take(SyntaxKind.PercentageToken);
             TakeWhile(SyntaxKind.WhiteSpaceToken);
@@ -14,7 +14,7 @@ namespace Compiler.Language {
             TakeWhile(SyntaxKind.WhiteSpaceToken);
             if (Current?.Kind == SyntaxKind.ColonToken) {
                 Take(SyntaxKind.ColonToken);
-                var value = TakeWhile(t => t.Kind != SyntaxKind.EndBlock);
+                var value = TakeWhile(t => t.Kind != SyntaxKind.EndDirective);
                 return new DirectiveNode(id, value);
             }
             else {

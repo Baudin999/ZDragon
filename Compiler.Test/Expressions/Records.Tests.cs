@@ -291,7 +291,7 @@ record Person =
     FirstName: Address.Street;
 ";
             var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile(true);
+            var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Ast);
             Assert.Single(compilerResult.ErrorSink.Errors);
@@ -410,6 +410,63 @@ record PeterPan extends Person Address =
 
             var peterPan = compilerResult.Lexicon["PeterPan"] as RecordNode;
             Assert.Equal(4, peterPan.Fields.Count);
+        }
+
+        [Fact(DisplayName = "Record - Field Directives 001")]
+        public void Record_FieldDirectives001() {
+            var code = @"
+record Person =
+    % direction: left
+    Address: Address;
+
+record Address;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Empty(compilerResult.ErrorSink.Errors);
+
+            Assert.IsType<RecordNode>(compilerResult.Ast[0]);
+            var personNode = (RecordNode)compilerResult.Ast[0];
+
+            Assert.Single(personNode.Fields[0].Directives);
+            Assert.IsType<DirectiveNode>(personNode.Fields[0].Directives[0]);
+            DirectiveNode directive = (DirectiveNode)personNode.Fields[0].Directives[0];
+            Assert.Equal("direction", directive.Id);
+            Assert.Equal("left", directive.Literal);
+        }
+
+
+        [Fact(DisplayName = "Record - Field Directives 002")]
+        public void Record_FieldDirectives002() {
+            var code = @"
+record Person =
+    
+    @ The description of the field
+    @ on multiple lines...
+    % direction: left
+    % render: false
+    Address: Address;
+
+record Address;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Empty(compilerResult.ErrorSink.Errors);
+
+            Assert.IsType<RecordNode>(compilerResult.Ast[0]);
+            var personNode = (RecordNode)compilerResult.Ast[0];
+
+
+            Assert.Equal(2, personNode.Fields[0].Directives.Count);
+            Assert.Equal("The description of the field on multiple lines...", personNode.Fields[0].Description);
+            Assert.IsType<DirectiveNode>(personNode.Fields[0].Directives[0]);
+            DirectiveNode directive = (DirectiveNode)personNode.Fields[0].Directives[0];
+            Assert.Equal("direction", directive.Id);
+            Assert.Equal("left", directive.Literal);
         }
 
 

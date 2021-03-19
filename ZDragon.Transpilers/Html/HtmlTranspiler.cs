@@ -177,13 +177,14 @@ namespace ZDragon.Transpilers.Html {
                 var doc_title = directiveNodes.FirstOrDefault(d => d.Id == "Title")?.Literal ?? "No title";
                 var doc_author = directiveNodes.FirstOrDefault(d => d.Id == "Author")?.Literal ?? "No author";
                 var doc_date = directiveNodes.FirstOrDefault(d => d.Id == "Date")?.Literal ?? "No date";
+                var doc_image = directiveNodes.FirstOrDefault(d => d.Id == "Image")?.Literal ?? "/standalone-icon.png";
 
                 parts.Add($@"
 <div class='title-page'>
     <div class='title-page--title'>{doc_title}</div>
     <div class='title-page--author'>{doc_author}</div>
     <div class='title-page--date'>{doc_date}</div>
-    <img src='/standalone-icon.png' />
+    <img style='max-width:100%;' src='{doc_image}' />
 </div>
 ");
             }

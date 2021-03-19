@@ -50,38 +50,38 @@ namespace Compiler {
             return compilationResult;
         }
 
-        public CompilationResult Compile(ContextType initialContext = ContextType.None) {
-            var tokens = new Lexer(this.SourceCode, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
-            var contextualTokens = new ContextualTokenizer(tokens, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
-            var ast = new ContextualParser(contextualTokens, this.Cache.ErrorSink).Parse().ToList();
-            var lexicon = new Lexicon(ast, Cache, this.Namespace).CreateLexicon();
-            var document = ast.OfType<IDocumentNode>();
-            var referencedModules = ast.OfType<OpenNode>();
-            var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);
+        //public CompilationResult Compile(ContextType initialContext = ContextType.None) {
+        //    var tokens = new Lexer(this.SourceCode, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
+        //    var contextualTokens = new ContextualTokenizer(tokens, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
+        //    var ast = new ContextualParser(contextualTokens, this.Cache.ErrorSink).Parse().ToList();
+        //    var lexicon = new Lexicon(ast, Cache, this.Namespace).CreateLexicon();
+        //    var document = ast.OfType<IDocumentNode>();
+        //    var referencedModules = ast.OfType<OpenNode>();
+        //    var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);
 
-            new TypeChecker(this.Cache, compilationResult).Check();
+        //    new TypeChecker(this.Cache, compilationResult).Check();
 
-            Cache.Add(this.Namespace, compilationResult);
-            return compilationResult;
-        }
+        //    Cache.Add(this.Namespace, compilationResult);
+        //    return compilationResult;
+        //}
 
-        public CompilationResult Compile(bool typeCheck) {
-            var initialContext = ContextType.None;
-            var tokens = new Lexer(this.SourceCode, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
-            var contextualTokens = new ContextualTokenizer(tokens, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
-            var ast = new ContextualParser(contextualTokens, this.Cache.ErrorSink).Parse().ToList();
-            var lexicon = new Lexicon(ast, Cache, this.Namespace).CreateLexicon();
-            var document = ast.OfType<IDocumentNode>();
-            var referencedModules = ast.OfType<OpenNode>();
-            var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);
+        //public CompilationResult Compile(bool typeCheck) {
+        //    var initialContext = ContextType.None;
+        //    var tokens = new Lexer(this.SourceCode, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
+        //    var contextualTokens = new ContextualTokenizer(tokens, this.Cache.ErrorSink).Tokenize(initialContext).ToList();
+        //    var ast = new ContextualParser(contextualTokens, this.Cache.ErrorSink).Parse().ToList();
+        //    var lexicon = new Lexicon(ast, Cache, this.Namespace).CreateLexicon();
+        //    var document = ast.OfType<IDocumentNode>();
+        //    var referencedModules = ast.OfType<OpenNode>();
+        //    var compilationResult = new CompilationResult(ast, contextualTokens, this.Cache, referencedModules, lexicon, document, this.Namespace);
 
-            if (typeCheck) {
-                new TypeChecker(this.Cache, compilationResult).Check();
-            }
+        //    if (typeCheck) {
+        //        new TypeChecker(this.Cache, compilationResult).Check();
+        //    }
 
-            this.Cache.Add(this.Namespace, compilationResult);
-            return compilationResult;
-        }
+        //    this.Cache.Add(this.Namespace, compilationResult);
+        //    return compilationResult;
+        //}
 
 
 

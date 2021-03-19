@@ -14,6 +14,7 @@ namespace Compiler.Symbols {
 
         private int index = 0;
         private readonly int max;
+        private Token? Previous => index > 0 ? Tokens[index - 1] : null;
         private Token? Current => index < max ? Tokens[index] : null;
         private Token? Next => (index + 1) < max ? Tokens[index + 1] : null;
         private Token? Take() {

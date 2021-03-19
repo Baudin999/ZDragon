@@ -196,6 +196,38 @@ component Foo extends BaseComponents.Foo =
             Assert.Equal(2, foo.Attributes.Count);
         }
 
+        [Fact(DisplayName = "Component - Import Relations")]
+        public void Component_ImportRelations() {
+            var errorSink = new ErrorSink();
+            var codeFirst = @"
+system Foo =
+    Contains:
+        - Bar
+
+component Bar
+";
+            var codeSecond = @"
+open BaseComponents;
+component FooBar =
+    Interactions:
+        - Foo
+";
+            var cache = new CompilationCache(errorSink);
+            var compilerResultFirst = new Compiler.Compiler(codeFirst, "BaseComponents", cache).Compile().Check();
+            var compilerResultSecond = new Compiler.Compiler(codeSecond, "Components", cache).Compile().Check();
+
+            Assert.NotNull(compilerResultFirst);
+            Assert.NotNull(compilerResultSecond);
+
+            Assert.Empty(errorSink.Errors);
+
+            Assert.Equal(2, compilerResultSecond.Ast.Count);
+            Assert.Equal(2, compilerResultSecond.Lexicon.Count);
+            Assert.True(compilerResultSecond.Lexicon.ContainsKey("Foo"));
+            Assert.True(compilerResultSecond.Lexicon.ContainsKey("FooBar"));
+            Assert.False(compilerResultSecond.Lexicon.ContainsKey("Bar"));
+        }
+
         [Fact(DisplayName = "System - EmptyContains")]
         public void System_EmptyContains() {
             var errorSink = new ErrorSink();

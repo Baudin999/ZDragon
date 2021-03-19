@@ -11,12 +11,10 @@ namespace ZDragon.Transpilers.Components {
             "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
         };
         private readonly Dictionary<string, string> types = new Dictionary<string, string>();
-        //private readonly List<string> parts = new List<string>();
-        private readonly List<string> relations = new List<string>();
+        private readonly Dictionary<string, string> relations = new Dictionary<string, string>();
         private HashSet<string> nonRootNodes = new HashSet<string>();
-        //private readonly List<string> rootNodes = new List<string>();
         private readonly List<string> containedComponents = new List<string>();
-        private readonly List<string> reservedAttributes  = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
+        private readonly List<string> reservedAttributes = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
 
         private void TranspileComponent(ComponentNode node) {
             var name = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
@@ -102,11 +100,11 @@ namespace ZDragon.Transpilers.Components {
             };
 
             if (node.Imported) {
-                if (type == "System")  componentName += "_Ext";
-                types.Add(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"")");
+                //if (type == "System")  componentName += "_Ext";
+                types.TryAdd(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"")");
             }
             else if (contains.Count == 0 && !types.ContainsKey(node.Id)) {
-                types.Add(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"")");
+                types.TryAdd(node.Id, $@"{attributes}{componentName}({node.Id}, ""{name}"", ""v{version},system"")");
             }
             else {
                 systemParts.Add($@"{attributes}{componentName}({node.Id}, ""{name}"", ""{description}"") {{");
@@ -126,8 +124,8 @@ namespace ZDragon.Transpilers.Components {
             }
 
             if (!containedComponents.Contains(node.Id) && types.TryAdd(node.Id, string.Join("\r\n", systemParts))) {
-                ParseInteractions(node);
             }
+            ParseInteractions(node);
         }
 
         private void ParseInteractions(AttributesNode node) {
@@ -141,7 +139,7 @@ namespace ZDragon.Transpilers.Components {
                 }
 
                 if (lexicon.ContainsKey(interactionParts[0])) {
-                    relations.Add($"Rel({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]})");
+                    relations.TryAdd($"{node.Id}{interactionParts[0]}", $"Rel({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]})");
                 }
             }
         }
@@ -154,6 +152,7 @@ namespace ZDragon.Transpilers.Components {
             var name = node.GetAttribute("Name");
             var description = node.GetAttribute("Description");
             var direction = node.GetAttribute("Direction", "");
+            var hidden = bool.Parse(node.GetAttribute("Hidden", "False").ToLower());
 
             var _status = node.GetAttribute("Status", "").ToLower();
 
@@ -165,20 +164,37 @@ namespace ZDragon.Transpilers.Components {
                 _ => "-[#353535]->"
             };
 
-            var d = direction switch {
-                "Up" => "Rel_U",
-                "Down" => "Rel_D",
-                "Left" => "Rel_L",
-                "Right" => "Rel_R",
-                _ => "Rel_"
-            };
 
-            if (from != null && to != null && d == "Rel_") {
-                relations.Add($"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech}, {_relColor})");
+            var d = "Rel_";
+
+            if (hidden) {
+                d = direction switch {
+                    "Up" => "Lay_U",
+                    "Down" => "Lay_D",
+                    "Left" => "Lay_L",
+                    "Right" => "Lay_R",
+                    _ => "Rel_"
+                };
+                relations.TryAdd($"{from}{to}_{new Guid()}", $"{d}({from}, {to})");
             }
-            else if (from != null && to != null) {
-                relations.Add($"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech})");
+            else {
+                d = direction switch {
+                    "Up" => "Rel_U",
+                    "Down" => "Rel_D",
+                    "Left" => "Rel_L",
+                    "Right" => "Rel_R",
+                    _ => "Rel_"
+                };
+
+                if (from != null && to != null && d == "Rel_") {
+                    relations.TryAdd($"{from}{to}", $"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech}, {_relColor})");
+                }
+                else if (from != null && to != null) {
+                    relations.TryAdd($"{from}{to}", $"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech})");
+                }
             }
+
+           
         }
 
         private string ParseTags(AttributesNode node) {
@@ -252,7 +268,7 @@ AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColo
 " +
                 String.Join("\r\n", validParts) +
                 "\r\n\r\n" +
-                string.Join("\r\n", relations) +
+                string.Join("\r\n", relations.Select(r => r.Value)) +
                 "\r\n\r\nSHOW_DYNAMIC_LEGEND()";
         }
     }

@@ -122,7 +122,7 @@
             <TabPanel>
                 <Panel style="height: calc(100% - 3rem);">
                     {#if planningSvgUrl}
-                        <img alt="svg" src={planningSvgUrl} />
+                        <img style="min-width:100%; max-width:100%;" alt="svg" src={planningSvgUrl} />
                     {/if}
                 </Panel>
             </TabPanel>

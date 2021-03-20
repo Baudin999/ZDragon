@@ -260,7 +260,7 @@ namespace ZDragon.Transpilers.Components {
 !define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
 
 
-AddTagSupport(""deprecated"", $bgColor=""#750103"", $fontColor=""#fff"", $borderColor=""#280000"")
+AddTagSupport(""deprecated"", $bgColor=""#7912F4"", $fontColor=""#FFFFFA"", $borderColor=""#026320"")
 AddTagSupport(""new"", $bgColor=""#ad6800"", $fontColor=""#fff"", $borderColor=""#002808"")
 AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#593500"")
 

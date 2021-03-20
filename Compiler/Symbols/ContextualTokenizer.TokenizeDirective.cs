@@ -21,7 +21,7 @@ namespace Compiler.Symbols {
                 }
             }
 
-            tokens.Add(Token.EndBlock);
+            tokens.Add(new Token(SyntaxKind.EndDirective));
 
             return new TokenGroup(ContextType.DirectiveDeclaration, tokens);
         }

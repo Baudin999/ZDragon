@@ -4858,7 +4858,7 @@ var zdragon = (function () {
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*componentUrl*/ ctx[2])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-1pwsn1t");
-    			add_location(img, file$a, 92, 24, 3369);
+    			add_location(img, file$a, 92, 24, 3384);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -4884,7 +4884,7 @@ var zdragon = (function () {
     	return block;
     }
 
-    // (91:16) <Panel style="height: calc(100% - 3rem);">
+    // (91:16) <Panel style="height: calc(100% - 3rem); overflow:auto;">
     function create_default_slot_6(ctx) {
     	let if_block_anchor;
     	let if_block = /*svgUrl*/ ctx[1] && create_if_block_2$1(ctx);
@@ -4922,7 +4922,7 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_6.name,
     		type: "slot",
-    		source: "(91:16) <Panel style=\\\"height: calc(100% - 3rem);\\\">",
+    		source: "(91:16) <Panel style=\\\"height: calc(100% - 3rem); overflow:auto;\\\">",
     		ctx
     	});
 
@@ -4935,7 +4935,7 @@ var zdragon = (function () {
 
     	const panel = new Panel({
     			props: {
-    				style: "height: calc(100% - 3rem);",
+    				style: "height: calc(100% - 3rem); overflow:auto;",
     				$$slots: { default: [create_default_slot_6] },
     				$$scope: { ctx }
     			},
@@ -4995,7 +4995,7 @@ var zdragon = (function () {
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*svgUrl*/ ctx[1])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-1pwsn1t");
-    			add_location(img, file$a, 100, 24, 3629);
+    			add_location(img, file$a, 100, 24, 3659);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -5021,7 +5021,7 @@ var zdragon = (function () {
     	return block;
     }
 
-    // (99:16) <Panel style="height: calc(100% - 3rem);">
+    // (99:16) <Panel style="height: calc(100% - 3rem); overflow:auto;">
     function create_default_slot_4(ctx) {
     	let if_block_anchor;
     	let if_block = /*svgUrl*/ ctx[1] && create_if_block_1$2(ctx);
@@ -5059,7 +5059,7 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_4.name,
     		type: "slot",
-    		source: "(99:16) <Panel style=\\\"height: calc(100% - 3rem);\\\">",
+    		source: "(99:16) <Panel style=\\\"height: calc(100% - 3rem); overflow:auto;\\\">",
     		ctx
     	});
 
@@ -5072,7 +5072,7 @@ var zdragon = (function () {
 
     	const panel = new Panel({
     			props: {
-    				style: "height: calc(100% - 3rem);",
+    				style: "height: calc(100% - 3rem); overflow:auto;",
     				$$slots: { default: [create_default_slot_4] },
     				$$scope: { ctx }
     			},
@@ -5129,10 +5129,12 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			img = element("img");
+    			set_style(img, "min-width", "100%");
+    			set_style(img, "max-width", "100%");
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*planningSvgUrl*/ ctx[3])) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "class", "svelte-1pwsn1t");
-    			add_location(img, file$a, 108, 24, 3891);
+    			add_location(img, file$a, 108, 24, 3936);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, img, anchor);
@@ -5158,7 +5160,7 @@ var zdragon = (function () {
     	return block;
     }
 
-    // (107:16) <Panel style="height: calc(100% - 3rem);">
+    // (107:16) <Panel style="height: calc(100% - 3rem); overflow:auto;">
     function create_default_slot_2(ctx) {
     	let if_block_anchor;
     	let if_block = /*planningSvgUrl*/ ctx[3] && create_if_block$3(ctx);
@@ -5196,7 +5198,7 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_2.name,
     		type: "slot",
-    		source: "(107:16) <Panel style=\\\"height: calc(100% - 3rem);\\\">",
+    		source: "(107:16) <Panel style=\\\"height: calc(100% - 3rem); overflow:auto;\\\">",
     		ctx
     	});
 
@@ -5209,7 +5211,7 @@ var zdragon = (function () {
 
     	const panel = new Panel({
     			props: {
-    				style: "height: calc(100% - 3rem);",
+    				style: "height: calc(100% - 3rem); overflow:auto;",
     				$$slots: { default: [create_default_slot_2] },
     				$$scope: { ctx }
     			},
@@ -5458,9 +5460,9 @@ var zdragon = (function () {
     			attr_dev(div2, "class", "document-editor svelte-1pwsn1t");
     			add_location(div2, file$a, 59, 4, 2157);
     			attr_dev(i, "class", "fa fa-print svelte-1pwsn1t");
-    			add_location(i, file$a, 115, 12, 4093);
+    			add_location(i, file$a, 118, 12, 4265);
     			attr_dev(div3, "class", "print-button svelte-1pwsn1t");
-    			add_location(div3, file$a, 114, 8, 4036);
+    			add_location(div3, file$a, 117, 8, 4208);
     			attr_dev(div4, "class", "page-viewer svelte-1pwsn1t");
     			add_location(div4, file$a, 64, 4, 2277);
     			attr_dev(div5, "class", "container svelte-1pwsn1t");
@@ -8155,10 +8157,7 @@ var zdragon = (function () {
                 [/\d+/, "number"],
                 [/"/, { token: 'string.quote', bracket: '@open', next: '@string' }],
                 [/'[a-z]/, "generic-parameter"], // generic types
-                //[/([\t\s{4}])([^:]*)(:)([^;]+)(;)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }, "number"], "@field"],
-                //[/([\t\s{4}])([^:]*)(:)([^;]+)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }], "@field"],
-                //[/( *)(&)( *)([^ ]+)/, ["", "number", "", "annotation"]],
-                // [';', 'number', "@field"],
+                { include: "root" },
                 { include: "lang" }
             ],
             attributes: [
@@ -8192,7 +8191,7 @@ var zdragon = (function () {
         },
         rules: [
             { token: "chapter", foreground: "#ea5dd5" },
-            { token: "annotation", foreground: "#800000" },
+            { token: "annotation", foreground: "#cd9394" },
             { token: "identifier", foreground: "#00aa9e" },
             { token: "basetype", foreground: "#fdf8ea" },
             { token: "generic-parameter", foreground: "#ea5dd5" },

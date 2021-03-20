@@ -92,6 +92,7 @@ namespace Compiler.Language {
                         var resolvedFields = recordNode.Fields.Select(f => {
                             return new RecordFieldNode(
                                 f.AnnotationNode?.Clone(),
+                                f.Directives.Select(d => d.Clone()),
                                 f.IdToken.Clone(),
                                 f.TypeTokens.Select(t => {
                                     if (genericParameters.ContainsKey(t.Value)) return genericParameters[t.Value];
@@ -128,6 +129,7 @@ namespace Compiler.Language {
         }
 
         private void AddAttributesNode(AttributesNode node) {
+
             var interactions = node.GetAttributeItems("Interactions", new List<string>());
             foreach (var interaction in interactions) {
 

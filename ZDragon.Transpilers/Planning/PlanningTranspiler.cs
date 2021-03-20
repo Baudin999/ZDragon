@@ -65,6 +65,9 @@ namespace ZDragon.Transpilers.Planning {
             else if (start != null && end is null && duration != null) {
                 parts.Add($"[{title}] as [{node.Id}] {startString} and lasts {duration}");
             }
+            else if (start is null && end is null) {
+                parts.Add($"[{title}] as [{node.Id}] lasts {duration}{afterString}");
+            }
             else {
                 parts.Add($"[{title}] as [{node.Id}] lasts {duration}{afterString}");
             }

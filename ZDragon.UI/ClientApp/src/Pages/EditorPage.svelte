@@ -104,7 +104,7 @@
             </TabPanel>
 
             <TabPanel>
-                <Panel style="height: calc(100% - 3rem);">
+                <Panel style="height: calc(100% - 3rem); overflow:auto;">
                     {#if svgUrl}
                         <img alt="svg" src={componentUrl} />
                     {/if}
@@ -112,7 +112,7 @@
             </TabPanel>
 
             <TabPanel>
-                <Panel style="height: calc(100% - 3rem);">
+                <Panel style="height: calc(100% - 3rem); overflow:auto;">
                     {#if svgUrl}
                         <img alt="svg" src={svgUrl} />
                     {/if}
@@ -120,9 +120,12 @@
             </TabPanel>
 
             <TabPanel>
-                <Panel style="height: calc(100% - 3rem);">
+                <Panel style="height: calc(100% - 3rem); overflow:auto;">
                     {#if planningSvgUrl}
-                        <img alt="svg" src={planningSvgUrl} />
+                        <img
+                            style="min-width:100%; max-width:100%;"
+                            alt="svg"
+                            src={planningSvgUrl} />
                     {/if}
                 </Panel>
             </TabPanel>

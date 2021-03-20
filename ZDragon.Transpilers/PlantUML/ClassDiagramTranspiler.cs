@@ -61,13 +61,17 @@ class {node.Id} {{
                         // we might want to treat generic parameters differently in the future.
                     }
                     else if (!baseTypes.Contains(t)) {
+                        var direction = field.Directives.FirstOrDefault(d => d.Id == "direction")?.Literal ?? "";
+                        var connector = $"-{direction.ToLower()}-";
+                            
                         if (field.IsList) {
+
                             var min = field.Restrictions.FirstOrDefault(r => r.Key == "min")?.Value ?? "0";
                             var max = field.Restrictions.FirstOrDefault(r => r.Key == "max")?.Value ?? "*";
-                            relations.Add($"{node.Id} \"{1}\" -- \"{min}-{max}\" {t}");
+                            relations.Add($"{node.Id} \"{1}\" {connector} \"{min}-{max}\" {t}");
                         }
                         else {
-                            relations.Add($"{node.Id} -- {t}");
+                            relations.Add($"{node.Id} {connector} {t}");
                         }
                     }
                 }

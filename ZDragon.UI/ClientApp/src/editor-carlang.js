@@ -85,10 +85,7 @@ export const tokenizer = {
             [/\d+/, "number"],
             [/"/, { token: 'string.quote', bracket: '@open', next: '@string' }],
             [/'[a-z]/, "generic-parameter"], // generic types
-            //[/([\t\s{4}])([^:]*)(:)([^;]+)(;)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }, "number"], "@field"],
-            //[/([\t\s{4}])([^:]*)(:)([^;]+)/, ["nothing", "nothing", "number", { token: "", next: "@decode_type.$4" }], "@field"],
-            //[/( *)(&)( *)([^ ]+)/, ["", "number", "", "annotation"]],
-            // [';', 'number', "@field"],
+            { include: "root" },
             { include: "lang" }
         ],
         attributes: [
@@ -122,7 +119,7 @@ export const theme = {
     },
     rules: [
         { token: "chapter", foreground: "#ea5dd5" },
-        { token: "annotation", foreground: "#800000" },
+        { token: "annotation", foreground: "#cd9394" },
         { token: "identifier", foreground: "#00aa9e" },
         { token: "basetype", foreground: "#fdf8ea" },
         { token: "generic-parameter", foreground: "#ea5dd5" },

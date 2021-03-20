@@ -8,20 +8,21 @@ namespace Compiler.Checkers {
     public partial class TypeChecker {
 
         private void CheckAttributesNode(AttributesNode node) {
-            var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();
-
-            foreach (var interaction in interactions) {
-                var token = interaction.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
-                if (token != null) {
-                    CheckToken(node, null, token);
+            if (!node.Imported) {
+                var interactions = node.Attributes.FirstOrDefault(a => a.Key == "Interactions")?.ItemsTokens ?? new List<List<Token>>();
+                foreach (var interaction in interactions) {
+                    var token = interaction.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
+                    if (token != null) {
+                        CheckToken(node, null, token);
+                    }
                 }
-            }
 
-            var contains = node.Attributes.FirstOrDefault(a => a.Key == "Contains")?.ItemsTokens ?? new List<List<Token>>();
-            foreach (var c in contains) {
-                var token = c.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
-                if (token != null) {
-                    CheckToken(node, null, token);
+                var contains = node.Attributes.FirstOrDefault(a => a.Key == "Contains")?.ItemsTokens ?? new List<List<Token>>();
+                foreach (var c in contains) {
+                    var token = c.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
+                    if (token != null) {
+                        CheckToken(node, null, token);
+                    }
                 }
             }
 

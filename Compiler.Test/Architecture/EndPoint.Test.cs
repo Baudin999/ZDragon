@@ -56,6 +56,40 @@ endpoint GetProfile :: ProfileId -> Maybe Profile =
             Assert.Equal(2, compilerResult.Warnings.Count);
 
         }
+
+        [Fact(DisplayName = "EndPoint - Markdown Description")]
+        public void EndPoint_MarkdownDescription() {
+            var code = @"
+
+endpoint GetNextBestOffer :: ProfileId -> Offer =
+    Name: Get Next Best Offer
+    Url: /api/v0/get_next_best_offer/{profileId}
+    Description: Get Next Best Offer
+    Method: POST
+    Version: 0
+    Interactions:
+        - Matching
+    Documentation:
+        We will want to get the next best offer
+        from the OfferStore. This API can be
+        called with the profileId and will return 
+        a set of unique offers for this profile.
+
+        Some bulletpoints to make a point:
+         * First
+             * extra
+         * Second
+
+type ProfileId = String;
+record Offer
+";
+            var result = new Compiler.Compiler(code).Compile().Check();
+
+            Assert.NotNull(result);
+            Assert.Equal(3, result.Ast.Count);
+            Assert.Equal(3, result.Lexicon.Count);
+
+        }
     }
 }
 

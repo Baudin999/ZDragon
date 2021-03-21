@@ -39,7 +39,7 @@ namespace Compiler.Symbols {
                 // This shows us that a field definition has started
                 // [....]Name: Something
                 // ContextualIndent1 IdentifierToken ColonToken
-                else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.ColonToken) {
+                else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.ColonToken && Previous?.Kind == SyntaxKind.ContextualIndent1) {
                     if (fieldStarted) {
                         tokens.Add(new Token(SyntaxKind.AttributeFieldEnded));
                     }
@@ -50,16 +50,33 @@ namespace Compiler.Symbols {
                     tokens.Add(Take()); // the colon
                 }
 
-                else if (!fieldStarted && Current?.Kind == SyntaxKind.WhiteSpaceToken) Take();   // skip whitespaces, but only outside of field definitions
-                else if (Current?.Kind == SyntaxKind.NewLineToken) Take();                       // skip newlines
-                else if (Current?.Kind == SyntaxKind.ContextualIndent1) Take();                  // contextual tokens...
+                else if (!fieldStarted && Current?.Kind == SyntaxKind.WhiteSpaceToken) Take();              // skip whitespaces, but only outside of field definitions
+                else if (!fieldStarted && Current?.Kind == SyntaxKind.NewLineToken) Take();                 // skip newlines outside of field definition
+                else if (
+                    fieldStarted &&
+                    Current?.Kind == SyntaxKind.NewLineToken &&
+                    Next?.Kind == SyntaxKind.ContextualIndent1) Take();                                     // Skip the newlines at the end of the description field before a new field
+                else if (
+                    fieldStarted &&
+                    Current?.Kind == SyntaxKind.NewLineToken &&
+                    Next?.Kind != SyntaxKind.ContextualIndent1) tokens.Add(Take());                         // include newlines in description fields.
+                else if (Current?.Kind == SyntaxKind.ContextualIndent1) Take();                             // contextual tokens...
                 else if (Current?.Kind == SyntaxKind.ContextualIndent2) {
-                    tokens.Add(new Token(" ", SyntaxKind.WhiteSpaceToken, Current));
+                    tokens.Add(new Token(System.Environment.NewLine, SyntaxKind.NewLineToken, Current));
                     Take();
                 }
-                else if (Current?.Kind == SyntaxKind.ContextualIndent3) Take();
-                else if (Current?.Kind == SyntaxKind.ContextualIndent4) Take();
-                else if (Current?.Kind == SyntaxKind.ContextualIndent5) Take();
+                else if (fieldStarted && Current?.Kind == SyntaxKind.ContextualIndent3) {
+                    tokens.Add(new Token(System.Environment.NewLine + "    ", SyntaxKind.NewLineToken, Current));
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent4) {
+                    tokens.Add(new Token(System.Environment.NewLine + "        ", SyntaxKind.NewLineToken, Current));
+                    Take();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent5) {
+                    tokens.Add(new Token(System.Environment.NewLine + "            ", SyntaxKind.NewLineToken, Current));
+                    Take();
+                }
 
                 else {
                     tokens.Add(Take());

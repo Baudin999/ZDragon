@@ -34,6 +34,9 @@
         </div>
     {/each}
 </div>
+<div class="clear" on:click={() => localStorage.removeItem("applications")}>
+    <i class="fa fa-times" />
+</div>
 
 <style type="less">
     .home {
@@ -72,6 +75,25 @@
                 transform: translate(-50%, -50%);
                 user-select: none;
             }
+        }
+    }
+
+    .clear {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        height: 20px;
+        width: 20px;
+        z-index: 9999;
+
+        color: var(--color-1--font);
+
+        i {
+            height: 100%;
+            width: 100%;
+        }
+        &:hover {
+            cursor: pointer;
         }
     }
 </style>

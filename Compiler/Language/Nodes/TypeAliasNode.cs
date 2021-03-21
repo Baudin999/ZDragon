@@ -7,8 +7,9 @@ namespace Compiler.Language.Nodes {
         public string Id => IdToken.Value;
         public List<Token> GenericParameters { get; private set; }
         public ExpressionNode Body { get; private set; }
-        public AnnotationNode Annotation { get; }
+        public AnnotationNode AnnotationNode { get; }
         public List<RestrictionNode> Restrictions { get; }
+        public string Description => AnnotationNode.Annotation ?? "";
 
         public bool Imported { get; set; } = false;
         public string? ImportedFrom { get; set; } = null;
@@ -24,7 +25,7 @@ namespace Compiler.Language.Nodes {
             this.IdToken = id;
             this.GenericParameters = genericParameters;
             this.Body = body;
-            this.Annotation = annotationNode;
+            this.AnnotationNode = annotationNode;
             this.Restrictions = restrictions ?? new List<RestrictionNode>() ;
         }
 

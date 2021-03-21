@@ -47,7 +47,9 @@ namespace Compiler.Checkers {
                 node.IdToken
                 ));
             else {
-                CheckToken(node, null, from.ValueToken.Last());
+                var token = from.ValueToken.FirstOrDefault(v => v.Kind == SyntaxKind.IdentifierToken);
+                if (token != null)
+                    CheckToken(node, null, token);
             }
             if (to is null) errorSink.AddError(new Error(
                 ErrorType.Architecture_Interaction_MissingTo,
@@ -55,7 +57,9 @@ namespace Compiler.Checkers {
                 node.IdToken
                 ));
             else {
-                CheckToken(node, null, to.ValueToken.Last());
+                var token = to.ValueToken.FirstOrDefault(v => v.Kind == SyntaxKind.IdentifierToken);
+                if (token != null)
+                    CheckToken(node, null, token);
             }
         }
 

@@ -16,9 +16,13 @@ namespace ZDragon.Transpilers.Components {
         private readonly List<string> containedComponents = new List<string>();
         private readonly List<string> reservedAttributes = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
 
+        private string GetDescription(AttributesNode node) {
+            return (node.GetAttribute("Description") ?? "").Replace(System.Environment.NewLine, " ");
+        }
+
         private void TranspileComponent(ComponentNode node) {
             var name = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
-            var description = node.GetAttribute("Description") ?? "";
+            var description = GetDescription(node);
             var tech = node.GetAttribute("Technology", "component");
             var version = node.GetAttribute("Version", "0");
 
@@ -59,7 +63,7 @@ namespace ZDragon.Transpilers.Components {
 
         private void TranspileEndpointNode(EndpointNode node) {
             var name = node.GetAttribute("Name") ?? node.Id;
-            var description = node.GetAttribute("Description") ?? "";
+            var description = GetDescription(node);
             var tech = node.GetAttribute("Technology", "endpoint");
             var version = node.GetAttribute("Version", "0");
 
@@ -69,7 +73,7 @@ namespace ZDragon.Transpilers.Components {
 
         private void TranspilePersonNode(PersonNode node) {
             var name = node.GetAttribute("Name") ?? node.Id;
-            var description = node.GetAttribute("Description") ?? "";
+            var description = GetDescription(node);
 
             if (types.TryAdd(node.Id, $@"Person({node.Id}, ""{name}"", """", ""{description}"")"))
                 ParseInteractions(node);
@@ -79,7 +83,7 @@ namespace ZDragon.Transpilers.Components {
             var systemParts = new List<string>();
 
             var name = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
-            var description = node.GetAttribute("Description") ?? "";
+            var description = GetDescription(node);
             var version = node.GetAttribute("Version", "0");
             var contains = node.GetAttributeItems("Contains") ?? new List<string>();
 
@@ -150,7 +154,7 @@ namespace ZDragon.Transpilers.Components {
             var tech = node.GetAttribute("Technology", "\"\"");
             var title = node.GetAttribute("Title");
             var name = node.GetAttribute("Name");
-            var description = node.GetAttribute("Description");
+            var description = GetDescription(node);
             var direction = node.GetAttribute("Direction", "");
             var hidden = bool.Parse(node.GetAttribute("Hidden", "False").ToLower());
 
@@ -194,7 +198,7 @@ namespace ZDragon.Transpilers.Components {
                 }
             }
 
-           
+
         }
 
         private string ParseTags(AttributesNode node) {

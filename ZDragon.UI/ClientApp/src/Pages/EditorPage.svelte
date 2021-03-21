@@ -123,7 +123,7 @@
                 <Panel style="height: calc(100% - 3rem); overflow:auto;">
                     {#if planningSvgUrl}
                         <img
-                            style="min-width:100%; max-width:100%;"
+                            style="min-width:100%;"
                             alt="svg"
                             src={planningSvgUrl} />
                     {/if}

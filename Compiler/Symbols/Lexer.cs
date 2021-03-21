@@ -79,6 +79,7 @@ namespace Compiler.Symbols {
             return pushToken(SyntaxKind.WhiteSpaceToken);
         }
         private Token parseNewline() {
+
             if (current == '\r' && next == '\n') {
                 take();
                 take();
@@ -86,7 +87,7 @@ namespace Compiler.Symbols {
             else if (current == '\n') {
                 take();
             }
-            var token = pushToken(SyntaxKind.NewLineToken);
+            var token = pushToken(SyntaxKind.NewLineToken, System.Environment.NewLine);
             moveNextLine();
             return token;
         }

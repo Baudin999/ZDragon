@@ -241,7 +241,7 @@ type name = String;
             Assert.IsType<TypeAliasNode>(compilerResult.Ast.First());
             TypeAliasNode typeNode = (TypeAliasNode)compilerResult.Ast.First();
             var annotation = "The name type with multi-line annotations";
-            Assert.Equal(annotation, typeNode.Annotation.Annotation);
+            Assert.Equal(annotation, typeNode.AnnotationNode.Annotation);
         }
 
 
@@ -262,7 +262,7 @@ type Name = String
             Assert.IsType<TypeAliasNode>(compilerResult.Ast.First());
             TypeAliasNode typeNode = (TypeAliasNode)compilerResult.Ast.First();
             var annotation = "The name type with multi-line annotations";
-            Assert.Equal(annotation, typeNode.Annotation.Annotation);
+            Assert.Equal(annotation, typeNode.AnnotationNode.Annotation);
         }
 
 

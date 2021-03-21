@@ -13,6 +13,7 @@ namespace ZDragon.Transpilers.Html {
             "<div class='toc-1'>1 Table of Contents<div>"
         };
         private readonly CompilationResult compilationresult;
+        private readonly MarkdownPipeline pipeline;
         private readonly List<string> parts = new List<string>();
 
         private int h1 = 1;
@@ -62,6 +63,10 @@ namespace ZDragon.Transpilers.Html {
             parts.Add($"<h{mcn.Depth}>{mcn.Content}</h{mcn.Depth}>");
         }
 
+        private string ToHtml(string content) {
+            return Markdown.ToHtml(content, pipeline);
+        }
+
         private void RenderParagraphNode(IDocumentNode node) {
             parts.Add($"<p>{node.Content}</p>");
         }
@@ -73,7 +78,7 @@ namespace ZDragon.Transpilers.Html {
                 .UseAdvancedExtensions()
                 .Build();
 
-            parts.Add(Markdown.ToHtml(node.Content, pipeline));
+            parts.Add(ToHtml(node.Content));
         }
 
         private void RenderViewNode(ViewNode node) {
@@ -82,7 +87,7 @@ namespace ZDragon.Transpilers.Html {
 
         private void RenderGuidelineNode(GuidelineNode node) {
             var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
-            var description = node.GetAttribute("Description", "");
+            var description = ToHtml(node.GetAttribute("Markdown") ?? node.GetAttribute("Description") ?? "");
             var rationale = node.GetAttribute("Rationale", "");
             var number = node.GetAttribute("Number", "000");
 
@@ -99,7 +104,7 @@ namespace ZDragon.Transpilers.Html {
 
         private void RenderRequirementNode(RequirementNode node) {
             var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
-            var description = node.GetAttribute("Description", "");
+            var description = ToHtml(node.GetAttribute("Markdown") ?? node.GetAttribute("Description") ?? "");
             var rationale = node.GetAttribute("Rationale", "");
             var number = node.GetAttribute("Number", "000");
 
@@ -116,8 +121,8 @@ namespace ZDragon.Transpilers.Html {
 
 
         private void RenderEndpointNode(EndpointNode node) {
-
-            var description = node.GetAttribute("Description");
+            var description = node.GetAttribute("Description") ?? "";
+            var markdown = ToHtml(node.GetAttribute("Documentation") ?? description);
             var method = node.GetAttribute("Method", "GET").ToUpper();
 
             var parameters = new List<string>();
@@ -138,6 +143,7 @@ namespace ZDragon.Transpilers.Html {
             parts.Add($@"
 <div class='keep-together'>
     <h2>{node.Title}</h2>
+    {markdown}
     <div class='endpoint'>
     <div class='title'><span class='endpoint--method'>{method}</span> {url}</div>
     <table>
@@ -168,6 +174,11 @@ namespace ZDragon.Transpilers.Html {
 
         public HtmlTranspiler(CompilationResult compilationResult) {
             this.compilationresult = compilationResult;
+            this.pipeline = new MarkdownPipelineBuilder()
+                .UsePipeTables()
+                .UseTaskLists()
+                .UseAdvancedExtensions()
+                .Build();
         }
 
         private int RenderTitlePage(int tocIndex) {

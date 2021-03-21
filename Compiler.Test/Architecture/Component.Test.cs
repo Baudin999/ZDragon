@@ -14,6 +14,7 @@ component Application001 =
         As you can see we can add multi-line descriptions
         to our components.
 ";
+            var nl = System.Environment.NewLine;
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile().Check();
 
@@ -33,7 +34,7 @@ component Application001 =
             Assert.Equal("First Application", nameAttribute.Value);
 
             Assert.Equal("Description", descriptionAttribute.Key);
-            Assert.Equal("This is the first appalication As you can see we can add multi-line descriptions to our components.", descriptionAttribute.Value);
+            Assert.Equal($"This is the first appalication{nl}As you can see we can add multi-line descriptions{nl}to our components.", descriptionAttribute.Value);
         }
 
         [Fact(DisplayName = "Component - Simple 002")]

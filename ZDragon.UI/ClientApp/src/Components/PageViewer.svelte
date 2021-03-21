@@ -2,21 +2,20 @@
     import { onMount } from "svelte";
     import Page from "./Page.svelte";
 
-    let container;
+    let pageWrapper;
     function resize() {
-        if (!container) return;
-        var scaleX = container.clientWidth / 900;
-        var height = container.parentElement.clientHeight;
-        if (scaleX < 1) {
-            container.setAttribute("style", `transform: scale(${scaleX})`);
-            // let rest = height - height / scaleX;
+        if (!pageWrapper) return;
+        var scaleX = pageWrapper.clientWidth / 900;
+        var height = pageWrapper.parentElement.clientHeight;
+        if (scaleX < 1.5) {
             height = height / scaleX;
+            pageWrapper.setAttribute("style", `transform: scale(${scaleX});`);
         }
-        if (container.firstElementChild) {
+        if (pageWrapper.firstElementChild) {
             var value = "calc(" + height + "px - 5rem)";
-            container.firstElementChild.style.height = value;
-            container.firstElementChild.style.minHeight = value;
-            container.firstElementChild.style.maxHeight = value;
+            pageWrapper.firstElementChild.style.height = value;
+            pageWrapper.firstElementChild.style.minHeight = value;
+            pageWrapper.firstElementChild.style.maxHeight = value;
         }
     }
 
@@ -33,7 +32,7 @@
     });
 </script>
 
-<div class="page-wrapper" bind:this={container}>
+<div class="page-wrapper" bind:this={pageWrapper}>
     <slot />
     <!-- <div class="bottom" /> -->
 </div>
@@ -41,7 +40,8 @@
 <style>
     .page-wrapper {
         height: 0;
-        transform-origin: top middle;
+        transform-origin: top !important;
+        /* transform-origin: top middle; */
 
         display: flex;
         flex-direction: column;
@@ -49,10 +49,10 @@
         justify-content: flex-start;
         align-content: flex-start;
 
-        padding-bottom: 1cm;
+        /* padding-bottom: 2cm; */
     }
     .bottom {
         display: block;
-        height: 1cm;
+        /* height: 1cm; */
     }
 </style>

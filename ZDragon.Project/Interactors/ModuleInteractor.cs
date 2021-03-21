@@ -142,9 +142,14 @@ namespace ZDragon.Project.Interactors {
         }
 
         public async Task SaveDataModelSvg() {
-            var svgPath = Path.Combine(this.OutPath, "data.svg");
-            var puml = new ClassDiagramTranspiler(this.CompilationResult.Lexicon).Transpile();
-            await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            try {
+                var svgPath = Path.Combine(this.OutPath, "data.svg");
+                var puml = new ClassDiagramTranspiler(this.CompilationResult.Lexicon).Transpile();
+                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            }
+            catch (System.Exception) {
+                //
+            }
         }
         public async Task<byte[]> GetDataModelSvg() {
             var svgPath = Path.Combine(this.OutPath, "data.svg");
@@ -153,16 +158,26 @@ namespace ZDragon.Project.Interactors {
         }
 
         public async Task SaveComponentModelSvg() {
-            var svgPath = Path.Combine(this.OutPath, "components.svg");
-            var puml = new ComponentTranspiler(this.CompilationResult.Lexicon).Transpile();
-            await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            try {
+                var svgPath = Path.Combine(this.OutPath, "components.svg");
+                var puml = new ComponentTranspiler(this.CompilationResult.Lexicon).Transpile();
+                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            }
+            catch (System.Exception) {
+                //
+            }
         }
 
         public async Task SaveRoadmapSvg() {
-            var svgPath = Path.Combine(this.OutPath, "roadmap.svg");
-            var lexicon = this.CompilationResult.Lexicon.Select(x => x.Value).OfType<IPlanningNode>().ToList();
-            var puml = new PlanningTranspiler(lexicon).Transpile();
-            await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            try {
+                var svgPath = Path.Combine(this.OutPath, "roadmap.svg");
+                var lexicon = this.CompilationResult.Lexicon.Select(x => x.Value).OfType<IPlanningNode>().ToList();
+                var puml = new PlanningTranspiler(lexicon).Transpile();
+                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+            }
+            catch (System.Exception) {
+                //
+            }
         }
 
         public async Task SaveViews() {

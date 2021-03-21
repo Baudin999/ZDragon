@@ -12,5 +12,6 @@ namespace Compiler.Language.Nodes {
         public string Content => "";
 
         public string Literal => "";
+        public bool IsTemplate => false;
     }
 }

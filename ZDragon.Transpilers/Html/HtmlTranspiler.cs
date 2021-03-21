@@ -23,6 +23,7 @@ namespace ZDragon.Transpilers.Html {
         private int h5 = 0;
 
         private void RenderChapterNode(MarkdownChapterNode mcn) {
+            var content = Interpolate(mcn.Content);
             if (mcn.Depth == 1) {
                 h1 = h1 + 1;
                 h2 = 0;
@@ -33,52 +34,59 @@ namespace ZDragon.Transpilers.Html {
                     parts.Add("</div>");
                 }
                 parts.Add("<div class='keep-together'>");
-                toc.Add($"<div class='toc-1'>{h1} {mcn.Content}<div>");
+                toc.Add($"<div class='toc-1'>{h1} {content}<div>");
             }
             else if (mcn.Depth == 2) {
                 h2 = h2 + 1;
                 h3 = 0;
                 h4 = 0;
                 h5 = 0;
-                toc.Add($"<div class='toc-2'>{h1}.{h2} {mcn.Content}</div>");
+                toc.Add($"<div class='toc-2'>{h1}.{h2} {content}</div>");
             }
             else if (mcn.Depth == 3) {
                 h3 = h3 + 1;
                 h4 = 0;
                 h5 = 0;
-                toc.Add($"<div class='toc-3'>{h1}.{h2}.{h3} {mcn.Content}</div>");
+                toc.Add($"<div class='toc-3'>{h1}.{h2}.{h3} {content}</div>");
             }
             else if (mcn.Depth == 4) {
                 h4 = h4 + 1;
                 h5 = 0;
-                toc.Add($"<div class='toc-4'>{h1}.{h2}.{h3}.{h4} {mcn.Content}</div>");
+                toc.Add($"<div class='toc-4'>{h1}.{h2}.{h3}.{h4} {content}</div>");
             }
             else if (mcn.Depth == 5) {
                 h5 = h5 + 1;
-                toc.Add($"<div class='toc-5'>{h1}.{h2}.{h3}.{h4}.{h5} {mcn.Content}</div>");
+                toc.Add($"<div class='toc-5'>{h1}.{h2}.{h3}.{h4}.{h5} {content}</div>");
             }
 
 
 
-            parts.Add($"<h{mcn.Depth}>{mcn.Content}</h{mcn.Depth}>");
+            parts.Add($"<h{mcn.Depth}>{content}</h{mcn.Depth}>");
         }
 
         private string ToHtml(string content) {
             return Markdown.ToHtml(content, pipeline);
         }
+        private string Interpolate(string content) {
+            return CarTemplating.FormatTemplate(content, this.compilationresult.Lexicon);
+        }
 
         private void RenderParagraphNode(IDocumentNode node) {
-            parts.Add($"<p>{node.Content}</p>");
+            if (node.IsTemplate) {
+                parts.Add($"<p>{Interpolate(node.Content)}</p>");
+            }
+            else {
+                parts.Add($"<p>{node.Content}</p>");
+            }
         }
 
         private void RenderMarkdownNode(MarkdownNode node) {
-            var pipeline = new MarkdownPipelineBuilder()
-                .UsePipeTables()
-                .UseTaskLists()
-                .UseAdvancedExtensions()
-                .Build();
-
-            parts.Add(ToHtml(node.Content));
+            if (node.IsTemplate) {
+                parts.Add(ToHtml(Interpolate(node.Content)));
+            }
+            else {
+                parts.Add(ToHtml(node.Content));
+            }
         }
 
         private void RenderViewNode(ViewNode node) {

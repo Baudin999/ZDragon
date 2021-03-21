@@ -21,7 +21,7 @@ namespace ZDragon.Project {
                 return bytes;
             } catch (Exception ex) {
                 System.Console.WriteLine(ex.Message);
-                throw ex;
+                throw new Exception("Failed to generate a correct PlantUml diagram.");
             }
         }
     }

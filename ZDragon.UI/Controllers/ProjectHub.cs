@@ -17,8 +17,10 @@ namespace ZDragon.UI.Controllers {
 
         internal async Task ModuleChanged(string ns) {
             try {
-                if (Clients != null)
+                await Task.Delay(300);
+                if (Clients != null) {
                     await Clients.All.SendAsync("ModuleChanged", ns);
+                }
             }
             catch (System.Exception) {
                 // do nothing

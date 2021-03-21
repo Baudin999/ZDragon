@@ -8119,6 +8119,7 @@ var zdragon = (function () {
                 [/([\t\s{4}])([^:]*)(:)([^:]*)/, ["word", "annotation", "number", "word"]]
             ],
             lang: [
+                [/({)([a-zA-Z0-9]+)(\.)([a-zA-Z0-9]+)(})/, ["chapter", "type.identifier", "chapter", "annotation.field", "chapter"]],
                 [/^([a-z][^ ]*)/, [
                     {
                         cases: {
@@ -8216,6 +8217,7 @@ var zdragon = (function () {
             { token: "identifier", foreground: "#00aa9e" },
             { token: "basetype", foreground: "#fdf8ea" },
             { token: "generic-parameter", foreground: "#ea5dd5" },
+            { token: "annotation.field", foreground: "#ffffff" },
         ]
     };
 

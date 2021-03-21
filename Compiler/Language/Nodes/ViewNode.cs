@@ -17,6 +17,7 @@ namespace Compiler.Language.Nodes {
         public string Content => "";
 
         public string Literal => "";
+        public bool IsTemplate => false;
 
         public ViewNode(AnnotationNode annotationNode, Token id, List<Token>nodes) : base(id, ExpressionKind.ViewExpression) {
             this.Annotation = annotationNode;

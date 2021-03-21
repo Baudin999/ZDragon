@@ -201,7 +201,7 @@
         position: fixed;
         z-index: 99999;
         right: 1rem;
-        bottom: 0rem;
+        top: 4rem;
         height: 32px;
         width: 32px;
     }

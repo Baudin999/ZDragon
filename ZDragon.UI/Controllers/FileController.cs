@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Compiler.Language.Nodes;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Linq;
 using System.Threading.Tasks;
+using ZDragon.Transpilers.OpenAPI;
 using ZDragon.UI.Models;
 
 namespace ZDragon.UI.Controllers {
@@ -39,6 +42,29 @@ namespace ZDragon.UI.Controllers {
             }
         }
 
+        [HttpPost("/json")]
+        public async Task<IActionResult> GenerateJson([FromBody] GenerateJsonBody body) {
+            try {
+
+                var compilationResult = new Compiler.Compiler(body.Code).Compile().Check();
+                var rootNode = compilationResult.Lexicon.Values.FirstOrDefault(n => n is ILanguageNode);
+                var schema = new JsonSchemaTranspiler(rootNode, compilationResult.Lexicon).Transpile();
+
+                var result = new {
+                    schemaText = schema.ToString(),
+                    schema
+                };
+
+                return Ok(result);
+            }
+            catch (System.Exception ex) {
+                return Problem(
+                   title: $"Failed to generate Json",
+                   detail: ex.Message
+                   );
+            }
+        }
+
         private async Task RefreshProjectStructure() {
             await Task.Delay(1000);
             _ = _projectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
@@ -46,5 +72,9 @@ namespace ZDragon.UI.Controllers {
 
     }
 
+
+    public class GenerateJsonBody {
+        public string Code { get; set; }
+    }
 
 }

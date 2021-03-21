@@ -14,6 +14,7 @@
     {#if selectedApp}
         <NavButton href="editor" icon="fa fa-file" title="Editor" />
     {/if}
+    <NavButton href="json-designer" icon="fa fa-file-code-o" title="Json" />
 </nav>
 
 <style type="less">

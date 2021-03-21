@@ -2471,7 +2471,7 @@ var zdragon = (function () {
     		var scaleX = pageWrapper.clientWidth / 900;
     		var height = pageWrapper.parentElement.clientHeight;
 
-    		if (scaleX < 1.5) {
+    		if (scaleX < 1.3) {
     			height = height / scaleX;
     			pageWrapper.setAttribute("style", `transform: scale(${scaleX});`);
     		}
@@ -4701,7 +4701,7 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			iframe_1 = element("iframe");
-    			attr_dev(iframe_1, "class", "html-iframe svelte-1pwsn1t");
+    			attr_dev(iframe_1, "class", "html-iframe svelte-1a8e0pb");
     			if (iframe_1.src !== (iframe_1_src_value = /*htmlUrl*/ ctx[4])) attr_dev(iframe_1, "src", iframe_1_src_value);
     			attr_dev(iframe_1, "title", "Page");
     			add_location(iframe_1, file$a, 79, 28, 2898);
@@ -4859,7 +4859,7 @@ var zdragon = (function () {
     			img = element("img");
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*componentUrl*/ ctx[2])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "class", "svelte-1pwsn1t");
+    			attr_dev(img, "class", "svelte-1a8e0pb");
     			add_location(img, file$a, 92, 24, 3384);
     		},
     		m: function mount(target, anchor) {
@@ -4996,7 +4996,7 @@ var zdragon = (function () {
     			img = element("img");
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*svgUrl*/ ctx[1])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "class", "svelte-1pwsn1t");
+    			attr_dev(img, "class", "svelte-1a8e0pb");
     			add_location(img, file$a, 100, 24, 3659);
     		},
     		m: function mount(target, anchor) {
@@ -5134,7 +5134,7 @@ var zdragon = (function () {
     			set_style(img, "min-width", "100%");
     			attr_dev(img, "alt", "svg");
     			if (img.src !== (img_src_value = /*planningSvgUrl*/ ctx[3])) attr_dev(img, "src", img_src_value);
-    			attr_dev(img, "class", "svelte-1pwsn1t");
+    			attr_dev(img, "class", "svelte-1a8e0pb");
     			add_location(img, file$a, 108, 24, 3936);
     		},
     		m: function mount(target, anchor) {
@@ -5454,19 +5454,19 @@ var zdragon = (function () {
     			t2 = space();
     			div3 = element("div");
     			i = element("i");
-    			attr_dev(div0, "class", "file-explorer--container svelte-1pwsn1t");
+    			attr_dev(div0, "class", "file-explorer--container svelte-1a8e0pb");
     			add_location(div0, file$a, 56, 4, 2075);
-    			attr_dev(div1, "class", "svelte-1pwsn1t");
+    			attr_dev(div1, "class", "svelte-1a8e0pb");
     			add_location(div1, file$a, 60, 8, 2196);
-    			attr_dev(div2, "class", "document-editor svelte-1pwsn1t");
+    			attr_dev(div2, "class", "document-editor svelte-1a8e0pb");
     			add_location(div2, file$a, 59, 4, 2157);
-    			attr_dev(i, "class", "fa fa-print svelte-1pwsn1t");
+    			attr_dev(i, "class", "fa fa-print svelte-1a8e0pb");
     			add_location(i, file$a, 118, 12, 4249);
-    			attr_dev(div3, "class", "print-button svelte-1pwsn1t");
+    			attr_dev(div3, "class", "print-button svelte-1a8e0pb");
     			add_location(div3, file$a, 117, 8, 4192);
-    			attr_dev(div4, "class", "page-viewer svelte-1pwsn1t");
+    			attr_dev(div4, "class", "page-viewer svelte-1a8e0pb");
     			add_location(div4, file$a, 64, 4, 2277);
-    			attr_dev(div5, "class", "container svelte-1pwsn1t");
+    			attr_dev(div5, "class", "container svelte-1a8e0pb");
     			add_location(div5, file$a, 55, 0, 2046);
     			dispose = listen_dev(div3, "click", /*print*/ ctx[6], false, false, false);
     		},
@@ -6406,10 +6406,11 @@ var zdragon = (function () {
 
     function create_fragment$h(ctx) {
     	let nav;
-    	let t;
+    	let t0;
+    	let t1;
     	let current;
 
-    	const navbutton = new NavButton({
+    	const navbutton0 = new NavButton({
     			props: {
     				href: "/",
     				icon: "fa fa-home",
@@ -6420,12 +6421,23 @@ var zdragon = (function () {
 
     	let if_block = /*selectedApp*/ ctx[0] && create_if_block$6(ctx);
 
+    	const navbutton1 = new NavButton({
+    			props: {
+    				href: "json-designer",
+    				icon: "fa fa-file-code-o",
+    				title: "Json"
+    			},
+    			$$inline: true
+    		});
+
     	const block = {
     		c: function create() {
     			nav = element("nav");
-    			create_component(navbutton.$$.fragment);
-    			t = space();
+    			create_component(navbutton0.$$.fragment);
+    			t0 = space();
     			if (if_block) if_block.c();
+    			t1 = space();
+    			create_component(navbutton1.$$.fragment);
     			attr_dev(nav, "class", "svelte-z2p9zd");
     			add_location(nav, file$e, 11, 0, 277);
     		},
@@ -6434,9 +6446,11 @@ var zdragon = (function () {
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, nav, anchor);
-    			mount_component(navbutton, nav, null);
-    			append_dev(nav, t);
+    			mount_component(navbutton0, nav, null);
+    			append_dev(nav, t0);
     			if (if_block) if_block.m(nav, null);
+    			append_dev(nav, t1);
+    			mount_component(navbutton1, nav, null);
     			current = true;
     		},
     		p: function update(ctx, [dirty]) {
@@ -6445,7 +6459,7 @@ var zdragon = (function () {
     					if_block = create_if_block$6(ctx);
     					if_block.c();
     					transition_in(if_block, 1);
-    					if_block.m(nav, null);
+    					if_block.m(nav, t1);
     				} else {
     					transition_in(if_block, 1);
     				}
@@ -6461,19 +6475,22 @@ var zdragon = (function () {
     		},
     		i: function intro(local) {
     			if (current) return;
-    			transition_in(navbutton.$$.fragment, local);
+    			transition_in(navbutton0.$$.fragment, local);
     			transition_in(if_block);
+    			transition_in(navbutton1.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
-    			transition_out(navbutton.$$.fragment, local);
+    			transition_out(navbutton0.$$.fragment, local);
     			transition_out(if_block);
+    			transition_out(navbutton1.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(nav);
-    			destroy_component(navbutton);
+    			destroy_component(navbutton0);
     			if (if_block) if_block.d();
+    			destroy_component(navbutton1);
     		}
     	};
 
@@ -7677,11 +7694,226 @@ var zdragon = (function () {
     	}
     }
 
-    /* src\App.svelte generated by Svelte v3.16.7 */
-    const file$j = "src\\App.svelte";
+    /* src\Pages\JsonSchemaDesigner.svelte generated by Svelte v3.16.7 */
+    const file$j = "src\\Pages\\JsonSchemaDesigner.svelte";
 
-    // (18:8) <Route path="/editor">
-    function create_default_slot_4$1(ctx) {
+    function create_fragment$n(ctx) {
+    	let div3;
+    	let div1;
+    	let div0;
+    	let t;
+    	let div2;
+    	let current;
+
+    	const editor0 = new Editor({
+    			props: { text: /*text*/ ctx[1] },
+    			$$inline: true
+    		});
+
+    	editor0.$on("save", /*generateJsonSchema*/ ctx[2]);
+
+    	const editor1 = new Editor({
+    			props: {
+    				text: /*output*/ ctx[0],
+    				language: "json"
+    			},
+    			$$inline: true
+    		});
+
+    	const block = {
+    		c: function create() {
+    			div3 = element("div");
+    			div1 = element("div");
+    			div0 = element("div");
+    			create_component(editor0.$$.fragment);
+    			t = space();
+    			div2 = element("div");
+    			create_component(editor1.$$.fragment);
+    			attr_dev(div0, "class", "svelte-76c50c");
+    			add_location(div0, file$j, 36, 8, 1543);
+    			attr_dev(div1, "class", "document-editor svelte-76c50c");
+    			add_location(div1, file$j, 35, 4, 1504);
+    			attr_dev(div2, "class", "svelte-76c50c");
+    			add_location(div2, file$j, 41, 4, 1644);
+    			attr_dev(div3, "class", "container svelte-76c50c");
+    			add_location(div3, file$j, 34, 0, 1475);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div3, anchor);
+    			append_dev(div3, div1);
+    			append_dev(div1, div0);
+    			mount_component(editor0, div0, null);
+    			append_dev(div3, t);
+    			append_dev(div3, div2);
+    			mount_component(editor1, div2, null);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const editor0_changes = {};
+    			if (dirty & /*text*/ 2) editor0_changes.text = /*text*/ ctx[1];
+    			editor0.$set(editor0_changes);
+    			const editor1_changes = {};
+    			if (dirty & /*output*/ 1) editor1_changes.text = /*output*/ ctx[0];
+    			editor1.$set(editor1_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(editor0.$$.fragment, local);
+    			transition_in(editor1.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(editor0.$$.fragment, local);
+    			transition_out(editor1.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div3);
+    			destroy_component(editor0);
+    			destroy_component(editor1);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$n.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$m($$self, $$props, $$invalidate) {
+    	var __awaiter = this && this.__awaiter || (function (thisArg, _arguments, P, generator) {
+    		function adopt(value) {
+    			return value instanceof P
+    			? value
+    			: new P(function (resolve) {
+    						resolve(value);
+    					});
+    		}
+
+    		return new (P || (P = Promise))(function (resolve, reject) {
+    				function fulfilled(value) {
+    					try {
+    						step(generator.next(value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function rejected(value) {
+    					try {
+    						step(generator["throw"](value));
+    					} catch(e) {
+    						reject(e);
+    					}
+    				}
+
+    				function step(result) {
+    					result.done
+    					? resolve(result.value)
+    					: adopt(result.value).then(fulfilled, rejected);
+    				}
+
+    				step((generator = generator.apply(thisArg, _arguments || [])).next());
+    			});
+    	});
+
+    	let { namespace = "" } = $$props;
+    	var oldNamespace = "";
+    	let output = "";
+    	let text = "";
+
+    	let generateJsonSchema = event => __awaiter(void 0, void 0, void 0, function* () {
+    		const changedText = event.detail;
+    		localStorage.setItem("source", changedText);
+    		var result = yield post("/json", { code: changedText });
+    		$$invalidate(0, output = result.schemaText);
+    	});
+
+    	try {
+    		text = localStorage.getItem("source");
+    	} catch(ex) {
+    		
+    	}
+
+    	const writable_props = ["namespace"];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<JsonSchemaDesigner> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$set = $$props => {
+    		if ("namespace" in $$props) $$invalidate(3, namespace = $$props.namespace);
+    	};
+
+    	$$self.$capture_state = () => {
+    		return {
+    			__awaiter,
+    			namespace,
+    			oldNamespace,
+    			output,
+    			text,
+    			generateJsonSchema
+    		};
+    	};
+
+    	$$self.$inject_state = $$props => {
+    		if ("__awaiter" in $$props) __awaiter = $$props.__awaiter;
+    		if ("namespace" in $$props) $$invalidate(3, namespace = $$props.namespace);
+    		if ("oldNamespace" in $$props) $$invalidate(4, oldNamespace = $$props.oldNamespace);
+    		if ("output" in $$props) $$invalidate(0, output = $$props.output);
+    		if ("text" in $$props) $$invalidate(1, text = $$props.text);
+    		if ("generateJsonSchema" in $$props) $$invalidate(2, generateJsonSchema = $$props.generateJsonSchema);
+    	};
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*oldNamespace, namespace*/ 24) {
+    			 {
+    				if (moduleStore && oldNamespace !== namespace) {
+    					selectModuleByNamespace(namespace);
+    					$$invalidate(4, oldNamespace = namespace);
+    				}
+    			}
+    		}
+    	};
+
+    	return [output, text, generateJsonSchema, namespace];
+    }
+
+    class JsonSchemaDesigner extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$m, create_fragment$n, safe_not_equal, { namespace: 3 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "JsonSchemaDesigner",
+    			options,
+    			id: create_fragment$n.name
+    		});
+    	}
+
+    	get namespace() {
+    		throw new Error("<JsonSchemaDesigner>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set namespace(value) {
+    		throw new Error("<JsonSchemaDesigner>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* src\App.svelte generated by Svelte v3.16.7 */
+    const file$k = "src\\App.svelte";
+
+    // (19:8) <Route path="/editor">
+    function create_default_slot_5$1(ctx) {
     	let current;
     	const editorpage = new EditorPage({ $$inline: true });
 
@@ -7709,17 +7941,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_4$1.name,
+    		id: create_default_slot_5$1.name,
     		type: "slot",
-    		source: "(18:8) <Route path=\\\"/editor\\\">",
+    		source: "(19:8) <Route path=\\\"/editor\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (21:8) <Route path="/editor/:namespace" let:params>
-    function create_default_slot_3$1(ctx) {
+    // (22:8) <Route path="/editor/:namespace" let:params>
+    function create_default_slot_4$1(ctx) {
     	let current;
 
     	const editorpage = new EditorPage({
@@ -7756,17 +7988,17 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_3$1.name,
+    		id: create_default_slot_4$1.name,
     		type: "slot",
-    		source: "(21:8) <Route path=\\\"/editor/:namespace\\\" let:params>",
+    		source: "(22:8) <Route path=\\\"/editor/:namespace\\\" let:params>",
     		ctx
     	});
 
     	return block;
     }
 
-    // (25:8) <Route path="/">
-    function create_default_slot_2$2(ctx) {
+    // (26:8) <Route path="/">
+    function create_default_slot_3$1(ctx) {
     	let current;
     	const home = new Home({ $$inline: true });
 
@@ -7794,16 +8026,54 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_default_slot_2$2.name,
+    		id: create_default_slot_3$1.name,
     		type: "slot",
-    		source: "(25:8) <Route path=\\\"/\\\">",
+    		source: "(26:8) <Route path=\\\"/\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (28:8) <Route path="/home">
+    // (29:8) <Route path="/json-designer">
+    function create_default_slot_2$2(ctx) {
+    	let current;
+    	const jsonschemadesigner = new JsonSchemaDesigner({ $$inline: true });
+
+    	const block = {
+    		c: function create() {
+    			create_component(jsonschemadesigner.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(jsonschemadesigner, target, anchor);
+    			current = true;
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(jsonschemadesigner.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(jsonschemadesigner.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(jsonschemadesigner, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot_2$2.name,
+    		type: "slot",
+    		source: "(29:8) <Route path=\\\"/json-designer\\\">",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (32:8) <Route path="/home">
     function create_default_slot_1$2(ctx) {
     	let current;
     	const home = new Home({ $$inline: true });
@@ -7834,14 +8104,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot_1$2.name,
     		type: "slot",
-    		source: "(28:8) <Route path=\\\"/home\\\">",
+    		source: "(32:8) <Route path=\\\"/home\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (12:0) <Router>
+    // (13:0) <Router>
     function create_default_slot$2(ctx) {
     	let div2;
     	let t0;
@@ -7852,6 +8122,7 @@ var zdragon = (function () {
     	let t3;
     	let t4;
     	let t5;
+    	let t6;
     	let current;
     	const toolbar = new Toolbar({ $$inline: true });
     	const menu = new Menu({ $$inline: true });
@@ -7859,7 +8130,7 @@ var zdragon = (function () {
     	const route0 = new Route({
     			props: {
     				path: "/editor",
-    				$$slots: { default: [create_default_slot_4$1] },
+    				$$slots: { default: [create_default_slot_5$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
@@ -7870,7 +8141,7 @@ var zdragon = (function () {
     				path: "/editor/:namespace",
     				$$slots: {
     					default: [
-    						create_default_slot_3$1,
+    						create_default_slot_4$1,
     						({ params }) => ({ 0: params }),
     						({ params }) => params ? 1 : 0
     					]
@@ -7888,13 +8159,22 @@ var zdragon = (function () {
     	const route3 = new Route({
     			props: {
     				path: "/",
-    				$$slots: { default: [create_default_slot_2$2] },
+    				$$slots: { default: [create_default_slot_3$1] },
     				$$scope: { ctx }
     			},
     			$$inline: true
     		});
 
     	const route4 = new Route({
+    			props: {
+    				path: "/json-designer",
+    				$$slots: { default: [create_default_slot_2$2] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	const route5 = new Route({
     			props: {
     				path: "/home",
     				$$slots: { default: [create_default_slot_1$2] },
@@ -7921,12 +8201,14 @@ var zdragon = (function () {
     			create_component(route3.$$.fragment);
     			t5 = space();
     			create_component(route4.$$.fragment);
+    			t6 = space();
+    			create_component(route5.$$.fragment);
     			attr_dev(div0, "class", "panel svelte-11g6d2h");
-    			add_location(div0, file$j, 16, 6, 440);
+    			add_location(div0, file$k, 17, 6, 511);
     			attr_dev(div1, "class", "content-container svelte-11g6d2h");
-    			add_location(div1, file$j, 14, 4, 385);
+    			add_location(div1, file$k, 15, 4, 456);
     			attr_dev(div2, "class", "app--main svelte-11g6d2h");
-    			add_location(div2, file$j, 12, 2, 339);
+    			add_location(div2, file$k, 13, 2, 410);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div2, anchor);
@@ -7945,6 +8227,8 @@ var zdragon = (function () {
     			mount_component(route3, div0, null);
     			append_dev(div0, t5);
     			mount_component(route4, div0, null);
+    			append_dev(div0, t6);
+    			mount_component(route5, div0, null);
     			current = true;
     		},
     		p: function update(ctx, dirty) {
@@ -7976,6 +8260,13 @@ var zdragon = (function () {
     			}
 
     			route4.$set(route4_changes);
+    			const route5_changes = {};
+
+    			if (dirty & /*$$scope*/ 2) {
+    				route5_changes.$$scope = { dirty, ctx };
+    			}
+
+    			route5.$set(route5_changes);
     		},
     		i: function intro(local) {
     			if (current) return;
@@ -7986,6 +8277,7 @@ var zdragon = (function () {
     			transition_in(route2.$$.fragment, local);
     			transition_in(route3.$$.fragment, local);
     			transition_in(route4.$$.fragment, local);
+    			transition_in(route5.$$.fragment, local);
     			current = true;
     		},
     		o: function outro(local) {
@@ -7996,6 +8288,7 @@ var zdragon = (function () {
     			transition_out(route2.$$.fragment, local);
     			transition_out(route3.$$.fragment, local);
     			transition_out(route4.$$.fragment, local);
+    			transition_out(route5.$$.fragment, local);
     			current = false;
     		},
     		d: function destroy(detaching) {
@@ -8007,6 +8300,7 @@ var zdragon = (function () {
     			destroy_component(route2);
     			destroy_component(route3);
     			destroy_component(route4);
+    			destroy_component(route5);
     		}
     	};
 
@@ -8014,14 +8308,14 @@ var zdragon = (function () {
     		block,
     		id: create_default_slot$2.name,
     		type: "slot",
-    		source: "(12:0) <Router>",
+    		source: "(13:0) <Router>",
     		ctx
     	});
 
     	return block;
     }
 
-    function create_fragment$n(ctx) {
+    function create_fragment$o(ctx) {
     	let current;
 
     	const router = new Router({
@@ -8068,7 +8362,7 @@ var zdragon = (function () {
 
     	dispatch_dev("SvelteRegisterBlock", {
     		block,
-    		id: create_fragment$n.name,
+    		id: create_fragment$o.name,
     		type: "component",
     		source: "",
     		ctx
@@ -8080,13 +8374,13 @@ var zdragon = (function () {
     class App extends SvelteComponentDev {
     	constructor(options) {
     		super(options);
-    		init(this, options, null, create_fragment$n, safe_not_equal, {});
+    		init(this, options, null, create_fragment$o, safe_not_equal, {});
 
     		dispatch_dev("SvelteRegisterComponent", {
     			component: this,
     			tagName: "App",
     			options,
-    			id: create_fragment$n.name
+    			id: create_fragment$o.name
     		});
     	}
     }

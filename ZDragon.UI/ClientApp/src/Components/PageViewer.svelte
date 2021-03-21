@@ -7,7 +7,7 @@
         if (!pageWrapper) return;
         var scaleX = pageWrapper.clientWidth / 900;
         var height = pageWrapper.parentElement.clientHeight;
-        if (scaleX < 1.5) {
+        if (scaleX < 1.3) {
             height = height / scaleX;
             pageWrapper.setAttribute("style", `transform: scale(${scaleX});`);
         }

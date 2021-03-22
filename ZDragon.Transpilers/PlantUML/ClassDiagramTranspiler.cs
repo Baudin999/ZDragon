@@ -47,7 +47,7 @@ interface {node.Id} {{}}
             }
         }
         private void TranspileRecordNode(RecordNode node) {
-            var fields = node.Fields.OrderBy(f => f.Id).Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}: {string.Join(" ", f.Types)};");
+            var fields = node.Fields.Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}: {string.Join(" ", f.Types)};");
             types.Add($@"
 class {node.Id} {{
     {string.Join("\r\n\t", fields)}
@@ -55,6 +55,7 @@ class {node.Id} {{
 ");
 
             foreach (var field in node.Fields) {
+
                 foreach (var t in field.Types) {
                     if (t.StartsWith("'")) {
                         // do nothing 
@@ -63,6 +64,11 @@ class {node.Id} {{
                     else if (!baseTypes.Contains(t)) {
                         var direction = field.Directives.FirstOrDefault(d => d.Id == "direction")?.Literal ?? "";
                         var connector = $"-{direction.ToLower()}-";
+
+                        if (!lexicon.ContainsKey(t)) { 
+                            continue; 
+                        }
+
                             
                         if (field.IsList) {
 

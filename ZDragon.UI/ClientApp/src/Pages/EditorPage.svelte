@@ -7,6 +7,7 @@
         Modal,
     } from "../Components/components.js";
     import PageViewer from "../Components/PageViewer.svelte";
+    import ImageViewer from "../Components/ImageViewer.svelte";
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
@@ -27,6 +28,8 @@
     let planningSvgUrl;
     let htmlUrl;
     let scrollY = 0;
+
+    let componentsScale = 1;
 
     let context = [];
 
@@ -106,13 +109,9 @@
             <TabPanel>
                 <Panel style="height: calc(100% - 3rem); overflow:auto;">
                     {#if svgUrl}
-                        <img alt="svg" src={componentUrl} />
+                        <ImageViewer url={componentUrl} />
                     {/if}
                 </Panel>
-                <div class="popout">
-                    <a href={componentUrl} target="_blank"
-                        ><i class="fa fa-external-link" /></a>
-                </div>
             </TabPanel>
 
             <TabPanel>
@@ -209,24 +208,32 @@
 
         margin-left: 2rem;
     }
-    .print-button {
+
+    .print-button,
+    .popout,
+    .scale--inc,
+    .scale--dec {
         position: fixed;
         z-index: 99999;
-        right: 1rem;
         top: 4rem;
         height: 32px;
         width: 32px;
     }
+
+    .print-button {
+        right: 1rem;
+    }
     .popout {
-        position: fixed;
-        z-index: 99999;
         right: 3rem;
-        top: 4rem;
-        height: 32px;
-        width: 32px;
         a {
             color: inherit;
             text-decoration: inherit;
         }
+    }
+    .scale--inc {
+        right: 5rem;
+    }
+    .scale--dec {
+        right: 7rem;
     }
 </style>

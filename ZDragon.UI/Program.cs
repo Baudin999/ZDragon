@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ZDragon.UI {
     public class Program {
 
-        public static Project.Project Project { get; private set; }
+        //public static Project.Project Project { get; private set; }
 
         public static void Main(string[] args) {
             //Console.WriteLine("INIT APP");
@@ -20,7 +20,7 @@ namespace ZDragon.UI {
             //    if (Directory.Exists(arg)) path = arg;
             //}
 
-            Program.Project = new Project.Project(path);
+            ZDragon.Project.Project.CurrentProject = new Project.Project(path);
 
             CreateHostBuilder(args).Build().Run();
         }

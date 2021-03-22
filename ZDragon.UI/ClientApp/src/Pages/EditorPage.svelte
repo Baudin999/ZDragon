@@ -109,6 +109,10 @@
                         <img alt="svg" src={componentUrl} />
                     {/if}
                 </Panel>
+                <div class="popout">
+                    <a href={componentUrl} target="_blank"
+                        ><i class="fa fa-external-link" /></a>
+                </div>
             </TabPanel>
 
             <TabPanel>
@@ -117,6 +121,10 @@
                         <img alt="svg" src={svgUrl} />
                     {/if}
                 </Panel>
+                <div class="popout">
+                    <a href={svgUrl} target="_blank"
+                        ><i class="fa fa-external-link" /></a>
+                </div>
             </TabPanel>
 
             <TabPanel>
@@ -128,6 +136,10 @@
                             src={planningSvgUrl} />
                     {/if}
                 </Panel>
+                <div class="popout">
+                    <a href={planningSvgUrl} target="_blank"
+                        ><i class="fa fa-external-link" /></a>
+                </div>
             </TabPanel>
         </Tabs>
 
@@ -204,5 +216,17 @@
         top: 4rem;
         height: 32px;
         width: 32px;
+    }
+    .popout {
+        position: fixed;
+        z-index: 99999;
+        right: 3rem;
+        top: 4rem;
+        height: 32px;
+        width: 32px;
+        a {
+            color: inherit;
+            text-decoration: inherit;
+        }
     }
 </style>

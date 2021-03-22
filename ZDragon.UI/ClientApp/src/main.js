@@ -1,6 +1,6 @@
 import App from "./App.svelte";
 
-import { selectApplication, setFiles } from "./Services/state";
+import { receiveMessage, selectApplication, setFiles } from "./Services/state";
 import { post } from "./Services/http";
 
 // import styling
@@ -30,15 +30,15 @@ const app = new App({
 
 var connection = new signalR.HubConnectionBuilder().withUrl("/project").withAutomaticReconnect().build();
 connection.on("ReceiveMessage", function (data) {
-  // console.log("Ready from SignalR: " + data);
+  receiveMessage(data);
 });
 connection.on("ModuleChanged", function (ns) {
-  console.log("ModuleChanged");
+  receiveMessage("Module Changed: " + ns);
   var event = new CustomEvent("module_changed", {});
   window.dispatchEvent(event);
 });
 connection.on("ProjectChanged", function (result) {
-  console.log(result);
+  receiveMessage("Project Changed, updating navigation pane");
   setFiles(result);
 });
 connection.start();

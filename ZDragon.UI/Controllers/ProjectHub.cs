@@ -5,10 +5,17 @@ using ZDragon.Project.Interactors;
 
 namespace ZDragon.UI.Controllers {
     public class ProjectHub : Hub {
-        public async Task SendMessage(string message) {
+
+        public ProjectHub() {
+            ZDragon.Project.Project.CurrentProject.OnMessageSent += Project_OnMessageSent;
+        }
+
+        private void Project_OnMessageSent(object sender, Project.MessageEventArgs args) {
             try {
-                if (Clients != null)
-                    await Clients.All.SendAsync("ReceiveMessage", message);
+                if (Clients != null) {
+                    Console.WriteLine("Sending Message: " + args.Message);
+                    _ = Clients.All.SendAsync("ReceiveMessage", args);
+                }
             }
             catch (System.Exception) {
                 // do nothing
@@ -36,6 +43,11 @@ namespace ZDragon.UI.Controllers {
             catch (System.Exception) {
                 // do nothing
             }
+        }
+
+        public override Task OnConnectedAsync() {
+            _ = Clients.All.SendAsync("ReceiveMessage", new Project.MessageEventArgs("Client Connected"));
+            return base.OnConnectedAsync();
         }
     }
 }

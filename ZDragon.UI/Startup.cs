@@ -26,7 +26,7 @@ namespace ZDragon.UI {
                     options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
                 });
             services.AddSingleton<Controllers.ProjectHub>();
-            services.AddSingleton<Project.Project>(sp => Program.Project);
+            services.AddSingleton<Project.Project>(sp => ZDragon.Project.Project.CurrentProject);
             services.AddSignalR().AddNewtonsoftJsonProtocol(options => {
                 options.PayloadSerializerSettings.Converters.Add(new StringEnumConverter());
                 options.PayloadSerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
@@ -59,7 +59,7 @@ namespace ZDragon.UI {
             // Open the Electron-Window here
             var task = BootstrapElectron(lifetime);
             task.ContinueWith(t => {
-                System.Console.WriteLine("DONE!");
+                ZDragon.Project.Project.CurrentProject.SendMessage(@$"DONE!");
             });
         }
 

@@ -36,9 +36,20 @@ type PersonRequest = Request Person;
             var compilerResult = compiler.Compile().Check();
 
             Assert.Empty(compilerResult.Errors);
+            Assert.Equal(3, compilerResult.Lexicon.Count);
 
-            var personRequest = compilerResult.Lexicon["PersonRequest"];
+            var personRequest = (RecordNode)compilerResult.Lexicon["PersonRequest"];
             Assert.IsType<RecordNode>(personRequest);
+            Assert.Equal(2, personRequest.Fields.Count);
+
+            var type = personRequest.Fields[0];
+            var body = personRequest.Fields[1];
+            Assert.Equal("Type", type.Id);
+            Assert.Equal("String", type.Types[0]);
+
+            Assert.Equal("Body", body.Id);
+            Assert.Equal("Person", body.Types[0]);
+
         }
     }
 }

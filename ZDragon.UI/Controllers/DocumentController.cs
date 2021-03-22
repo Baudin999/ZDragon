@@ -23,7 +23,7 @@ namespace ZDragon.UI.Controllers {
         [HttpGet("/document/{ns}")]
         public async Task<IActionResult> Index([FromRoute]string ns) {
             var realPath = WebUtility.UrlDecode(ns);
-            if (Program.Project.IsValidProjectPath(realPath)) {
+            if (ZDragon.Project.Project.CurrentProject.IsValidProjectPath(realPath)) {
                 var moduleInteractor = _project.Find<ModuleInteractor>(ns);
                 if (moduleInteractor != null) {
                     var text = await moduleInteractor.GetText();

@@ -10,6 +10,9 @@ using ZDragon.Transpilers.PlantUML;
 
 namespace ZDragon.Project {
     public class Project {
+
+        public static Project CurrentProject;
+
         public CompilationCache Cache { get; private set;}
         private string _root { get; set; }
         private string outpath { get; set; }
@@ -17,6 +20,9 @@ namespace ZDragon.Project {
         private string imagesPath { get; set; }
         public string RootPath => _root;
         public DirectoryInteractor DirectoryInteractor { get; private set;  }
+
+        public delegate void ProjectMessageHandler(object sender, MessageEventArgs args);
+        public event ProjectMessageHandler? OnMessageSent;
 
 
         public Project(string root) {
@@ -34,6 +40,11 @@ namespace ZDragon.Project {
                 Directory.CreateDirectory(imagesPath);
 
             DirectoryInteractor = new DirectoryInteractor(root, root, Cache);
+        }
+
+        public void SendMessage(string message) {
+            if (OnMessageSent != null)
+                OnMessageSent(this, new MessageEventArgs(message));
         }
 
         public DirectoryInteractor ResetDirectory() {
@@ -89,5 +100,4 @@ namespace ZDragon.Project {
             throw new Exception("Not a valid file");
         }
     }
-
 }

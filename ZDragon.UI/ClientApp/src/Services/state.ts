@@ -43,6 +43,30 @@ export const selectApplication = app => {
     }));
 }
 
+export const receiveMessage = data => {
+    stateStore.update((s: any) => {
+
+        var messages = s.messages || [];
+        if (!data.message && data) {
+            messages.unshift({
+                timestamp: new Date().toLocaleString(),
+                message: data
+            });
+        }
+        else if (data.message) {
+            messages.unshift({
+                timestamp: new Date().toLocaleString(),
+                message: data.message
+            });
+        }
+
+        return ({
+            ...s,
+            messages
+        });
+    });
+}
+
 export const setFiles = ({ rootPath, dir }) => {
     var sts = get(stateStore);
     if (rootPath != sts.application) {

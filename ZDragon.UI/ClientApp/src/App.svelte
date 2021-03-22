@@ -8,6 +8,7 @@
 
   import Toolbar from "./Components/App/Toolbar.svelte";
   import JsonSchemaDesigner from "./Pages/JsonSchemaDesigner.svelte";
+  import LogPage from "./Pages/LogPage.svelte";
 </script>
 
 <Router>
@@ -31,6 +32,9 @@
         </Route>
         <Route path="/home">
           <Home />
+        </Route>
+        <Route path="/logs">
+          <LogPage />
         </Route>
       </div>
     </div>

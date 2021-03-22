@@ -25,7 +25,7 @@ namespace ZDragon.Project.Interactors {
 
             foreach (var dir in Directory.GetDirectories(this.DirectoryPath)) {
                 if (ApplicationInteractor.IsApplication(this.DirectoryPath, dir)) {
-                    System.Console.WriteLine($"Initializing Application: {dir}");
+                    ZDragon.Project.Project.CurrentProject.SendMessage($"Initializing Application: {dir}");
                     Applications.Add(new ApplicationInteractor(this.RootPath, dir, cache));
                 }
             }

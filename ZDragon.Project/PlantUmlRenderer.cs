@@ -20,7 +20,13 @@ namespace ZDragon.Project {
                 var bytes = await renderer.RenderAsync(puml, OutputFormat.Svg);
                 return bytes;
             } catch (Exception ex) {
-                System.Console.WriteLine(ex.Message);
+
+                ZDragon.Project.Project.CurrentProject.SendMessage(@$"
+Failed to generate PlantUML diagram:
+
+{ex.Message}
+");
+
                 throw new Exception("Failed to generate a correct PlantUml diagram.");
             }
         }

@@ -11,6 +11,7 @@
     let databases = f("Database");
     let endpoints = f("Endpoint");
     let components = f("Component");
+    let models = f("Model");
 
     let onClick = (module) => () => {
         let path = "/editor/" + module.namespace;
@@ -68,6 +69,19 @@
                 {#if features.length > 0}
                     <h2>Features</h2>
                     {#each features as node}
+                        <div
+                            class="item item--node"
+                            class:selected={node.namespace ==
+                                $moduleStore.selectedModule}
+                            on:click={onClick(node)}>
+                            <i class="fa fa-diamond" />{node.name}
+                        </div>
+                    {/each}
+                {/if}
+
+                {#if models.length > 0}
+                    <h2>Models</h2>
+                    {#each models as node}
                         <div
                             class="item item--node"
                             class:selected={node.namespace ==

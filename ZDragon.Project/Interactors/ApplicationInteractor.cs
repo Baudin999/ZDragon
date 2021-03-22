@@ -32,6 +32,7 @@ namespace ZDragon.Project.Interactors {
         public string DatabasesPath { get; }
         public string ModelsPath { get; }
         public string FeaturesPath { get; }
+        public string StoriesPath { get; }
         public List<ModuleInteractor> Modules { get; } = new List<ModuleInteractor>();
 
         public ApplicationInteractor(string root, string path, CompilationCache cache) : this(root, new DirectoryInfo(path), cache) {
@@ -55,6 +56,7 @@ namespace ZDragon.Project.Interactors {
             this.DatabasesPath = Path.Join(this.FullPath, "Databases");
             this.ModelsPath = Path.Join(this.FullPath, "Models");
             this.FeaturesPath = Path.Join(this.FullPath, "Features");
+            this.StoriesPath = Path.Join(this.FullPath, "Stories");
 
             this.ParseDirectory(this.RootPath, cache, FileTypes.Default);
             this.ParseDirectory(this.ComponentsPath, cache, FileTypes.Component);
@@ -62,6 +64,7 @@ namespace ZDragon.Project.Interactors {
             this.ParseDirectory(this.EndpointsPath, cache, FileTypes.Endpoint);
             this.ParseDirectory(this.ModelsPath, cache, FileTypes.Model);
             this.ParseDirectory(this.DatabasesPath, cache, FileTypes.Database);
+            this.ParseDirectory(this.StoriesPath, cache, FileTypes.Story);
         }
 
         private void ParseDirectory(string path, CompilationCache cache, FileTypes type) {
@@ -125,8 +128,11 @@ namespace ZDragon.Project.Interactors {
             return File.Exists(fullPath);
         }
 
-        public bool Equals(ApplicationInteractor other) {
-            return other.FullPath == this.FullPath;
+        public bool Equals(ApplicationInteractor? other) {
+            if (other is null) return false;
+            else {
+                return other.FullPath == this.FullPath;
+            }
         }
 
 
@@ -141,6 +147,8 @@ namespace ZDragon.Project.Interactors {
                 "Feature" => Path.Combine(this.FeaturesPath, fileName),
                 "Endpoint" => Path.Combine(this.EndpointsPath, fileName),
                 "Database" => Path.Combine(this.DatabasesPath, fileName),
+                "Model" => Path.Combine(this.ModelsPath, fileName),
+                "Story" => Path.Combine(this.StoriesPath, fileName),
                 "Component" => Path.Combine(this.ComponentsPath, fileName),
                 _ => Path.Combine(this.DirectoryInfo.FullName ?? this.RootPath, fileName)
             };

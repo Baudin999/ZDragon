@@ -41,6 +41,7 @@
             <option>Database</option>
             <option>Endpoint</option>
             <option>Model</option>
+            <option>Story</option>
             <option>Empty</option>
         </select>
     </div>

@@ -1,17 +1,17 @@
 {
   "executable": "ZDragon.UI",
   "splashscreen": {
-    "imageFile": ""
+    "imageFile": "/wwwroot/standalone-icon.png"
   },
   "name": "ZDragon",
   "author": "",
   "singleInstance": true,
   "environment": "Production",
   "build": {
-    "appId": "com.ZDragon.UI.app",
+    "appId": "com.ZDragon.app",
     "productName": "ZDragon",
     "copyright": "Copyright © 2020",
-    "buildVersion": "1.0.3",
+    "buildVersion": "1.0.4",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"
@@ -30,6 +30,9 @@
         "filter": [ "**/*" ]
       },
       "**/*"
-    ]
+    ],
+    "win": {
+      "icon": "bin/wwwroot/standalone-icon.png"
+    }
   }
 }

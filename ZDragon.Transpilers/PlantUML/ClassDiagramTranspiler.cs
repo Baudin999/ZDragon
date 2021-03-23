@@ -9,7 +9,7 @@ namespace ZDragon.Transpilers.PlantUML {
     public class ClassDiagramTranspiler {
         //private readonly CompilationResult compilationresult;
         private readonly List<string> baseTypes = new List<string> {
-            "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
+            "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either", "Guid"
         };
         private readonly List<string> types = new List<string>();
         private readonly List<string> relations = new List<string>();
@@ -20,7 +20,7 @@ namespace ZDragon.Transpilers.PlantUML {
             if (node.Body is FunctionParameterNode fpn) {
                 // do function parameter
                 types.Add($@"
-class {node.Id} <<function>> {{
+class {node.Id} << (F, #FF7700) function >> {{
     {node.Id} :: {fpn};
 }}
 ");
@@ -42,14 +42,14 @@ class {node.Id} <<function>> {{
             }
             else {
                 types.Add($@"
-interface {node.Id} {{}}
+interface {node.Id} << (A, orchid) alias >> {{}}
 ");
             }
         }
         private void TranspileRecordNode(RecordNode node) {
             var fields = node.Fields.Select(f => $"{(f.IsCloned ? "{classifier} " : "")}{f.Id}: {string.Join(" ", f.Types)};");
             types.Add($@"
-class {node.Id} {{
+class {node.Id} << (R, #8AC0C0) record >> {{
     {string.Join("\r\n\t", fields)}
 }}
 ");

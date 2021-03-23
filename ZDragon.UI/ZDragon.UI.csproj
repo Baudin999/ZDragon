@@ -174,7 +174,9 @@
     <None Include="wwwroot\favicon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\standalone-icon.png" />
+    <None Include="wwwroot\standalone-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="wwwroot\styles.css" />
   </ItemGroup>
   <ItemGroup>

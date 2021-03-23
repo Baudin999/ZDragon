@@ -83,6 +83,22 @@ namespace Lexer {
         }
 
 
+        [Fact(DisplayName = "Lex - Spaces")]
+        public void Spaces() {
+            var code = @"
+ * SOmething
+        * Other
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile();
+
+            verifyTokens(
+                compiler.SourceCode,
+                compilerResult.Tokens.ToList(),
+                false);
+        }
+
+
         [Fact(DisplayName = "Lex Parameter - Non Contextual Generic Parameter")]
         public void NonContextualGenericParameter() {
             var code = @"a 'b";

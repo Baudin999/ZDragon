@@ -195,7 +195,7 @@ namespace Compiler.Symbols {
                 else if (token.Kind == SyntaxKind.NewLineToken && i + 1 < max && t[i + 1].Kind == SyntaxKind.NewLineToken) {
                     yield return token;
                 }
-                else if (token.Kind == SyntaxKind.NewLineToken) {
+                else if (inContext && token.Kind == SyntaxKind.NewLineToken) {
                     int depth = 0;
                     var depthTokens = new List<Token?> { token };
 

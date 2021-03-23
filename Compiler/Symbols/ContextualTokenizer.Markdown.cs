@@ -19,10 +19,10 @@ namespace Compiler.Symbols {
                 if (Current?.Kind == SyntaxKind.NewLineToken && Next?.Kind == SyntaxKind.HashToken) {
                     break;
                 }
-                tokens.Add(Take());
+                else {
+                    tokens.Add(Take());
+                }
             }
-
-
 
             return new TokenGroup(ContextType.MarkdownDeclaration, tokens);
         }

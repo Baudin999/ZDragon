@@ -19,6 +19,8 @@
 
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
 
+    <ProjectReference Include="..\ZDragon.Project\ZDragon.Project.csproj" />
+
     <ProjectReference Include="..\ZDragon.Transpilers\ZDragon.Transpilers.csproj" />
 
   </ItemGroup>

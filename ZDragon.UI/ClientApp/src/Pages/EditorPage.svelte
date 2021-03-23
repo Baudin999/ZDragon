@@ -108,7 +108,7 @@
 
             <TabPanel>
                 <Panel style="height: calc(100% - 3rem); overflow:auto;">
-                    {#if svgUrl}
+                    {#if componentUrl}
                         <ImageViewer url={componentUrl} />
                     {/if}
                 </Panel>
@@ -117,28 +117,17 @@
             <TabPanel>
                 <Panel style="height: calc(100% - 3rem); overflow:auto;">
                     {#if svgUrl}
-                        <img alt="svg" src={svgUrl} />
+                        <ImageViewer url={svgUrl} />
                     {/if}
                 </Panel>
-                <div class="popout">
-                    <a href={svgUrl} target="_blank"
-                        ><i class="fa fa-external-link" /></a>
-                </div>
             </TabPanel>
 
             <TabPanel>
                 <Panel style="height: calc(100% - 3rem); overflow:auto;">
                     {#if planningSvgUrl}
-                        <img
-                            style="min-width:100%;"
-                            alt="svg"
-                            src={planningSvgUrl} />
+                        <ImageViewer url={planningSvgUrl} />
                     {/if}
                 </Panel>
-                <div class="popout">
-                    <a href={planningSvgUrl} target="_blank"
-                        ><i class="fa fa-external-link" /></a>
-                </div>
             </TabPanel>
         </Tabs>
 

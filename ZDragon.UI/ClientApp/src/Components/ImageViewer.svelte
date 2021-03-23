@@ -4,7 +4,6 @@
     export let url = null;
 
     let scale = 1;
-    let canstart = true;
     let draging = false;
     let img;
 
@@ -29,9 +28,6 @@
 
     function stopDrag(e) {
         draging = false;
-        setTimeout(() => {
-            canstart = true;
-        }, 300);
         e.preventDefault();
     }
 

@@ -1,7 +1,7 @@
 <script type="ts">
     import { writable } from "svelte/store";
     import Editor from "./Editor.svelte";
-    import { moduleStore, parseCode, selectModule } from "../Services/module";
+    import { moduleStore, saveCode, selectModule } from "../Services/module";
 
     export let context = [];
 
@@ -13,7 +13,7 @@
     let onSave = async (event) => {
         if (!module || !event) return;
         let code = event.detail;
-        parseCode(module, code);
+        saveCode(module, code);
     };
 
     let mapErrorToken = (e) => {

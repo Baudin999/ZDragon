@@ -31,15 +31,17 @@ type ProfileId = Guid;
 
             // test the type definition
             Assert.IsType<FunctionParameterNode>(endPointNode.TypeDefinition);
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             FunctionParameterNode fun = (FunctionParameterNode)endPointNode.TypeDefinition;
-            Assert.Equal(2, fun.Nodes.Count);
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+            Assert.Equal(2, fun?.Nodes.Count ?? 0);
 
-            Assert.Equal("ProfileId", ((IdentifierNode)fun.Nodes[0]).Id);
+            Assert.Equal("ProfileId", ((IdentifierNode?)fun?.Nodes[0])?.Id);
 
-            TypeApplicationNode tan = (TypeApplicationNode)fun.Nodes[1];
-            Assert.Equal(2, tan.Parameters.Count);
-            Assert.Equal("Maybe", tan.Parameters[0].Value);
-            Assert.Equal("Profile", tan.Parameters[1].Value);
+            var tan = (TypeApplicationNode?)fun?.Nodes[1] ?? null;
+            Assert.Equal(2, tan?.Parameters.Count ?? 0);
+            Assert.Equal("Maybe", tan?.Parameters[0].Value);
+            Assert.Equal("Profile", tan?.Parameters[1].Value);
 
         }
 

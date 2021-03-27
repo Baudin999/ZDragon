@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Expressions {
+namespace Documentation{
     public class Markdown {
         [Fact(DisplayName = "Markdown - Example 01")]
         public void Markdown_Example01() {

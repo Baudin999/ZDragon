@@ -3,7 +3,7 @@ using Compiler.Language.Nodes;
 using System.Linq;
 using Xunit;
 
-namespace Expressions {
+namespace Language {
     public class TypeAliasses {
         [Fact(DisplayName = "Types - variable type definition")]
         public void Types_VariableDefinition() {

@@ -164,12 +164,14 @@ namespace Compiler.Symbols {
                 else if (isOperator(current)) {
                     tokens.Add(parseOperator());
                 }
-                else if (current == Convert.ToChar(0x7F)) {
+                else if (current >= 0x00 && current <= 0x7F) {
+                    // these are the invalid ASCII characters
+                    // these I'd call editor bugs...
                     index++;
                 }
                 else {
-                    Console.WriteLine(current);
-                    throw new Exception("Invalid token");
+                    Console.WriteLine($"Invalid Token: [pos {index}] " + current.ToString() + $" key code: {(int)current}");
+                    index++;
                 }
             }
 

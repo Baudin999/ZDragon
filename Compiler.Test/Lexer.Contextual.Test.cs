@@ -66,8 +66,8 @@ component Something =
             var tokens = lexer.Tokenize(Compiler.Symbols.ContextType.None);
 
             Assert.NotNull(tokens);
-            Assert.Equal(1, tokens.Where(t => t.Kind == SyntaxKind.StartBlock).Count());
-            Assert.Equal(1, tokens.Where(t => t.Kind == SyntaxKind.EndBlock).Count());
+            Assert.Single(tokens.Where(t => t.Kind == SyntaxKind.StartBlock));
+            Assert.Single(tokens.Where(t => t.Kind == SyntaxKind.EndBlock));
 
         }
     }

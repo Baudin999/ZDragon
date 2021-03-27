@@ -3,7 +3,7 @@ using Compiler.Language.Nodes;
 using System.Linq;
 using Xunit;
 
-namespace Imports {
+namespace Language {
     public class Open {
 
         [Fact(DisplayName = "Open - Simple")]

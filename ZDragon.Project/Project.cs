@@ -1,17 +1,13 @@
 ﻿using Compiler;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using ZDragon.Project.Interactors;
-using ZDragon.Transpilers.Components;
-using ZDragon.Transpilers.Html;
-using ZDragon.Transpilers.PlantUML;
 
 namespace ZDragon.Project {
     public class Project {
 
-        public static Project CurrentProject;
+        public static Project? CurrentProject;
 
         public CompilationCache Cache { get; private set;}
         private string _root { get; set; }
@@ -43,8 +39,13 @@ namespace ZDragon.Project {
         }
 
         public void SendMessage(string message) {
-            if (OnMessageSent != null)
-                OnMessageSent(this, new MessageEventArgs(message));
+            try {
+                if (OnMessageSent != null)
+                    OnMessageSent(this, new MessageEventArgs(message));
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
         }
 
         public DirectoryInteractor ResetDirectory() {

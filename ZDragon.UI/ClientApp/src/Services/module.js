@@ -54,7 +54,7 @@ export const deleteModule = async module => {
     console.log(module);
 };
 
-export const parseCode = async (module, code) => {
+export const saveCode = async (module, code) => {
 
     if (!module || !module.namespace || !code) {
         console.log("Invalid \"Parse Code\"", module, code);

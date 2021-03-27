@@ -91,6 +91,7 @@ namespace Compiler {
                 { "view", SyntaxKind.ViewDeclarationToken },
                 { "guideline", SyntaxKind.GuidelineDeclarationToken },
                 { "requirement", SyntaxKind.RequirementDeclarationToken },
+                { "include", SyntaxKind.IncludeDeclarationToken },
 
                 // architecture
                 { "person", SyntaxKind.PersonDeclarationToken },
@@ -254,12 +255,13 @@ namespace Compiler {
         DataDeclarationToken,
         ChoiceDeclarationToken,
         OpenDeclarationToken,
-        EndKeywordToken,
-        FuncDefinitionToken,
-        IfToken,
-        ElseToken,
+        EndKeywordToken,            
+        FuncDefinitionToken,        
+        IfToken,                    // if
+        ElseToken,                  // else
         LetToken,                   // let
         ExtendsToken,               // extends
+        IncludeDeclarationToken,    // include
         GenericParameterToken,
 
         // literals

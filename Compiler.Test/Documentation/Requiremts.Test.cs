@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Markdown {
+namespace Documentation {
     public class Requirements {
         [Fact(DisplayName = "Requirement - Simple")]
         public void Requirements_Simple() {

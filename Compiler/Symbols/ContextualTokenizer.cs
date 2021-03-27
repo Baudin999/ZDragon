@@ -172,6 +172,14 @@ namespace Compiler.Symbols {
                     yield return TokenizeChapter();
                 }
 
+
+                // Documentation
+                else if (Current?.Kind == SyntaxKind.IncludeDeclarationToken) {
+                    yield return TokenizeIncludeDefinition(annotations);
+                    annotations = new List<Token>();
+                }
+
+
                 // Architecture
                 else if (Current?.Kind == SyntaxKind.PersonDeclarationToken) {
                     //
@@ -240,6 +248,7 @@ namespace Compiler.Symbols {
         ViewDeclaration,
         GuidelineDeclaration,
         RequirementDeclaration,
+        IncludeDeclaration,
 
         // planning
         RoadmapDeclaration,

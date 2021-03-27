@@ -2,12 +2,12 @@ using Compiler.Checkers;
 using Compiler.Language;
 using Compiler.Language.Nodes;
 using Compiler.Symbols;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler {
 
-    public class Compiler
-    {
+    public class Compiler {
         public readonly CompilationCache Cache;
         public string Code { get; private set; }
         public string Namespace { get; }
@@ -20,8 +20,7 @@ namespace Compiler {
             this.SourceCode = new SourceCode(code);
         }
 
-        public Compiler(string code, string ns)
-        {
+        public Compiler(string code, string ns) {
             this.Cache = new CompilationCache(new ErrorSink());
             this.Code = code;
             this.Namespace = ns;
@@ -39,7 +38,7 @@ namespace Compiler {
             var initialContext = ContextType.None;
             var tokens = new Lexer(this.SourceCode, Cache.ErrorSink).Tokenize(initialContext).ToList();
             var contextualTokens = new ContextualTokenizer(tokens, Cache.ErrorSink).Tokenize(initialContext).ToList();
-            var ast = new ContextualParser(contextualTokens, Cache.ErrorSink).Parse().ToList();
+            var ast = new ContextualParser(contextualTokens, Cache.ErrorSink).Parse().FoldAst(Cache).ToList();
             var lexicon = new Lexicon(ast, Cache, this.Namespace).CreateLexicon();
             var document = ast.OfType<IDocumentNode>();
             var referencedModules = ast.OfType<OpenNode>();
@@ -49,11 +48,34 @@ namespace Compiler {
             Cache.Add(this.Namespace, compilationResult);
             return compilationResult;
         }
+    }
 
-      
-
-
-
+    internal static class NodeHelpers {
+        internal static IEnumerable<AstNode> FoldAst(this IEnumerable<AstNode> ast, CompilationCache cache) {
+            foreach (var node in ast) {
+                if (node is IncludeNode include) {
+                    if (cache.Has(include.Namespace)) {
+                        var found = false;
+                        var module = cache.Get(include.Namespace);
+                        foreach (var _node in module.Ast) {
+                            if (found && _node is IDocumentNode) {
+                                var result = _node.Copy();
+                                result.Imported = true;
+                                result.ImportedFrom = include.Namespace;
+                                yield return result;
+                            }
+                            if (_node is DirectiveNode dn) {
+                                if (dn.Key == "region" && dn.Value == include.Id) found = true;
+                                if (dn.Key == "endregion" && dn.Value == include.Id) found = false;
+                            }
+                        }
+                    }
+                }
+                else {
+                    yield return node;
+                }
+            }
+        }
     }
 
 }

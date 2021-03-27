@@ -1,3 +1,52 @@
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 16px;
+  background: var(--background);
+  color: var(--color);
+}
+
+* {
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: Verdana, Geneva, sans-serif;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.fade-out {
+  opacity: 0;
+}
+.fade-in {
+  opacity: 1;
+}
 :root {
   --color-primary: #ff6c00;
   --color-primary--dark: #803100;
@@ -123,35 +172,6 @@ textarea:focus {
 textarea {
   height: 150px;
 }
-table.table--glossary {
-  border-collapse: collapse;
-}
-table.table--glossary td,
-table.table--glossary th {
-  padding: 1rem;
-  text-align: left;
-}
-table.table--glossary td:last-child,
-table.table--glossary th:last-child {
-  padding-right: 4rem;
-}
-table.table--glossary td {
-  border-bottom: 1px solid lightgray;
-}
-table.table--glossary thead {
-  background: #fa6003;
-}
-table.table--glossary thead th {
-  font-weight: normal;
-  color: #ffffff;
-}
-
-
-.content table {
-  border: 1px solid green;
-}.mermaid > svg {
-  text-align: center;
-}
 /* Button Styling */
 
 button {
@@ -188,56 +208,36 @@ button.warning:hover {
   background: var(--color-primary);
   color: var(--color-primary--alt);
 }
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+.mermaid > svg {
+  text-align: center;
+}
+table.table--glossary {
+  border-collapse: collapse;
+}
+table.table--glossary td,
+table.table--glossary th {
+  padding: 1rem;
+  text-align: left;
+}
+table.table--glossary td:last-child,
+table.table--glossary th:last-child {
+  padding-right: 4rem;
+}
+table.table--glossary td {
+  border-bottom: 1px solid lightgray;
+}
+table.table--glossary thead {
+  background: #fa6003;
+}
+table.table--glossary thead th {
+  font-weight: normal;
+  color: #ffffff;
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
 
-  overflow: hidden;
-
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 16px;
-  background: var(--background);
-  color: var(--color);
+.content table {
+  border: 1px solid green;
 }
-
-* {
-  text-rendering: optimizeLegibility;
-}
-
-body {
-  font-family: Verdana, Geneva, sans-serif;
-}
-
-.noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-}
-
-.fade-out {
-  opacity: 0;
-}
-.fade-in {
-  opacity: 1;
-}
-
 .file-explorer {
     /* padding: 1rem; */
 }

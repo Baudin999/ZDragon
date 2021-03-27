@@ -90,7 +90,12 @@ namespace ZDragon.Transpilers.Html {
         }
 
         private void RenderViewNode(ViewNode node) {
-            parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/{node.Hash}.svg\" alt=\"data\" />");
+            if (node.Imported) {
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{node.ImportedFrom}/{node.Hash}.svg\" alt=\"data\" />");
+            }
+            else {
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/{node.Hash}.svg\" alt=\"data\" />");
+            }
         }
 
         private void RenderGuidelineNode(GuidelineNode node) {

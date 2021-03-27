@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Markdown {
+namespace Documentation {
     public class Chapter {
         [Fact(DisplayName = "Markdown - Chapter Literal")]
         public void TwoWords() {

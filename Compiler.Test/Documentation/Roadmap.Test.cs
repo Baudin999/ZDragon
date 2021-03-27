@@ -1,7 +1,7 @@
 ﻿using Compiler.Language.Nodes;
 using Xunit;
 
-namespace Planning {
+namespace Documentation {
     public class Roadmap {
 
         [Fact()]

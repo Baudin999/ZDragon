@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Expressions {
+namespace Language {
     public class RecordLiteral {
 
         [Fact(DisplayName = "Record Literal - Person")]

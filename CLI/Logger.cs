@@ -30,7 +30,6 @@ namespace CLI
             settings.Converters.Add(new AnnotationConverter());
             settings.Converters.Add(new TokenConverter());
             var result = JsonConvert.DeserializeObject<AstNode>(s, settings);
-            int i = 0;
         }
 
     }
@@ -40,11 +39,9 @@ namespace CLI
             return (objectType == typeof(RecordNode));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+        public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
             // Load the JSON for the Result into a JObject
             JObject jo = JObject.Load(reader);
-
-            
 
             // Return the result
             return null;
@@ -64,11 +61,11 @@ namespace CLI
             return (objectType == typeof(AnnotationNode));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
+        public override object? ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {
             // Load the JSON for the Result into a JObject
             JObject jo = JObject.Load(reader);
-            var token = jo["Token"].ToObject<Token>();
-            return new AnnotationNode(token);
+            var token = jo["Token"]?.ToObject<Token>();
+            return token is null ? token : new AnnotationNode(token);
         }
 
         public override bool CanWrite {

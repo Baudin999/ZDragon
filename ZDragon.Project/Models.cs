@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ZDragon.Project {
     public class Domain {
-        public string Name { get; set; }
-        public string FullPath { get; set; }
-        public string Path { get; set; }
+        public string Name { get; set; } = default!;
+        public string FullPath { get; set; } = default!;
+        public string Path { get; set; } = default!;
 
-        public DomainConfiguration Configuration { get; set; }
+        public DomainConfiguration Configuration { get; set; } = default!;
     }
 
     public class DomainConfiguration {

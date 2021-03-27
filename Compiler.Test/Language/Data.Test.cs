@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Expressions {
+namespace Language {
     public class Data {
         [Fact(DisplayName = "Data - Maybe")]
         public void Data_Maybe() {

@@ -65,6 +65,9 @@ namespace Compiler.Language {
                 else if (tokenBlock.Context == ContextType.RequirementDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseRequirement();
                 }
+                else if (tokenBlock.Context == ContextType.IncludeDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseInclude();
+                }
 
                 // planning
                 else if (tokenBlock.Context == ContextType.RoadmapDeclaration) {

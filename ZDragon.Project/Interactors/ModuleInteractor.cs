@@ -117,11 +117,11 @@ namespace ZDragon.Project.Interactors {
 
                 var text = await GetText();
                 this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile().Check();
-                ZDragon.Project.Project.CurrentProject.SendMessage($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
+                ZDragon.Project.Project.CurrentProject?.SendMessage($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
                 return this.CompilationResult;
             }
             catch (System.Exception ex) {
-                ZDragon.Project.Project.CurrentProject.SendMessage(@$"
+                ZDragon.Project.Project.CurrentProject?.SendMessage(@$"
 Failed to compile '{this.Namespace}':
 
 {ex.Message}
@@ -136,11 +136,11 @@ Failed to compile '{this.Namespace}':
                 // reset the previous Compiltation Errors
                 this.cache.Reset();
                 this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile().Check();
-                ZDragon.Project.Project.CurrentProject.SendMessage($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
+                ZDragon.Project.Project.CurrentProject?.SendMessage($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
                 return this.CompilationResult;
             }
             catch (System.Exception ex) {
-                ZDragon.Project.Project.CurrentProject.SendMessage(@$"
+                ZDragon.Project.Project.CurrentProject?.SendMessage(@$"
 Failed to compile '{this.Namespace}':
 
 {ex.Message}
@@ -212,7 +212,8 @@ Failed to compile '{this.Namespace}':
                     tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml)));
                     names.Add(view.Hash + ".svg");
                 }
-                else {
+                else if (viewLexicon?.FirstOrDefault().Value is ILanguageNode)
+                {
                     var _puml = new ClassDiagramTranspiler(viewLexicon).Transpile();
                     var path = Path.Combine(this.OutPath, view.Hash + ".svg");
                     tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml)));

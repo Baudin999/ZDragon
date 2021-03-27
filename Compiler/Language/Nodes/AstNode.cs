@@ -2,6 +2,10 @@
 
 namespace Compiler.Language.Nodes {
     public class AstNode {
+
+        public bool Imported { get; set; } = false;
+        public string? ImportedFrom { get; set; }
+
         public ISourceSegment Segment { get; protected set; }
         public AstNode(ISourceSegment segment) {
             this.Segment = segment;

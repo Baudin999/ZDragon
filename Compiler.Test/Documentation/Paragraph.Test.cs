@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Markdown {
+namespace Documentation {
     public class Paragraph {
         [Fact(DisplayName = "Markdown - Paragraph Literal")]
         public void Markdown_ParagraphLiteral() {

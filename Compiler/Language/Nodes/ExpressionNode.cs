@@ -47,6 +47,7 @@ namespace Compiler.Language.Nodes {
         GuidelineExpression,
 
         OpenExpression,
+        IncludeExpression,
         ComponentExpression,
         InteractionExpression,
         SystemExpression,

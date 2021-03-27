@@ -43,7 +43,7 @@ namespace ZDragon.UI.Controllers {
         }
 
         [HttpPost("/json")]
-        public async Task<IActionResult> GenerateJson([FromBody] GenerateJsonBody body) {
+        public IActionResult GenerateJson([FromBody] GenerateJsonBody body) {
             try {
 
                 var compilationResult = new Compiler.Compiler(body.Code).Compile().Check();

@@ -189,10 +189,6 @@ namespace ZDragon.Transpilers.OpenAPI {
             bool required = true;
             if (Lexicon.ContainsKey(type) && !References.ContainsKey(type)) {
 
-                //if (type == "Person") {
-                //    var i = 0;
-                //}
-
                 var result = MapBlock(Lexicon[type]);
                 required = result.Item1;
                 References[type] = result.Item2;
@@ -201,7 +197,11 @@ namespace ZDragon.Transpilers.OpenAPI {
         }
 
         private (bool, JSchema) MapBlock(IIdentifierExpressionNode node) {
-            if (References[node.Id] != null) return (true, (JSchema)References[node.Id]);
+            if (References[node.Id] != null) {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                return (true, JSchema.Parse(References[node.Id].ToString()));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+            }
 
             return node switch {
                 RecordNode n => MapRecordNode(n),

@@ -7,6 +7,10 @@ namespace Compiler.Language.Nodes {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
         public IEnumerable<Token> ValueTokens { get; }
+
+        public string Key => this.Id;
+        public string Value => this.Literal;
+
         public string Literal { get; }
 
         public DirectiveNode(Token id, IEnumerable<Token> value) : base(id, ExpressionKind.DirectiveExpression) {

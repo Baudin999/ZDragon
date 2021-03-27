@@ -17,8 +17,8 @@ namespace ZDragon.UI.Controllers {
                     _ = Clients.All.SendAsync("ReceiveMessage", args);
                 }
             }
-            catch (System.Exception) {
-                // do nothing
+            catch (System.Exception ex) {
+                Console.WriteLine(ex.Message);
             }
         }
 

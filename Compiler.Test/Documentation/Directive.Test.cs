@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Markdown {
+namespace Documentation {
     public class Directives {
         [Fact(DisplayName = "Markdown - Directive")]
         public void TwoWords() {

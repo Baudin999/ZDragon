@@ -60,9 +60,24 @@ namespace Compiler.Checkers {
         }
 
         private void CheckViewNode(ViewNode view) {
-            CheckToken(view, null, view.IdToken);
-            foreach (var node in view.Nodes) {
-                CheckToken(view, null, node);
+            if (!view.Imported) {
+                CheckToken(view, null, view.IdToken);
+                foreach (var node in view.Nodes) {
+                    CheckToken(view, null, node);
+                }
+            }
+        }
+
+        private void CheckIncludeNode(IncludeNode include) {
+            // include looks like:
+            // include <Application>.Components.<First>.<RegionName>;
+            //            app                  fileName   regionId
+
+            if (!cache.Has(include.Namespace)) {
+                errorSink.AddError(new Error(
+                    $"Module '{include.Namespace}' does not seem to exist.",
+                    include.IdToken
+                ));
             }
         }
 
@@ -247,6 +262,7 @@ type {root.Id} {typeName} = ...;
 
                 // documentation nodes
                 case ViewNode n: CheckViewNode(n); break;
+                case IncludeNode n: CheckIncludeNode(n); break;
 
                 // check architectural nodes
                 case ComponentNode n: CheckComponentNode(n); break;

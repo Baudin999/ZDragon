@@ -2,7 +2,7 @@
 using System.Linq;
 using Xunit;
 
-namespace Expressions {
+namespace Language {
     public class Choice {
         [Fact(DisplayName = "Choice - Gender")]
         public void Choice_Gender() {

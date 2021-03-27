@@ -6,8 +6,6 @@ namespace Compiler.Language.Nodes {
     public class ViewNode : ExpressionNode, IIdentifierExpressionNode, ILanguageNode, IDocumentNode {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
-        public bool Imported { get; set; }
-        public string? ImportedFrom { get; set; }
 
         public AnnotationNode Annotation { get; }
         public List<Token> Nodes { get; }

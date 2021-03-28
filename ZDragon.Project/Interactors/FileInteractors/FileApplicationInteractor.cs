@@ -7,8 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using ZDragon.Project.Templates;
 
-namespace ZDragon.Project.Interactors {
-    public class ApplicationInteractor : IEquatable<ApplicationInteractor>, IInteractor {
+namespace ZDragon.Project.Interactors.FileInteractors {
+    public class FileApplicationInteractor : IEquatable<FileApplicationInteractor>, IApplicationInteractor {
         public string RootPath { get; }
 
         [JsonIgnore]
@@ -33,9 +33,9 @@ namespace ZDragon.Project.Interactors {
         public string ModelsPath { get; }
         public string FeaturesPath { get; }
         public string StoriesPath { get; }
-        public List<ModuleInteractor> Modules { get; } = new List<ModuleInteractor>();
+        public List<IModuleInteractor> Modules { get; } = new List<IModuleInteractor>();
 
-        public ApplicationInteractor(string root, string path, CompilationCache cache) : this(root, new DirectoryInfo(path), cache) {
+        public FileApplicationInteractor(string root, string path, CompilationCache cache) : this(root, new DirectoryInfo(path), cache) {
             //
         }
 
@@ -43,7 +43,7 @@ namespace ZDragon.Project.Interactors {
         /// Default Constructor
         /// </summary>
         /// <param name="dir"></param>
-        public ApplicationInteractor(string root, DirectoryInfo dir, CompilationCache cache) {
+        public FileApplicationInteractor(string root, DirectoryInfo dir, CompilationCache cache) {
             this.RootPath = root;
             this.DirectoryInfo = dir;
             this.FullPath = dir.FullName;
@@ -71,7 +71,7 @@ namespace ZDragon.Project.Interactors {
             if (!Directory.Exists(path)) Directory.CreateDirectory(path);
             foreach (var file in Directory.GetFiles(path)) {
                 if (Path.GetExtension(file) == ".car") {
-                    Modules.Add(new ModuleInteractor(this.RootPath, file, cache, type, this));
+                    Modules.Add(new FileModuleInteractor(this.RootPath, file, cache, type, this));
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace ZDragon.Project.Interactors {
             }
         }
 
-        public ModuleInteractor? Find(string ns) {
+        public IModuleInteractor? Find(string ns) {
             return Modules.FirstOrDefault(m => m.Namespace == ns);
         }
 
@@ -93,20 +93,20 @@ namespace ZDragon.Project.Interactors {
             return index;
         }
 
-        public static List<ApplicationInteractor> FromDirectory(string root, string path, CompilationCache cache) {
+        public static List<FileApplicationInteractor> FromDirectory(string root, string path, CompilationCache cache) {
 
-            var applications = new List<ApplicationInteractor>();
+            var applications = new List<FileApplicationInteractor>();
             if (Directory.Exists(path)) {
                 var directory = new DirectoryInfo(path);
                 foreach (var dir in directory.GetDirectories()) {
-                    applications.Add(new ApplicationInteractor(root, dir, cache));
+                    applications.Add(new FileApplicationInteractor(root, dir, cache));
                 }
             }
 
             return applications;
         }
 
-        public static ApplicationInteractor Create(string root, string name, CompilationCache cache) {
+        public static FileApplicationInteractor Create(string root, string name, CompilationCache cache) {
             name = name.Replace(" ", "");
             var fullPath = Path.Combine(Path.GetFullPath(root), name);
 
@@ -119,7 +119,7 @@ namespace ZDragon.Project.Interactors {
             var configPath = Path.Combine(fullPath, "app.config");
             if (!File.Exists(configPath)) File.Create(configPath);
 
-            return new ApplicationInteractor(root, dirInfo, cache);
+            return new FileApplicationInteractor(root, dirInfo, cache);
         }
 
         public static bool IsApplication(string root, string name) {
@@ -128,7 +128,7 @@ namespace ZDragon.Project.Interactors {
             return File.Exists(fullPath);
         }
 
-        public bool Equals(ApplicationInteractor? other) {
+        public bool Equals(FileApplicationInteractor? other) {
             if (other is null) return false;
             else {
                 return other.FullPath == this.FullPath;
@@ -138,7 +138,7 @@ namespace ZDragon.Project.Interactors {
 
         // IInteractor methods
 
-        public async Task<ModuleInteractor> AddFile(string name, string type, string? description) {
+        public async Task<FileModuleInteractor> AddFile(string name, string type, string? description) {
             // Should be added to the application or directory of which this file is a part.
             string fileName = name;
             if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
@@ -162,7 +162,7 @@ namespace ZDragon.Project.Interactors {
             };
 
             await File.WriteAllTextAsync(path, template);
-            var moduleInteractor = new ModuleInteractor(this.RootPath, path, this.Cache);
+            var moduleInteractor = new FileModuleInteractor(this.RootPath, path, this.Cache);
             this.Modules.Add(moduleInteractor);
             return moduleInteractor;
         }

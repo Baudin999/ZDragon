@@ -34,7 +34,7 @@ namespace ZDragon.UI.Controllers {
             }
         }
 
-        internal async Task ProjectChanged(string rootPath, DirectoryInteractor dir) {
+        internal async Task ProjectChanged(string rootPath, IDirectoryInteractor dir) {
             try {
                 if (Clients != null) {
                     await Clients.All.SendAsync("ProjectChanged", new { rootPath, dir });

@@ -34,6 +34,21 @@ namespace ZDragon.UI.Controllers {
             }
         }
 
+
+        [HttpGet("/project/index")]
+        public IActionResult GetIndex() {
+            try {
+                var index = _project.GetComponentNodes();
+                return Ok(index);
+            }
+            catch (Exception ex) {
+                return Problem(
+                   title: $"Failed to generate an Index",
+                   detail: ex.Message
+                   );
+            }
+        }
+
     }
 
 }

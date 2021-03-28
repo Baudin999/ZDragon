@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
+using ZDragon.Project.Interactors;
 using ZDragon.Transpilers.OpenAPI;
 using ZDragon.UI.Models;
 
@@ -27,7 +28,7 @@ namespace ZDragon.UI.Controllers {
                 // the namespace is the folder to which the fill will be added
                 // the body is the FileSubmit
 
-                var app = _project.Find(body.AppName);
+                var app = _project.Find<IApplicationInteractor>(body.AppName);
                 _ = await app.AddFile(body.Name, body.Type, body.Description);
                 _project.ResetDirectory();
 

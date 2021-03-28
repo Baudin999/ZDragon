@@ -6,33 +6,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using ZDragon.Project.Templates;
 
-namespace ZDragon.Project.Interactors {
-    public class DirectoryInteractor : IInteractor {
+namespace ZDragon.Project.Interactors.FileInteractors {
+    public class FileDirectoryInteractor : IDirectoryInteractor {
         public string RootPath { get; }
         public string DirectoryPath { get; }
         public string Namespace { get; }
-        public List<ApplicationInteractor> Applications { get; } = new List<ApplicationInteractor>();
-        public List<ModuleInteractor> Modules { get; } = new List<ModuleInteractor>();
+        public List<IApplicationInteractor> Applications { get; } = new List<IApplicationInteractor>();
+        public List<IModuleInteractor> Modules { get; } = new List<IModuleInteractor>();
 
         [JsonIgnore]
         private readonly CompilationCache cache;
 
-        public DirectoryInteractor(string root, string path, CompilationCache cache) {
+        public FileDirectoryInteractor(string root, string path, CompilationCache cache) {
             this.cache = cache;
             this.RootPath = root;
             this.DirectoryPath = Path.IsPathFullyQualified(path) ? path : Path.GetFullPath(path);
             this.Namespace = Utilities.GetNamespaceFromPath(root, path);
 
             foreach (var dir in Directory.GetDirectories(this.DirectoryPath)) {
-                if (ApplicationInteractor.IsApplication(this.DirectoryPath, dir)) {
+                if (FileApplicationInteractor.IsApplication(this.DirectoryPath, dir)) {
                     ZDragon.Project.Project.CurrentProject?.SendMessage($"Initializing Application: {dir}");
-                    Applications.Add(new ApplicationInteractor(this.RootPath, dir, cache));
+                    Applications.Add(new FileApplicationInteractor(this.RootPath, dir, cache));
                 }
             }
 
             foreach (var file in Directory.GetFiles(this.DirectoryPath)) {
                 if (Path.GetExtension(file) == ".car") {
-                    Modules.Add(new ModuleInteractor(this.RootPath, file, cache));
+                    Modules.Add(new FileModuleInteractor(this.RootPath, file, cache));
                 }
             }
         }
@@ -42,8 +42,8 @@ namespace ZDragon.Project.Interactors {
             foreach (var application in Applications) await application.Verify();
         }
 
-        public DirectoryInteractor CreateApplication(string name) {
-            var appInteractor = ApplicationInteractor.Create(this.RootPath, name, cache);
+        public FileDirectoryInteractor CreateApplication(string name) {
+            var appInteractor = FileApplicationInteractor.Create(this.RootPath, name, cache);
             this.Applications.Add(appInteractor);
             return this;
         }
@@ -75,14 +75,14 @@ namespace ZDragon.Project.Interactors {
         /// <param name="root"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static DirectoryInteractor Create(string root, string name, CompilationCache cache) {
-            return new DirectoryInteractor(root, name, cache);
+        public static FileDirectoryInteractor Create(string root, string name, CompilationCache cache) {
+            return new FileDirectoryInteractor(root, name, cache);
         }
 
 
         // IInteractor methods
 
-        public async Task<ModuleInteractor> AddFile(string name, string type, string? description) {
+        public async Task<FileModuleInteractor> AddFile(string name, string type, string? description) {
             // Should be added to the application or directory of which this file is a part.
             string fileName = name;
             if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
@@ -94,7 +94,7 @@ namespace ZDragon.Project.Interactors {
             }
 
             await File.WriteAllTextAsync(path, template);
-            return new ModuleInteractor(this.RootPath, path, cache);
+            return new FileModuleInteractor(this.RootPath, path, cache);
 
         }
     }

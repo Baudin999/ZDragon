@@ -12,13 +12,13 @@ using ZDragon.Transpilers.Html;
 using ZDragon.Transpilers.Planning;
 using ZDragon.Transpilers.PlantUML;
 
-namespace ZDragon.Project.Interactors {
+namespace ZDragon.Project.Interactors.FileInteractors {
     /// <summary>
     /// The module interactor gives us a way to interact with a module,
     /// like saving the file, compiling the module and gerally maintain
     /// the validity of the diagrams created by the module.
     /// </summary>
-    public class ModuleInteractor : IInteractor {
+    public class FileModuleInteractor : IModuleInteractor {
         public string Name { get; }
         public string RootPath { get; }
         public string? DirectoryPath { get; }
@@ -40,15 +40,15 @@ namespace ZDragon.Project.Interactors {
         public FileTypes FileType { get; }
 
         [JsonIgnore]
-        public ApplicationInteractor? ApplicationInteractor { get; }
+        public IApplicationInteractor? ApplicationInteractor { get; }
 
-        public ModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType, ApplicationInteractor app) : this(rootPath, file, cache) {
+        public FileModuleInteractor(string rootPath, string file, CompilationCache cache, FileTypes fileType, FileApplicationInteractor app) : this(rootPath, file, cache) {
             if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.FileType = fileType;
             this.ApplicationInteractor = app;
         }
 
-        public ModuleInteractor(string rootPath, string file, CompilationCache cache) {
+        public FileModuleInteractor(string rootPath, string file, CompilationCache cache) {
             if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.cache = cache;
 
@@ -81,7 +81,7 @@ namespace ZDragon.Project.Interactors {
             return text;
         }
 
-        public async Task<ModuleInteractor> SaveModule(string s) {
+        public async Task<FileModuleInteractor> SaveModule(string s) {
             List<Task> tasks = new List<Task>();
 
             var newHash = Compiler.Utilities.HashString(s);
@@ -255,7 +255,7 @@ Failed to compile '{this.Namespace}':
 
         // IInteractor methods
 
-        public async Task<ModuleInteractor> AddFile(string name, string type, string? description) {
+        public async Task<FileModuleInteractor> AddFile(string name, string type, string? description) {
             // Should be added to the application or directory of which this file is a part.
             name = name.Replace(" ", "");
             string fileName = name;
@@ -268,7 +268,7 @@ Failed to compile '{this.Namespace}':
             }
 
             await File.WriteAllTextAsync(path, template);
-            return new ModuleInteractor(this.RootPath, path, cache);
+            return new FileModuleInteractor(this.RootPath, path, cache);
 
         }
 

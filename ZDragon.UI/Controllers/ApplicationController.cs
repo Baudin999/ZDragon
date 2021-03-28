@@ -34,7 +34,7 @@ namespace ZDragon.UI.Controllers {
 
         [HttpGet("/application/lexicon/{ns}")]
         public IActionResult GetLexiconForApplication([FromRoute]string ns) {
-            var moduleInteractor = _project.Find<ModuleInteractor>(ns);
+            var moduleInteractor = _project.Find<IModuleInteractor>(ns);
             var index = moduleInteractor.ApplicationInteractor.CreateIndex(moduleInteractor.FileType);
             return Ok(index);
 

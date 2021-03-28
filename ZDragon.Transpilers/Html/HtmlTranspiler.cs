@@ -217,6 +217,11 @@ namespace ZDragon.Transpilers.Html {
         }
 
         public string Transpile() {
+            var renderRoadmap = bool.Parse(compilationresult.Ast.OfType<DirectiveNode>().FirstOrDefault(d => d.Key == "roadmap")?.Value.ToLower() ?? "true");
+            var renderComponents = bool.Parse(compilationresult.Ast.OfType<DirectiveNode>().FirstOrDefault(d => d.Key == "components")?.Value.ToLower() ?? "true")
+                && compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0;
+            var renderClasses = bool.Parse(compilationresult.Ast.OfType<DirectiveNode>().FirstOrDefault(d => d.Key == "classes")?.Value.ToLower() ?? "true")
+                && compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0;
 
             var endpoints = compilationresult.Lexicon.Values.OfType<EndpointNode>().ToList();
 
@@ -237,7 +242,7 @@ namespace ZDragon.Transpilers.Html {
             var tocIndex = 1;
             tocIndex = RenderTitlePage(tocIndex);
 
-            if (compilationresult.Lexicon.Values.OfType<IPlanningNode>().Count() > 0) {
+            if (renderClasses && compilationresult.Lexicon.Values.OfType<IPlanningNode>().Count() > 0) {
 
                 toc.Add($"<div class='toc-1'>{++h1} Roadmap<div>");
 
@@ -271,10 +276,10 @@ namespace ZDragon.Transpilers.Html {
                     }
                 }
 
-                if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0) {
+                if (renderClasses) {
                     toc.Add($"<div class='toc-1'>{++h1} Logical Data Model<div>");
                 }
-                if (compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0) {
+                if (renderComponents) {
                     toc.Add($"<div class='toc-1'>{++h1} Component Diagram<div>");
                 }
                 
@@ -289,13 +294,13 @@ namespace ZDragon.Transpilers.Html {
                 endpoints.ForEach(RenderEndpointNode);
             }
 
-            if (compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0) {
+            if (renderClasses) {
                 // Don't put in the logical data model if there are no entities defined
                 parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" /></div>");
             }
 
-            if (compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0) {
+            if (renderComponents) {
                 // Don't put in the architectural diagram if there are no architectural components defined
                 parts.Add("<div class='keep-together'><h1>Component Diagram</h1>");
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" /></div>");

@@ -9,6 +9,7 @@
   import Toolbar from "./Components/App/Toolbar.svelte";
   import JsonSchemaDesigner from "./Pages/JsonSchemaDesigner.svelte";
   import LogPage from "./Pages/LogPage.svelte";
+  import ViewBuilder from "./Pages/ViewBuilder.svelte";
 </script>
 
 <Router>
@@ -36,6 +37,9 @@
         <Route path="/logs">
           <LogPage />
         </Route>
+        <Route path="view-builder">
+          <ViewBuilder />
+        </Route>
       </div>
     </div>
   </div>
@@ -55,6 +59,7 @@
       flex: 1;
       display: flex;
       flex-direction: row;
+      overflow: hidden;
 
       .panel {
         flex: 1;

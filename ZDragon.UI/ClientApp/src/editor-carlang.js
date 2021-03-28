@@ -41,6 +41,7 @@ export const tokenizer = {
                         "view": { token: "keyword", next: "@view" },
                         "guideline": { token: "keyword", next: "@attributes" },
                         "requirement": { token: "keyword", next: "@attributes" },
+                        "include": { token: "keyword", next: "@field" },
 
                         // planning
                         "roadmap": { token: "keyword", next: "@attributes" },

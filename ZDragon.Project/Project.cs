@@ -1,8 +1,12 @@
 ﻿using Compiler;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ZDragon.Project.Interactors;
+using ZDragon.Project.Interactors.FileInteractors;
+using ZDragon.Project.Interactors.MemoryInteractors;
 
 namespace ZDragon.Project {
     public class Project {
@@ -15,7 +19,7 @@ namespace ZDragon.Project {
         private string dbPath { get; set;}
         private string imagesPath { get; set; }
         public string RootPath => _root;
-        public DirectoryInteractor DirectoryInteractor { get; private set;  }
+        public IDirectoryInteractor DirectoryInteractor { get; private set;  }
 
         public delegate void ProjectMessageHandler(object sender, MessageEventArgs args);
         public event ProjectMessageHandler? OnMessageSent;
@@ -26,7 +30,7 @@ namespace ZDragon.Project {
             _root = root;
             outpath = Path.Combine(_root, "out");
             dbPath = Path.Combine(outpath, "store.db");
-            imagesPath = Path.Combine(_root, "Images");
+            imagesPath = Path.Combine(_root, "images");
 
 
             if (!Directory.Exists(outpath))
@@ -35,7 +39,17 @@ namespace ZDragon.Project {
             if (!Directory.Exists(imagesPath))
                 Directory.CreateDirectory(imagesPath);
 
-            DirectoryInteractor = new DirectoryInteractor(root, root, Cache);
+            DirectoryInteractor = new FileDirectoryInteractor(root, root, Cache);
+        }
+
+        public Project(bool inMemory) {
+            Cache = new CompilationCache(new ErrorSink());
+            var invalidString = "-,,%$^#%^invalid";
+            _root = invalidString;
+            outpath = invalidString;
+            dbPath = invalidString;
+            imagesPath = invalidString;
+            this.DirectoryInteractor = new MemoryDirectoryInteractor();
         }
 
         public void SendMessage(string message) {
@@ -48,8 +62,8 @@ namespace ZDragon.Project {
             }
         }
 
-        public DirectoryInteractor ResetDirectory() {
-            this.DirectoryInteractor = new DirectoryInteractor(_root, _root, Cache);
+        public IDirectoryInteractor ResetDirectory() {
+            this.DirectoryInteractor = new FileDirectoryInteractor(_root, _root, Cache);
             return this.DirectoryInteractor;
         }
 
@@ -65,20 +79,20 @@ namespace ZDragon.Project {
                 dbPath = Path.Combine(outpath, "store.db");
                 imagesPath = Path.Combine(_root, "Images");
 
-                DirectoryInteractor = new DirectoryInteractor(_root, _root, Cache);
+                DirectoryInteractor = new FileDirectoryInteractor(_root, _root, Cache);
             }
         }
 
         public async Task<string> GetTextByNamespace(string ns) {
             var moduleInteractor = DirectoryInteractor.Find(ns);
-            if (moduleInteractor is ModuleInteractor mi)
+            if (moduleInteractor is FileModuleInteractor mi)
                 return await mi.GetText();
 
             throw new Exception("Cannot get the text of a non module interactor");
         }
 
         public bool CreateApplication(string name) {
-            var appInteractor = ApplicationInteractor.Create(this._root, name, this.Cache);
+            var appInteractor = FileApplicationInteractor.Create(this._root, name, this.Cache);
             return appInteractor != null;
         }
 
@@ -88,6 +102,18 @@ namespace ZDragon.Project {
         }
         public IInteractor? Find(string ns) {
             return DirectoryInteractor.Find(ns);
+        }
+
+        public IEnumerable<NodeDescriptor> GetComponentNodes() {
+            var modules = DirectoryInteractor.Applications.SelectMany(a => a.Modules).Select(m => m.Namespace).ToArray();
+            var index = this.Cache.GenerateComponentIndex(modules);
+
+            foreach (var node in index) {
+                yield return new NodeDescriptor {
+                    Name = node.Key,
+                    Namespace = node.QualifiedName
+                };
+            }
         }
 
         public Task<byte[]> GetImage(string file) {
@@ -100,5 +126,14 @@ namespace ZDragon.Project {
 
             throw new Exception("Not a valid file");
         }
+    }
+
+    public class NodeDescriptor {
+        public string Name { get; set; } = default!;
+        public string Namespace { get; set; } = default!;
+        public string ProjectName { get; set; } = default!;
+        public string ApplicationName { get; set; } = default!;
+        public string FileName { get; set; } = default!;
+
     }
 }

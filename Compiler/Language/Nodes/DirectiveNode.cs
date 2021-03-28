@@ -16,7 +16,7 @@ namespace Compiler.Language.Nodes {
         public DirectiveNode(Token id, IEnumerable<Token> value) : base(id, ExpressionKind.DirectiveExpression) {
             this.IdToken = id;
             this.ValueTokens = value.ToList();
-            this.Literal = string.Join("", ValueTokens.Select(value => value.Value)).Trim();
+            this.Literal = string.Join("", ValueTokens.Select(value => value.Value)).Replace(";", "").Trim();
         }
 
 

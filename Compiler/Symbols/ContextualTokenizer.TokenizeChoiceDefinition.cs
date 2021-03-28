@@ -13,7 +13,7 @@ namespace Compiler.Symbols {
             tokens.AddRange(annotations);
             while (index < max && Current != null && Current?.Kind != SyntaxKind.EndBlock) {
                 if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
-                    tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
+                    tokens.Add(new Token(new List<Token> { TakeF(), TakeF() }, SyntaxKind.GenericParameterToken, 1));
                 }
                 else if (Current?.Kind == SyntaxKind.EndBlock) {
                     Take();
@@ -39,19 +39,19 @@ namespace Compiler.Symbols {
                 }
 
                 // Skip contextual Tokens
-                else if (Current.Kind == SyntaxKind.ContextualIndent1) {
+                else if (Current?.Kind == SyntaxKind.ContextualIndent1) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.ContextualIndent2) {
+                else if (Current?.Kind == SyntaxKind.ContextualIndent2) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.ContextualIndent3) {
+                else if (Current?.Kind == SyntaxKind.ContextualIndent3) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.ContextualIndent4) {
+                else if (Current?.Kind == SyntaxKind.ContextualIndent4) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.ContextualIndent5) {
+                else if (Current?.Kind == SyntaxKind.ContextualIndent5) {
                     Take();
                 }
 

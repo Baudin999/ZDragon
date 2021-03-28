@@ -36,9 +36,21 @@ namespace Compiler.Symbols {
         /// <param name="kind"></param>
         /// <returns></returns>
         private Token TakeF(SyntaxKind kind) {
-            var result = Take();
-            if (result is null) throw new Exception($"Expected token of kind '{kind}' but received token of kind '{Current?.Kind}'.");
-            else return result;
+            if (Current is null) throw new Exception($"Expected token of kind '{kind}' but received nothing (null).");
+            if (Current.Kind != kind) throw new Exception($"Expected token of kind '{kind}' but received {Current.Kind}.");
+            else {
+                var t = Take();
+                if (t != null) return t;
+                else throw new Exception("Current is null, but should never happen, wish C# would hurry up and implement nullability correctly!");
+            }
+        }
+        private Token TakeF() {
+            if (Current is null) throw new Exception($"Expected a token but received nothing (null).");
+            else {
+                var t = Take();
+                if (t != null) return t;
+                else throw new Exception("Current is null, but should never happen, wish C# would hurry up and implement nullability correctly!");
+            }
         }
         private IEnumerable<Token?> TakeWhile(Predicate<Token> p, int indentLevel = 0) {
             while (Current != null && p(Current)) {
@@ -103,18 +115,18 @@ namespace Compiler.Symbols {
         /// </summary>
         /// <returns>Token</returns>
         private Token AggregateStringLiteralToken() {
-            List<Token?> parts = new List<Token?> { Take(SyntaxKind.DoubleQuoteToken) }.Where(i => i != null).ToList();
+            List<Token> parts = new List<Token> { TakeF(SyntaxKind.DoubleQuoteToken) }.ToList();
             
             while (Current?.Kind != SyntaxKind.DoubleQuoteToken && Current != null) {
-                parts.Add(Take());
+                parts.Add(TakeF());
             }
-            parts.Add(Take(SyntaxKind.DoubleQuoteToken));
+            parts.Add(TakeF(SyntaxKind.DoubleQuoteToken));
 
             return new Token(parts, SyntaxKind.StringLiteralToken, indentLevel);
         }
 
         private Token ParseAnnotation() {
-            var attributeTokens = TakeWhile(t => t.Kind != SyntaxKind.NewLineToken && t.Kind != SyntaxKind.ContextualIndent1 && t.Kind != SyntaxKind.ContextualIndent2).ToList();
+            var attributeTokens = TakeWhile(t => t.Kind != SyntaxKind.NewLineToken && t.Kind != SyntaxKind.ContextualIndent1 && t.Kind != SyntaxKind.ContextualIndent2).OfType<Token>().ToList() ?? new List<Token>();
             var annotationToken = new Token(attributeTokens, SyntaxKind.AnnotationToken);
             return annotationToken;
         }

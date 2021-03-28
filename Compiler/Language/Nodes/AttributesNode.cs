@@ -7,8 +7,6 @@ namespace Compiler.Language.Nodes {
         public Token IdToken { get; }
         public string Id => IdToken.Value.Trim();
         public List<AttributeNode> Attributes { get; }
-        public bool Imported { get; set; } = false;
-        public string? ImportedFrom { get; set; } = null;
         public List<Token> Extensions { get; }
 
         public string Title => GetAttribute("Title") ?? GetAttribute("Name") ?? Id;

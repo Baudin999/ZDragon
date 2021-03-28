@@ -21,7 +21,7 @@ namespace ZDragon.Project {
                 return bytes;
             } catch (Exception ex) {
 
-                ZDragon.Project.Project.CurrentProject.SendMessage(@$"
+                ZDragon.Project.Project.CurrentProject?.SendMessage(@$"
 Failed to generate PlantUML diagram:
 
 {ex.Message}

@@ -18,8 +18,6 @@ namespace Compiler.Language.Nodes {
         public AnnotationNode? AnnotationNode { get; }
         public string Description => AnnotationNode?.Annotation ?? "";
         public List<DirectiveNode> Directives { get; }
-        public bool Imported { get; set; } = false;
-        public string? ImportedFrom { get; set; } = null;
 
 
         public RecordFieldNode(AnnotationNode? annotation, IEnumerable<DirectiveNode> directives, Token identifierToken, IEnumerable<Token> types, IEnumerable<RestrictionNode> restrictions, bool cloned = false) : base(identifierToken, ExpressionKind.RecordExpressionField) {
@@ -47,5 +45,9 @@ namespace Compiler.Language.Nodes {
             return Clone();
         }
 
+
+        public override string ToString() {
+            return $"{Id}: {Type};";
+        }
     }
 }

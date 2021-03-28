@@ -24,12 +24,12 @@ namespace Compiler.Symbols {
         private TokenGroup TokenizeTypeDefinition(List<Token> annotations) {
             var tokens = new List<Token>();
             tokens.AddRange(annotations);
-            while (index < max && Current.Kind != SyntaxKind.SemiColonToken) {
-                if (Current.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
-                    tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.NextParameterToken, 1));
+            while (index < max && Current?.Kind != SyntaxKind.SemiColonToken) {
+                if (Current?.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
+                    tokens.Add(new Token(new List<Token> { TakeF(), TakeF() }, SyntaxKind.NextParameterToken, 1));
                 }
-                else if (Current.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
-                    tokens.Add(new Token(new List<Token> { Take(), Take() }, SyntaxKind.GenericParameterToken, 1));
+                else if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
+                    tokens.Add(new Token(new List<Token> { TakeF(), TakeF() }, SyntaxKind.GenericParameterToken, 1));
                 }
                 else if (Current?.Kind == SyntaxKind.NewLineToken && (Next?.Kind != SyntaxKind.IndentToken || Next == null)) {
                     Take(); // take the newline token
@@ -39,22 +39,22 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
                     tokens.Add(AggregateStringLiteralToken());
                 }
-                else if (Current.Kind == SyntaxKind.IndentToken) {
+                else if (Current?.Kind == SyntaxKind.IndentToken) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.WhiteSpaceToken) {
+                else if (Current?.Kind == SyntaxKind.WhiteSpaceToken) {
                     Take();
                 }
-                else if (Current.Kind == SyntaxKind.NewLineToken) {
+                else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                 }
                 else {
-                    tokens.Add(Take());
+                    tokens.Add(TakeF());
                 }
             }
 
             if (Current?.Kind == SyntaxKind.SemiColonToken) {
-                tokens.Add(Take());
+                tokens.Add(TakeF());
             }
 
             return new TokenGroup(ContextType.TypeDeclaration, tokens);

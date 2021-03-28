@@ -8,8 +8,6 @@ namespace Compiler.Language.Nodes {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
         public List<ChoiceFieldNode> Fields { get; }
-        public bool Imported { get; set; } = false;
-        public string? ImportedFrom { get; set; } = null;
 
         public ChoiceNode(AnnotationNode annotationNode, Token id, List<ChoiceFieldNode> fields) : base(id, ExpressionKind.ChoiceExpression) {
             this.Annotation = annotationNode;

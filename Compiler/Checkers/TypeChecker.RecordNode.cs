@@ -7,20 +7,30 @@ namespace Compiler.Checkers {
 
         private void CheckRecordNode(RecordNode node) {
 
-            CheckTokens(node, null, node.Extensions);
+            var extension_errors = CheckTokens(node, null, node.Extensions);
 
             foreach (var field in node.Fields) {
                 var root = field.TypeTokens.First();
                 var id = root.Value;
 
                 if (id == "Maybe") {
-                    CheckMaybe(node, field, field.TypeTokens);
+                    errorSink.Errors.AddRange(CheckMaybe(node, field, field.TypeTokens));
                 }
                 else if (id == "List") {
-                    CheckList(node, field, field.TypeTokens);
+                    errorSink.Errors.AddRange(CheckList(node, field, field.TypeTokens));
                 }
                 else {
-                    CheckTokens(node, field, field.TypeTokens);
+                    var errors = CheckTokens(node, field, field.TypeTokens);
+                    foreach (var error in errors) {
+                        if (error.ErrorType == ErrorType.Unknown) {
+                            error.ErrorType = ErrorType.Record_UnknownFieldType;
+                            error.Message = $@"
+On record '{node.Id}' we've encountered an unknown field type:
+    {field}
+";
+                        }
+                        errorSink.Errors.Add(error);
+                    }
                 }
             }
 

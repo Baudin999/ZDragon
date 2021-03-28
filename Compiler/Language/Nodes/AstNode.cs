@@ -14,7 +14,9 @@ namespace Compiler.Language.Nodes {
             this.Segment = Token.Range(start, end);
         }
 
-        public AstNode() { }
+        public AstNode() {
+            Segment = Token.DefaultSourceSegment();
+        }
 
         public virtual AstNode Copy() { 
             return this; 

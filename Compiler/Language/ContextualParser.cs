@@ -15,6 +15,13 @@ namespace Compiler.Language {
 
         public IEnumerable<AstNode> Parse() {
 
+            // handle the annotations
+            //var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            //var annotationNode =
+            //    annotations.Count > 0 ?
+            //    new AnnotationNode(annotations) :
+            //    new AnnotationNode(Current ?? SourceSegment.Empty);
+
             foreach (var tokenBlock in TokenBlocks) {
                 if (tokenBlock.Context == ContextType.TypeDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseTypeDefinition();
@@ -35,7 +42,8 @@ namespace Compiler.Language {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseMarkup();
                 }
                 else if (tokenBlock.Context == ContextType.DirectiveDeclaration) {
-                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseDirective();
+                    var directiveNode =  new Parser(tokenBlock.Tokens, ErrorSink).ParseDirective();
+                    if (directiveNode != null) yield return directiveNode;
                 }
 
                 // architecture
@@ -57,7 +65,8 @@ namespace Compiler.Language {
 
                 // documentation
                 else if (tokenBlock.Context == ContextType.ViewDeclaration) {
-                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseView();
+                    var viewNode = new Parser(tokenBlock.Tokens, ErrorSink).ParseView();
+                    if (viewNode != null) yield return viewNode;
                 }
                 else if (tokenBlock.Context == ContextType.GuidelineDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseGuideline();

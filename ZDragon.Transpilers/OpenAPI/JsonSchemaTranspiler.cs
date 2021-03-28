@@ -20,12 +20,13 @@ namespace ZDragon.Transpilers.OpenAPI {
         }
 
         private (bool, JSchema) MapRecordNode(RecordNode node) {
-            var schema = new JSchema();
-            schema.SchemaVersion = new Uri("https://json-schema.org/draft/2020-12/schema");
-            //schema.Id = new Uri($"https://zdragon.nl/{node.Id}.schema.json");
-            schema.Title = node.Id;
-            schema.Description = node.Description;
-            schema.Type = JSchemaType.Object;
+            var schema = new JSchema {
+                SchemaVersion = new Uri("https://json-schema.org/draft/2020-12/schema"),
+                //schema.Id = new Uri($"https://zdragon.nl/{node.Id}.schema.json");
+                Title = node.Id,
+                Description = node.Description,
+                Type = JSchemaType.Object
+            };
 
             foreach (var field in node.Fields) {
                 var (required, _schema) = MapRecordFieldNode(field);
@@ -80,9 +81,10 @@ namespace ZDragon.Transpilers.OpenAPI {
 
         private (bool, JSchema) MapTypeAliasNode(TypeAliasNode node) {
             var required = true;
-            var schema = new JSchema();
-            schema.Title = node.Id;
-            schema.Description = node.Description;
+            var schema = new JSchema {
+                Title = node.Id,
+                Description = node.Description
+            };
 
             if (node.Body.ExpressionKind == ExpressionKind.IdentifierExpression) {
                 var idNode = (IdentifierNode)node.Body;

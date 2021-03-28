@@ -24,10 +24,10 @@ namespace Compiler.Checkers {
             switch (body) {
                 case FunctionParameterNode n: CheckFunctionParameters(root, n, usedParams); break;
                 case GenericParameterNode n: 
-                    CheckToken(root, null, n.IdToken);
+                    errorSink.Errors.AddRange(CheckToken(root, null, n.IdToken));
                     usedParams.Add(n.Id);
                     break;
-                case IdentifierNode n: CheckToken(root, null, n.IdToken); break;
+                case IdentifierNode n: errorSink.Errors.AddRange(CheckToken(root, null, n.IdToken)); break;
                 case TypeApplicationNode n: CheckTypeApplication(root, n, usedParams); break;
                 default: break;
             }
@@ -35,7 +35,7 @@ namespace Compiler.Checkers {
 
         private void CheckTypeApplication(IIdentifierExpressionNode root, TypeApplicationNode node, HashSet<string> usedParams) {
             foreach (var n in node.Parameters) {
-                CheckToken(root, null, n);
+                errorSink.Errors.AddRange(CheckToken(root, null, n));
             }
         }
 

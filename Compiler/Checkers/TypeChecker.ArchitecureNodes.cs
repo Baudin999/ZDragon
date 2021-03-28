@@ -13,7 +13,7 @@ namespace Compiler.Checkers {
                 foreach (var interaction in interactions) {
                     var token = interaction.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
                     if (token != null) {
-                        CheckToken(node, null, token);
+                        errorSink.Errors.AddRange(CheckToken(node, null, token));
                     }
                 }
 
@@ -21,14 +21,14 @@ namespace Compiler.Checkers {
                 foreach (var c in contains) {
                     var token = c.Where(i => i.Kind == SyntaxKind.IdentifierToken).FirstOrDefault();
                     if (token != null) {
-                        CheckToken(node, null, token);
+                        errorSink.Errors.AddRange(CheckToken(node, null, token));
                     }
                 }
             }
 
             node.Extensions.ForEach(extension => {
-                if (extension is QualifiedToken qt) CheckQualifiedToken(node, null, qt);
-                else CheckToken(node, null, extension);
+                if (extension is QualifiedToken qt) errorSink.Errors.AddRange(CheckQualifiedToken(node, null, qt));
+                else errorSink.Errors.AddRange(CheckToken(node, null, extension));
             });
         }
 
@@ -49,7 +49,7 @@ namespace Compiler.Checkers {
             else {
                 var token = from.ValueToken.FirstOrDefault(v => v.Kind == SyntaxKind.IdentifierToken);
                 if (token != null)
-                    CheckToken(node, null, token);
+                    errorSink.Errors.AddRange(CheckToken(node, null, token));
             }
             if (to is null) errorSink.AddError(new Error(
                 ErrorType.Architecture_Interaction_MissingTo,
@@ -59,7 +59,7 @@ namespace Compiler.Checkers {
             else {
                 var token = to.ValueToken.FirstOrDefault(v => v.Kind == SyntaxKind.IdentifierToken);
                 if (token != null)
-                    CheckToken(node, null, token);
+                    errorSink.Errors.AddRange(CheckToken(node, null, token));
             }
         }
 

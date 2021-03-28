@@ -5,8 +5,8 @@ using System.Linq;
 namespace Compiler.Language.Nodes {
     public class FunctionParameterNode : ExpressionNode {
         public List<ExpressionNode> Nodes { get; }
-        public ExpressionNode Result { get; }
-        public List<ExpressionNode> Parameters { get; }
+        public ExpressionNode? Result { get; } = null;
+        public List<ExpressionNode>? Parameters { get; } = null;
 
         public FunctionParameterNode(List<ExpressionNode> nodes) : base(Token.Range(nodes.First().Segment, nodes.Last().Segment), ExpressionKind.FunctionDefinitionExpression) {
             Nodes = nodes;

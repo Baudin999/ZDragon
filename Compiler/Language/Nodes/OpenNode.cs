@@ -7,8 +7,6 @@ namespace Compiler.Language.Nodes {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
         public string Namespace { get; }
-        public bool Imported { get; set; } = false;
-        public string? ImportedFrom { get; set; } = null;
 
         public OpenNode(AnnotationNode annotationNode, Token id) : base(id, ExpressionKind.OpenExpression) {
             this.Annotation = annotationNode;

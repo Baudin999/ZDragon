@@ -199,7 +199,7 @@ namespace Compiler.Symbols {
                 }
                 else if (inContext && token.Kind == SyntaxKind.NewLineToken) {
                     int depth = 0;
-                    var depthTokens = new List<Token?> { token };
+                    var depthTokens = new List<Token> { token };
 
                     while (i + 1 < max && t[i + 1].Kind == SyntaxKind.IndentToken) {
                         depth++;

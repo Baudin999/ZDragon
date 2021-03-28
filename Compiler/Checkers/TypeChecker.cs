@@ -1,5 +1,6 @@
 ﻿using Compiler.Language.Nodes;
 using Compiler.Symbols;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -59,14 +60,7 @@ namespace Compiler.Checkers {
             }
         }
 
-        private void CheckViewNode(ViewNode view) {
-            if (!view.Imported) {
-                CheckToken(view, null, view.IdToken);
-                foreach (var node in view.Nodes) {
-                    CheckToken(view, null, node);
-                }
-            }
-        }
+
 
         private void CheckIncludeNode(IncludeNode include) {
             // include looks like:
@@ -81,11 +75,12 @@ namespace Compiler.Checkers {
             }
         }
 
-        private void CheckMaybe(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
+        private List<Error> CheckMaybe(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
+            var errors = new List<Error>();
             // Maybe can only have one type following the Maybe
             if (tokens.Count != 2) {
                 var message = tokens.Count > 2 ? "too many" : "not enough";
-                errorSink.AddError(new Error(
+                errors.Add(new Error(
                     @$"A Maybe type can only have a single type parameter:
 record {root.Id} =
     {context?.Id ?? "LastName"}: Maybe <<Type>>
@@ -95,13 +90,15 @@ Your Maybe definitions seems to have {message} type parameters.
                     root.IdToken
                 ));
             }
+            return errors;
         }
 
-        private void CheckList(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
+        private List<Error> CheckList(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
+            var errors = new List<Error>();
             // Maybe can only have one type following the Maybe
             if (tokens.Count != 2) {
                 var message = tokens.Count > 2 ? "too many" : "not enough";
-                errorSink.AddError(new Error(
+                errors.Add(new Error(
                     @$"A List type can only have a single type parameter:
 record {root.Id} =
     {context?.Id ?? "LastName"}: List <<Type>>
@@ -111,37 +108,41 @@ Your List definitions seems to have {message} type parameters.
                     root.IdToken
                 ));
             }
+            return errors;
         }
 
-        private void CheckTokens(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
+        private List<Error> CheckTokens(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, List<Token> tokens) {
+            var errors = new List<Error>();
             foreach (var token in tokens) {
-                if (token is QualifiedToken qt) CheckQualifiedToken(root, context, qt);
-                else if (token is Token t) CheckToken(root, context, t);
+                if (token is QualifiedToken qt) errors.AddRange(CheckQualifiedToken(root, context, qt));
+                else if (token is Token t) errors.AddRange(CheckToken(root, context, t));
             }
+            return errors;
         }
 
-        private void CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token) {
-            CheckToken(root, context, token, token.Value);
+        private List<Error> CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token) {
+            return CheckToken(root, context, token, token.Value);
         }
 
-        private void CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token, string typeName) {
+        private List<Error> CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token, string typeName, ErrorType errorType = ErrorType.Unknown) {
+            var errors = new List<Error>();
+
             var rootName = context?.Id ?? root.Id;
-            if (baseTypes.Contains(typeName)) return;
-            else if (lexicon.ContainsKey(typeName)) return;
+            if (baseTypes.Contains(typeName)) { return errors; }
+            else if (lexicon.ContainsKey(typeName)) { return errors; }
             else if (token.Kind == SyntaxKind.GenericParameterToken) {
                 if (root is RecordNode rn) {
                     if (!rn.GenericParameters.Any(e => e.Value == typeName)) {
-                        errorSink.AddError(new Error(
+                        errors.Add(new Error(
                             ErrorType.GenericParameter_Undefined,
                             $"Undeclared generic parameter \"{typeName}\" on field '{context?.Id}' of record '{root.Id}'.",
                             token
                             ));
-                        return;
                     }
                 }
                 else if (root is TypeAliasNode tan) {
                     if (!tan.GenericParameters.Any(e => e.Value == typeName)) {
-                        errorSink.AddError(new Error(
+                        errors.Add(new Error(
                             ErrorType.GenericParameter_Undefined,
                             @$"Undeclared generic parameter {typeName} on type alias '{root.Id}'. 
 
@@ -151,41 +152,39 @@ type {root.Id} {typeName} = ...;
 ",
                             token
                             ));
-                        return;
                     }
                 }
-                return;
+                return errors;
             }
             else {
                 // check all the other "open" declarations to the get the ast node
                 var _ref = Get(token.Value);
                 if (_ref != null) {
                     Add(token.Value, _ref);
-                    return;
                 }
+                else {
+                    errors.Add(new Error(
+                        ErrorType.Unknown,
+                        @$"Could not find type '{token.Value}' on '{rootName}'.",
+                        token
+                    ));
+                }
+                return errors;
             }
-
-            // default not found Error Sync
-            errorSink.AddError(new Error(
-                ErrorType.Unknown,
-                @$"Could not find type '{token.Value}' on '{rootName}'.",
-                token
-            ));
         }
 
-        private void CheckQualifiedToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, QualifiedToken qt) {
-
+        private List<Error> CheckQualifiedToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, QualifiedToken qt) {
+            var errors = new List<Error>();
             if (!cache.Has(qt.Namespace)) {
-                errorSink.AddError(new Error(
+                errors.Add(new Error(
                     $"Module '{qt.Namespace}' does not exist",
                     Token.Range(qt.NamespaceParts.First(), qt.NamespaceParts.Last())
                 ));
-                return;
             }
             else {
                 var module = cache.Get(qt.Namespace).Lexicon;
                 if (!baseTypes.Contains(qt.Id) && !module.ContainsKey(qt.Id)) {
-                    errorSink.AddError(new Error(
+                    errors.Add(new Error(
                         @$"Could not find type '{qt.QualifiedName}' in module '{qt.Namespace}'.",
                         qt.IdToken
                     ));
@@ -194,6 +193,7 @@ type {root.Id} {typeName} = ...;
                     Add(qt.QualifiedName, module[qt.Id]);
                 }
             }
+            return errors;
         }
 
         private IIdentifierExpressionNode? Get(string typeName) {
@@ -229,7 +229,7 @@ type {root.Id} {typeName} = ...;
             this.lexicon = cr.Lexicon;
             this.compilationResult = cr;
         }
-        
+
 
         public void Check() {
             // check all the types

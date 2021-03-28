@@ -1,5 +1,6 @@
 ﻿using Compiler;
 using Compiler.Language.Nodes;
+using System.Linq;
 using Xunit;
 
 namespace Views {
@@ -38,8 +39,67 @@ record Person
 ";
 
             var result = new Compiler.Compiler(codeFirst).Compile().Check();
-
             Assert.Single(result.Errors);
+        }
+
+
+        [Fact(DisplayName = "Views - No Identifier")]
+        public void Views_NoIdentifier() {
+            var codeFirst = @"
+
+
+view = 
+    Person
+    Address
+
+record Person
+record Address
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Equal(3, result.Ast.Count);
+            Assert.IsType<ViewNode>(result.Ast.First());
+            Assert.Empty(result.Errors);
+        }
+
+        [Fact(DisplayName = "Views - No Equals sign")]
+        public void Views_NoEqualsSign() {
+            var codeFirst = @"
+
+
+view
+    Person
+    Address
+
+record Person
+record Address
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Single(result.Errors);
+            Assert.Equal(ErrorType.View_MissingEquals, result.Errors.First().ErrorType);
+            Assert.Equal(2, result.Ast.Count);
+            
+        }
+
+
+        [Fact(DisplayName = "Views - Mixing Types")]
+        public void Views_MixingTypes() {
+            var codeFirst = @"
+
+view =
+    Person
+    PersonContainer
+
+record Person
+component PersonContainer
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+            Assert.Single(result.Errors);
+            Assert.Equal(ErrorType.View_WrongFieldType, result.Errors.First().ErrorType);
+            Assert.Equal(3, result.Ast.Count);
+
         }
 
     }

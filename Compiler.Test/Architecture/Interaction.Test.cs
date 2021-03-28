@@ -86,10 +86,8 @@ interaction FromTo =
     From: GetDataFromToComponent
     To: ToComponent
 ";
-            var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile().Check();
-
-            Assert.Equal(2, compilerResult.Errors.Count);
+            var result = new Compiler.Compiler(code).Compile().Check();
+            Assert.Equal(2, result.Errors.Count);
 
         }
     }

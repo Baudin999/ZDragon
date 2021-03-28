@@ -48,7 +48,7 @@ namespace Compiler.Symbols {
         public int IndentLevel { get; private set; } = 0;
 
         internal Token Combine(Token token) {
-            return new Token(new List<Token?> { this, token }, token.Kind, token.IndentLevel);
+            return new Token(new List<Token> { this, token }, token.Kind, token.IndentLevel);
         }
 
         public ContextType Context { get; set; } = ContextType.None;
@@ -133,7 +133,7 @@ namespace Compiler.Symbols {
             this.IndentLevel = indentLevel;
         }
 
-        public Token(List<Token?> tokens, SyntaxKind kind, int indentLevel = 0) :
+        public Token(List<Token> tokens, SyntaxKind kind, int indentLevel = 0) :
             this(
                 string.Join("", tokens.OfType<Token>().Select(t => t.Value)),
                 kind,
@@ -146,7 +146,7 @@ namespace Compiler.Symbols {
             return $"{Kind} - '{Value}'";
         }
 
-        public new bool Equals(object x, object y) {
+        public new bool Equals(object? x, object? y) {
             if (x is Token tx) {
                 if (y is string s) {
                     return tx.Value == s;

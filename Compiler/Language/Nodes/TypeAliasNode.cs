@@ -11,8 +11,6 @@ namespace Compiler.Language.Nodes {
         public List<RestrictionNode> Restrictions { get; }
         public string Description => AnnotationNode.Annotation ?? "";
 
-        public bool Imported { get; set; } = false;
-        public string? ImportedFrom { get; set; } = null;
 
         public TypeAliasNode(
                 ISourceSegment sourceSegment, 

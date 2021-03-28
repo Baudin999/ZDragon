@@ -2,9 +2,9 @@
 
 namespace Compiler {
     public class Error {
-        public string Message { get; }
-        public ISourceSegment SourceSegment { get; }
-        public ErrorType ErrorType { get; } = ErrorType.GenericError;
+        public string Message { get; set;  }
+        public ISourceSegment SourceSegment { get; set; }
+        public ErrorType ErrorType { get; set;  } = ErrorType.GenericError;
 
 
         public Error(string message) {
@@ -39,8 +39,17 @@ namespace Compiler {
         InvalidTypeDefinition,
         Generics_ApplicationMisMatch,
 
+        // records 
+        Record_UnknownFieldType,
+
         // architecture
         Architecture_Interaction_MissingFrom,
-        Architecture_Interaction_MissingTo
+        Architecture_Interaction_MissingTo,
+
+        // view errors
+        View_MissingFields,
+        View_MissingEquals,
+        View_UnknownField,
+        View_WrongFieldType
     }
 }

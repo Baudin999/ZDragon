@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using ZDragon.Project.Postgres;
 
 namespace Database {
     public class Postgres {
 
-        [Fact(DisplayName = "Database - Open Connection")]
+        [Fact(Skip = "Running local", DisplayName = "Database - Open Connection")]
         public async void Database_OpenConnection() {
             var result = await new PostgresFileSystem().Test();
             Assert.True(result.Count() > 0);
         }
 
-        [Fact(DisplayName = "Database - Create Table")]
+        [Fact(Skip = "Running local", DisplayName = "Database - Create Table")]
         public async void Database_CreateTable() {
             var tableName = "Test001";
             var system = new PostgresFileSystem();

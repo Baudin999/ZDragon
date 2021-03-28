@@ -20,7 +20,7 @@ namespace Compiler.Symbols {
                 // in the definition of an endpoint we can write things like ":: PersonId -> Person"
                 // the arrow in this context is a NextParameterToken.
                 else if (!definitionEnded && Current?.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
-                    tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.NextParameterToken, 1));
+                    tokens.Add(new Token(new List<Token> { TakeF(), TakeF() }, SyntaxKind.NextParameterToken, 1));
                 }
 
                 // Fully qualified types.
@@ -110,7 +110,7 @@ namespace Compiler.Symbols {
         tokens.Add(new QualifiedToken(identifierParts));
     }
     else if (Current?.Kind == SyntaxKind.MinusToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
-        tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.NextParameterToken, 1));
+        tokens.Add(new Token(new List<Token> { TakeF(), TakeF() }, SyntaxKind.NextParameterToken, 1));
     }
     else if (Current?.Kind == SyntaxKind.IndentToken) {
         Take();

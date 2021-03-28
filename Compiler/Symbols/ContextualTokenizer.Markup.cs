@@ -13,11 +13,11 @@ namespace Compiler.Symbols {
             while (index < max && Current != null) {
                 if (Current.Kind == SyntaxKind.ForwardSlashToken && Next?.Kind == SyntaxKind.GreaterThenToken) {
                     // />  Closing symbol
-                    tokens.Add(new Token(new List<Token?> { Take(), Take() }, SyntaxKind.CloseMarkupElement));
+                    tokens.Add(new Token(new List<Token> { TakeF(), TakeF() }, SyntaxKind.CloseMarkupElement));
                 }
                 else if (Current.Kind == SyntaxKind.LessThenToken && Next?.Kind == SyntaxKind.ForwardSlashToken) {
                     //  </ Closing
-                    var closingTokens = TakeWhile(t => t.Kind != SyntaxKind.GreaterThenToken).ToList();
+                    var closingTokens = TakeWhile(t => t.Kind != SyntaxKind.GreaterThenToken).OfType<Token>().ToList();
                     tokens.Add(new Token(closingTokens, SyntaxKind.CloseMarkupElement));
                 }
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {

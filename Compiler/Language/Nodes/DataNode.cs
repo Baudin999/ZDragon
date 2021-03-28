@@ -9,8 +9,6 @@ namespace Compiler.Language.Nodes {
         public string Id => IdToken.Value;
         public List<Token> GenericParameters { get; }
         public List<DataFieldNode> Fields { get; }
-        public bool Imported { get; set; } = false;
-        public string? ImportedFrom { get; set; } = null;
 
         public DataNode(AnnotationNode annotationNode, Token id, List<Token> genericParameters, List<DataFieldNode> fields) : base(id, ExpressionKind.DataExpression) {
             this.Annotation = annotationNode;

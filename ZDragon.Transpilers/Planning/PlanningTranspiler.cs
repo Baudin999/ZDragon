@@ -76,8 +76,7 @@ namespace ZDragon.Transpilers.Planning {
         private string? parseDate(string? input) {
             if (input is null) return null;
 
-            DateTime date;
-            if (DateTime.TryParse(input, out date)) {
+            if (DateTime.TryParse(input, out var date)) {
                 return date.ToString("yyyy-MM-dd");
             }
             else {

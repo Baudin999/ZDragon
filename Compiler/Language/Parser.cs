@@ -22,12 +22,32 @@ namespace Compiler.Language {
 
         public ContextType? CurrentContext { get; private set; }
 
-        private Token Take() {
+        private Token? Take() {
             var c = Current;
             index++;
             return c;
         }
-        private Token Take(SyntaxKind kind, string? message = null) {
+        private Token TakeF(string? message = null) {
+            var c = Current;
+            index++;
+            if (c != null)
+                return c;
+            else 
+                throw new Exception(message ?? "Token is null");
+        }
+        private Token TakeF(SyntaxKind kind, ErrorType errorType = ErrorType.Unknown, string? message = null) {
+            var c = Current;
+            index++;
+            if (c != null && c.Kind == kind)
+                return c;
+            else {
+                var v = c is null ? "null" : c.Kind.ToString();
+                ErrorSink.AddError(
+                    new Error(errorType, message ?? $"Expected '{kind}' but received '{v}'", Current ?? Token.DefaultSourceSegment()));
+                throw new Exception(message ?? $"Expected '{kind}' but received '{v}'");
+            }
+        }
+        private Token? Take(SyntaxKind kind, string? message = null) {
             var c = Current;
 
             if (c is null) {
@@ -41,20 +61,25 @@ namespace Compiler.Language {
                     message ?? $"Expected '{kind}' but received '{Current?.Kind}'",
                     c ?? Token.DefaultSourceSegment()
                 ));
-                index++;
+                //index++;
+                return null;
             }
             else {
                 index++;
             }
             return c;
         }
-        private IEnumerable<Token?> TakeWhile(SyntaxKind kind) {
+        private Token? TryTake(SyntaxKind kind) {
+            if (Current?.Kind == kind) return TakeF();
+            else return null;
+        }
+        private IEnumerable<Token> TakeWhile(SyntaxKind kind) {
             var tokens = new List<Token>();
-            while (Current != null && Current?.Kind == kind) tokens.Add(Take());
+            while (Current != null && Current?.Kind == kind) tokens.Add(TakeF());
             return tokens;
         }
-        private IEnumerable<Token?> TakeWhile(Predicate<Token> predicate) {
-            while (Current != null && predicate(Current)) yield return Take();
+        private IEnumerable<Token> TakeWhile(Predicate<Token> predicate) {
+            while (Current != null && predicate(Current)) yield return TakeF();
         }
         private IEnumerable<Token> TakeBefore(SyntaxKind kind) {
             var i = -1;

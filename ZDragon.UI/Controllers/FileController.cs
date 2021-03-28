@@ -35,6 +35,7 @@ namespace ZDragon.UI.Controllers {
 
                 return Ok();
             } catch (System.Exception ex) {
+                _logger.Log(LogLevel.Error, $"Failed to add a file to the project: {body.AppName}.{body.Type}.{body.Name}");
                 return Problem(
                    title: $"Failed to add a file to the project: {body.AppName}.{body.Type}.{body.Name}",
                    detail: ex.Message

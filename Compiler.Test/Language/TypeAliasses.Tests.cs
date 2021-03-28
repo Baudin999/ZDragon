@@ -78,8 +78,7 @@ type add = Number -> Maybe Number;
             var code = @"
 type add = (Number -> Number -> Number) -> (Number -> String) -> (Number1 -> (Number2 -> Number3));
 ";
-            var compiler = new Compiler.Compiler(code);
-            var compilerResult = compiler.Compile().Check();
+            var compilerResult = new Compiler.Compiler(code).Compile().Check();
 
             Assert.Equal(3, compilerResult.Errors.Count);
             Assert.True(compilerResult.Ast.Count == 1);

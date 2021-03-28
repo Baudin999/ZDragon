@@ -11,8 +11,6 @@ namespace Compiler.Language.Nodes {
         public List<Token> GenericParameters { get; }
         public List<Token> Extensions { get; }
         public List<RecordFieldNode> Fields { get; }
-        public bool Imported { get; set; } = false;
-        public string? ImportedFrom { get; set; } = null;
 
         public RecordNode(AnnotationNode? annotation, Token identifierToken, List<Token> genericParameters, List<Token> extensions, List<RecordFieldNode> fields) : base(identifierToken, ExpressionKind.RecordExpression) {
             this.AnnotationNode = annotation;

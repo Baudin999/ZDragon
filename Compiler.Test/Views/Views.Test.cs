@@ -77,7 +77,7 @@ record Address
 
             var result = new Compiler.Compiler(codeFirst).Compile().Check();
             Assert.Single(result.Errors);
-            Assert.Equal(ErrorType.View_MissingEquals, result.Errors.First().ErrorType);
+            Assert.Equal(ErrorKind.View_MissingEquals, result.Errors.First().ErrorType);
             Assert.Equal(2, result.Ast.Count);
             
         }
@@ -97,7 +97,7 @@ component PersonContainer
 
             var result = new Compiler.Compiler(codeFirst).Compile().Check();
             Assert.Single(result.Errors);
-            Assert.Equal(ErrorType.View_WrongFieldType, result.Errors.First().ErrorType);
+            Assert.Equal(ErrorKind.View_WrongFieldType, result.Errors.First().ErrorType);
             Assert.Equal(3, result.Ast.Count);
 
         }

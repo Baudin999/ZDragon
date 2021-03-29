@@ -11,7 +11,7 @@ namespace Compiler.Checkers {
 
                 // check if the view actually contains view elements.
                 if (view.Nodes.Count == 0) {
-                    errorSink.AddError(new Error(ErrorType.View_MissingFields, $@"
+                    errorSink.AddError(new Error(ErrorKind.View_MissingFields, $@"
 Views need fields. This view '{view.Id}' does not seem to contain any fields.
 ", view.Segment));
 
@@ -21,7 +21,7 @@ Views need fields. This view '{view.Id}' does not seem to contain any fields.
                 foreach (var node in view.Nodes) {
                     var errors = CheckToken(view, null, node);
                     foreach (var error in errors) {
-                        error.ErrorType = ErrorType.View_UnknownField;
+                        error.ErrorType = ErrorKind.View_UnknownField;
                         errorSink.AddError(error);
                     }
                 }
@@ -56,7 +56,7 @@ Views need fields. This view '{view.Id}' does not seem to contain any fields.
                             var tp = nodeType is ILanguageNode ? "Architectural Element" : "Language Element";
 
                             errorSink.AddError(new Error(
-                                ErrorType.View_WrongFieldType,
+                                ErrorKind.View_WrongFieldType,
                                 @$"Fields in a view should be of the same type.
 The first element of the view list is a {td} but
 the '{node.Value}' is a {tp}. 

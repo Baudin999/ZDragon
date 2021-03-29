@@ -124,7 +124,7 @@ Your List definitions seems to have {message} type parameters.
             return CheckToken(root, context, token, token.Value);
         }
 
-        private List<Error> CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token, string typeName, ErrorType errorType = ErrorType.Unknown) {
+        private List<Error> CheckToken(IIdentifierExpressionNode root, IIdentifierExpressionNode? context, Token token, string typeName, ErrorKind errorType = ErrorKind.Unknown) {
             var errors = new List<Error>();
 
             var rootName = context?.Id ?? root.Id;
@@ -134,7 +134,7 @@ Your List definitions seems to have {message} type parameters.
                 if (root is RecordNode rn) {
                     if (!rn.GenericParameters.Any(e => e.Value == typeName)) {
                         errors.Add(new Error(
-                            ErrorType.GenericParameter_Undefined,
+                            ErrorKind.GenericParameter_Undefined,
                             $"Undeclared generic parameter \"{typeName}\" on field '{context?.Id}' of record '{root.Id}'.",
                             token
                             ));
@@ -143,7 +143,7 @@ Your List definitions seems to have {message} type parameters.
                 else if (root is TypeAliasNode tan) {
                     if (!tan.GenericParameters.Any(e => e.Value == typeName)) {
                         errors.Add(new Error(
-                            ErrorType.GenericParameter_Undefined,
+                            ErrorKind.GenericParameter_Undefined,
                             @$"Undeclared generic parameter {typeName} on type alias '{root.Id}'. 
 
 We expect a generic type definition to at least contain {typeName} as a generic parameter:
@@ -164,7 +164,7 @@ type {root.Id} {typeName} = ...;
                 }
                 else {
                     errors.Add(new Error(
-                        ErrorType.Unknown,
+                        ErrorKind.Unknown,
                         @$"Could not find type '{token.Value}' on '{rootName}'.",
                         token
                     ));

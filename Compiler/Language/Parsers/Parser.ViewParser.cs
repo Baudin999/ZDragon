@@ -22,7 +22,7 @@ namespace Compiler.Language {
                 var id = TryTake(SyntaxKind.IdentifierToken);
 
                 // The Equals Sign is required, without a definition the view is worthless.
-                var equals = TakeF(SyntaxKind.EqualsToken, ErrorType.View_MissingEquals, @$"
+                var equals = TakeF(SyntaxKind.EqualsToken, ErrorKind.View_MissingEquals, @$"
 Failed to parse view {id?.Value ?? ""}:
 
 A view definition needs an implementation like:

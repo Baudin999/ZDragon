@@ -35,7 +35,7 @@ record person =
 
             Assert.Single(compilerResult.Errors);
             Assert.Single(compilerResult.Tokens);
-            Assert.Equal(ErrorType.InvalidIdentifier, compilerResult.Errors.First().ErrorType);
+            Assert.Equal(ErrorKind.InvalidIdentifier, compilerResult.Errors.First().ErrorType);
         }
 
         [Fact(DisplayName = "Records - Multiple TypeChecking")]
@@ -54,7 +54,7 @@ record person =
 
             Assert.Single(compilerResult.Errors);
             Assert.Single(compilerResult.Tokens);
-            Assert.Equal(ErrorType.InvalidIdentifier, compilerResult.Errors.First().ErrorType);
+            Assert.Equal(ErrorKind.InvalidIdentifier, compilerResult.Errors.First().ErrorType);
         }
 
         [Fact(DisplayName = "Records - Two types names only")]
@@ -474,6 +474,37 @@ record Person =
     @ The description of the field
     @ on multiple lines...
     % direction: left
+    % render: false
+    Address: Address;
+
+record Address;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Empty(compilerResult.ErrorSink.Errors);
+
+            Assert.IsType<RecordNode>(compilerResult.Ast[0]);
+            var personNode = (RecordNode)compilerResult.Ast[0];
+
+
+            Assert.Equal(2, personNode.Fields[0].Directives.Count);
+            Assert.Equal("The description of the field on multiple lines...", personNode.Fields[0].Description);
+            Assert.IsType<DirectiveNode>(personNode.Fields[0].Directives[0]);
+            DirectiveNode directive = (DirectiveNode)personNode.Fields[0].Directives[0];
+            Assert.Equal("direction", directive.Id);
+            Assert.Equal("left", directive.Literal);
+        }
+
+        [Fact(DisplayName = "Record - Field Directives alt. Annotations")]
+        public void Record_FieldDirectivesAltAnnotations() {
+            var code = @"
+record Person =
+    
+    @ The description of the field
+    % direction: left
+    @ on multiple lines...
     % render: false
     Address: Address;
 

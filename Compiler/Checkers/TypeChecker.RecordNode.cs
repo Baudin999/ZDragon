@@ -22,8 +22,8 @@ namespace Compiler.Checkers {
                 else {
                     var errors = CheckTokens(node, field, field.TypeTokens);
                     foreach (var error in errors) {
-                        if (error.ErrorType == ErrorType.Unknown) {
-                            error.ErrorType = ErrorType.Record_UnknownFieldType;
+                        if (error.ErrorType == ErrorKind.Unknown) {
+                            error.ErrorType = ErrorKind.Record_UnknownFieldType;
                             error.Message = $@"
 On record '{node.Id}' we've encountered an unknown field type:
     {field}

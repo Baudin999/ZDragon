@@ -29,7 +29,7 @@ type name
             var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.ErrorSink.Errors);
-            Assert.Equal(ErrorType.InvalidTypeDefinition, compilerResult.ErrorSink.Errors.First().ErrorType);
+            Assert.Equal(ErrorKind.InvalidTypeDefinition, compilerResult.ErrorSink.Errors.First().ErrorType);
         }
 
         [Fact(DisplayName = "Types - function definition")]
@@ -210,7 +210,7 @@ type add 'a = 'a -> 'b -> Number;
             var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Errors);
-            Assert.Equal(ErrorType.GenericParameter_Undefined, compilerResult.Errors[0].ErrorType);
+            Assert.Equal(ErrorKind.GenericParameter_Undefined, compilerResult.Errors[0].ErrorType);
         }
         [Fact(DisplayName = "Types - generic function definition error 002")]
         public void Types_GenericFunctionDefinition_Error002() {
@@ -221,7 +221,7 @@ type add 'a = Number -> Number;
             var compilerResult = compiler.Compile().Check();
 
             Assert.Single(compilerResult.Errors);
-            Assert.Equal(ErrorType.GenericParameter_Unused, compilerResult.Errors[0].ErrorType);
+            Assert.Equal(ErrorKind.GenericParameter_Unused, compilerResult.Errors[0].ErrorType);
         }
 
         [Fact(DisplayName = "Types - Annotations")]

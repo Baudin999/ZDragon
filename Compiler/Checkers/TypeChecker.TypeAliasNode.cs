@@ -13,7 +13,7 @@ namespace Compiler.Checkers {
             // check if all the generic parameters are used
             foreach (var genericParameter in node.GenericParameters) {
                 if (!usedParams.Contains(genericParameter.Value)) {
-                    var error = new Error(ErrorType.GenericParameter_Unused, $"Unused generic parameter {genericParameter.Value}", genericParameter);
+                    var error = new Error(ErrorKind.GenericParameter_Unused, $"Unused generic parameter {genericParameter.Value}", genericParameter);
                     errorSink.AddError(error);
                 }
             }

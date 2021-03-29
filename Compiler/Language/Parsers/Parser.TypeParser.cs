@@ -24,7 +24,7 @@ namespace Compiler.Language {
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).OfType<Token>().ToList();
             var typeDef = Take(SyntaxKind.EqualsToken, AliasMessages[AliasErrors.AssignmentExpected]);
             if (typeDef is null) {
-                ErrorSink.Errors.Add(new Error(ErrorType.InvalidTypeDefinition, $"Type aliasses cannot be simple names, the complete type definition is required", id));
+                ErrorSink.Errors.Add(new Error(ErrorKind.InvalidTypeDefinition, $"Type aliasses cannot be simple names, the complete type definition is required", id));
                 return new TypeAliasNode(Token.Range(type, id), annotationNode, id, genericParameters, new ExpressionNode(id, ExpressionKind.EmptyExpression));
             }
 

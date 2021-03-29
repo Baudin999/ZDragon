@@ -10,7 +10,7 @@ namespace Compiler.Language {
             var start = Take(SyntaxKind.RequirementDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
-                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", name));
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name));
             }
             Token end = name;
 

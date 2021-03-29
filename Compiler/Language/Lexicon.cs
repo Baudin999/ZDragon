@@ -67,7 +67,7 @@ namespace Compiler.Language {
                 foreach (var token in ta.Parameters) {
                     if (token.Value == "Maybe" || token.Value == "List") continue;
                     else if (!lexicon.ContainsKey(token.Value)) {
-                        errorSink.AddError(new Error(ErrorType.Unknown, $"Could not find type \"{token.Value}\" on type \"{node.Id}\"", token));
+                        errorSink.AddError(new Error(ErrorKind.Unknown, $"Could not find type \"{token.Value}\" on type \"{node.Id}\"", token));
                     }
                 }
 
@@ -80,7 +80,7 @@ namespace Compiler.Language {
                         // check number of generic parameters, we only allow
                         // complete application, not partial application...
                         if (recordNode.GenericParameters.Count != ta.Parameters.Count - 1) {
-                            errorSink.AddError(new Error(ErrorType.Generics_ApplicationMisMatch, $"Invalid number of applied generic parameters.", node.IdToken));
+                            errorSink.AddError(new Error(ErrorKind.Generics_ApplicationMisMatch, $"Invalid number of applied generic parameters.", node.IdToken));
                             return;
                         }
 

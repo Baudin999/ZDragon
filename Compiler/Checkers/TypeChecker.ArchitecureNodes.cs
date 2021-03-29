@@ -42,7 +42,7 @@ namespace Compiler.Checkers {
             var to = node.GetAttributeNode("To");
 
             if (from is null) errorSink.AddError(new Error(
-                ErrorType.Architecture_Interaction_MissingFrom,
+                ErrorKind.Architecture_Interaction_MissingFrom,
                 $"The interaction '{node.Id}' is missing a 'From' parameter.",
                 node.IdToken
                 ));
@@ -52,7 +52,7 @@ namespace Compiler.Checkers {
                     errorSink.Errors.AddRange(CheckToken(node, null, token));
             }
             if (to is null) errorSink.AddError(new Error(
-                ErrorType.Architecture_Interaction_MissingTo,
+                ErrorKind.Architecture_Interaction_MissingTo,
                 $"The interaction '{node.Id}' is missing a 'From' parameter.",
                 node.IdToken
                 ));

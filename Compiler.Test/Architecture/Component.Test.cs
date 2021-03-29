@@ -143,7 +143,7 @@ component Foo =
 
             Assert.Single(compilerResult.Tokens);
             Assert.Single(compilerResult.Errors);
-            Assert.Equal(ErrorType.Unknown, compilerResult.Errors.First().ErrorType);
+            Assert.Equal(ErrorKind.Unknown, compilerResult.Errors.First().ErrorType);
         }
 
         [Fact(DisplayName = "Component - Import Open")]

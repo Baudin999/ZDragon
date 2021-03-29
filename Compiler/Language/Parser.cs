@@ -35,7 +35,7 @@ namespace Compiler.Language {
             else 
                 throw new Exception(message ?? "Token is null");
         }
-        private Token TakeF(SyntaxKind kind, ErrorType errorType = ErrorType.Unknown, string? message = null) {
+        private Token TakeF(SyntaxKind kind, ErrorKind errorType = ErrorKind.Unknown, string? message = null) {
             var c = Current;
             index++;
             if (c != null && c.Kind == kind)
@@ -51,9 +51,6 @@ namespace Compiler.Language {
             var c = Current;
 
             if (c is null) {
-                //ErrorSink.AddError(new Error(
-                //    message ?? $"Expected '{kind}' but reached the end of the token stream."
-                //));
                 // DO NOTHING!
             }
             else if (c?.Kind != kind) {
@@ -61,7 +58,6 @@ namespace Compiler.Language {
                     message ?? $"Expected '{kind}' but received '{Current?.Kind}'",
                     c ?? Token.DefaultSourceSegment()
                 ));
-                //index++;
                 return null;
             }
             else {

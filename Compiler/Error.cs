@@ -4,7 +4,7 @@ namespace Compiler {
     public class Error {
         public string Message { get; set;  }
         public ISourceSegment SourceSegment { get; set; }
-        public ErrorType ErrorType { get; set;  } = ErrorType.GenericError;
+        public ErrorKind ErrorType { get; set;  } = ErrorKind.GenericError;
 
 
         public Error(string message) {
@@ -17,8 +17,8 @@ namespace Compiler {
             this.SourceSegment = sourceSegment;
         }
 
-        public Error(ErrorType errorType, string message, ISourceSegment sourceSegment) {
-            this.ErrorType = errorType;
+        public Error(ErrorKind errorKind, string message, ISourceSegment sourceSegment) {
+            this.ErrorType = errorKind;
             this.Message = message;
             this.SourceSegment = sourceSegment;
         }
@@ -28,7 +28,7 @@ namespace Compiler {
         }
     }
 
-    public enum ErrorType {
+    public enum ErrorKind {
         GenericParameter,
 
         GenericError,
@@ -41,6 +41,7 @@ namespace Compiler {
 
         // records 
         Record_UnknownFieldType,
+        Record_InvalidFieldIdentifier,
 
         // architecture
         Architecture_Interaction_MissingFrom,

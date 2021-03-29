@@ -12,7 +12,7 @@ namespace Compiler.Language {
             TakeWhile(SyntaxKind.WhiteSpaceToken);
             var id = Take(SyntaxKind.IdentifierToken);
             if (id is null) {
-                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, @$"
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, @$"
 Directives should have an identifier:
 
 % id: value

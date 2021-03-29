@@ -18,12 +18,12 @@ namespace Compiler.Language {
             var recordDeclaration = Take(SyntaxKind.RecordDeclarationToken);
             var id = TryTake(SyntaxKind.IdentifierToken);
             if (id?.Kind != SyntaxKind.IdentifierToken) {
-                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", id ?? Current ?? Token.DefaultSourceSegment()));
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", id ?? Current ?? Token.DefaultSourceSegment()));
                 _ = TakeWhile(t => t != null).ToList();
                 return null;
             }
             else if (char.IsLower(id.Value[0])) {
-                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier, Identifiers should start with a capital letter.", id));
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier, Identifiers should start with a capital letter.", id));
             }
 
             // generic parameters
@@ -50,38 +50,49 @@ namespace Compiler.Language {
                 while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
 
                     AnnotationNode? annotation = null;
-                    while (Current.Kind == SyntaxKind.AnnotationToken) {
-                        if (annotation == null) annotation = new AnnotationNode(Take());
-                        else annotation.Add(Take());
-                    }
-
                     var directives = new List<DirectiveNode>();
-                    while (Current.Kind == SyntaxKind.PercentageToken) {
-                        var directive = ParseDirective();
-                        directives.Add(directive);
-                        Take(SyntaxKind.EndDirective);
+
+                    while (Current.Kind == SyntaxKind.AnnotationToken || Current.Kind == SyntaxKind.PercentageToken) {
+                        if (Current.Kind == SyntaxKind.AnnotationToken) {
+                            if (annotation == null) annotation = new AnnotationNode(TakeF());
+                            else annotation.Add(TakeF());
+                        }
+                        else if (Current.Kind == SyntaxKind.PercentageToken) {
+                            var directive = ParseDirective();
+                            if (directive != null) directives.Add(directive);
+                            TakeF(SyntaxKind.EndDirective);
+                        }
                     }
 
                     var fieldId = Take(SyntaxKind.IdentifierToken);
-                    Take(SyntaxKind.ColonToken);
-                    var fieldType = new List<Token>();
-                    while (Current?.Kind == SyntaxKind.IdentifierToken || Current?.Kind == SyntaxKind.GenericParameterToken) {
-                        fieldType.Add(Take());
+                    if (fieldId == null) {
+                        ErrorSink.AddError(new Error(ErrorKind.Record_InvalidFieldIdentifier, @"Invalid Field Identifier:
+record Person =
+    FirstName: String;
+", Current ?? id));
+
+                        _ = TakeWhile(t => t.Kind != SyntaxKind.SemiColonToken).ToList();
                     }
+                    else {
 
-                    var restrictionAnnotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
-                    var restrictions = new List<RestrictionNode>();
-                    while (Current?.Kind == SyntaxKind.AndToken) {
-                        Take();
-                        var key = Take(SyntaxKind.IdentifierToken);
-                        var value = Take();
-                        restrictions.Add(new RestrictionNode(key, value));
-                        restrictionAnnotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                        _ = Take(SyntaxKind.ColonToken);
+                        var fieldType = new List<Token>();
+                        while (Current?.Kind == SyntaxKind.IdentifierToken || Current?.Kind == SyntaxKind.GenericParameterToken) {
+                            fieldType.Add(TakeF());
+                        }
+
+                        var restrictionAnnotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                        var restrictions = new List<RestrictionNode>();
+                        while (Current?.Kind == SyntaxKind.AndToken) {
+                            _ = TakeF(SyntaxKind.AndToken);
+                            var key = TakeF(SyntaxKind.IdentifierToken);
+                            var value = TakeF();
+                            restrictions.Add(new RestrictionNode(key, value));
+                            restrictionAnnotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+                        }
+                        fields.Add(new RecordFieldNode(annotation, directives, fieldId, fieldType, restrictions));
                     }
-
-                    Take(SyntaxKind.SemiColonToken);
-
-                    fields.Add(new RecordFieldNode(annotation, directives, fieldId, fieldType, restrictions));
+                    _ = TryTake(SyntaxKind.SemiColonToken);
                 }
             }
 

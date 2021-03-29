@@ -6,7 +6,7 @@ using System.Linq;
 namespace Compiler.Language {
     public partial class Parser {
 
-        public ExpressionNode ParseRecordDefinition() {
+        public ExpressionNode? ParseRecordDefinition() {
             // handle the annotations
             var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
             var annotationNode =
@@ -16,9 +16,11 @@ namespace Compiler.Language {
 
 
             var recordDeclaration = Take(SyntaxKind.RecordDeclarationToken);
-            var id = Take();
-            if (id.Kind != SyntaxKind.IdentifierToken) {
-                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", id));
+            var id = TryTake(SyntaxKind.IdentifierToken);
+            if (id?.Kind != SyntaxKind.IdentifierToken) {
+                ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", id ?? Current ?? Token.DefaultSourceSegment()));
+                _ = TakeWhile(t => t != null).ToList();
+                return null;
             }
             else if (char.IsLower(id.Value[0])) {
                 ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier, Identifiers should start with a capital letter.", id));

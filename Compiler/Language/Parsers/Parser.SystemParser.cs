@@ -7,8 +7,8 @@ namespace Compiler.Language {
     public partial class Parser {
 
         internal ExpressionNode ParseSystem() {
-            var start = Take(SyntaxKind.SystemDeclarationToken);
-            var name = Take();
+            var start = TakeF(SyntaxKind.SystemDeclarationToken);
+            var name = TakeF();
             if (name.Kind != SyntaxKind.IdentifierToken) {
                 ErrorSink.AddError(new Error(ErrorType.InvalidIdentifier, "Invalid Identifier", name));
             }
@@ -17,20 +17,19 @@ namespace Compiler.Language {
             // extensions
             List<Token> extensions = new List<Token>();
             if (Current?.Kind == SyntaxKind.ExtendsToken) {
-                var extends = Take(SyntaxKind.ExtendsToken);
-
+                var extends = TakeF(SyntaxKind.ExtendsToken);
                 extensions = TakeWhile(SyntaxKind.IdentifierToken).OfType<Token>().ToList();
             }
 
             var attributes = new List<AttributeNode>();
             if (Current?.Kind == SyntaxKind.EqualsToken) {
-                Take(SyntaxKind.EqualsToken);
+                _ = TakeF(SyntaxKind.EqualsToken);
 
                 while (Current?.Kind == SyntaxKind.AttributeFieldStarted) {
-                    Take(); // attribute field started
+                    _ = TakeF(); // attribute field started
 
-                    var fieldName = Take();
-                    Take(SyntaxKind.ColonToken);
+                    var fieldName = TakeF();
+                    _ = TakeF(SyntaxKind.ColonToken);
                     var fieldDescription = 
                             TakeWhile(t => t.Kind != SyntaxKind.AttributeFieldEnded)
                                 .OfType<Token>()
@@ -56,7 +55,7 @@ namespace Compiler.Language {
 
                     attributes.Add(new AttributeNode(fieldName, fieldDescription, items));
 
-                    end = Take(); // attribute field ended
+                    end = TakeF(); // attribute field ended
                 }
             }
 

@@ -15,19 +15,14 @@ namespace Compiler.Language {
 
         public IEnumerable<AstNode> Parse() {
 
-            // handle the annotations
-            //var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
-            //var annotationNode =
-            //    annotations.Count > 0 ?
-            //    new AnnotationNode(annotations) :
-            //    new AnnotationNode(Current ?? SourceSegment.Empty);
-
             foreach (var tokenBlock in TokenBlocks) {
                 if (tokenBlock.Context == ContextType.TypeDeclaration) {
-                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseTypeDefinition();
+                    var typeDeclaration = new Parser(tokenBlock.Tokens, ErrorSink).ParseTypeDefinition();
+                    if (typeDeclaration != null) yield return typeDeclaration;
                 }
                 else if (tokenBlock.Context == ContextType.RecordDeclaration) {
-                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseRecordDefinition();
+                    var recordDeclaration = new Parser(tokenBlock.Tokens, ErrorSink).ParseRecordDefinition();
+                    if (recordDeclaration != null) yield return recordDeclaration;
                 }
                 else if (tokenBlock.Context == ContextType.DataDeclaration) {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseDataDefinition();

@@ -18,7 +18,6 @@ namespace ZDragon.UI.Controllers {
         }
 
 
-
         [HttpPost("/project/init/{path}")]
         public IActionResult InitProject(string path) {
             try {

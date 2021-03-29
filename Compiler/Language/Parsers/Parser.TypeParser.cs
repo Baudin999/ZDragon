@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Compiler.Language {
     public partial class Parser {
-        public ExpressionNode ParseTypeDefinition() {
+        public ExpressionNode? ParseTypeDefinition() {
             // handle the annotations
             var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
             var annotationNode = 
@@ -14,8 +14,13 @@ namespace Compiler.Language {
                 new AnnotationNode(Current ?? SourceSegment.Empty);
 
             // parse the rest of the type definition
-            var type = Take(SyntaxKind.TypeDeclarationToken);
+            var type = TakeF(SyntaxKind.TypeDeclarationToken);
             var id = Take(SyntaxKind.IdentifierToken, AliasMessages[AliasErrors.InvalidIdentifier]);
+            if (id is null) {
+                TakeWhile(t => t.Kind == SyntaxKind.EndBlock || t.Kind == SyntaxKind.SemiColonToken);
+                return null;
+            }
+
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).OfType<Token>().ToList();
             var typeDef = Take(SyntaxKind.EqualsToken, AliasMessages[AliasErrors.AssignmentExpected]);
             if (typeDef is null) {
@@ -30,13 +35,13 @@ namespace Compiler.Language {
             while (Current != null && Current.Kind == SyntaxKind.ContextualIndent1 && Next?.Kind == SyntaxKind.AndToken) {
                 Take(); // ContextualIndent1
                 Take(); // AndToken
-                var key = Take(SyntaxKind.IdentifierToken);
-                var value = Take();
+                var key = TakeF(SyntaxKind.IdentifierToken);
+                var value = TakeF();
                 restrictions.Add(new RestrictionNode(key, value));
                 TakeWhile(SyntaxKind.AnnotationToken).ToList();
             }
 
-            var endStatement = Take(SyntaxKind.SemiColonToken);
+            var endStatement = TryTake(SyntaxKind.SemiColonToken);
 
             // return the block
             return new TypeAliasNode(Token.Range(type, endStatement ?? idAlias.Segment), annotationNode, id, genericParameters, idAlias);

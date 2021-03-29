@@ -377,11 +377,39 @@ record Person =
             Assert.Empty(errorSink.Errors);
         }
 
-        [Fact(DisplayName = "Record - Qualified Field Types 004")]
-        public void Record_QualifiedFieldType_004() {
+        [Fact(DisplayName = "ERROR - Record - Qualified Field Types 004")]
+        public void ERROR_Record_QualifiedFieldType_004() {
             var code = @"
 record Person =
     Address: Address.Address;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Single(compilerResult.Ast);
+            Assert.Single(compilerResult.ErrorSink.Errors);
+        }
+
+        [Fact(DisplayName = "ERROR - Record - No Identifier")]
+        public void ERROR_Record_NoIdentifier() {
+            var code = @"
+record =
+    Address: Address.Address;
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Empty(compilerResult.Ast);
+            Assert.Single(compilerResult.ErrorSink.Errors);
+        }
+
+        [Fact(DisplayName = "ERROR - Record - No Identifier 002")]
+        public void ERROR_Record_NoIdentifier_002() {
+            var code = @"
+record =
+    Address: Address;
+
+record Address
 ";
             var compiler = new Compiler.Compiler(code);
             var compilerResult = compiler.Compile().Check();

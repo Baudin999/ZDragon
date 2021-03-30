@@ -192,6 +192,13 @@ namespace Compiler.Symbols {
                 }
 
 
+                // flow
+                else if (Current?.Kind == SyntaxKind.FlowDeclarationToken) {
+                    yield return TokenizeFlowDefinition(annotations);
+
+                }
+
+
                 // Architecture
                 else if (Current?.Kind == SyntaxKind.PersonDeclarationToken) {
                     //
@@ -225,6 +232,17 @@ namespace Compiler.Symbols {
                     yield return TokenizeAttributesDefinition(annotations, ContextType.TaskDeclaration);
                 }
 
+                // skip tokens
+                else if (Current?.Kind == SyntaxKind.SemiColonToken) {
+                    _ = TakeF();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent1) {
+                    _ = TakeF();
+                }
+                else if (Current?.Kind == SyntaxKind.ContextualIndent2) {
+                    _ = TakeF();
+                }
+
                 else {
                     // We are probably in a markdown block and will interpert it like so...
                     var markdownBlock = TokenizeMarkdown();
@@ -248,6 +266,10 @@ namespace Compiler.Symbols {
         SystemDeclaration,
         ComponentDeclaration,
         EndPointDeclaration,
+
+
+        // flows
+        FlowDeclaration,
 
 
         MarkdownDeclaration,

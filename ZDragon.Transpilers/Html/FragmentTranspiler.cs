@@ -1,50 +1,22 @@
-﻿using Compiler;
-using Compiler.Language.Nodes;
-using Markdig;
-using System.Collections.Generic;
+﻿using Compiler.Language.Nodes;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace ZDragon.Transpilers.Html {
     public class FragmentTranspiler {
 
-        private readonly Dictionary<string, IDocumentNode> Document;
+      
+        internal static string RenderViewNode(ViewNode node, string ns) {
+            return $"<img style='max-width:100%;' src=\"/documents/{ns}/{node.Hash}.svg\" alt=\"data\" />";
 
-        public string Namespace { get; }
-
-        private readonly List<string> parts = new List<string>();
-
-
-        private void RenderChapterNode(MarkdownChapterNode mcn) {
-
-            parts.Add($"<h{mcn.Depth}>{mcn.Content}</h{mcn.Depth}>");
         }
 
-        private void RenderParagraphNode(IDocumentNode node) {
-            parts.Add($"<p>{node.Content}</p>");
-        }
-
-        private void RenderMarkdownNode(MarkdownNode node) {
-            var pipeline = new MarkdownPipelineBuilder()
-                .UsePipeTables()
-                .UseTaskLists()
-                .UseAdvancedExtensions()
-                .Build();
-
-            parts.Add(Markdown.ToHtml(node.Content, pipeline));
-        }
-
-        private void RenderViewNode(ViewNode node) {
-            parts.Add($"<img style='max-width:100%;' src=\"/documents/{Namespace}/{node.Hash}.svg\" alt=\"data\" />");
-        }
-
-        private void RenderGuidelineNode(GuidelineNode node) {
+        internal static string RenderGuidelineNode(GuidelineNode node) {
             var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
             var description = node.GetAttribute("Description", "");
             var rationale = node.GetAttribute("Rationale", "");
             var number = node.GetAttribute("Number", "000");
 
-            parts.Add(@$"<div class='guideline'>
+            return @$"<div class='guideline'>
 <title>GUIDELINE {number}: {title}</title>
 <dl>
     <dt>Description</dt>
@@ -52,16 +24,16 @@ namespace ZDragon.Transpilers.Html {
     <dt>Rationale</dt>
     <dd>{rationale}</dd>
 </dl>
-</div>");
+</div>";
         }
 
-        private void RenderRequirementNode(RequirementNode node) {
+        internal static string RenderRequirementNode(RequirementNode node) {
             var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
             var description = node.GetAttribute("Description", "");
             var rationale = node.GetAttribute("Rationale", "");
             var number = node.GetAttribute("Number", "000");
 
-            parts.Add(@$"<div class='requirement'>
+            return @$"<div class='requirement'>
 <title>REQUIREMENT {number}: {title}</title>
 <dl>
     <dt>Description</dt>
@@ -69,33 +41,60 @@ namespace ZDragon.Transpilers.Html {
     <dt>Rationale</dt>
     <dd>{rationale}</dd>
 </dl>
-</div>");
+</div>";
         }
 
+       
 
-        public FragmentTranspiler(string ns, Dictionary<string, IDocumentNode> document) {
-            this.Document = document;
-            this.Namespace = ns;
+
+        internal static string RenderRecordTable(RecordNode node) {
+
+
+            var body = node.Fields.Select(field => {
+                var optional = field.Types.FirstOrDefault() == "Maybe";
+                return $"<tr><td>{field.Id}</td><td>{field.Description}</td><td>{!optional}</td></tr>";
+            });
+
+            return $@"
+<div class='keep-together language-table'>
+    <h2>{node.Id}</h2>
+    <div class='language-table--description'><p>{node.Description}</p></div>
+    <table>
+        <thead><tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Required</th>
+</tr></thead>
+        <tbody>
+            {string.Join("", body)}
+        </tbody>
+    </table>
+</div>
+";
         }
 
+        internal static string RenderAttributesTable(AttributesNode node) {
 
-
-        public string Transpile() {
-
-            var endpoints = Document.Values.OfType<EndpointNode>().ToList();
-
-            foreach (var documentPart in this.Document.Values) {
-                if (documentPart is MarkdownChapterNode markdownChapterNode) RenderChapterNode(markdownChapterNode);
-                else if (documentPart is MarkdownNode markdownNode) RenderMarkdownNode(markdownNode);
-                else if (documentPart is ViewNode viewNode) RenderViewNode(viewNode);
-                else if (documentPart is GuidelineNode guidelineNode) RenderGuidelineNode(guidelineNode);
-                else if (documentPart is RequirementNode requriementNode) RenderRequirementNode(requriementNode);
-                else RenderParagraphNode(documentPart);
-            }
-
+            var attributes = node.Attributes.Select(a => $"<tr><td>{a.Key}</td><td>{a.Value}</td></tr>");
             
-            return string.Join("\n\n", parts);
+            return $@"
+<div class='keep-together language-table'>
+    <h2>{node.Title}</h2>
+    <div class='language-table--description'><p>{node.Description}</p></div>
+    <table>
+        <thead><tr>
+    <th>Key</th>
+    <th>Value</th>
+</tr></thead>
+        <tbody>
+            {string.Join("", attributes)}
+        </tbody>
+    </table>
+</div>
+";
         }
+
+
 
     }
 }

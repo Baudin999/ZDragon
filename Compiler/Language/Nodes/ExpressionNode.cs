@@ -57,6 +57,8 @@ namespace Compiler.Language.Nodes {
 
         RoadmapExpression, 
         MilestoneExpression,
-        TaskExpression
+        TaskExpression,
+
+        FlowExpression
     }
 }

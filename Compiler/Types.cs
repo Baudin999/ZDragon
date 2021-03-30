@@ -106,6 +106,7 @@ namespace Compiler {
                 { "task",       SyntaxKind.TaskDeclarationToken },
 
                 // flow
+                { "flow", SyntaxKind.FlowDeclarationToken },
                 { "if", SyntaxKind.IfToken },
                 { "else", SyntaxKind.ElseToken },
                 { "where", SyntaxKind.WhereToken },
@@ -256,7 +257,9 @@ namespace Compiler {
         ChoiceDeclarationToken,
         OpenDeclarationToken,
         EndKeywordToken,            
-        FuncDefinitionToken,        
+        FuncDefinitionToken,
+
+        FlowDeclarationToken,       // flow
         IfToken,                    // if
         ElseToken,                  // else
         LetToken,                   // let

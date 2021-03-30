@@ -10,7 +10,7 @@ namespace ZDragon.Transpilers.Html {
         private readonly List<string> toc = new List<string> {
             "<h1>Table of Contents</h1>",
             "<div class='toc'>",
-            "<div class='toc-1'>1 Table of Contents<div>"
+            "<div class='toc-1'>1 Table of Contents</div>"
         };
         private readonly CompilationResult compilationresult;
         private readonly MarkdownPipeline pipeline;
@@ -34,7 +34,7 @@ namespace ZDragon.Transpilers.Html {
                     parts.Add("</div>");
                 }
                 parts.Add("<div class='keep-together'>");
-                toc.Add($"<div class='toc-1'>{h1} {content}<div>");
+                toc.Add($"<div class='toc-1'>{h1} {content}</div>");
             }
             else if (mcn.Depth == 2) {
                 h2 = h2 + 1;
@@ -87,49 +87,6 @@ namespace ZDragon.Transpilers.Html {
             else {
                 parts.Add(ToHtml(node.Content));
             }
-        }
-
-        private void RenderViewNode(ViewNode node) {
-            if (node.Imported) {
-                parts.Add($"<img style='max-width:100%;' src=\"/documents/{node.ImportedFrom}/{node.Hash}.svg\" alt=\"data\" />");
-            }
-            else {
-                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/{node.Hash}.svg\" alt=\"data\" />");
-            }
-        }
-
-        private void RenderGuidelineNode(GuidelineNode node) {
-            var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
-            var description = ToHtml(node.GetAttribute("Markdown") ?? node.GetAttribute("Description") ?? "");
-            var rationale = node.GetAttribute("Rationale", "");
-            var number = node.GetAttribute("Number", "000");
-
-            parts.Add(@$"<div class='guideline'>
-<title>GUIDELINE {number}: {title}</title>
-<dl>
-    <dt>Description</dt>
-    <dd>{description}</dd>
-    <dt>Rationale</dt>
-    <dd>{rationale}</dd>
-</dl>
-</div>");
-        }
-
-        private void RenderRequirementNode(RequirementNode node) {
-            var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;
-            var description = ToHtml(node.GetAttribute("Markdown") ?? node.GetAttribute("Description") ?? "");
-            var rationale = node.GetAttribute("Rationale", "");
-            var number = node.GetAttribute("Number", "000");
-
-            parts.Add(@$"<div class='requirement'>
-<title>REQUIREMENT {number}: {title}</title>
-<dl>
-    <dt>Description</dt>
-    <dd>{description}</dd>
-    <dt>Rationale</dt>
-    <dd>{rationale}</dd>
-</dl>
-</div>");
         }
 
 
@@ -244,7 +201,7 @@ namespace ZDragon.Transpilers.Html {
 
             if (renderClasses && compilationresult.Lexicon.Values.OfType<IPlanningNode>().Count() > 0) {
 
-                toc.Add($"<div class='toc-1'>{++h1} Roadmap<div>");
+                toc.Add($"<div class='toc-1'>{++h1} Roadmap</div>");
 
                 // Don't put in the roadmap in if there are no planning nodes defined
                 parts.Add("<div class='keep-together'><h1>Roadmap</h1>");
@@ -254,18 +211,25 @@ namespace ZDragon.Transpilers.Html {
             foreach (var documentPart in this.compilationresult.Document) {
                 if (documentPart is MarkdownChapterNode markdownChapterNode) RenderChapterNode(markdownChapterNode);
                 else if (documentPart is MarkdownNode markdownNode) RenderMarkdownNode(markdownNode);
-                else if (documentPart is ViewNode viewNode) RenderViewNode(viewNode);
-                else if (documentPart is GuidelineNode guidelineNode) RenderGuidelineNode(guidelineNode);
-                else if (documentPart is RequirementNode requriementNode) RenderRequirementNode(requriementNode);
-                else if (documentPart is EndpointNode endpointNode) { 
-                    /* Do nothing, we will render the endpoints at the back of the document */ 
+                else if (documentPart is ViewNode viewNode) {
+                    if (viewNode.Imported && viewNode.ImportedFrom != null) parts.Add(FragmentTranspiler.RenderViewNode(viewNode, viewNode.ImportedFrom));
+                    else parts.Add(FragmentTranspiler.RenderViewNode(viewNode, compilationresult.Namespace));
+                }
+                else if (documentPart is GuidelineNode guidelineNode) {
+                    parts.Add(FragmentTranspiler.RenderGuidelineNode(guidelineNode));
+                }
+                else if (documentPart is RequirementNode requriementNode) {
+                    parts.Add(FragmentTranspiler.RenderRequirementNode(requriementNode));
+                }
+                else if (documentPart is EndpointNode endpointNode) {
+                    /* Do nothing, we will render the endpoints at the back of the document */
                 }
                 else RenderParagraphNode(documentPart);
             }
 
+
             if (h1 > 1) {
-                // Don't put in the TOC if there are no chapters...
-                parts.Add("</div>");
+                
 
                 if (endpoints.Count > 0) {
                     toc.Add($"<div class='toc-1'>{++h1} Endpoints</div>");
@@ -277,12 +241,24 @@ namespace ZDragon.Transpilers.Html {
                 }
 
                 if (renderClasses) {
-                    toc.Add($"<div class='toc-1'>{++h1} Logical Data Model<div>");
+                    h2 = 0;
+                    h3 = 0;
+                    toc.Add($"<div class='toc-1'>{++h1} Logical Data Model</div>");
+                    this.compilationresult.Ast.OfType<RecordNode>().ToList().ForEach(n => {
+                        toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
+                    });
                 }
                 if (renderComponents) {
-                    toc.Add($"<div class='toc-1'>{++h1} Component Diagram<div>");
+                    h2 = 0;
+                    h3 = 0;
+                    toc.Add($"<div class='toc-1'>{++h1} Component Diagram</div>");
+                    this.compilationresult.Ast.OfType<AttributesNode>().ToList().ForEach(n => {
+                        toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
+                    });
                 }
-                
+                // Don't put in the TOC if there are no chapters...
+                toc.Add("</div>");
+
                 parts.Insert(tocIndex, string.Join("\n\n", toc));
             }
 
@@ -297,15 +273,38 @@ namespace ZDragon.Transpilers.Html {
             if (renderClasses) {
                 // Don't put in the logical data model if there are no entities defined
                 parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
-                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" /></div>");
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" />");
+
+                foreach (var node in this.compilationresult.Ast) {
+                    if (node is RecordNode recordNode) {
+                        parts.Add(FragmentTranspiler.RenderRecordTable(recordNode));
+                    }
+                    else {
+                        // skip
+                    }
+                }
+
+                parts.Add("</div>");
             }
 
             if (renderComponents) {
                 // Don't put in the architectural diagram if there are no architectural components defined
                 parts.Add("<div class='keep-together'><h1>Component Diagram</h1>");
-                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" /></div>");
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" />");
+
+                foreach (var node in this.compilationresult.Ast) {
+                    if (node is AttributesNode attributesNode) {
+                        parts.Add(FragmentTranspiler.RenderAttributesTable(attributesNode));
+                    }
+                    else {
+                        // skip
+                    }
+                }
+                parts.Add("</div>");
             }
 
+
+            
 
 
             parts.Add(@"

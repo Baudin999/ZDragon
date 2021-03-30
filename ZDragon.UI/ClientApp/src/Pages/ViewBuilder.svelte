@@ -1,5 +1,6 @@
 <script>
     import Panel from "../Components/Panel.svelte";
+    import Toggle from "../Components/Toggle.svelte";
     import app from "../main";
     import { get } from "../Services/http";
 
@@ -19,8 +20,7 @@
 <div style="max-height: 100%; overflow: auto;">
     {#each index as item}
         <div class="index--item">
-            <span class="name">{item.name}</span><span class="namespace"
-                >{item.namespace}</span>
+            <Toggle /> <span class="name">{item.name}</span>
         </div>
     {/each}
 </div>

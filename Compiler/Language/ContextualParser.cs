@@ -58,6 +58,11 @@ namespace Compiler.Language {
                     yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseInteraction();
                 }
 
+                // flows
+                else if (tokenBlock.Context == ContextType.FlowDeclaration) {
+                    yield return new Parser(tokenBlock.Tokens, ErrorSink).ParseFlow();
+                }
+
                 // documentation
                 else if (tokenBlock.Context == ContextType.ViewDeclaration) {
                     var viewNode = new Parser(tokenBlock.Tokens, ErrorSink).ParseView();

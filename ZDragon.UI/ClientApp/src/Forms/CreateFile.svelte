@@ -42,6 +42,7 @@
             <option>Endpoint</option>
             <option>Model</option>
             <option>Story</option>
+            <option>Documentation</option>
             <option>Empty</option>
         </select>
     </div>

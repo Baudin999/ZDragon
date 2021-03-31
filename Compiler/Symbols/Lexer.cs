@@ -48,6 +48,12 @@ namespace Compiler.Symbols {
             }
             return value;
         }
+        private string takeWhile(Func<bool> check) {
+            while (check()) {
+                take();
+            }
+            return value;
+        }
         private Token pushToken(SyntaxKind kind, string v) {
             var token = new Token(
                 value = v,
@@ -78,6 +84,7 @@ namespace Compiler.Symbols {
             }
             return pushToken(SyntaxKind.WhiteSpaceToken);
         }
+
         private Token parseNewline() {
 
             if (current == '\r' && next == '\n') {
@@ -129,20 +136,68 @@ namespace Compiler.Symbols {
             return pushToken(SyntaxKind.NumberLiteralToken);
         }
 
-        private bool isWhiteSpace(char c) {
+        private Token parseComment() {
+            var _indexStart = index;
+            var _lineStart = line;
+            var _lineTokenStartIndex = lineTokenIndex;
+            while (next != char.MaxValue) {
+                if (current == '*' && next == '}') {
+                    take();
+                    take();
+                    break;
+                }
+                if (current == '\n') {
+                    take();
+                    moveNextLine();
+                } 
+                else {
+                    take();
+                }
+            }
+            var _lineEnd = line;
+            var _indexEnd = index;
+            var _lineTokenEndIndex = lineTokenIndex;
+
+            var token = new Token(
+                value: value,
+                kind: SyntaxKind.CommentLiteral,
+                indexStart: _indexStart,
+                indexEnd: _indexEnd,
+                columnStart: _lineTokenStartIndex,
+                columnEnd: _lineTokenEndIndex,
+                lineStart: _lineStart,
+                lineEnd: _lineEnd
+            );
+
+            tokenStartIndex = index;
+            lineTokenStartIndex = lineTokenIndex;
+            value = "";
+
+            return token;
+        }
+
+        private static bool isWhiteSpace(char c) {
             return c == ' ';
         }
-        private bool isNewline(char c) {
+        private static bool isNewline(char c) {
             return c == '\n' || c == '\r';
         }
-        private bool isCharacter(char c) {
+        private static bool isCharacter(char c) {
             return Mappings.Letters.Contains(c) || c == '_';
         }
-        private bool isNumber(char c) {
+        private static bool isNumber(char c) {
             return Mappings.Numbers.Contains(c);
         }
-        private bool isOperator(char c) {
+        private static bool isOperator(char c) {
             return Mappings.Operators.Contains(c);
+        }
+
+        private static bool isBeginComment(char c, char n) {
+            return c == '{' && n == '*';
+        }
+
+        private static bool isEndComment(char c, char n) {
+            return c == '*' && n == '}';
         }
 
         public IEnumerable<Token> Tokenize(ContextType contextType) {
@@ -151,6 +206,9 @@ namespace Compiler.Symbols {
             while (index < max) {
                 if (isWhiteSpace(current)) {
                     tokens.Add(parseWhiteSpace());
+                }
+                else if (isBeginComment(current, next)) {
+                    tokens.Add(parseComment());
                 }
                 else if (isNewline(current)) {
                     tokens.Add(parseNewline());

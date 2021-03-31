@@ -18,9 +18,7 @@ namespace ZDragon.Transpilers.Components {
 
         private string GetDescription(AttributesNode node) {
             return (node.GetAttribute("Description") ?? "").Replace(System.Environment.NewLine, " ");
-        }
-
-        
+        }        
 
         private void TranspileEndpointNode(EndpointNode node) {
             var name = node.GetAttribute("Name") ?? node.Id;

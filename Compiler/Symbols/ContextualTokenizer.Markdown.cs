@@ -20,6 +20,9 @@ namespace Compiler.Symbols {
                     break;
                 }
                 else {
+                    if (Current?.Kind == SyntaxKind.CommentLiteral) {
+                        Take();
+                    }
                     tokens.Add(Take());
                 }
             }

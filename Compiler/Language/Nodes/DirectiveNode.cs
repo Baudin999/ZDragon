@@ -5,7 +5,7 @@ using System.Linq;
 namespace Compiler.Language.Nodes {
     public class DirectiveNode : ExpressionNode {
         public Token IdToken { get; }
-        public string Id => IdToken.Value;
+        public string Id => IdToken.Value.Trim().ToLower();
         public IEnumerable<Token> ValueTokens { get; }
 
         public string Key => this.Id;

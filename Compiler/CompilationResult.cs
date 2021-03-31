@@ -1,6 +1,7 @@
 ﻿using Compiler.Checkers;
 using Compiler.Language.Nodes;
 using Compiler.Symbols;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -33,10 +34,15 @@ namespace Compiler {
             return this;
         }
 
-        //public CompilationResult Check(Index index) {
-        //    new TypeChecker(this.CompilationCache, this, index).Check();
-        //    return this;
-        //}
+
+        public bool? ParseBooleanDirective(string key) {
+            var directive = this.Ast.FirstOrDefault(node => node is DirectiveNode dn && dn.Key == key) as DirectiveNode;
+            if (directive is not null) {
+                _ = bool.TryParse(directive.Value.ToLower(), out bool result);
+                return result;
+            }
+            return null;
+        }
 
 
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace ZDragon.UI.Controllers {
 
@@ -21,7 +22,7 @@ namespace ZDragon.UI.Controllers {
         [HttpPost("/project/init/{path}")]
         public IActionResult InitProject(string path) {
             try {
-                var actualPath = path.Replace("__$__", "\\");
+                var actualPath = path.Replace("__$__", Path.DirectorySeparatorChar.ToString());
                 _project.Reload(actualPath);
                 _ = ProjectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
                 return Ok();

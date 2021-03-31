@@ -242,6 +242,10 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.ContextualIndent2) {
                     _ = TakeF();
                 }
+                else if (Current?.Kind == SyntaxKind.CommentLiteral) {
+                    //
+                    _ = TakeF();
+                }
 
                 else {
                     // We are probably in a markdown block and will interpert it like so...

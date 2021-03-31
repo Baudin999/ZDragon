@@ -77,6 +77,9 @@ namespace Compiler.Symbols {
                     tokens.Add(new Token(System.Environment.NewLine + "            ", SyntaxKind.NewLineToken, Current));
                     Take();
                 }
+                else if (Current?.Kind == SyntaxKind.CommentLiteral) {
+                    Take();
+                }
 
                 else {
                     tokens.Add(Take());

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace ZDragon.Transpilers.Html {
     public class HtmlTranspiler {
         private readonly List<string> toc = new List<string> {
-            "<h1>Table of Contents</h1>",
+            "<div class='keep-together'><h1>Table of Contents</h1>",
             "<div class='toc'>",
             "<div class='toc-1'>1 Table of Contents</div>"
         };
@@ -25,22 +25,28 @@ namespace ZDragon.Transpilers.Html {
         private void RenderChapterNode(MarkdownChapterNode mcn) {
             var content = Interpolate(mcn.Content);
             if (mcn.Depth == 1) {
+                // close the keep-together parts
+                if (h1 > 1) parts.Add("</div>");
+                if (h2 > 0) parts.Add("</div>");
+
                 h1 = h1 + 1;
                 h2 = 0;
                 h3 = 0;
                 h4 = 0;
                 h5 = 0;
-                if (h1 > 2) {
-                    parts.Add("</div>");
-                }
+                
                 parts.Add("<div class='keep-together'>");
                 toc.Add($"<div class='toc-1'>{h1} {content}</div>");
             }
             else if (mcn.Depth == 2) {
+                // close the keep-together parts
+                if (h2 > 0) parts.Add("</div>");
                 h2 = h2 + 1;
                 h3 = 0;
                 h4 = 0;
                 h5 = 0;
+
+                parts.Add("<div class='keep-together'>");
                 toc.Add($"<div class='toc-2'>{h1}.{h2} {content}</div>");
             }
             else if (mcn.Depth == 3) {
@@ -175,10 +181,14 @@ namespace ZDragon.Transpilers.Html {
 
         public string Transpile() {
             var renderRoadmap = bool.Parse(compilationresult.Ast.OfType<DirectiveNode>().FirstOrDefault(d => d.Key == "roadmap")?.Value.ToLower() ?? "true");
-            var renderComponents = bool.Parse(compilationresult.Ast.OfType<DirectiveNode>().FirstOrDefault(d => d.Key == "components")?.Value.ToLower() ?? "true")
-                && compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0;
-            var renderClasses = bool.Parse(compilationresult.Ast.OfType<DirectiveNode>().FirstOrDefault(d => d.Key == "classes")?.Value.ToLower() ?? "true")
-                && compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0;
+
+            var hasArchitectureNodes = compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0;
+            var renderComponents = compilationresult.ParseBooleanDirective("components") ?? true && hasArchitectureNodes;
+            var renderComponentDetails = compilationresult.ParseBooleanDirective("component details") ?? false;
+            
+            var hasLanguageNodes = compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0;
+            var renderClasses = compilationresult.ParseBooleanDirective("classes") ?? true && hasLanguageNodes;
+            var renderClassDetails = compilationresult.ParseBooleanDirective("class details") ?? false;
 
             var endpoints = compilationresult.Lexicon.Values.OfType<EndpointNode>().ToList();
 
@@ -204,6 +214,8 @@ namespace ZDragon.Transpilers.Html {
                 toc.Add($"<div class='toc-1'>{++h1} Roadmap</div>");
 
                 // Don't put in the roadmap in if there are no planning nodes defined
+                parts.Add("</div>");
+                if (h2 > 0) parts.Add("</div>");
                 parts.Add("<div class='keep-together'><h1>Roadmap</h1>");
                 parts.Add($"<img style='max-width:100%;min-width:100%;' src=\"/documents/{compilationresult.Namespace}/roadmap.svg\" alt=\"data\" /></div>");
             }
@@ -230,7 +242,6 @@ namespace ZDragon.Transpilers.Html {
 
             if (h1 > 1) {
                 
-
                 if (endpoints.Count > 0) {
                     toc.Add($"<div class='toc-1'>{++h1} Endpoints</div>");
                     h2 = 0;
@@ -244,25 +255,31 @@ namespace ZDragon.Transpilers.Html {
                     h2 = 0;
                     h3 = 0;
                     toc.Add($"<div class='toc-1'>{++h1} Logical Data Model</div>");
-                    this.compilationresult.Ast.OfType<RecordNode>().ToList().ForEach(n => {
-                        toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
-                    });
+
+                    if (renderComponentDetails) {
+                        this.compilationresult.Ast.OfType<RecordNode>().ToList().ForEach(n => {
+                            toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
+                        });
+                    }
                 }
+
                 if (renderComponents) {
                     h2 = 0;
                     h3 = 0;
                     toc.Add($"<div class='toc-1'>{++h1} Component Diagram</div>");
-                    this.compilationresult.Ast.OfType<AttributesNode>().ToList().ForEach(n => {
-                        toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
-                    });
+
+                    if (renderComponentDetails) {
+                        this.compilationresult.Ast.OfType<AttributesNode>().ToList().ForEach(n => {
+                            toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
+                        });
+                    }
                 }
+
                 // Don't put in the TOC if there are no chapters...
-                toc.Add("</div>");
+                toc.Add("</div></div>");
 
                 parts.Insert(tocIndex, string.Join("\n\n", toc));
             }
-
-
             
             if (endpoints.Count > 0) {
                 parts.Add($"<h1>Endpoints</h1>");
@@ -275,12 +292,9 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" />");
 
-                foreach (var node in this.compilationresult.Ast) {
-                    if (node is RecordNode recordNode) {
-                        parts.Add(FragmentTranspiler.RenderRecordTable(recordNode));
-                    }
-                    else {
-                        // skip
+                if (renderClassDetails) {
+                    foreach (var node in this.compilationresult.Ast.OfType<RecordNode>().OrderBy(n => n.Id)) {
+                        parts.Add(FragmentTranspiler.RenderRecordTable(node));
                     }
                 }
 
@@ -292,20 +306,13 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add("<div class='keep-together'><h1>Component Diagram</h1>");
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" />");
 
-                foreach (var node in this.compilationresult.Ast) {
-                    if (node is AttributesNode attributesNode) {
-                        parts.Add(FragmentTranspiler.RenderAttributesTable(attributesNode));
-                    }
-                    else {
-                        // skip
+                if (renderComponentDetails) {
+                    foreach (var node in this.compilationresult.Ast.OfType<AttributesNode>().OrderBy(n => n.Id)) {
+                        parts.Add(FragmentTranspiler.RenderAttributesTable(node));
                     }
                 }
                 parts.Add("</div>");
             }
-
-
-            
-
 
             parts.Add(@"
     <script src='prism.js'></script>

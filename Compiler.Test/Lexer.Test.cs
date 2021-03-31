@@ -252,6 +252,104 @@ Pan""";
         }
 
 
+        [Fact(DisplayName = "Lexer - Comments")]
+        public void Lexer_Comments() {
+            var code = @"
+{*
+record Address =
+    Street: String;
+*}
+";
+
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            verifyTokens(
+                compiler.SourceCode,
+                compilerResult.Tokens.ToList(),
+                false);
+
+            Assert.Empty(compilerResult.Errors);
+            Assert.Empty(compilerResult.Ast);
+            Assert.Empty(compilerResult.Lexicon);
+
+        }
+
+        [Fact(DisplayName = "Lexer - Comments 02")]
+        public void Lexer_Comments_02() {
+            var code = @"
+{*
+record Address =
+    Street: String;
+*}
+
+record Person =
+    Address: Address;
+";
+
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            verifyTokens(
+                compiler.SourceCode,
+                compilerResult.Tokens.ToList(),
+                false);
+
+            Assert.Single(compilerResult.Errors);
+            Assert.Single(compilerResult.Ast);
+            Assert.Single(compilerResult.Lexicon);
+
+        }
+
+        [Fact(DisplayName = "Lexer - Comments 03")]
+        public void Lexer_Comments_03() {
+            var code = @"
+record Person =
+    FirstName: {* Maybe *} String;
+";
+
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            verifyTokens(
+                compiler.SourceCode,
+                compilerResult.Tokens.ToList(),
+                false);
+
+            Assert.Empty(compilerResult.Errors);
+            Assert.Single(compilerResult.Ast);
+            Assert.Single(compilerResult.Lexicon);
+
+            var r = (RecordNode)compilerResult.Ast[0];
+            Assert.Single(r.Fields);
+            Assert.Single(r.Fields[0].Types);
+            Assert.Equal("String", r.Fields[0].Types[0]);
+        }
+
+        [Fact(DisplayName = "Lexer - Comments 04 Not closed")]
+        public void Lexer_Comments_04() {
+            var code = @"
+{*
+record Address =
+    Street: String;
+
+";
+
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            verifyTokens(
+                compiler.SourceCode,
+                compilerResult.Tokens.ToList(),
+                false);
+
+            Assert.Empty(compilerResult.Errors);
+            Assert.Empty(compilerResult.Ast);
+            Assert.Empty(compilerResult.Lexicon);
+
+        }
+
+
         [Fact(DisplayName = "Lex markup - Markup Example")]
         public void LexMarkup() {
             var code = @"

@@ -32,7 +32,7 @@ namespace Compiler.Language {
             index++;
             if (c != null)
                 return c;
-            else 
+            else
                 throw new Exception(message ?? "Token is null");
         }
         private Token TakeF(SyntaxKind kind, ErrorKind errorType = ErrorKind.Unknown, string? message = null) {
@@ -69,9 +69,9 @@ namespace Compiler.Language {
             if (Current?.Kind == kind) return TakeF();
             else return null;
         }
-        private IEnumerable<Token> TakeWhile(SyntaxKind kind) {
+        private IEnumerable<Token> TakeWhile(params SyntaxKind[] kinds) {
             var tokens = new List<Token>();
-            while (Current != null && Current?.Kind == kind) tokens.Add(TakeF());
+            while (Current != null && kinds.Contains(Current.Kind)) tokens.Add(TakeF());
             return tokens;
         }
         private IEnumerable<Token> TakeWhile(Predicate<Token> predicate) {
@@ -80,7 +80,7 @@ namespace Compiler.Language {
         private IEnumerable<Token> TakeBefore(SyntaxKind kind) {
             var i = -1;
             Token? t;
-            while((t = TokenAt(i))?.Kind == kind) {
+            while ((t = TokenAt(i))?.Kind == kind) {
                 yield return t;
                 i--;
             }
@@ -99,6 +99,16 @@ namespace Compiler.Language {
             this.Tokens = tokens.ToList();
             this.ErrorSink = errorSink;
             max = this.Tokens.Count;
+        }
+    }
+
+    public static class Extensions {
+        public static Token? Join(this IEnumerable<Token> tokens) {
+            // exception case
+            if (tokens.Count() == 0) return null;
+
+            // true case
+            else return new Token(tokens.ToList(), tokens.First().Kind);
         }
     }
 }

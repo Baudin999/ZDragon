@@ -51,6 +51,9 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.ContextualIndent5) {
                     Take();
                 }
+                else if (Current?.Kind == SyntaxKind.CommentLiteral) {
+                    Take();
+                }
 
                 // else we take the token
                 else {

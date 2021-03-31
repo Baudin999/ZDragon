@@ -48,6 +48,9 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                 }
+                else if (Current?.Kind == SyntaxKind.CommentLiteral) {
+                    Take();
+                }
                 else {
                     tokens.Add(TakeF());
                 }

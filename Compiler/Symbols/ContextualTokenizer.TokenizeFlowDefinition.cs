@@ -34,6 +34,9 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.NewLineToken) {
                     Take();
                 }
+                else if (Current?.Kind == SyntaxKind.CommentLiteral) {
+                    Take();
+                }
                 else if (Current?.Kind == SyntaxKind.ContextualIndent1) {
                     if (inField) tokens.Add(new Token(SyntaxKind.EndBlock));
                     _ = TakeF(SyntaxKind.ContextualIndent1);

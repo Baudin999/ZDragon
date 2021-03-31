@@ -1,19 +1,25 @@
 export const tokenizer = {
-    brackets: [{ open: "{*", close: "*}", token: "delimiter.bracket" }],
     keywords: [
         "record",
         "choice",
         "data",
         "open",
     ],
-    autoClosingPairs: [{ open: "{*", close: "*}" }],
+    autoClosingPairs: [{ open: "{", close: "}" }],
     digits: /\d+(_+\d+)*/,
+
     tokenizer: {
         root: [
             { include: "chapter" },
             { include: "annotation" },
             { include: "directive" },
             { include: "lang" },
+            { include: 'whitespace' },
+        ],
+        whitespace: [
+            [/[ \t\r\n]+/, 'white'],
+            [/\{\*/, 'comment', '@comment'],
+            [/\/\/.*$/, 'comment'],
         ],
         chapter: [[/#.*/, "chapter"]],
         annotation: [[/@.*/, "annotation"]],
@@ -110,6 +116,12 @@ export const tokenizer = {
             [/[^\\"]+/, 'string'],
             [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }]
         ],
+        comment: [
+            [/[^\*}]+/, 'comment'],
+            [/\{\*/, 'comment', '@push'],    // nested comment
+            ["\\*}", 'comment', '@pop'],
+            [/[\{\*]/, 'comment']
+        ]
     }
 };
 

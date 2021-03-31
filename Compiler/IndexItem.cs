@@ -5,6 +5,12 @@ namespace Compiler {
     public class IndexItem: IEquatable<string> {
         public string Key { get; }
         public string QualifiedName { get; }
+        public string FileName { get; set; } = default!;
+        public string Hash { get; set; } = default!;
+        public string ProjectName { get; set; } = default!;
+        public string ApplicationName { get; set; } = default!;
+        public string FileType { get; set; } = default!;
+
         public IIdentifierExpressionNode Node { get; }
         public IndexItem(string key, string qualifiedName, IIdentifierExpressionNode node) {
             this.Key = key;

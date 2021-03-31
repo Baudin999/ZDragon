@@ -12,6 +12,7 @@
     let endpoints = f("Endpoint");
     let components = f("Component");
     let models = f("Model");
+    let documents = f("Documentation");
 
     let onClick = (module) => () => {
         let path = "/editor/" + module.namespace;
@@ -101,6 +102,19 @@
                                 $moduleStore.selectedModule}
                             on:click={onClick(node)}>
                             <i class="fa fa-database" />{node.name}
+                        </div>
+                    {/each}
+                {/if}
+
+                {#if documents.length > 0}
+                    <h2>Documents</h2>
+                    {#each documents as node}
+                        <div
+                            class="item item--node"
+                            class:selected={node.namespace ==
+                                $moduleStore.selectedModule}
+                            on:click={onClick(node)}>
+                            <i class="fa fa-diamond" />{node.name}
                         </div>
                     {/each}
                 {/if}

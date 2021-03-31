@@ -10,7 +10,7 @@ namespace Compiler.Language {
         {
             var openDirective = Take(SyntaxKind.PercentageToken);
             TakeWhile(SyntaxKind.WhiteSpaceToken);
-            var id = Take(SyntaxKind.IdentifierToken);
+            var id = TakeWhile(SyntaxKind.IdentifierToken, SyntaxKind.WhiteSpaceToken).Join();
             if (id is null) {
                 ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, @$"
 Directives should have an identifier:

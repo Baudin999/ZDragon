@@ -186,6 +186,8 @@ namespace Compiler {
 
     public enum SyntaxKind {
         Unknown,
+        CommentLiteral,
+
         WhiteSpaceToken,
         NewLineToken,
         IndentToken,

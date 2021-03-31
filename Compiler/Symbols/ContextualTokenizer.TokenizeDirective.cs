@@ -17,7 +17,15 @@ namespace Compiler.Symbols {
                     var newToken = new Token(t.Value, SyntaxKind.IdentifierToken, t);
                     tokens.Add(newToken);
                 } else {
-                    tokens.Add(t); 
+                    if (t.Kind != SyntaxKind.PercentageToken && t.Kind != SyntaxKind.ColonToken) {
+                        tokens.Add(new Token(t.Value, SyntaxKind.IdentifierToken, t));
+                    }
+                    else if (Current?.Kind == SyntaxKind.CommentLiteral) {
+                        // skip it!
+                    }
+                    else {
+                        tokens.Add(t);
+                    }
                 }
             }
 

@@ -12,7 +12,7 @@ namespace ZDragon.UI {
 
         public static void Main(string[] args) {
             
-            ZDragon.Project.Project.CurrentProject = new Project.Project(true);
+            ZDragon.Project.Project.CurrentProject = new Project.Project();
             CreateHostBuilder(args).Build().Run();
         }
 

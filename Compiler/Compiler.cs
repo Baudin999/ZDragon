@@ -38,7 +38,10 @@ namespace Compiler {
             var initialContext = ContextType.None;
             var tokens = new Lexer(this.SourceCode, Cache.ErrorSink).Tokenize(initialContext).ToList();
             var contextualTokens = new ContextualTokenizer(tokens, Cache.ErrorSink).Tokenize(initialContext).ToList();
-            var ast = new ContextualParser(contextualTokens, Cache.ErrorSink).Parse().FoldAst(Cache).ToList();
+            var ast = new ContextualParser(contextualTokens, Cache.ErrorSink)
+                .Parse()
+                .ParseIncludeNodes(Cache)
+                .ToList();
             var lexicon = new Lexicon(ast, Cache, this.Namespace).CreateLexicon();
             var document = ast.OfType<IDocumentNode>();
             var referencedModules = ast.OfType<OpenNode>();
@@ -51,7 +54,7 @@ namespace Compiler {
     }
 
     internal static class NodeHelpers {
-        internal static IEnumerable<AstNode> FoldAst(this IEnumerable<AstNode> ast, CompilationCache cache) {
+        internal static IEnumerable<AstNode> ParseIncludeNodes(this IEnumerable<AstNode> ast, CompilationCache cache) {
             foreach (var node in ast) {
                 if (node is IncludeNode include) {
                     if (cache.Has(include.Namespace)) {

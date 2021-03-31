@@ -5,7 +5,8 @@
         Endpoint,
         Feature,
         Model,
-        Default,
-        Story
+        Story,
+        Documentation,
+        Default
     }
 }

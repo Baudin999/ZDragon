@@ -3101,35 +3101,41 @@ var zdragon = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
+    	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_1(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
+    	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_2(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
+    	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_3(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
+    	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
     function get_each_context_4(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[11] = list[i];
+    	child_ctx[12] = list[i];
     	return child_ctx;
     }
 
-    // (37:0) {#if application}
+    function get_each_context_5(ctx, list, i) {
+    	const child_ctx = ctx.slice();
+    	child_ctx[12] = list[i];
+    	return child_ctx;
+    }
+
+    // (38:0) {#if application}
     function create_if_block$3(ctx) {
     	let div;
     	let title;
@@ -3149,12 +3155,12 @@ var zdragon = (function () {
     			t1 = space();
     			if (if_block) if_block.c();
     			attr_dev(i, "class", "fa fa-institution svelte-1rcx9b2");
-    			add_location(i, file$7, 39, 13, 1234);
+    			add_location(i, file$7, 40, 13, 1275);
     			attr_dev(title, "class", "svelte-1rcx9b2");
-    			add_location(title, file$7, 38, 8, 1184);
+    			add_location(title, file$7, 39, 8, 1225);
     			attr_dev(div, "class", "application svelte-1rcx9b2");
-    			add_location(div, file$7, 37, 4, 1149);
-    			dispose = listen_dev(title, "click", /*selectApplication*/ ctx[9], false, false, false);
+    			add_location(div, file$7, 38, 4, 1190);
+    			dispose = listen_dev(title, "click", /*selectApplication*/ ctx[10], false, false, false);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3191,25 +3197,27 @@ var zdragon = (function () {
     		block,
     		id: create_if_block$3.name,
     		type: "if",
-    		source: "(37:0) {#if application}",
+    		source: "(38:0) {#if application}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (41:8) {#if selectedApplication === application.namespace}
+    // (42:8) {#if selectedApplication === application.namespace}
     function create_if_block_1$1(ctx) {
     	let div;
     	let t0;
     	let t1;
     	let t2;
     	let t3;
-    	let if_block0 = /*components*/ ctx[6].length > 0 && create_if_block_6(ctx);
-    	let if_block1 = /*endpoints*/ ctx[5].length > 0 && create_if_block_5(ctx);
-    	let if_block2 = /*features*/ ctx[3].length > 0 && create_if_block_4(ctx);
-    	let if_block3 = /*models*/ ctx[7].length > 0 && create_if_block_3(ctx);
-    	let if_block4 = /*databases*/ ctx[4].length > 0 && create_if_block_2(ctx);
+    	let t4;
+    	let if_block0 = /*components*/ ctx[6].length > 0 && create_if_block_7(ctx);
+    	let if_block1 = /*endpoints*/ ctx[5].length > 0 && create_if_block_6(ctx);
+    	let if_block2 = /*features*/ ctx[3].length > 0 && create_if_block_5(ctx);
+    	let if_block3 = /*models*/ ctx[7].length > 0 && create_if_block_4(ctx);
+    	let if_block4 = /*databases*/ ctx[4].length > 0 && create_if_block_3(ctx);
+    	let if_block5 = /*documents*/ ctx[8].length > 0 && create_if_block_2(ctx);
 
     	const block = {
     		c: function create() {
@@ -3223,8 +3231,10 @@ var zdragon = (function () {
     			if (if_block3) if_block3.c();
     			t3 = space();
     			if (if_block4) if_block4.c();
+    			t4 = space();
+    			if (if_block5) if_block5.c();
     			attr_dev(div, "class", "application--details svelte-1rcx9b2");
-    			add_location(div, file$7, 41, 12, 1366);
+    			add_location(div, file$7, 42, 12, 1407);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3237,6 +3247,8 @@ var zdragon = (function () {
     			if (if_block3) if_block3.m(div, null);
     			append_dev(div, t3);
     			if (if_block4) if_block4.m(div, null);
+    			append_dev(div, t4);
+    			if (if_block5) if_block5.m(div, null);
     		},
     		p: function update(ctx, dirty) {
     			if (/*components*/ ctx[6].length > 0) if_block0.p(ctx, dirty);
@@ -3244,6 +3256,7 @@ var zdragon = (function () {
     			if (/*features*/ ctx[3].length > 0) if_block2.p(ctx, dirty);
     			if (/*models*/ ctx[7].length > 0) if_block3.p(ctx, dirty);
     			if (/*databases*/ ctx[4].length > 0) if_block4.p(ctx, dirty);
+    			if (/*documents*/ ctx[8].length > 0) if_block5.p(ctx, dirty);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
@@ -3252,6 +3265,7 @@ var zdragon = (function () {
     			if (if_block2) if_block2.d();
     			if (if_block3) if_block3.d();
     			if (if_block4) if_block4.d();
+    			if (if_block5) if_block5.d();
     		}
     	};
 
@@ -3259,23 +3273,23 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_1$1.name,
     		type: "if",
-    		source: "(41:8) {#if selectedApplication === application.namespace}",
+    		source: "(42:8) {#if selectedApplication === application.namespace}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (43:16) {#if components.length > 0}
-    function create_if_block_6(ctx) {
+    // (44:16) {#if components.length > 0}
+    function create_if_block_7(ctx) {
     	let h2;
     	let t1;
     	let each_1_anchor;
-    	let each_value_4 = /*components*/ ctx[6];
+    	let each_value_5 = /*components*/ ctx[6];
     	let each_blocks = [];
 
-    	for (let i = 0; i < each_value_4.length; i += 1) {
-    		each_blocks[i] = create_each_block_4(get_each_context_4(ctx, each_value_4, i));
+    	for (let i = 0; i < each_value_5.length; i += 1) {
+    		each_blocks[i] = create_each_block_5(get_each_context_5(ctx, each_value_5, i));
     	}
 
     	const block = {
@@ -3290,7 +3304,7 @@ var zdragon = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(h2, "class", "svelte-1rcx9b2");
-    			add_location(h2, file$7, 43, 20, 1467);
+    			add_location(h2, file$7, 44, 20, 1508);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3303,8 +3317,139 @@ var zdragon = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*components, $moduleStore, onClick*/ 324) {
-    				each_value_4 = /*components*/ ctx[6];
+    			if (dirty & /*components, $moduleStore, onClick*/ 580) {
+    				each_value_5 = /*components*/ ctx[6];
+    				let i;
+
+    				for (i = 0; i < each_value_5.length; i += 1) {
+    					const child_ctx = get_each_context_5(ctx, each_value_5, i);
+
+    					if (each_blocks[i]) {
+    						each_blocks[i].p(child_ctx, dirty);
+    					} else {
+    						each_blocks[i] = create_each_block_5(child_ctx);
+    						each_blocks[i].c();
+    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
+    					}
+    				}
+
+    				for (; i < each_blocks.length; i += 1) {
+    					each_blocks[i].d(1);
+    				}
+
+    				each_blocks.length = each_value_5.length;
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(h2);
+    			if (detaching) detach_dev(t1);
+    			destroy_each(each_blocks, detaching);
+    			if (detaching) detach_dev(each_1_anchor);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block_7.name,
+    		type: "if",
+    		source: "(44:16) {#if components.length > 0}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (46:20) {#each components as node}
+    function create_each_block_5(ctx) {
+    	let div;
+    	let i;
+    	let t0_value = /*node*/ ctx[12].name + "";
+    	let t0;
+    	let t1;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			i = element("i");
+    			t0 = text(t0_value);
+    			t1 = space();
+    			attr_dev(i, "class", "fa fa-cogs svelte-1rcx9b2");
+    			add_location(i, file$7, 51, 28, 1868);
+    			attr_dev(div, "class", "item item--node svelte-1rcx9b2");
+    			toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			add_location(div, file$7, 46, 24, 1601);
+    			dispose = listen_dev(div, "click", /*onClick*/ ctx[9](/*node*/ ctx[12]), false, false, false);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, i);
+    			append_dev(div, t0);
+    			append_dev(div, t1);
+    		},
+    		p: function update(new_ctx, dirty) {
+    			ctx = new_ctx;
+
+    			if (dirty & /*components, $moduleStore*/ 68) {
+    				toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			}
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			dispose();
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_each_block_5.name,
+    		type: "each",
+    		source: "(46:20) {#each components as node}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (57:16) {#if endpoints.length > 0}
+    function create_if_block_6(ctx) {
+    	let h2;
+    	let t1;
+    	let each_1_anchor;
+    	let each_value_4 = /*endpoints*/ ctx[5];
+    	let each_blocks = [];
+
+    	for (let i = 0; i < each_value_4.length; i += 1) {
+    		each_blocks[i] = create_each_block_4(get_each_context_4(ctx, each_value_4, i));
+    	}
+
+    	const block = {
+    		c: function create() {
+    			h2 = element("h2");
+    			h2.textContent = "Endpoints";
+    			t1 = space();
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].c();
+    			}
+
+    			each_1_anchor = empty();
+    			attr_dev(h2, "class", "svelte-1rcx9b2");
+    			add_location(h2, file$7, 57, 20, 2055);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, h2, anchor);
+    			insert_dev(target, t1, anchor);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].m(target, anchor);
+    			}
+
+    			insert_dev(target, each_1_anchor, anchor);
+    		},
+    		p: function update(ctx, dirty) {
+    			if (dirty & /*endpoints, $moduleStore, onClick*/ 548) {
+    				each_value_4 = /*endpoints*/ ctx[5];
     				let i;
 
     				for (i = 0; i < each_value_4.length; i += 1) {
@@ -3338,18 +3483,18 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_6.name,
     		type: "if",
-    		source: "(43:16) {#if components.length > 0}",
+    		source: "(57:16) {#if endpoints.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:20) {#each components as node}
+    // (59:20) {#each endpoints as node}
     function create_each_block_4(ctx) {
     	let div;
     	let i;
-    	let t0_value = /*node*/ ctx[11].name + "";
+    	let t0_value = /*node*/ ctx[12].name + "";
     	let t0;
     	let t1;
     	let dispose;
@@ -3360,12 +3505,12 @@ var zdragon = (function () {
     			i = element("i");
     			t0 = text(t0_value);
     			t1 = space();
-    			attr_dev(i, "class", "fa fa-cogs svelte-1rcx9b2");
-    			add_location(i, file$7, 50, 28, 1827);
+    			attr_dev(i, "class", "fa fa-envelope svelte-1rcx9b2");
+    			add_location(i, file$7, 64, 28, 2413);
     			attr_dev(div, "class", "item item--node svelte-1rcx9b2");
-    			toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
-    			add_location(div, file$7, 45, 24, 1560);
-    			dispose = listen_dev(div, "click", /*onClick*/ ctx[8](/*node*/ ctx[11]), false, false, false);
+    			toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			add_location(div, file$7, 59, 24, 2146);
+    			dispose = listen_dev(div, "click", /*onClick*/ ctx[9](/*node*/ ctx[12]), false, false, false);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3376,8 +3521,8 @@ var zdragon = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*components, $moduleStore*/ 68) {
-    				toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			if (dirty & /*endpoints, $moduleStore*/ 36) {
+    				toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
     			}
     		},
     		d: function destroy(detaching) {
@@ -3390,19 +3535,19 @@ var zdragon = (function () {
     		block,
     		id: create_each_block_4.name,
     		type: "each",
-    		source: "(45:20) {#each components as node}",
+    		source: "(59:20) {#each endpoints as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (56:16) {#if endpoints.length > 0}
+    // (70:16) {#if features.length > 0}
     function create_if_block_5(ctx) {
     	let h2;
     	let t1;
     	let each_1_anchor;
-    	let each_value_3 = /*endpoints*/ ctx[5];
+    	let each_value_3 = /*features*/ ctx[3];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_3.length; i += 1) {
@@ -3412,7 +3557,7 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			h2 = element("h2");
-    			h2.textContent = "Endpoints";
+    			h2.textContent = "Features";
     			t1 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -3421,7 +3566,7 @@ var zdragon = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(h2, "class", "svelte-1rcx9b2");
-    			add_location(h2, file$7, 56, 20, 2014);
+    			add_location(h2, file$7, 70, 20, 2603);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3434,8 +3579,8 @@ var zdragon = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*endpoints, $moduleStore, onClick*/ 292) {
-    				each_value_3 = /*endpoints*/ ctx[5];
+    			if (dirty & /*features, $moduleStore, onClick*/ 524) {
+    				each_value_3 = /*features*/ ctx[3];
     				let i;
 
     				for (i = 0; i < each_value_3.length; i += 1) {
@@ -3469,18 +3614,18 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_5.name,
     		type: "if",
-    		source: "(56:16) {#if endpoints.length > 0}",
+    		source: "(70:16) {#if features.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (58:20) {#each endpoints as node}
+    // (72:20) {#each features as node}
     function create_each_block_3(ctx) {
     	let div;
     	let i;
-    	let t0_value = /*node*/ ctx[11].name + "";
+    	let t0_value = /*node*/ ctx[12].name + "";
     	let t0;
     	let t1;
     	let dispose;
@@ -3491,12 +3636,12 @@ var zdragon = (function () {
     			i = element("i");
     			t0 = text(t0_value);
     			t1 = space();
-    			attr_dev(i, "class", "fa fa-envelope svelte-1rcx9b2");
-    			add_location(i, file$7, 63, 28, 2372);
+    			attr_dev(i, "class", "fa fa-diamond svelte-1rcx9b2");
+    			add_location(i, file$7, 77, 28, 2959);
     			attr_dev(div, "class", "item item--node svelte-1rcx9b2");
-    			toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
-    			add_location(div, file$7, 58, 24, 2105);
-    			dispose = listen_dev(div, "click", /*onClick*/ ctx[8](/*node*/ ctx[11]), false, false, false);
+    			toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			add_location(div, file$7, 72, 24, 2692);
+    			dispose = listen_dev(div, "click", /*onClick*/ ctx[9](/*node*/ ctx[12]), false, false, false);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3507,8 +3652,8 @@ var zdragon = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*endpoints, $moduleStore*/ 36) {
-    				toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			if (dirty & /*features, $moduleStore*/ 12) {
+    				toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
     			}
     		},
     		d: function destroy(detaching) {
@@ -3521,19 +3666,19 @@ var zdragon = (function () {
     		block,
     		id: create_each_block_3.name,
     		type: "each",
-    		source: "(58:20) {#each endpoints as node}",
+    		source: "(72:20) {#each features as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (69:16) {#if features.length > 0}
+    // (83:16) {#if models.length > 0}
     function create_if_block_4(ctx) {
     	let h2;
     	let t1;
     	let each_1_anchor;
-    	let each_value_2 = /*features*/ ctx[3];
+    	let each_value_2 = /*models*/ ctx[7];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_2.length; i += 1) {
@@ -3543,7 +3688,7 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			h2 = element("h2");
-    			h2.textContent = "Features";
+    			h2.textContent = "Models";
     			t1 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -3552,7 +3697,7 @@ var zdragon = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(h2, "class", "svelte-1rcx9b2");
-    			add_location(h2, file$7, 69, 20, 2562);
+    			add_location(h2, file$7, 83, 20, 3146);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3565,8 +3710,8 @@ var zdragon = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*features, $moduleStore, onClick*/ 268) {
-    				each_value_2 = /*features*/ ctx[3];
+    			if (dirty & /*models, $moduleStore, onClick*/ 644) {
+    				each_value_2 = /*models*/ ctx[7];
     				let i;
 
     				for (i = 0; i < each_value_2.length; i += 1) {
@@ -3600,18 +3745,18 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_4.name,
     		type: "if",
-    		source: "(69:16) {#if features.length > 0}",
+    		source: "(83:16) {#if models.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (71:20) {#each features as node}
+    // (85:20) {#each models as node}
     function create_each_block_2(ctx) {
     	let div;
     	let i;
-    	let t0_value = /*node*/ ctx[11].name + "";
+    	let t0_value = /*node*/ ctx[12].name + "";
     	let t0;
     	let t1;
     	let dispose;
@@ -3623,11 +3768,11 @@ var zdragon = (function () {
     			t0 = text(t0_value);
     			t1 = space();
     			attr_dev(i, "class", "fa fa-diamond svelte-1rcx9b2");
-    			add_location(i, file$7, 76, 28, 2918);
+    			add_location(i, file$7, 90, 28, 3498);
     			attr_dev(div, "class", "item item--node svelte-1rcx9b2");
-    			toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
-    			add_location(div, file$7, 71, 24, 2651);
-    			dispose = listen_dev(div, "click", /*onClick*/ ctx[8](/*node*/ ctx[11]), false, false, false);
+    			toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			add_location(div, file$7, 85, 24, 3231);
+    			dispose = listen_dev(div, "click", /*onClick*/ ctx[9](/*node*/ ctx[12]), false, false, false);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3638,8 +3783,8 @@ var zdragon = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*features, $moduleStore*/ 12) {
-    				toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			if (dirty & /*models, $moduleStore*/ 132) {
+    				toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
     			}
     		},
     		d: function destroy(detaching) {
@@ -3652,19 +3797,19 @@ var zdragon = (function () {
     		block,
     		id: create_each_block_2.name,
     		type: "each",
-    		source: "(71:20) {#each features as node}",
+    		source: "(85:20) {#each models as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (82:16) {#if models.length > 0}
+    // (96:16) {#if databases.length > 0}
     function create_if_block_3(ctx) {
     	let h2;
     	let t1;
     	let each_1_anchor;
-    	let each_value_1 = /*models*/ ctx[7];
+    	let each_value_1 = /*databases*/ ctx[4];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value_1.length; i += 1) {
@@ -3674,7 +3819,7 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			h2 = element("h2");
-    			h2.textContent = "Models";
+    			h2.textContent = "Databases";
     			t1 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -3683,7 +3828,7 @@ var zdragon = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(h2, "class", "svelte-1rcx9b2");
-    			add_location(h2, file$7, 82, 20, 3105);
+    			add_location(h2, file$7, 96, 20, 3688);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3696,8 +3841,8 @@ var zdragon = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*models, $moduleStore, onClick*/ 388) {
-    				each_value_1 = /*models*/ ctx[7];
+    			if (dirty & /*databases, $moduleStore, onClick*/ 532) {
+    				each_value_1 = /*databases*/ ctx[4];
     				let i;
 
     				for (i = 0; i < each_value_1.length; i += 1) {
@@ -3731,18 +3876,18 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_3.name,
     		type: "if",
-    		source: "(82:16) {#if models.length > 0}",
+    		source: "(96:16) {#if databases.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (84:20) {#each models as node}
+    // (98:20) {#each databases as node}
     function create_each_block_1(ctx) {
     	let div;
     	let i;
-    	let t0_value = /*node*/ ctx[11].name + "";
+    	let t0_value = /*node*/ ctx[12].name + "";
     	let t0;
     	let t1;
     	let dispose;
@@ -3753,12 +3898,12 @@ var zdragon = (function () {
     			i = element("i");
     			t0 = text(t0_value);
     			t1 = space();
-    			attr_dev(i, "class", "fa fa-diamond svelte-1rcx9b2");
-    			add_location(i, file$7, 89, 28, 3457);
+    			attr_dev(i, "class", "fa fa-database svelte-1rcx9b2");
+    			add_location(i, file$7, 103, 28, 4046);
     			attr_dev(div, "class", "item item--node svelte-1rcx9b2");
-    			toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
-    			add_location(div, file$7, 84, 24, 3190);
-    			dispose = listen_dev(div, "click", /*onClick*/ ctx[8](/*node*/ ctx[11]), false, false, false);
+    			toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			add_location(div, file$7, 98, 24, 3779);
+    			dispose = listen_dev(div, "click", /*onClick*/ ctx[9](/*node*/ ctx[12]), false, false, false);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3769,8 +3914,8 @@ var zdragon = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*models, $moduleStore*/ 132) {
-    				toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			if (dirty & /*databases, $moduleStore*/ 20) {
+    				toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
     			}
     		},
     		d: function destroy(detaching) {
@@ -3783,19 +3928,19 @@ var zdragon = (function () {
     		block,
     		id: create_each_block_1.name,
     		type: "each",
-    		source: "(84:20) {#each models as node}",
+    		source: "(98:20) {#each databases as node}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (95:16) {#if databases.length > 0}
+    // (109:16) {#if documents.length > 0}
     function create_if_block_2(ctx) {
     	let h2;
     	let t1;
     	let each_1_anchor;
-    	let each_value = /*databases*/ ctx[4];
+    	let each_value = /*documents*/ ctx[8];
     	let each_blocks = [];
 
     	for (let i = 0; i < each_value.length; i += 1) {
@@ -3805,7 +3950,7 @@ var zdragon = (function () {
     	const block = {
     		c: function create() {
     			h2 = element("h2");
-    			h2.textContent = "Databases";
+    			h2.textContent = "Documents";
     			t1 = space();
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
@@ -3814,7 +3959,7 @@ var zdragon = (function () {
 
     			each_1_anchor = empty();
     			attr_dev(h2, "class", "svelte-1rcx9b2");
-    			add_location(h2, file$7, 95, 20, 3647);
+    			add_location(h2, file$7, 109, 20, 4237);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, h2, anchor);
@@ -3827,8 +3972,8 @@ var zdragon = (function () {
     			insert_dev(target, each_1_anchor, anchor);
     		},
     		p: function update(ctx, dirty) {
-    			if (dirty & /*databases, $moduleStore, onClick*/ 276) {
-    				each_value = /*databases*/ ctx[4];
+    			if (dirty & /*documents, $moduleStore, onClick*/ 772) {
+    				each_value = /*documents*/ ctx[8];
     				let i;
 
     				for (i = 0; i < each_value.length; i += 1) {
@@ -3862,18 +4007,18 @@ var zdragon = (function () {
     		block,
     		id: create_if_block_2.name,
     		type: "if",
-    		source: "(95:16) {#if databases.length > 0}",
+    		source: "(109:16) {#if documents.length > 0}",
     		ctx
     	});
 
     	return block;
     }
 
-    // (97:20) {#each databases as node}
+    // (111:20) {#each documents as node}
     function create_each_block(ctx) {
     	let div;
     	let i;
-    	let t0_value = /*node*/ ctx[11].name + "";
+    	let t0_value = /*node*/ ctx[12].name + "";
     	let t0;
     	let t1;
     	let dispose;
@@ -3884,12 +4029,12 @@ var zdragon = (function () {
     			i = element("i");
     			t0 = text(t0_value);
     			t1 = space();
-    			attr_dev(i, "class", "fa fa-database svelte-1rcx9b2");
-    			add_location(i, file$7, 102, 28, 4005);
+    			attr_dev(i, "class", "fa fa-diamond svelte-1rcx9b2");
+    			add_location(i, file$7, 116, 28, 4595);
     			attr_dev(div, "class", "item item--node svelte-1rcx9b2");
-    			toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
-    			add_location(div, file$7, 97, 24, 3738);
-    			dispose = listen_dev(div, "click", /*onClick*/ ctx[8](/*node*/ ctx[11]), false, false, false);
+    			toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			add_location(div, file$7, 111, 24, 4328);
+    			dispose = listen_dev(div, "click", /*onClick*/ ctx[9](/*node*/ ctx[12]), false, false, false);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -3900,8 +4045,8 @@ var zdragon = (function () {
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
 
-    			if (dirty & /*databases, $moduleStore*/ 20) {
-    				toggle_class(div, "selected", /*node*/ ctx[11].namespace == /*$moduleStore*/ ctx[2].selectedModule);
+    			if (dirty & /*documents, $moduleStore*/ 260) {
+    				toggle_class(div, "selected", /*node*/ ctx[12].namespace == /*$moduleStore*/ ctx[2].selectedModule);
     			}
     		},
     		d: function destroy(detaching) {
@@ -3914,7 +4059,7 @@ var zdragon = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(97:20) {#each databases as node}",
+    		source: "(111:20) {#each documents as node}",
     		ctx
     	});
 
@@ -3982,6 +4127,7 @@ var zdragon = (function () {
     	let endpoints = f("Endpoint");
     	let components = f("Component");
     	let models = f("Model");
+    	let documents = f("Documentation");
 
     	let onClick = module => () => {
     		let path = "/editor/" + module.namespace;
@@ -4024,6 +4170,7 @@ var zdragon = (function () {
     			endpoints,
     			components,
     			models,
+    			documents,
     			onClick,
     			selectApplication,
     			$moduleStore
@@ -4039,8 +4186,9 @@ var zdragon = (function () {
     		if ("endpoints" in $$props) $$invalidate(5, endpoints = $$props.endpoints);
     		if ("components" in $$props) $$invalidate(6, components = $$props.components);
     		if ("models" in $$props) $$invalidate(7, models = $$props.models);
-    		if ("onClick" in $$props) $$invalidate(8, onClick = $$props.onClick);
-    		if ("selectApplication" in $$props) $$invalidate(9, selectApplication = $$props.selectApplication);
+    		if ("documents" in $$props) $$invalidate(8, documents = $$props.documents);
+    		if ("onClick" in $$props) $$invalidate(9, onClick = $$props.onClick);
+    		if ("selectApplication" in $$props) $$invalidate(10, selectApplication = $$props.selectApplication);
     		if ("$moduleStore" in $$props) moduleStore.set($moduleStore = $$props.$moduleStore);
     	};
 
@@ -4053,6 +4201,7 @@ var zdragon = (function () {
     		endpoints,
     		components,
     		models,
+    		documents,
     		onClick,
     		selectApplication
     	];
@@ -7315,18 +7464,19 @@ var zdragon = (function () {
     	let option5;
     	let option6;
     	let option7;
+    	let option8;
     	let select_value_value;
-    	let t12;
+    	let t13;
     	let div2;
     	let label2;
-    	let t14;
-    	let input1;
     	let t15;
+    	let input1;
+    	let t16;
     	let div3;
     	let label3;
-    	let t17;
-    	let textarea;
     	let t18;
+    	let textarea;
+    	let t19;
     	let button;
     	let dispose;
 
@@ -7358,20 +7508,22 @@ var zdragon = (function () {
     			option6 = element("option");
     			option6.textContent = "Story";
     			option7 = element("option");
-    			option7.textContent = "Empty";
-    			t12 = space();
+    			option7.textContent = "Documentation";
+    			option8 = element("option");
+    			option8.textContent = "Empty";
+    			t13 = space();
     			div2 = element("div");
     			label2 = element("label");
     			label2.textContent = "Application Name";
-    			t14 = space();
-    			input1 = element("input");
     			t15 = space();
+    			input1 = element("input");
+    			t16 = space();
     			div3 = element("div");
     			label3 = element("label");
     			label3.textContent = "Description";
-    			t17 = space();
-    			textarea = element("textarea");
     			t18 = space();
+    			textarea = element("textarea");
+    			t19 = space();
     			button = element("button");
     			button.textContent = "Submit";
     			attr_dev(label0, "for", "cf_001");
@@ -7403,27 +7555,30 @@ var zdragon = (function () {
     			option6.__value = "Story";
     			option6.value = option6.__value;
     			add_location(option6, file_1, 43, 12, 1344);
-    			option7.__value = "Empty";
+    			option7.__value = "Documentation";
     			option7.value = option7.__value;
     			add_location(option7, file_1, 44, 12, 1380);
+    			option8.__value = "Empty";
+    			option8.value = option8.__value;
+    			add_location(option8, file_1, 45, 12, 1424);
     			attr_dev(select, "id", "cf_002");
     			add_location(select, file_1, 36, 8, 1043);
     			attr_dev(div1, "class", "form--field");
     			add_location(div1, file_1, 34, 4, 966);
     			attr_dev(label2, "for", "cf_003");
-    			add_location(label2, file_1, 49, 8, 1476);
+    			add_location(label2, file_1, 50, 8, 1520);
     			attr_dev(input1, "id", "cf_003");
-    			add_location(input1, file_1, 50, 8, 1530);
+    			add_location(input1, file_1, 51, 8, 1574);
     			attr_dev(div2, "class", "form--field");
-    			add_location(div2, file_1, 48, 4, 1441);
+    			add_location(div2, file_1, 49, 4, 1485);
     			attr_dev(label3, "for", "cf_004");
-    			add_location(label3, file_1, 54, 8, 1641);
+    			add_location(label3, file_1, 55, 8, 1685);
     			attr_dev(textarea, "id", "cf_004");
-    			add_location(textarea, file_1, 55, 8, 1690);
+    			add_location(textarea, file_1, 56, 8, 1734);
     			attr_dev(div3, "class", "form--field");
-    			add_location(div3, file_1, 53, 4, 1606);
+    			add_location(div3, file_1, 54, 4, 1650);
     			attr_dev(button, "type", "button");
-    			add_location(button, file_1, 58, 4, 1773);
+    			add_location(button, file_1, 59, 4, 1817);
     			attr_dev(form, "class", "form");
     			add_location(form, file_1, 28, 0, 786);
 
@@ -7457,6 +7612,7 @@ var zdragon = (function () {
     			append_dev(select, option5);
     			append_dev(select, option6);
     			append_dev(select, option7);
+    			append_dev(select, option8);
     			select_value_value = /*$file*/ ctx[0].type;
 
     			for (var i = 0; i < select.options.length; i += 1) {
@@ -7468,17 +7624,17 @@ var zdragon = (function () {
     				}
     			}
 
-    			append_dev(form, t12);
+    			append_dev(form, t13);
     			append_dev(form, div2);
     			append_dev(div2, label2);
-    			append_dev(div2, t14);
+    			append_dev(div2, t15);
     			append_dev(div2, input1);
-    			append_dev(form, t15);
+    			append_dev(form, t16);
     			append_dev(form, div3);
     			append_dev(div3, label3);
-    			append_dev(div3, t17);
+    			append_dev(div3, t18);
     			append_dev(div3, textarea);
-    			append_dev(form, t18);
+    			append_dev(form, t19);
     			append_dev(form, button);
     		},
     		p: function update(ctx, [dirty]) {
@@ -9666,21 +9822,27 @@ var zdragon = (function () {
     }
 
     const tokenizer = {
-        brackets: [{ open: "{*", close: "*}", token: "delimiter.bracket" }],
         keywords: [
             "record",
             "choice",
             "data",
             "open",
         ],
-        autoClosingPairs: [{ open: "{*", close: "*}" }],
+        autoClosingPairs: [{ open: "{", close: "}" }],
         digits: /\d+(_+\d+)*/,
+
         tokenizer: {
             root: [
                 { include: "chapter" },
                 { include: "annotation" },
                 { include: "directive" },
                 { include: "lang" },
+                { include: 'whitespace' },
+            ],
+            whitespace: [
+                [/[ \t\r\n]+/, 'white'],
+                [/\{\*/, 'comment', '@comment'],
+                [/\/\/.*$/, 'comment'],
             ],
             chapter: [[/#.*/, "chapter"]],
             annotation: [[/@.*/, "annotation"]],
@@ -9777,6 +9939,12 @@ var zdragon = (function () {
                 [/[^\\"]+/, 'string'],
                 [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }]
             ],
+            comment: [
+                [/[^\*}]+/, 'comment'],
+                [/\{\*/, 'comment', '@push'],    // nested comment
+                ["\\*}", 'comment', '@pop'],
+                [/[\{\*]/, 'comment']
+            ]
         }
     };
 

@@ -6,9 +6,9 @@ namespace ZDragon.Project.Interactors.MemoryInteractors {
             //
         }
 
-        public List<IApplicationInteractor> Applications => throw new System.NotImplementedException();
+        public List<IApplicationInteractor> Applications => new List<IApplicationInteractor>();
 
-        public List<IModuleInteractor> Modules => throw new System.NotImplementedException();
+        public List<IModuleInteractor> Modules => new List<IModuleInteractor>();
 
         public IInteractor? Find(string ns) {
             return null;

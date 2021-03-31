@@ -102,5 +102,27 @@ component PersonContainer
 
         }
 
+
+        [Fact(DisplayName = "Views - With Comment")]
+        public void Views_WithComment() {
+            var codeFirst = @"
+view PersonView = 
+    {* Person *}
+    Address
+
+record Person
+record Address
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+
+            Assert.Empty(result.Errors);
+            Assert.True(result.Lexicon.ContainsKey("PersonView"));
+            Assert.IsType<ViewNode>(result.Lexicon["PersonView"]);
+            var personView = (ViewNode)result.Lexicon["PersonView"];
+            Assert.Equal("PersonView", personView.Id);
+            Assert.Single(personView.Nodes);
+        }
+
     }
 }

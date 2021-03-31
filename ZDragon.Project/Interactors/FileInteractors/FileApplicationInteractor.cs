@@ -33,6 +33,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
         public string ModelsPath { get; }
         public string FeaturesPath { get; }
         public string StoriesPath { get; }
+        public string DocumentationPath { get; }
         public List<IModuleInteractor> Modules { get; } = new List<IModuleInteractor>();
 
         public FileApplicationInteractor(string root, string path, CompilationCache cache) : this(root, new DirectoryInfo(path), cache) {
@@ -57,6 +58,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             this.ModelsPath = Path.Join(this.FullPath, "Models");
             this.FeaturesPath = Path.Join(this.FullPath, "Features");
             this.StoriesPath = Path.Join(this.FullPath, "Stories");
+            this.DocumentationPath = Path.Join(this.FullPath, "Documentation");
 
             this.ParseDirectory(this.RootPath, cache, FileTypes.Default);
             this.ParseDirectory(this.ComponentsPath, cache, FileTypes.Component);
@@ -65,6 +67,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             this.ParseDirectory(this.ModelsPath, cache, FileTypes.Model);
             this.ParseDirectory(this.DatabasesPath, cache, FileTypes.Database);
             this.ParseDirectory(this.StoriesPath, cache, FileTypes.Story);
+            this.ParseDirectory(this.DocumentationPath, cache, FileTypes.Documentation);
         }
 
         private void ParseDirectory(string path, CompilationCache cache, FileTypes type) {
@@ -150,6 +153,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
                 "Model" => Path.Combine(this.ModelsPath, fileName),
                 "Story" => Path.Combine(this.StoriesPath, fileName),
                 "Component" => Path.Combine(this.ComponentsPath, fileName),
+                "Documentation" => Path.Combine(this.DocumentationPath, fileName),
                 _ => Path.Combine(this.DirectoryInfo.FullName ?? this.RootPath, fileName)
             };
 

@@ -42,7 +42,7 @@ namespace ZDragon.Project {
             DirectoryInteractor = new FileDirectoryInteractor(root, root, Cache);
         }
 
-        public Project(bool inMemory) {
+        public Project() {
             Cache = new CompilationCache(new ErrorSink());
             var invalidString = "-,,%$^#%^invalid";
             _root = invalidString;

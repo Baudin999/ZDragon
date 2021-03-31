@@ -8,10 +8,10 @@ namespace Compiler.Symbols {
     /// 
     /// </summary>
     internal partial class ContextualTokenizer {
-        private TokenGroup TokenizeChoiceDefinition(List<Token> annotations) {
+        private TokenGroup TokenizeViewDefinition(List<Token> annotations) {
             var tokens = new List<Token?>();
             tokens.AddRange(annotations);
-            while (index < max && Current != null && Current?.Kind != SyntaxKind.EndBlock) {
+            while (index < max && Current != null && Current?.Kind != SyntaxKind.EndKeywordToken) {
                 if (Current?.Kind == SyntaxKind.SingleQuoteToken && Next?.Kind == SyntaxKind.IdentifierToken) {
                     tokens.Add(new Token(new List<Token> { TakeF(), TakeF() }, SyntaxKind.GenericParameterToken, 1));
                 }
@@ -19,14 +19,21 @@ namespace Compiler.Symbols {
                     Take();
                     break;
                 }
+                else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
+                    var identifierParts = new List<Token>();
+                    while (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.DotToken) {
+                        identifierParts.Add(TakeF(SyntaxKind.IdentifierToken)); // add the part
+                        Take(); // skip the dot
+                    }
+                    identifierParts.Add(TakeF(SyntaxKind.IdentifierToken));
 
-                // handle inline annotations
-                else if (Current?.Kind == SyntaxKind.AmpersandToken) {
-                    tokens.Add(ParseAnnotation());
+                    tokens.Add(new QualifiedToken(identifierParts));
                 }
-
                 else if (Current?.Kind == SyntaxKind.DoubleQuoteToken) {
                     tokens.Add(AggregateStringLiteralToken());
+                }
+                else if (Current?.Kind == SyntaxKind.AmpersandToken) {
+                    tokens.Add(ParseAnnotation());
                 }
                 else if (Current?.Kind == SyntaxKind.IndentToken) {
                     Take();
@@ -63,12 +70,15 @@ namespace Compiler.Symbols {
                 }
             }
 
-
-            if (Current?.Kind == SyntaxKind.EndBlock) {
+            if (Current?.Kind == SyntaxKind.SemiColonToken) {
                 tokens.Add(Take());
             }
 
-            return new TokenGroup(ContextType.ChoiceDeclaration, tokens);
+            if (Current?.Kind == SyntaxKind.EndKeywordToken) {
+                Take();
+            }
+
+            return new TokenGroup(ContextType.ViewDeclaration, tokens);
         }
     }
 }

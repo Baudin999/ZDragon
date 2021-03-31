@@ -61,8 +61,13 @@ namespace Compiler {
             foreach (string ns in namespaces.Where(n => n != null)) {
                 if (Cache.ContainsKey(ns)) {
                     foreach (var (key, value) in Cache[ns].Lexicon) {
-                        if (value is IArchitectureNode && !value.Imported)
-                            result.Add(key, ns + "." + key, value);
+                        if (value is IArchitectureNode a && !value.Imported) {
+                            var indexItem = new IndexItem(key, ns + "." + key, value) {
+                               //
+                            };
+
+                            result.Add(indexItem);
+                        }
                     }
                 }
             }

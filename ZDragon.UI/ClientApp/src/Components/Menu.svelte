@@ -13,10 +13,13 @@
     <NavButton href="/" icon="fa fa-home" title="Home" />
     {#if selectedApp}
         <NavButton href="editor" icon="fa fa-file" title="Editor" />
+        <NavButton
+            href="view-builder"
+            icon="fa fa-tasks"
+            title="View Builder" />
     {/if}
     <NavButton href="json-designer" icon="fa fa-file-code-o" title="Json" />
     <NavButton href="logs" icon="fa fa-tasks" title="Logs" />
-    <NavButton href="view-builder" icon="fa fa-tasks" title="View Builder" />
 </nav>
 
 <style type="less">

@@ -1,22 +1,20 @@
 <script>
     import { post } from "./../Services/http";
-    import { stateStore, selectApplication } from "./../Services/state";
+    import {
+        stateStore,
+        selectApplication,
+        resetApplications,
+    } from "./../Services/state";
 
     let applications = [];
     let selectedApp;
 
-    var a = localStorage.getItem("applications");
-    if (a != null) {
-        applications = JSON.parse(a).sort();
-    }
-
-    let sa = async (app) => {
+    const sa = async (app) => {
         selectApplication(app);
-        let pUrl = app.replace(/\//g, "__$__").replace(/\\/g, "__$__");
-        await post("/project/init/" + pUrl, {});
     };
 
     stateStore.subscribe((s) => {
+        applications = s.applications || [];
         selectedApp = s.application;
     });
 </script>
@@ -34,7 +32,7 @@
         </div>
     {/each}
 </div>
-<div class="clear" on:click={() => localStorage.removeItem("applications")}>
+<div class="clear" on:click={resetApplications}>
     <i class="fa fa-times" />
 </div>
 

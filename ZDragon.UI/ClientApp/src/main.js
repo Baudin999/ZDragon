@@ -1,6 +1,6 @@
 import App from "./App.svelte";
 
-import { receiveMessage, selectApplication, setFiles } from "./Services/state";
+import { loadApplications, receiveMessage, selectApplication, setFiles } from "./Services/state";
 import { post } from "./Services/http";
 
 // import styling
@@ -19,9 +19,6 @@ monaco.languages.setMonarchTokensProvider("carlang", tokenizer);
 monaco.editor.defineTheme("carlangTheme", theme);
 
 
-// json editor
-// import "./../node_modules/jsoneditor/dist/jsoneditor.min.js";
-import "./../node_modules/jsoneditor/dist/jsoneditor.css";
 import "./../node_modules/@microsoft/signalr/dist/browser/signalr.min.js";
 
 const app = new App({
@@ -48,16 +45,5 @@ export default app;
 
 // Initialize the application
 setTimeout(() => {
-  var applications = localStorage.getItem("applications");
-  if (applications != null) {
-    applications = JSON.parse(applications);
-    if (applications.length > 0) {
-      let path = applications[0]
-        .replace(/\//g, "__$__")
-        .replace(/\\/g, "__$__");
-
-      selectApplication(applications[0]);
-      post("/project/init/" + path, {});
-    }
-  }
+  loadApplications();
 }, 500);

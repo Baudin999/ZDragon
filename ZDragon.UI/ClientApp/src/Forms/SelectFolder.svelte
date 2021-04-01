@@ -1,7 +1,7 @@
 <script>
     import { writable } from "svelte/store";
-    import Application from "../Components/FileExplorer/Application.svelte";
     import { post } from "../Services/http";
+    import { openApplication } from "../Services/state";
 
     export let close;
 
@@ -16,22 +16,9 @@
                 return path;
             };
 
-            let isValid = validateApp($app);
-            let path = $app.path;
-            if (isValid) {
-                var applications = localStorage.getItem("applications");
-                if (applications == null) applications = [];
-                else applications = JSON.parse(applications);
-                if (applications.indexOf(path) < 0) {
-                    applications.unshift(path);
-                    localStorage.setItem(
-                        "applications",
-                        JSON.stringify(applications)
-                    );
-                }
-
-                let pUrl = path.replace(/\//g, "__$__").replace(/\\/g, "__$__");
-                await post("/project/init/" + pUrl, {});
+            if (validateApp($app)) {
+                let path = $app.path;
+                openApplication(path);
                 close();
             }
         } catch (err) {

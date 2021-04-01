@@ -34,6 +34,21 @@ namespace ZDragon.UI.Controllers {
             }
         }
 
+        [HttpPost("/project/unload")]
+        public IActionResult Unload() {
+            try {
+                _project.Unload();
+                _ = ProjectHub.ProjectChanged("", _project.DirectoryInteractor);
+                return Ok();
+            }
+            catch (Exception ex) {
+                return Problem(
+                   title: $"Failed to unload the project",
+                   detail: ex.Message
+                   );
+            }
+        }
+
 
         [HttpGet("/project/index")]
         public IActionResult GetIndex() {

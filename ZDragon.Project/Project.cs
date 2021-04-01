@@ -82,6 +82,15 @@ namespace ZDragon.Project {
                 DirectoryInteractor = new FileDirectoryInteractor(_root, _root, Cache);
             }
         }
+        public void Unload() {
+            Cache = new CompilationCache(new ErrorSink());
+            var invalidString = "-,,%$^#%^invalid";
+            _root = invalidString;
+            outpath = invalidString;
+            dbPath = invalidString;
+            imagesPath = invalidString;
+            this.DirectoryInteractor = new MemoryDirectoryInteractor();
+        }
 
         public async Task<string> GetTextByNamespace(string ns) {
             var moduleInteractor = DirectoryInteractor.Find(ns);

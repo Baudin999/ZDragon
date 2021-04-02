@@ -1,5 +1,6 @@
 ﻿using Compiler;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,11 +20,11 @@ namespace ZDragon.Project.Interactors.FileInteractors {
 
         public FileDirectoryInteractor(string root, string path, CompilationCache cache) {
             this.cache = cache;
-            this.RootPath = root;
-            this.DirectoryPath = Path.IsPathFullyQualified(path) ? path : Path.GetFullPath(path);
+            this.RootPath = Utilities.GetFullPath(root);
+            this.DirectoryPath = Utilities.GetFullPath(path);
             this.Namespace = Utilities.GetNamespaceFromPath(root, path);
 
-            foreach (var dir in Directory.GetDirectories(this.DirectoryPath)) {
+            foreach (string dir in Directory.GetDirectories(this.DirectoryPath)) {
                 if (FileApplicationInteractor.IsApplication(this.DirectoryPath, dir)) {
                     ZDragon.Project.Project.CurrentProject?.SendMessage($"Initializing Application: {dir}");
                     Applications.Add(new FileApplicationInteractor(this.RootPath, dir, cache));

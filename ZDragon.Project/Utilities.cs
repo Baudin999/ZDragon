@@ -11,7 +11,7 @@ namespace ZDragon.Project {
             if (root == path) return "";
             var sep = Path.DirectorySeparatorChar.ToString();
 
-            var _path = Path.ChangeExtension(path, " ").Trim();
+            var _path = Path.ChangeExtension(path, " ").Trim().Trim('.');
             if (Path.IsPathRooted(_path) && Path.IsPathRooted(root)) {
                 _path = Path.GetRelativePath(root, _path);
                 _path = _path.Replace(".", "_$_$_");
@@ -19,7 +19,7 @@ namespace ZDragon.Project {
                 return _path;
             }
             else {
-                throw new Exception("Failed to create the Namespace fromt he paths: ");
+                throw new Exception("Failed to create the Namespace from the paths: ");
             }
 
         }
@@ -43,6 +43,16 @@ namespace ZDragon.Project {
             return path.Replace(" ", "");
         }
 
+        public static string GetFullPath(string path) {
+            if(path.StartsWith('~')) {
+                path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + path.Substring(1);
+            }
 
+            if(!Path.IsPathFullyQualified(path)) {
+                path = Path.GetFullPath(path);
+            }
+
+            return path;
+        }
     }
 }

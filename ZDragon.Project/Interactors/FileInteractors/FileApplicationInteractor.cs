@@ -111,7 +111,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
 
         public static FileApplicationInteractor Create(string root, string name, CompilationCache cache) {
             name = name.Replace(" ", "");
-            var fullPath = Path.Combine(Path.GetFullPath(root), name);
+            var fullPath = Path.Combine(Utilities.GetFullPath(root), name);
 
             // either create or load the ApplicationInteractor
             DirectoryInfo dirInfo =
@@ -127,7 +127,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
 
         public static bool IsApplication(string root, string name) {
             name = name.Replace(" ", "");
-            var fullPath = Path.Combine(Path.GetFullPath(root), name, "app.config");
+            var fullPath = Path.Combine(root, name, "app.config");
             return File.Exists(fullPath);
         }
 

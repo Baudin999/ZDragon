@@ -1,0 +1,45 @@
+﻿
+% component details: True
+
+view =
+    Person01
+    Component02
+    iComponent02_Person01
+
+
+record Person =
+    FirstName: String;
+
+endpoint GetData :: Number -> Person =
+    Url: /api/v0/getdata/{id}
+    Documentation:
+        ### Extra Title
+
+        With extra documentation
+
+        * First
+            * First-2
+
+
+
+person Person01 =  
+    Interactions:
+        - System01
+
+component Component01 =
+    Interactions:
+        - Component02
+
+component Component02 =
+    Status: New
+
+system System01 =
+    Contains:
+        - Component01
+
+interaction iComponent02_Person01 =
+    Title: Serve something
+    From: Component02
+    To: Person01
+    Technology: UDP
+    Status: New

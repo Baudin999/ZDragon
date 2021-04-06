@@ -11,7 +11,7 @@
     "appId": "com.ZDragon.app",
     "productName": "ZDragon",
     "copyright": "Copyright © 2020",
-    "buildVersion": "1.0.11",
+    "buildVersion": "0.0.11",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"

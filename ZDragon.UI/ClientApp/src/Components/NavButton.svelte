@@ -14,26 +14,6 @@
     };
 </script>
 
-<style type="less">
-    .nav-button {
-        display: inline-block;
-        text-align: center;
-        &:hover {
-            cursor: pointer;
-        }
-    }
-    .link {
-        text-decoration: underline;
-    }
-    .link:hover {
-        cursor: pointer;
-    }
-    .nav-button.icon i {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-    }
-</style>
-
 {#if icon}
     <span class="nav-button icon" class:selected class:link on:click={click}>
         <i class={icon} />
@@ -45,3 +25,24 @@
         {title}
     </span>
 {/if}
+
+<style type="less">
+    .nav-button {
+        display: inline-block;
+        text-align: center;
+        &:hover {
+            cursor: pointer;
+        }
+        font-size: 0.8rem;
+    }
+    .link {
+        text-decoration: underline;
+    }
+    .link:hover {
+        cursor: pointer;
+    }
+    .nav-button.icon i {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+</style>

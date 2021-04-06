@@ -34,7 +34,10 @@ namespace ZDragon.Project.Interactors.FileInteractors {
         public string FeaturesPath { get; }
         public string StoriesPath { get; }
         public string DocumentationPath { get; }
+        public string SettingsPath { get; }
         public List<IModuleInteractor> Modules { get; } = new List<IModuleInteractor>();
+
+        public ApplicationSettings ApplicationSettings { get; }
 
         public FileApplicationInteractor(string root, string path, CompilationCache cache) : this(root, new DirectoryInfo(path), cache) {
             //
@@ -48,10 +51,22 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             this.RootPath = root;
             this.DirectoryInfo = dir;
             this.FullPath = dir.FullName;
+            this.SettingsPath = Path.Combine(this.FullPath, "app.config");
             this.Name = dir.Name;
             this.Cache = cache;
             this.Namespace = Utilities.GetNamespaceFromPath(this.RootPath, dir.FullName);
 
+            // load the settings
+            if (File.Exists(this.SettingsPath)) {
+                var settings = File.ReadAllText(this.SettingsPath);
+                this.ApplicationSettings = JsonConvert.DeserializeObject<ApplicationSettings>(settings) ?? new ApplicationSettings();
+            }
+            else {
+                this.ApplicationSettings = new ApplicationSettings();
+            }
+
+
+            // Parse files in the application directories
             this.ComponentsPath = Path.Join(this.FullPath, "Components");
             this.EndpointsPath = Path.Join(this.FullPath, "Endpoints");
             this.DatabasesPath = Path.Join(this.FullPath, "Databases");
@@ -68,6 +83,8 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             this.ParseDirectory(this.DatabasesPath, cache, FileTypes.Database);
             this.ParseDirectory(this.StoriesPath, cache, FileTypes.Story);
             this.ParseDirectory(this.DocumentationPath, cache, FileTypes.Documentation);
+
+
         }
 
         private void ParseDirectory(string path, CompilationCache cache, FileTypes type) {
@@ -83,6 +100,13 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             foreach (var module in Modules) {
                 if (module != null)
                     await module.Verify();
+            }
+        }
+
+        public async Task Compile() {
+            foreach (var module in Modules) {
+                if (module != null)
+                    await module.Compile();
             }
         }
 
@@ -120,7 +144,9 @@ namespace ZDragon.Project.Interactors.FileInteractors {
                     Directory.CreateDirectory(fullPath);
 
             var configPath = Path.Combine(fullPath, "app.config");
-            if (!File.Exists(configPath)) File.Create(configPath);
+            if (!File.Exists(configPath)) {
+                File.WriteAllText(configPath, "");
+            }
 
             return new FileApplicationInteractor(root, dirInfo, cache);
         }

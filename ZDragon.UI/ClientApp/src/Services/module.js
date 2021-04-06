@@ -2,6 +2,19 @@
 import { writable, get as _get } from "svelte/store";
 import { getText, get, post } from "./http";
 
+/*
+
+Shape of the moduleStore
+
+{
+    modules: List Module             Array of Modules
+    selectedModule: String
+    processing: Boolean
+}
+
+*/
+
+
 export const moduleStore = writable({
     modules: []
 });
@@ -54,13 +67,19 @@ export const deleteModule = async module => {
     console.log(module);
 };
 
-export const saveCode = async (module, code) => {
+export const saveCode = async (code) => {
+
+    var ms = _get(moduleStore);
+    var module = ms.modules[ms.selectedModule];
 
     if (!module || !module.namespace || !code) {
         console.log("Invalid \"Parse Code\"", module, code);
-
         return;
     }
+    moduleStore.update(s => ({
+        ...s,
+        processing: true
+    }));
     var compilationResult = await post("/document/" + module.namespace, { code });
 
     moduleStore.update(s => {
@@ -68,7 +87,8 @@ export const saveCode = async (module, code) => {
         let modules = { ...s.modules, [module.namespace]: m };
         return {
             ...s,
-            modules
+            modules,
+            processing: false
         };
     });
 };

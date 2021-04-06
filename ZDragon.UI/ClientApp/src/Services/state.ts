@@ -60,6 +60,8 @@ export const openApplication = application => {
 
 export const selectApplication = application => {
 
+    localStorage.setItem("last opened application", application);
+
     // if the app is null, we'll want to clear the stateStore.application
     // but do nothing else. 
     if (!application) {
@@ -69,38 +71,22 @@ export const selectApplication = application => {
         }));
         return;
     }
+    else {
 
-    // var application = app.replace(/\//g, "__$__").replace(/\\/g, "__$__");
-    // var appJson = localStorage.getItem("applications") || "[]";
+        loadApplication(application);
 
-    // var applications = (JSON.parse(appJson) as string[]).filter(a => a != application);
-    // applications.unshift(application);
-    // localStorage.setItem("applications", JSON.stringify(applications));
-
-    // as a side-effect, we will want to load the application
-    // on the server. This should be done through function 
-    // composition instead of a side-effect
-    loadApplication(application);
-
-    stateStore.update(s => ({
-        ...s,
-        // applications,
-        application
-    }));
+        stateStore.update(s => ({
+            ...s,
+            // applications,
+            application
+        }));
+    }
 }
 
 export const loadApplications = () => {
     var appJson = localStorage.getItem("applications");
     if (appJson != null) {
         var applications = JSON.parse(appJson);
-        // .filter(a => a !== null && a !== undefined)
-        // .map(a => {
-        //     // the path to a directory contains elements which 
-        //     // cannot be transported over HTTP. This is why
-        //     // we replace the directory separators.
-        //     return a.replace(/\//g, "__$__")
-        //         .replace(/\\/g, "__$__");
-        // });
 
         stateStore.update(s => ({
             ...s,

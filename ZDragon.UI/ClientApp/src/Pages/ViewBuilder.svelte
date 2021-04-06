@@ -1,7 +1,6 @@
 <script>
     import Panel from "../Components/Panel.svelte";
     import Toggle from "../Components/Toggle.svelte";
-    import app from "../main";
     import { get } from "../Services/http";
 
     let index = [];

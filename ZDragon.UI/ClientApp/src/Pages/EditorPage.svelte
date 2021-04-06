@@ -1,11 +1,5 @@
-<script type="ts">
-    import {
-        Tabs,
-        TabList,
-        TabPanel,
-        Tab,
-        Modal,
-    } from "../Components/components.js";
+<script>
+    import { Tabs, TabList, TabPanel, Tab } from "../Components/components.js";
     import PageViewer from "../Components/PageViewer.svelte";
     import ImageViewer from "../Components/ImageViewer.svelte";
     import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
@@ -21,20 +15,17 @@
     var oldNamespace = "";
 
     let iframe;
-    let timeout;
-    let module;
     let svgUrl;
     let componentUrl;
     let planningSvgUrl;
     let htmlUrl;
     let scrollY = 0;
-
-    let componentsScale = 1;
-
+    let processing = false;
     let context = [];
 
     const generateUrls = (event) => {
-        scrollY = iframe?.contentWindow.scrollY ?? 0;
+        scrollY =
+            iframe && iframe.contentWindow ? iframe.contentWindow.scrollY : 0;
 
         if (!namespace) return;
         svgUrl = `/documents/${namespace}/data.svg?timestamp=${new Date().getMilliseconds()}`;
@@ -65,11 +56,16 @@
         if (iframe && !iframe.onload) {
             iframe.onload = function () {
                 setTimeout(() => {
-                    iframe?.contentWindow.scroll(0, scrollY);
+                    if (iframe && iframe.contentWindow)
+                        iframe.contentWindow.scroll(0, scrollY);
                 });
             };
         }
     }
+
+    moduleStore.subscribe((ms) => {
+        processing = ms.processing;
+    });
 </script>
 
 <div class="container">
@@ -82,6 +78,11 @@
         </div>
     </div>
     <div class="page-viewer">
+        {#if processing}
+            <div class="processing">
+                <i class="fa fa-spinner fa-spin fa-3x fa-fw" />
+            </div>
+        {/if}
         <Tabs>
             <TabList>
                 <Tab>Document</Tab>
@@ -172,6 +173,24 @@
             overflow-x: hidden;
             overflow-y: hidden;
             background-color: white;
+
+            .processing {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 100;
+                background: rgba(0, 0, 0, 0.5);
+
+                i {
+                    position: absolute;
+                    bottom: 1rem;
+                    right: 1rem;
+                    color: black;
+                    font-size: 5rem;
+                }
+            }
         }
     }
     img {

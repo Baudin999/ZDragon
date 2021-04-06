@@ -217,7 +217,7 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add("</div>");
                 if (h2 > 0) parts.Add("</div>");
                 parts.Add("<div class='keep-together'><h1>Roadmap</h1>");
-                parts.Add($"<img style='max-width:100%;min-width:100%;' src=\"/documents/{compilationresult.Namespace}/roadmap.svg\" alt=\"data\" /></div>");
+                parts.Add($"<img style='max-width:100%;min-width:100%;' src=\"/documents/{compilationresult.Namespace}/roadmap.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" /></div>");
             }
 
             foreach (var documentPart in this.compilationresult.Document) {
@@ -290,7 +290,7 @@ namespace ZDragon.Transpilers.Html {
             if (renderClasses) {
                 // Don't put in the logical data model if there are no entities defined
                 parts.Add("<div class='keep-together'><h1>Logical Data Model</h1>");
-                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg\" alt=\"data\" />");
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />");
 
                 if (renderClassDetails) {
                     foreach (var node in this.compilationresult.Ast.OfType<RecordNode>().OrderBy(n => n.Id)) {
@@ -304,7 +304,7 @@ namespace ZDragon.Transpilers.Html {
             if (renderComponents) {
                 // Don't put in the architectural diagram if there are no architectural components defined
                 parts.Add("<div class='keep-together'><h1>Component Diagram</h1>");
-                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg\" alt=\"data\" />");
+                parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />");
 
                 if (renderComponentDetails) {
                     foreach (var node in this.compilationresult.Ast.OfType<AttributesNode>().OrderBy(n => n.Id)) {

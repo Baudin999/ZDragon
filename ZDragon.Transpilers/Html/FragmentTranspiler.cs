@@ -6,7 +6,7 @@ namespace ZDragon.Transpilers.Html {
 
       
         internal static string RenderViewNode(ViewNode node, string ns) {
-            return $"<img style='max-width:100%;' src=\"/documents/{ns}/{node.Hash}.svg\" alt=\"data\" />";
+            return $"<img style='max-width:100%;' src=\"/documents/{ns}/{node.Hash}.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />";
 
         }
 

@@ -1,11 +1,11 @@
 ﻿using Compiler;
 using Compiler.Language.Nodes;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ZDragon.Project.LiteDb;
 using ZDragon.Project.Templates;
 using ZDragon.Transpilers.Components;
 using ZDragon.Transpilers.Html;
@@ -28,6 +28,9 @@ namespace ZDragon.Project.Interactors.FileInteractors {
         public byte[] DocumentHash { get; private set; }
 
         [JsonIgnore]
+        public bool RenderLocal { get; }
+
+        [JsonIgnore]
         private readonly CompilationCache cache;
 
         [JsonIgnore]
@@ -46,6 +49,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.FileType = fileType;
             this.ApplicationInteractor = app;
+            this.RenderLocal = this.ApplicationInteractor?.ApplicationSettings.RenderLocal ?? false;
         }
 
         public FileModuleInteractor(string rootPath, string file, CompilationCache cache) {
@@ -81,7 +85,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             return text;
         }
 
-        public async Task<FileModuleInteractor> SaveModule(string s) {
+        public async Task<IModuleInteractor> SaveModule(string s) {
             List<Task> tasks = new List<Task>();
 
             var newHash = Compiler.Utilities.HashString(s);
@@ -153,7 +157,7 @@ Failed to compile '{this.Namespace}':
             try {
                 var svgPath = Path.Combine(this.OutPath, "data.svg");
                 var puml = new ClassDiagramTranspiler(this.CompilationResult.Lexicon).Transpile();
-                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml, RenderLocal));
             }
             catch (System.Exception) {
                 //
@@ -169,7 +173,7 @@ Failed to compile '{this.Namespace}':
             try {
                 var svgPath = Path.Combine(this.OutPath, "components.svg");
                 var puml = new ComponentTranspiler(this.CompilationResult.Lexicon).Transpile();
-                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml, RenderLocal));
             }
             catch (System.Exception) {
                 //
@@ -181,7 +185,7 @@ Failed to compile '{this.Namespace}':
                 var svgPath = Path.Combine(this.OutPath, "roadmap.svg");
                 var lexicon = this.CompilationResult.Lexicon.Select(x => x.Value).OfType<IPlanningNode>().ToList();
                 var puml = new PlanningTranspiler(lexicon).Transpile();
-                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml));
+                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml, RenderLocal));
             }
             catch (System.Exception) {
                 //
@@ -209,14 +213,14 @@ Failed to compile '{this.Namespace}':
                 if (viewLexicon?.FirstOrDefault().Value is IArchitectureNode) {
                     var _puml = new ComponentTranspiler(viewLexicon).Transpile();
                     var path = Path.Combine(this.OutPath, view.Hash + ".svg");
-                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml)));
+                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml, RenderLocal)));
                     names.Add(view.Hash + ".svg");
                 }
                 else if (viewLexicon?.FirstOrDefault().Value is ILanguageNode)
                 {
                     var _puml = new ClassDiagramTranspiler(viewLexicon).Transpile();
                     var path = Path.Combine(this.OutPath, view.Hash + ".svg");
-                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml)));
+                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml, RenderLocal)));
                     names.Add(view.Hash + ".svg");
                 }
             }
@@ -245,17 +249,34 @@ Failed to compile '{this.Namespace}':
             var svgPath = Path.Combine(this.OutPath, "page.html");
             var html = new HtmlTranspiler(this.CompilationResult).Transpile();
             await File.WriteAllBytesAsync(svgPath, Compiler.Utilities.StringToByteArray(html));
+            await Task.Delay(100);
         }
         public async Task<byte[]> GetHtml() {
-            var htmlPath = Path.Combine(this.OutPath, "page.html");
-            if (!File.Exists(htmlPath)) await SaveHtml();
-            return await File.ReadAllBytesAsync(htmlPath);
+            var canOpen = false;
+            var attempt = 0;
+            Exception? exception = null;
+
+            while (!canOpen || attempt < 10) {
+                try {
+                    var htmlPath = Path.Combine(this.OutPath, "page.html");
+                    if (!File.Exists(htmlPath)) await SaveHtml();
+                    var result =  await File.ReadAllBytesAsync(htmlPath);
+                    canOpen = true;
+                    return result;
+                }
+                catch (Exception ex) {
+                    attempt++;
+                    exception = ex;
+                }
+            }
+
+            throw exception ?? new Exception("Failed to open html for reading");
         }
 
 
         // IInteractor methods
 
-        public async Task<FileModuleInteractor> AddFile(string name, string type, string? description) {
+        public async Task<IModuleInteractor> AddFile(string name, string type, string? description) {
             // Should be added to the application or directory of which this file is a part.
             name = name.Replace(" ", "");
             string fileName = name;

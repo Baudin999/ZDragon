@@ -10,11 +10,11 @@
     let type = "carlang";
     let markers = writable([]);
 
-    let onSave = async (event) => {
-        if (!module || !event) return;
-        let code = event.detail;
-        saveCode(module, code);
-    };
+    // let onSave = async (event) => {
+    //     if (!module || !event) return;
+    //     let code = event.detail;
+    //     saveCode(module, code);
+    // };
 
     let mapErrorToken = (e) => {
         return {
@@ -56,7 +56,8 @@
     </div>
 
     <div class="editor">
-        <Editor {context} {text} {markers} language={type} on:save={onSave} />
+        <Editor {context} {text} {markers} language={type} />
+        <!--on:save={onSave} -->
     </div>
 </div>
 

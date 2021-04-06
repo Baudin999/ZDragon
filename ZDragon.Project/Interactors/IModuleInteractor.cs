@@ -8,6 +8,7 @@ namespace ZDragon.Project.Interactors {
         IApplicationInteractor? ApplicationInteractor { get; }
         FileTypes FileType { get; }
         string Namespace { get; }
+        CompilationResult CompilationResult { get; }
 
         Task<CompilationResult> Compile();
         CompilationResult Compile(string s);
@@ -16,7 +17,7 @@ namespace ZDragon.Project.Interactors {
         Task<byte[]> GetHtml();
         Task<byte[]?> GetSvg(string file);
         Task<string> GetText();
-        Task<FileModuleInteractor> SaveModule(string s);
+        Task<IModuleInteractor> SaveModule(string s);
         Task Verify();
     }
 }

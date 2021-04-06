@@ -39,8 +39,17 @@ namespace ZDragon.Project.Interactors.FileInteractors {
         }
 
         public async Task Verify() {
-            foreach (var module in Modules) await module.Verify();
-            foreach (var application in Applications) await application.Verify();
+            Console.Write("Verifying applications .");
+            foreach (var application in Applications) {
+                await application.Verify();
+                Console.Write(".");
+            }
+
+            Console.Write("Compiling applications .");
+            foreach (var application in Applications) {
+                await application.Compile();
+                Console.Write(".");
+            }
         }
 
         public FileDirectoryInteractor CreateApplication(string name) {

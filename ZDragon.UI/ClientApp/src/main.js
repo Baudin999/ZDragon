@@ -1,7 +1,10 @@
 import App from "./App.svelte";
 
+import initKeyTrap from "./key_trap";
+import processor from "./Services/eventProcessing";
+
 import { loadApplications, receiveMessage, selectApplication, setFiles } from "./Services/state";
-import { post } from "./Services/http";
+
 
 // import styling
 import "./Styling/settings.css";
@@ -20,6 +23,7 @@ monaco.editor.defineTheme("carlangTheme", theme);
 
 
 import "./../node_modules/@microsoft/signalr/dist/browser/signalr.min.js";
+import eventbus from "./Services/eventbus";
 
 const app = new App({
   target: document.body
@@ -42,8 +46,20 @@ connection.start();
 
 export default app;
 
+// init the key trapping
+initKeyTrap();
+
+eventbus.subscribe("saving", text => {
+  console.log(text);
+});
 
 // Initialize the application
 setTimeout(() => {
   loadApplications();
+
+  // open last application
+  var lastOpenedApplication = localStorage.getItem("last opened application");
+  if (lastOpenedApplication) {
+    selectApplication(lastOpenedApplication);
+  }
 }, 500);

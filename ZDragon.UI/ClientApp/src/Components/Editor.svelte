@@ -1,12 +1,12 @@
 <script>
     import { createEventDispatcher } from "svelte";
-    import { onMount, onDestroy, afterUpdate } from "svelte";
+    import { onMount, onDestroy } from "svelte";
     import { writable } from "svelte/store";
-    // import { selectWord } from "../Services/selection";
+    import eventbus from "../Services/eventbus";
 
     const dispatch = createEventDispatcher();
 
-    export let onKeyPress = () => {};
+    // export let onKeyPress = () => {};
     let id = "editor-" + Math.floor(Math.random() * 1000);
     let editor = null;
     export let text = "";
@@ -48,15 +48,15 @@
             },
         });
         editor.dragAndDrop = false;
-        window.addEventListener("keydown", keyTrap, true);
-        editor.onMouseDown(function (e) {
-            if (e.event.ctrlKey && e.event.leftButton) {
-                var word = editor
-                    .getModel()
-                    .getWordAtPosition(e.target.position);
-                onKeyPress(word);
-            }
-        });
+        //window.addEventListener("keydown", keyTrap, true);
+        // editor.onMouseDown(function (e) {
+        //     if (e.event.ctrlKey && e.event.leftButton) {
+        //         var word = editor
+        //             .getModel()
+        //             .getWordAtPosition(e.target.position);
+        //         onKeyPress(word);
+        //     }
+        // });
         editor.onDidChangeModelContent(function (e) {
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
@@ -90,7 +90,7 @@
         ro.observe(editorContainer);
     });
     onDestroy(() => {
-        window.removeEventListener("keydown", keyTrap, true);
+        //window.removeEventListener("keydown", keyTrap, true);
     });
 
     $: if (language) {
@@ -123,26 +123,29 @@
         })();
     }
 
-    function keyTrap(e) {
-        if (editor.hasTextFocus()) {
-            if ((e.ctrlKey === true || e.metaKey == true) && e.key == "s") {
-                dispatch("save", editor.getValue());
-                onKeyPress(e, editor.getValue());
-                e.preventDefault();
-                return false;
-            } else if (language === "carlang" && e.key == "F2") {
-                var wordUnderCursor = editor
-                    .getModel()
-                    .getWordAtPosition(editor.getPosition());
-                if (wordUnderCursor && wordUnderCursor.word) {
-                    // console.log(wordUnderCursor.word);
-                    console.log(wordUnderCursor.word);
-                }
-            } else {
-                // console.log(e);
-            }
+    eventbus.subscribe("save", () => {
+        if (editor._focusTracker._hasFocus) {
+            eventbus.broadcast("saving", editor.getValue());
         }
-    }
+    });
+
+    // function keyTrap(e) {
+    //     if (editor.hasTextFocus()) {
+    //         if ((e.ctrlKey === true || e.metaKey == true) && e.key == "s") {
+    //             dispatch("save", editor.getValue());
+    //             onKeyPress(e, editor.getValue());
+    //             e.preventDefault();
+    //             return false;
+    //         } else if (language === "carlang" && e.key == "F2") {
+    //             var wordUnderCursor = editor
+    //                 .getModel()
+    //                 .getWordAtPosition(editor.getPosition());
+    //             if (wordUnderCursor && wordUnderCursor.word) {
+    //                 console.log(wordUnderCursor.word);
+    //             }
+    //         }
+    //     }
+    // }
 </script>
 
 <div class="editor" {id} bind:this={editorContainer} />

@@ -48,39 +48,13 @@
             },
         });
         editor.dragAndDrop = false;
-        //window.addEventListener("keydown", keyTrap, true);
-        // editor.onMouseDown(function (e) {
-        //     if (e.event.ctrlKey && e.event.leftButton) {
-        //         var word = editor
-        //             .getModel()
-        //             .getWordAtPosition(e.target.position);
-        //         onKeyPress(word);
-        //     }
-        // });
+
         editor.onDidChangeModelContent(function (e) {
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(() => {
                 dispatch("change", editor.getValue());
             }, 200);
         });
-
-        // monaco.languages.registerCompletionItemProvider("carlang", {
-        //     //TODO: implement completion provider
-        //     // triggerCharacters: [""],
-        //     // provideCompletionItems: function (model, position) {
-        //     //     let suggestions = [
-        //     //         {
-        //     //             label: "component",
-        //     //             kind: monaco.languages.CompletionItemKind.Keyword,
-        //     //             documentation: "Initialize a component",
-        //     //             insertText: "component",
-        //     //         },
-        //     //     ];
-        //     //     var foo = context;
-        //     //     console.log(suggestions);
-        //     //     return suggestions;
-        //     // },
-        // });
     };
     onMount(() => {
         initEditor();
@@ -128,24 +102,18 @@
             eventbus.broadcast("saving", editor.getValue());
         }
     });
+    eventbus.subscribe("navigateToToken", (position) => {
+        console.log(position);
 
-    // function keyTrap(e) {
-    //     if (editor.hasTextFocus()) {
-    //         if ((e.ctrlKey === true || e.metaKey == true) && e.key == "s") {
-    //             dispatch("save", editor.getValue());
-    //             onKeyPress(e, editor.getValue());
-    //             e.preventDefault();
-    //             return false;
-    //         } else if (language === "carlang" && e.key == "F2") {
-    //             var wordUnderCursor = editor
-    //                 .getModel()
-    //                 .getWordAtPosition(editor.getPosition());
-    //             if (wordUnderCursor && wordUnderCursor.word) {
-    //                 console.log(wordUnderCursor.word);
-    //             }
-    //         }
-    //     }
-    // }
+        var pos = {
+            lineNumber: position.lineStart + 1,
+            column: position.columnStart + 1,
+        };
+
+        editor.focus();
+        editor.setPosition(pos);
+        editor.revealLineInCenter(pos.lineNumber);
+    });
 </script>
 
 <div class="editor" {id} bind:this={editorContainer} />

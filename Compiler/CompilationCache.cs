@@ -1,5 +1,6 @@
 ﻿using Compiler.Checkers;
 using Compiler.Language.Nodes;
+using Compiler.Symbols;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,5 +89,48 @@ namespace Compiler {
             }
             return result;
         }
+
+        public List<Fragment> Search(string query) {
+            var aggregate = new List<Fragment>();
+            foreach (var cache in Cache.Values) {
+                var nodes = cache
+                    .Ast
+                    .OfType<IIdentifierExpressionNode>()
+                    .Where(n => !n.Imported)
+                    .Where(n => !(n is OpenNode))
+                    .Where(n => n.Id.Contains(query, StringComparison.InvariantCultureIgnoreCase))
+                    .Select(n => {
+                        var isSame = query.Equals(n.Id, StringComparison.InvariantCultureIgnoreCase);
+                        var startsWith = cache.Namespace.StartsWith(query, StringComparison.InvariantCultureIgnoreCase);
+                        var score = isSame ? 1 :
+                                        startsWith ? 0.7 :
+                                            0.2;
+
+                        return new Fragment(
+                            n.Id, 
+                            cache.Namespace, 
+                            n.IdToken,
+                            score
+                            );
+                    });
+                aggregate.AddRange(nodes);
+            }
+            return aggregate.OrderByDescending(n => n.Score).ThenBy(n => n.Id).ToList();
+        }
+    }
+
+    public class Fragment {
+        public string Id { get; }
+        public ISourceSegment Position { get; }
+        public string Namespace { get; }
+        public double Score { get; }
+
+        public Fragment(string id, string ns, ISourceSegment segment, double score) {
+            this.Id = id;
+            this.Position = segment;
+            this.Namespace = ns;
+            this.Score = score;
+        }
+
     }
 }

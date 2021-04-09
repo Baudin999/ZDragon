@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace Compiler.Language.Nodes {
-    public class IncludeNode : ExpressionNode, IIdentifierExpressionNode {
+    public class IncludeNode : ExpressionNode, IIdentifierExpressionNode, IDocumentNode {
         public AnnotationNode Annotation { get; }
         public string Description => Annotation.Annotation;
         public Token IdToken { get; }
@@ -10,6 +10,12 @@ namespace Compiler.Language.Nodes {
         public List<Token> AllTokens { get; }
         public string Namespace { get; }
         public string QualifiedName { get; }
+
+        public string Content => this.ToString();
+
+        public string Literal => "";
+
+        public bool IsTemplate => false;
 
         public IncludeNode(AnnotationNode annotationNode, Token id) : base(id, ExpressionKind.IncludeExpression) {
             this.Annotation = annotationNode;

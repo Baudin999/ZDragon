@@ -34,6 +34,21 @@
             cursor: pointer;
         }
         font-size: 0.8rem;
+        padding-left: 1rem;
+        margin-left: -1rem;
+        padding-right: 1rem;
+        margin-right: -1rem;
+        padding-top: 1rem;
+        border-left: 3px solid var(--color-1);
+
+        font-weight: 100;
+
+        &.selected {
+            border-left: 3px solid var(--color-3);
+            background: var(--color-1--bg);
+        }
+
+        transition: background-color 100ms ease-in-out;
     }
     .link {
         text-decoration: underline;

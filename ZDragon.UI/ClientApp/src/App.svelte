@@ -10,13 +10,31 @@
   import JsonSchemaDesigner from "./Pages/JsonSchemaDesigner.svelte";
   import LogPage from "./Pages/LogPage.svelte";
   import ViewBuilder from "./Pages/ViewBuilder.svelte";
+  import DocumentReader from "./Pages/DocumentReader.svelte";
+  import Modal from "./Components/Modal.svelte";
+  import Search from "./Forms/Search.svelte";
+  import eventbus from "./Services/eventbus";
+
+  let url = "";
+  let showSearch = false;
+
+  $: {
+    console.log("URL: ", url);
+  }
+
+  eventbus.subscribe("ctrl-p", () => {
+    showSearch = !showSearch;
+  });
+  eventbus.subscribe("navigate", () => {
+    showSearch = false;
+  });
 </script>
 
-<Router>
+<Router {url}>
   <div class="app--main">
     <Toolbar />
     <div class="content-container">
-      <Menu />
+      <Menu {url} />
       <div class="panel">
         <Route path="/editor">
           <EditorPage />
@@ -37,6 +55,9 @@
         <Route path="/logs">
           <LogPage />
         </Route>
+        <Route path="/reader">
+          <DocumentReader />
+        </Route>
         <Route path="view-builder">
           <ViewBuilder />
         </Route>
@@ -44,6 +65,10 @@
     </div>
   </div>
 </Router>
+
+<Modal title="Search" show={showSearch} close={() => (showSearch = false)}>
+  <Search show={showSearch} />
+</Modal>
 
 <style type="less">
   .app--main {

@@ -50,15 +50,16 @@ namespace ZDragon.UI.Controllers {
         }
 
 
-        [HttpGet("/project/index")]
-        public IActionResult GetIndex() {
+
+        [HttpGet("/project/search/{query}")]
+        public IActionResult Search(string query) {
             try {
-                var index = _project.GetComponentNodes();
-                return Ok(index);
+                var result = _project.Search(query);
+                return Ok(result);
             }
             catch (Exception ex) {
                 return Problem(
-                   title: $"Failed to generate an Index",
+                   title: $"Failed to search the compilation cache",
                    detail: ex.Message
                    );
             }

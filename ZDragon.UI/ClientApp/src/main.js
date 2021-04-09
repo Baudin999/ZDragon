@@ -53,6 +53,7 @@ eventbus.subscribe("saving", text => {
   console.log(text);
 });
 
+
 // Initialize the application
 setTimeout(() => {
   loadApplications();

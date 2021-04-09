@@ -61,6 +61,7 @@ namespace ZDragon.Transpilers.Components {
 
         private string ParseTags(AttributesNode node) {
             var _status = node.GetAttribute("Status", "").ToLower();
+            var _type = node.GetAttribute("Type", "").ToLower();
 
             var _newTags = _status switch {
                 "new" => $", $tags=\"new\"",
@@ -125,6 +126,7 @@ namespace ZDragon.Transpilers.Components {
 AddTagSupport(""deprecated"", $bgColor=""#7912F4"", $fontColor=""#FFFFFA"", $borderColor=""#026320"")
 AddTagSupport(""new"", $bgColor=""#ad6800"", $fontColor=""#fff"", $borderColor=""#002808"")
 AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#593500"")
+AddTagSupport(""business"", $bgColor=""#22A652"", $fontColor=""#dfffea"", $borderColor=""#40721e"")
 
 
 " +

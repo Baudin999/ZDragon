@@ -57,24 +57,29 @@ namespace ZDragon.UI.Controllers {
 
         [HttpGet("/documents/{ns}/{file}.svg")]
         public async Task<IActionResult> GetContentSvg(string ns, string file) {
-            var moduleInteractor = _project.Find<IModuleInteractor>(ns);
+            try {
+                var moduleInteractor = _project.Find<IModuleInteractor>(ns);
 
-            if (file == "data") {
-                var bytes = await moduleInteractor.GetDataModelSvg();
-                return File(bytes, "image/svg+xml");
+                if (file == "data") {
+                    var bytes = await moduleInteractor.GetDataModelSvg();
+                    return File(bytes, "image/svg+xml");
+                }
+                else if (file == "components") {
+                    var bytes = await moduleInteractor.GetComponentModelSvg();
+                    return File(bytes, "image/svg+xml");
+                }
+                else if (file == "roadmap") {
+                    var bytes = await moduleInteractor.GetSvg(file);
+                    return File(bytes, "image/svg+xml");
+                }
+                else {
+                    var bytes = await moduleInteractor.GetSvg(file);
+                    if (bytes == null) return NotFound();
+                    else return File(bytes, "image/svg+xml");
+                }
             }
-            else if (file == "components") {
-                var bytes = await moduleInteractor.GetComponentModelSvg();
-                return File(bytes, "image/svg+xml");
-            }
-            else if (file == "roadmap") {
-                var bytes = await moduleInteractor.GetSvg(file);
-                return File(bytes, "image/svg+xml");
-            }
-            else {
-                var bytes = await moduleInteractor.GetSvg(file);
-                if (bytes == null) return NotFound();
-                else return File(bytes, "image/svg+xml");
+            catch (System.Exception ex) {
+                return Problem(ex.Message);
             }
         }
 

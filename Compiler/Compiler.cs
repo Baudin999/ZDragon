@@ -56,7 +56,7 @@ namespace Compiler {
     internal static class NodeHelpers {
         internal static IEnumerable<AstNode> ParseIncludeNodes(this IEnumerable<AstNode> ast, CompilationCache cache) {
             foreach (var node in ast) {
-                if (node is IncludeNode include) {
+                if (node is IncludeNode include && include.Id != "components") {
                     if (cache.Has(include.Namespace)) {
                         var found = false;
                         var module = cache.Get(include.Namespace);

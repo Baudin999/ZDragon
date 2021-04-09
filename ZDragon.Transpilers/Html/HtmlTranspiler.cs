@@ -223,6 +223,9 @@ namespace ZDragon.Transpilers.Html {
             foreach (var documentPart in this.compilationresult.Document) {
                 if (documentPart is MarkdownChapterNode markdownChapterNode) RenderChapterNode(markdownChapterNode);
                 else if (documentPart is MarkdownNode markdownNode) RenderMarkdownNode(markdownNode);
+                else if (documentPart is IncludeNode includeNode) {
+                    parts.Add(FragmentTranspiler.RenderIncludeNode(includeNode));
+                }
                 else if (documentPart is ViewNode viewNode) {
                     if (viewNode.Imported && viewNode.ImportedFrom != null) parts.Add(FragmentTranspiler.RenderViewNode(viewNode, viewNode.ImportedFrom));
                     else parts.Add(FragmentTranspiler.RenderViewNode(viewNode, compilationresult.Namespace));
@@ -269,7 +272,7 @@ namespace ZDragon.Transpilers.Html {
                     toc.Add($"<div class='toc-1'>{++h1} Component Diagram</div>");
 
                     if (renderComponentDetails) {
-                        this.compilationresult.Ast.OfType<AttributesNode>().ToList().ForEach(n => {
+                        validAttributesNodes().ToList().ForEach(n => {
                             toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
                         });
                     }
@@ -307,7 +310,7 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />");
 
                 if (renderComponentDetails) {
-                    foreach (var node in this.compilationresult.Ast.OfType<AttributesNode>().OrderBy(n => n.Id)) {
+                    foreach (var node in validAttributesNodes()) {
                         parts.Add(FragmentTranspiler.RenderAttributesTable(node));
                     }
                 }
@@ -322,6 +325,10 @@ namespace ZDragon.Transpilers.Html {
 </html>
 ");
             return string.Join("\n\n", parts);
+        }
+
+        private IEnumerable<AttributesNode> validAttributesNodes() {
+            return this.compilationresult.Ast.OfType<AttributesNode>().Where(a => a.GetAttribute("Hidden", "False").ToLower() == "false").OrderBy(n => n.Id);
         }
 
     }

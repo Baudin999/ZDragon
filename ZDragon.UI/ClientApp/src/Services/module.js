@@ -69,6 +69,8 @@ export const deleteModule = async module => {
 
 export const saveCode = async (code) => {
 
+    if (code == "") code = " ";
+
     var ms = _get(moduleStore);
     var module = ms.modules[ms.selectedModule];
 

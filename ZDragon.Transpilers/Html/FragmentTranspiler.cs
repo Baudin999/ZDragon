@@ -9,6 +9,9 @@ namespace ZDragon.Transpilers.Html {
             return $"<img style='max-width:100%;' src=\"/documents/{ns}/{node.Hash}.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />";
 
         }
+        internal static string RenderIncludeNode(IncludeNode include) {
+            return $"<img style='max-width:100%;' src=\"/documents/{include.Namespace}/{include.Id}.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />";
+        }
 
         internal static string RenderGuidelineNode(GuidelineNode node) {
             var title = node.GetAttribute("Title") ?? node.GetAttribute("Name") ?? node.Id;

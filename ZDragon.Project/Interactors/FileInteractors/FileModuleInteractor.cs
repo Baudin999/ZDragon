@@ -49,7 +49,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.FileType = fileType;
             this.ApplicationInteractor = app;
-            this.RenderLocal = this.ApplicationInteractor?.ApplicationSettings.RenderLocal ?? false;
+            this.RenderLocal = this.ApplicationInteractor?.ApplicationSettings.RenderLocal ?? true;
         }
 
         public FileModuleInteractor(string rootPath, string file, CompilationCache cache) {

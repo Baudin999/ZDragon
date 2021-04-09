@@ -16,7 +16,7 @@ namespace ZDragon.Project {
         public CompilationCache Cache { get; private set;}
         private string _root { get; set; }
         private string outpath { get; set; }
-        private string dbPath { get; set;}
+        private string lucenePath { get; set; }
         private string imagesPath { get; set; }
         public string RootPath => _root;
         public IDirectoryInteractor DirectoryInteractor { get; private set;  }
@@ -29,7 +29,7 @@ namespace ZDragon.Project {
             Cache = new CompilationCache(new ErrorSink());
             _root = root;
             outpath = Path.Combine(_root, "out");
-            dbPath = Path.Combine(outpath, "store.db");
+            lucenePath = Path.Combine(outpath, "index");
             imagesPath = Path.Combine(_root, "images");
 
 
@@ -40,6 +40,7 @@ namespace ZDragon.Project {
                 Directory.CreateDirectory(imagesPath);
 
             DirectoryInteractor = new FileDirectoryInteractor(root, root, Cache);
+
         }
 
         public Project() {
@@ -47,8 +48,8 @@ namespace ZDragon.Project {
             var invalidString = "-,,%$^#%^invalid";
             _root = invalidString;
             outpath = invalidString;
-            dbPath = invalidString;
             imagesPath = invalidString;
+            lucenePath = invalidString;
             this.DirectoryInteractor = new MemoryDirectoryInteractor();
         }
 
@@ -76,10 +77,10 @@ namespace ZDragon.Project {
                 Cache = new CompilationCache(new ErrorSink());
                 _root = path;
                 outpath = Path.Combine(_root, "out");
-                dbPath = Path.Combine(outpath, "store.db");
                 imagesPath = Path.Combine(_root, "Images");
-
+                lucenePath = Path.Combine(outpath, "index");
                 DirectoryInteractor = new FileDirectoryInteractor(_root, _root, Cache);
+
             }
         }
         public void Unload() {
@@ -87,7 +88,7 @@ namespace ZDragon.Project {
             var invalidString = "-,,%$^#%^invalid";
             _root = invalidString;
             outpath = invalidString;
-            dbPath = invalidString;
+            lucenePath = invalidString;
             imagesPath = invalidString;
             this.DirectoryInteractor = new MemoryDirectoryInteractor();
         }
@@ -113,17 +114,6 @@ namespace ZDragon.Project {
             return DirectoryInteractor.Find(ns);
         }
 
-        public IEnumerable<NodeDescriptor> GetComponentNodes() {
-            var modules = DirectoryInteractor.Applications.SelectMany(a => a.Modules).Select(m => m.Namespace).ToArray();
-            var index = this.Cache.GenerateComponentIndex(modules);
-
-            foreach (var node in index) {
-                yield return new NodeDescriptor {
-                    Name = node.Key,
-                    Namespace = node.QualifiedName
-                };
-            }
-        }
 
         public Task<byte[]> GetImage(string file) {
             var fileName = Path.GetFileName(file);
@@ -135,14 +125,9 @@ namespace ZDragon.Project {
 
             throw new Exception("Not a valid file");
         }
-    }
 
-    public class NodeDescriptor {
-        public string Name { get; set; } = default!;
-        public string Namespace { get; set; } = default!;
-        public string ProjectName { get; set; } = default!;
-        public string ApplicationName { get; set; } = default!;
-        public string FileName { get; set; } = default!;
-
+        public List<Fragment> Search(string query) {
+            return this.Cache.Search(query);
+        }
     }
 }

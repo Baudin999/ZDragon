@@ -77,7 +77,8 @@
 
                 &:hover {
                     cursor: pointer;
-                    color: var(--color-3);
+                    background: var(--color-3);
+                    color: var(--color-3--font);
                 }
             }
         }

@@ -106,11 +106,11 @@ namespace ZDragon.Project {
             return appInteractor != null;
         }
 
-        public T? Find<T>(string ns) where T: IInteractor {
+        public T? FindInteractorByNamespace<T>(string ns) where T: IInteractor {
             var interactor =  DirectoryInteractor.Find(ns);
             return (T)interactor;
         }
-        public IInteractor? Find(string ns) {
+        public IInteractor? FindInteractorByNamespace(string ns) {
             return DirectoryInteractor.Find(ns);
         }
 
@@ -124,6 +124,16 @@ namespace ZDragon.Project {
 
 
             throw new Exception("Not a valid file");
+        }
+
+        public Fragment? FindFragment(string ns, string id) {
+            if (Cache.Has(ns)) {
+                var cache = Cache.Get(ns);
+                var node = cache.Lexicon[id];
+                var _ns = node.Imported && node.ImportedFrom is not null ? node.ImportedFrom : cache.Namespace;
+                return new Fragment(id, _ns, node.IdToken, 1);
+            }
+            return null;
         }
 
         public List<Fragment> Search(string query) {

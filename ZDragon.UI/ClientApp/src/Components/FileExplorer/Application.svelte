@@ -1,5 +1,6 @@
 <script>
     import { navigate } from "svelte-routing";
+    import eventbus from "../../Services/eventbus";
     import { moduleStore, selectModule } from "../../Services/module";
 
     // The application component
@@ -15,8 +16,9 @@
     let documents = f("Documentation");
 
     let onClick = (module) => () => {
-        let path = "/editor/" + module.namespace;
-        navigate(path);
+        // let path = "/editor/" + module.namespace;
+        // navigate(path);
+        eventbus.broadcast("navigate", { namespace: module.namespace });
         selectModule(module);
     };
     let selectApplication = () => {

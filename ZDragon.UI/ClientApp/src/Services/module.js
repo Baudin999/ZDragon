@@ -1,5 +1,6 @@
-
+import { navigate } from "svelte-routing";
 import { writable, get as _get } from "svelte/store";
+import eventbus from "./eventbus";
 import { getText, get, post } from "./http";
 
 /*
@@ -103,3 +104,52 @@ const getModuleText = async (namespace) => {
 
     return result;
 };
+
+
+eventbus.subscribe("navigateTo", async term => {
+    var store = _get(moduleStore);
+    var namespace = store.selectedModule;
+    if (!term || !namespace) return;
+    else {
+        var fragment = await get("/document/find/" + namespace + "/" + term);
+        console.log(fragment);
+        eventbus.broadcast("navigate", fragment);
+    }
+});
+
+
+const navigationStack = [];
+eventbus.subscribe("navigate", (fragment) => {
+    var store = _get(moduleStore);
+    if (fragment.namespace !== store.selectedModule && fragment.namespace) {
+        if (navigationStack.indexOf(fragment.namespace) == -1) {
+            navigationStack.push(fragment.namespace);
+        }
+        navigate("/editor/" + fragment.namespace);
+    }
+
+    if (fragment.position) {
+        setTimeout(() => {
+            var pos = {
+                lineNumber: fragment.position.lineStart + 1,
+                column: fragment.position.columnStart + 1,
+            };
+            console.log(pos);
+            eventbus.broadcast("navigateToToken", pos);
+        }, 500);
+    }
+});
+
+eventbus.subscribe("back", () => {
+    // not working yet...
+    if (navigationStack.length > 0) {
+        var store = _get(moduleStore);
+        let namespace = navigationStack.pop();
+        while (namespace == store.selectedModule) {
+            namespace = navigationStack.pop();
+        }
+        if (namespace !== store.selectedModule && namespace) {
+            navigate("/editor/" + namespace);
+        }
+    }
+});

@@ -24,7 +24,7 @@ namespace ZDragon.UI.Controllers {
         public async Task<IActionResult> Index([FromRoute]string ns) {
             var realPath = WebUtility.UrlDecode(ns);
             if (ZDragon.Project.Project.CurrentProject.IsValidProjectPath(realPath)) {
-                var moduleInteractor = _project.Find<IModuleInteractor>(ns);
+                var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
                 if (moduleInteractor != null) {
                     var text = await moduleInteractor.GetText();
 
@@ -44,7 +44,7 @@ namespace ZDragon.UI.Controllers {
 
         [HttpPost("/document/{ns}")]
         public async Task<IActionResult> SaveModule([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
-            var moduleInteractor = _project.Find<IModuleInteractor>(ns);
+            var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
             if (moduleInteractor != null) {
                 var result = await moduleInteractor.SaveModule(body.Code);
                 _ = _projectHub.ModuleChanged(result.Namespace);
@@ -58,7 +58,7 @@ namespace ZDragon.UI.Controllers {
         [HttpGet("/documents/{ns}/{file}.svg")]
         public async Task<IActionResult> GetContentSvg(string ns, string file) {
             try {
-                var moduleInteractor = _project.Find<IModuleInteractor>(ns);
+                var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
 
                 if (file == "data") {
                     var bytes = await moduleInteractor.GetDataModelSvg();
@@ -86,7 +86,7 @@ namespace ZDragon.UI.Controllers {
 
         [HttpGet("/documents/{ns}/{file}.html")]
         public async Task<IActionResult> GetHtmlString(string ns, string file) {
-            var moduleInteractor = _project.Find<IModuleInteractor>(ns);
+            var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
             if (moduleInteractor != null) {
                 return File(await moduleInteractor.GetHtml(), "text/html");
             }
@@ -103,6 +103,24 @@ namespace ZDragon.UI.Controllers {
             }
             catch (System.Exception) {
                 return NotFound();
+            }
+        }
+
+        [HttpGet("/document/find/{ns}/{id}")]
+        public IActionResult GetFragment(string ns, string id) {
+            try {
+                var fragment = _project.FindFragment(ns, id);
+                if (fragment is not null) {
+                    return Ok(fragment);
+                }
+                else {
+                    return NotFound();
+                }
+            }
+            catch (System.Exception) {
+                return Problem(
+                  title: $"Failed to get the fragment"
+                  );
             }
         }
 

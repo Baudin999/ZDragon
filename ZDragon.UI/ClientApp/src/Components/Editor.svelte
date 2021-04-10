@@ -3,6 +3,7 @@
     import { onMount, onDestroy } from "svelte";
     import { writable } from "svelte/store";
     import eventbus from "../Services/eventbus";
+    import { get } from "../Services/http";
 
     const dispatch = createEventDispatcher();
 
@@ -55,6 +56,15 @@
                 dispatch("change", editor.getValue());
             }, 200);
         });
+
+        editor.onMouseDown(function (e) {
+            if (e.event.ctrlKey && e.event.leftButton) {
+                var word = editor
+                    .getModel()
+                    .getWordAtPosition(e.target.position);
+                eventbus.broadcast("navigateTo", word.word);
+            }
+        });
     };
     onMount(() => {
         initEditor();
@@ -103,16 +113,9 @@
         }
     });
     eventbus.subscribe("navigateToToken", (position) => {
-        console.log(position);
-
-        var pos = {
-            lineNumber: position.lineStart + 1,
-            column: position.columnStart + 1,
-        };
-
         editor.focus();
-        editor.setPosition(pos);
-        editor.revealLineInCenter(pos.lineNumber);
+        editor.setPosition(position);
+        editor.revealLineInCenter(position.lineNumber);
     });
 </script>
 

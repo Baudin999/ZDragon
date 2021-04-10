@@ -50,7 +50,7 @@ export default app;
 initKeyTrap();
 
 eventbus.subscribe("saving", text => {
-  console.log(text);
+  // console.log(text);
 });
 
 

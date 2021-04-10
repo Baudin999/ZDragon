@@ -1,5 +1,4 @@
 <script>
-    import { navigate } from "svelte-routing";
     import { getContext } from "svelte";
     import NavButton from "./NavButton.svelte";
     import { stateStore } from "./../Services/state";
@@ -12,16 +11,6 @@
     let selectedApp;
     stateStore.subscribe((s) => {
         selectedApp = s.application;
-    });
-
-    eventbus.subscribe("navigate", (item) => {
-        navigate("/editor/" + item.namespace);
-
-        if (item.position) {
-            setTimeout(() => {
-                eventbus.broadcast("navigateToToken", item.position);
-            }, 500);
-        }
     });
 
     $: {

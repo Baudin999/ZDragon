@@ -1,4 +1,3 @@
-using Compiler.Checkers;
 using Compiler.Language;
 using Compiler.Language.Nodes;
 using Compiler.Symbols;
@@ -35,9 +34,8 @@ namespace Compiler {
         }
 
         public CompilationResult Compile() {
-            var initialContext = ContextType.None;
-            var tokens = new Lexer(this.SourceCode, Cache.ErrorSink).Tokenize(initialContext).ToList();
-            var contextualTokens = new ContextualTokenizer(tokens, Cache.ErrorSink).Tokenize(initialContext).ToList();
+            var tokens = new Lexer(this.SourceCode, Cache.ErrorSink).Tokenize().ToList();
+            var contextualTokens = new ContextualTokenizer(tokens, Cache.ErrorSink).Tokenize().ToList();
             var ast = new ContextualParser(contextualTokens, Cache.ErrorSink)
                 .Parse()
                 .ParseIncludeNodes(Cache)

@@ -1,8 +1,5 @@
 import App from "./App.svelte";
-
 import initKeyTrap from "./key_trap";
-import processor from "./Services/eventProcessing";
-
 import { loadApplications, receiveMessage, selectApplication, setFiles } from "./Services/state";
 
 
@@ -20,7 +17,6 @@ import { theme, tokenizer } from "./editor-carlang.js";
 monaco.languages.register({ id: "carlang" });
 monaco.languages.setMonarchTokensProvider("carlang", tokenizer);
 monaco.editor.defineTheme("carlangTheme", theme);
-
 
 import "./../node_modules/@microsoft/signalr/dist/browser/signalr.min.js";
 import eventbus from "./Services/eventbus";
@@ -48,10 +44,6 @@ export default app;
 
 // init the key trapping
 initKeyTrap();
-
-eventbus.subscribe("saving", text => {
-  // console.log(text);
-});
 
 
 // Initialize the application

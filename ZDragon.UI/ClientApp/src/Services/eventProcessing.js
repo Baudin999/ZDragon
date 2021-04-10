@@ -6,10 +6,7 @@ class EventProcessor {
     constructor() {
         //
 
-        eventbus.subscribe("saving", text => {
-            // save the module
-            saveCode(text);
-        });
+
     }
 
 

@@ -1,18 +1,14 @@
 <script>
-    import Domain from "./Domain.svelte";
-    import FileToolbar from "./FileToolbar.svelte";
-    import { stateStore } from "./../../Services/state";
+    import { stateStore } from "../Services/state";
     import Application from "./Application.svelte";
-
-    // getFiles();
 
     var applications = [];
     var selectedApplication = null;
-    stateStore.subscribe(({ files = {} }) => {
-        applications = [];
-        setTimeout(() => {
-            applications = files.applications || [];
-        });
+    stateStore.subscribe((s) => {
+        let files = s.files || [];
+        if (applications.length !== (files.applications || []).length) {
+            applications = files.applications;
+        }
     });
 </script>
 

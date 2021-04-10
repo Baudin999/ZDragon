@@ -10,7 +10,9 @@
 
     const click = () => {
         if (onClick) onClick();
-        if (href && !restricted) navigate(href);
+        if (href && !restricted) {
+            navigate(href);
+        }
     };
 </script>
 

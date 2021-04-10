@@ -3,7 +3,7 @@ import eventbus from "./Services/eventbus";
 function init() {
     function keytrap(e) {
         if ((e.ctrlKey || e.metaKey) && 46 < e.which && e.which < 91) {
-            console.log(e.code);
+
             if (e.code == "KeyS") {
                 eventbus.broadcast("save", {});
                 e.preventDefault();
@@ -20,6 +20,7 @@ function init() {
                 return false;
             }
             else {
+                console.log(e.code);
                 // do nothing
             }
         }

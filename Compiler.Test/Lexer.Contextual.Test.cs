@@ -39,7 +39,7 @@ component Something =
 
             var sourceCode = new SourceCode(code);
             var lexer = new Compiler.Symbols.Lexer(sourceCode, new ErrorSink());
-            var tokens = lexer.Tokenize(Compiler.Symbols.ContextType.None);
+            var tokens = lexer.Tokenize();
 
             Assert.NotNull(tokens);
             Assert.Equal(3, tokens.Where(t => t.Kind == SyntaxKind.StartBlock).Count());
@@ -63,7 +63,7 @@ component Something =
 
             var sourceCode = new SourceCode(code);
             var lexer = new Compiler.Symbols.Lexer(sourceCode, new ErrorSink());
-            var tokens = lexer.Tokenize(Compiler.Symbols.ContextType.None);
+            var tokens = lexer.Tokenize();
 
             Assert.NotNull(tokens);
             Assert.Single(tokens.Where(t => t.Kind == SyntaxKind.StartBlock));

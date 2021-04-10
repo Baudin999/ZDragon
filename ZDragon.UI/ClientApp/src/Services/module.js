@@ -83,7 +83,7 @@ export const saveCode = async (code) => {
         ...s,
         processing: true
     }));
-    var compilationResult = await post("/document/" + module.namespace, { code });
+    var compilationResult = await post("/document/" + module.namespace, { code: code.trim() });
 
     moduleStore.update(s => {
         let m = { ...module, compilationResult };
@@ -104,6 +104,11 @@ const getModuleText = async (namespace) => {
 
     return result;
 };
+
+eventbus.subscribe("saving", text => {
+    // save the module
+    saveCode(text);
+});
 
 
 eventbus.subscribe("navigateTo", async term => {
@@ -127,6 +132,10 @@ eventbus.subscribe("navigate", (fragment) => {
         }
         navigate("/editor/" + fragment.namespace);
     }
+    else if (fragment && fragment.indexOf(".") > -1) {
+        // probably a namespace passed into the function
+        navigate("/editor/" + fragment.namespace);
+    }
 
     if (fragment.position) {
         setTimeout(() => {
@@ -138,6 +147,8 @@ eventbus.subscribe("navigate", (fragment) => {
             eventbus.broadcast("navigateToToken", pos);
         }, 500);
     }
+
+
 });
 
 eventbus.subscribe("back", () => {

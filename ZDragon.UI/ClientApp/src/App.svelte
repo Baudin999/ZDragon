@@ -6,7 +6,7 @@
   import About from "./Pages/About.svelte";
   import Menu from "./Components/Menu.svelte";
 
-  import Toolbar from "./Components/App/Toolbar.svelte";
+  import Toolbar from "./Components/Toolbar.svelte";
   import JsonSchemaDesigner from "./Pages/JsonSchemaDesigner.svelte";
   import LogPage from "./Pages/LogPage.svelte";
   import ViewBuilder from "./Pages/ViewBuilder.svelte";

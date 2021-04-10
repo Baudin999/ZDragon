@@ -1,16 +1,16 @@
 <script>
-    import SelectFolder from "../../Forms/SelectFolder.svelte";
+    import SelectFolder from "../Forms/SelectFolder.svelte";
     import {
         toggleAddApplicationDialog,
         toggleAddFileDialog,
         toggleRefactorDialog,
-    } from "../../Services/state";
+    } from "../Services/state";
 
-    import CreateFile from "../../Forms/CreateFile.svelte";
-    import CreateApplication from "../../Forms/CreateApplication.svelte";
-    import Modal from "../Modal.svelte";
+    import CreateFile from "../Forms/CreateFile.svelte";
+    import CreateApplication from "../Forms/CreateApplication.svelte";
+    import Modal from "./Modal.svelte";
     import ToolbarItem from "./ToolbarItem.svelte";
-    import { stateStore } from "./../../Services/state";
+    import { stateStore } from "./../Services/state";
 
     let show = false;
     let selectDirectory = () => {

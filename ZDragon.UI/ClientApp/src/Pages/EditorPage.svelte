@@ -2,7 +2,7 @@
     import { Tabs, TabList, TabPanel, Tab } from "../Components/components.js";
     import PageViewer from "../Components/PageViewer.svelte";
     import ImageViewer from "../Components/ImageViewer.svelte";
-    import FileExplorer from "../Components/FileExplorer/FileExplorer.svelte";
+    import FileExplorer from "../Components/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
     import {

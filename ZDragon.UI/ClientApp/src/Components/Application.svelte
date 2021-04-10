@@ -1,7 +1,6 @@
 <script>
-    import { navigate } from "svelte-routing";
-    import eventbus from "../../Services/eventbus";
-    import { moduleStore, selectModule } from "../../Services/module";
+    import eventbus from "../Services/eventbus";
+    import { moduleStore, selectModule } from "../Services/module";
 
     // The application component
     export let application = null;
@@ -16,14 +15,16 @@
     let documents = f("Documentation");
 
     let onClick = (module) => () => {
-        // let path = "/editor/" + module.namespace;
-        // navigate(path);
         eventbus.broadcast("navigate", { namespace: module.namespace });
         selectModule(module);
     };
     let selectApplication = () => {
-        if (selectedApplication) selectedApplication = null;
-        else {
+        if (
+            selectedApplication &&
+            selectedApplication == application.namespace
+        ) {
+            selectedApplication = null;
+        } else {
             selectedApplication = application.namespace;
         }
     };
@@ -31,7 +32,11 @@
     moduleStore.subscribe((s) => {
         if (application && s && s.selectedModule) {
             if (s.selectedModule.indexOf(application.namespace) === 0) {
-                selectedApplication = application.namespace;
+                if (selectedApplication !== application.namespace) {
+                    setTimeout(() => {
+                        selectApplication();
+                    });
+                }
             }
         }
     });

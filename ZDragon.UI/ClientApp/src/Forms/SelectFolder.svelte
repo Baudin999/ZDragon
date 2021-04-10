@@ -34,8 +34,8 @@
         correct directory.
     </div>
     <div class="form--field">
-        <label for="ca_001">Folder Full Path</label>
-        <input id="ca_001" on:change={changeValue("path")} />
+        <label for="folder_path_001">Folder Full Path</label>
+        <input id="folder_path_001" on:change={changeValue("path")} />
     </div>
 
     <button on:click={submitForm} type="button">Submit</button>

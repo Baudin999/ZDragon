@@ -37,7 +37,7 @@ namespace Compiler.Symbols {
         }
         private char take() {
             var c = current;
-            value += c;
+            value += c.ToString();
             moveNext();
             return c;
         }
@@ -183,7 +183,12 @@ namespace Compiler.Symbols {
             return c == '\n' || c == '\r';
         }
         private static bool isCharacter(char c) {
-            return Mappings.Letters.Contains(c) || c == '_';
+            return Mappings.Letters.Contains(c) || 
+                c == '_' || 
+                (192 <= c && c <= 255) ||   // latin extended 1
+                c == 8217 ||                // 
+                c == 8216 || 
+                c == 8203;
         }
         private static bool isNumber(char c) {
             return Mappings.Numbers.Contains(c);
@@ -196,11 +201,7 @@ namespace Compiler.Symbols {
             return c == '{' && n == '*';
         }
 
-        private static bool isEndComment(char c, char n) {
-            return c == '*' && n == '}';
-        }
-
-        public IEnumerable<Token> Tokenize(ContextType contextType) {
+        public IEnumerable<Token> Tokenize() {
             var tokens = new List<Token>();
 
             while (index < max) {
@@ -228,7 +229,8 @@ namespace Compiler.Symbols {
                     index++;
                 }
                 else {
-                    Console.WriteLine($"Invalid Token: [pos {index}] " + current.ToString() + $" key code: {(int)current}");
+
+                    Console.WriteLine($"Invalid Token: [pos {index}] {current} key code: {(int)current}");
                     index++;
                 }
             }

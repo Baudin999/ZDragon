@@ -51,6 +51,8 @@
             color: var(--color-1--font);
             position: relative;
             font-size: 10px;
+            inline-size: 10rem;
+            overflow-wrap: break-word;
 
             i {
                 position: absolute;

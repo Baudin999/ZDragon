@@ -20,6 +20,7 @@ monaco.editor.defineTheme("carlangTheme", theme);
 
 import "./../node_modules/@microsoft/signalr/dist/browser/signalr.min.js";
 import eventbus from "./Services/eventbus";
+import { resetModule } from "./Services/module";
 
 const app = new App({
   target: document.body
@@ -37,6 +38,7 @@ connection.on("ModuleChanged", function (ns) {
 connection.on("ProjectChanged", function (result) {
   receiveMessage("Project Changed, updating navigation pane");
   setFiles(result);
+  resetModule();
 });
 connection.start();
 

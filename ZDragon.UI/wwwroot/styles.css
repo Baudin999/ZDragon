@@ -1,87 +1,3 @@
-/* FOMRS */
-.form {
-  width: 100%;
-}
-.form .form--field {
-  width: 100%;
-  margin-bottom: 1rem;
-  color: var(--color-1--font);
-}
-.form .form--field label {
-  display: block;
-  font-size: 0.6rem;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-}
-.form .form--field label:after {
-  content: ":";
-}
-.form .form--field input,
-.form .form--field textarea,
-.form .form--field select {
-  width: 100%;
-}
-
-.search,
-input,
-select,
-option,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0.4em;
-  border: 1px solid var(--color-1--border);
-  background: var(--color-1--light);
-  color: var(--color-1--dark);
-  border-radius: 0;
-}
-/* Change Autocomplete styles in Chrome*/
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus,
-textarea:-webkit-autofill,
-textarea:-webkit-autofill:hover,
-textarea:-webkit-autofill:focus,
-select:-webkit-autofill,
-select:-webkit-autofill:hover,
-select:-webkit-autofill:focus {
-  border: 1px solid var(--color-1--border);
-  -webkit-text-fill-color: var(--color-1--dark);
-  -webkit-box-shadow: none;
-  transition: background-color 5000s ease-in-out 0s;
-}
-
-select {
-  padding-right: 2rem;
-  position: relative;
-}
-
-input:focus,
-select:focus,
-option:focus,
-textarea:focus {
-    outline-color: var(--color-3--border);
-} 
-
-.invalid {
-  border: 1px solid red;
-  color: red;
-}
-.error {
-  color: red;
-  text-align: center;
-}
-
-.form-field--container .error {
-  text-align: right;
-}
-
-textarea {
-  height: 150px;
-}
-.mermaid > svg {
-  text-align: center;
-}
 :root {
   --color-primary: #ff6c00;
   --color-primary--dark: #803100;
@@ -177,7 +93,117 @@ body {
 .fade-in {
   opacity: 1;
 }
-/* Button Styling */
+.mermaid > svg {
+  text-align: center;
+}
+/* FOMRS */
+.form {
+  width: 100%;
+}
+.form .form--field {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--color-1--font);
+}
+.form .form--field label {
+  display: block;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.form .form--field label:after {
+  content: ":";
+}
+.form .form--field input,
+.form .form--field textarea,
+.form .form--field select {
+  width: 100%;
+}
+
+.search,
+input,
+select,
+option,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.4em;
+  border: 1px solid var(--color-1--border);
+  background: var(--color-1--light);
+  color: var(--color-1--dark);
+  border-radius: 0;
+}
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid var(--color-1--border);
+  -webkit-text-fill-color: var(--color-1--dark);
+  -webkit-box-shadow: none;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+select {
+  padding-right: 2rem;
+  position: relative;
+}
+
+input:focus,
+select:focus,
+option:focus,
+textarea:focus {
+    outline-color: var(--color-3--border);
+} 
+
+.invalid {
+  border: 1px solid red;
+  color: red;
+}
+.error {
+  color: red;
+  text-align: center;
+}
+
+.form-field--container .error {
+  text-align: right;
+}
+
+textarea {
+  height: 150px;
+}
+table.table--glossary {
+  border-collapse: collapse;
+}
+table.table--glossary td,
+table.table--glossary th {
+  padding: 1rem;
+  text-align: left;
+}
+table.table--glossary td:last-child,
+table.table--glossary th:last-child {
+  padding-right: 4rem;
+}
+table.table--glossary td {
+  border-bottom: 1px solid lightgray;
+}
+table.table--glossary thead {
+  background: #fa6003;
+}
+table.table--glossary thead th {
+  font-weight: normal;
+  color: #ffffff;
+}
+
+
+.content table {
+  border: 1px solid green;
+}/* Button Styling */
 
 button {
   border-radius: 0;
@@ -213,33 +239,7 @@ button.warning:hover {
   background: var(--color-primary);
   color: var(--color-primary--alt);
 }
-table.table--glossary {
-  border-collapse: collapse;
-}
-table.table--glossary td,
-table.table--glossary th {
-  padding: 1rem;
-  text-align: left;
-}
-table.table--glossary td:last-child,
-table.table--glossary th:last-child {
-  padding-right: 4rem;
-}
-table.table--glossary td {
-  border-bottom: 1px solid lightgray;
-}
-table.table--glossary thead {
-  background: #fa6003;
-}
-table.table--glossary thead th {
-  font-weight: normal;
-  color: #ffffff;
-}
 
-
-.content table {
-  border: 1px solid green;
-}
 .file-explorer {
     /* padding: 1rem; */
 }

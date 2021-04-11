@@ -21,8 +21,13 @@
     let selectApplication = () => {
         if (
             selectedApplication &&
-            selectedApplication == application.namespace
+            selectedApplication === application.namespace
         ) {
+            console.log(
+                "Closing: ",
+                selectedApplication,
+                application.namespace
+            );
             selectedApplication = null;
         } else {
             selectedApplication = application.namespace;
@@ -33,6 +38,11 @@
         if (application && s && s.selectedModule) {
             if (s.selectedModule.indexOf(application.namespace) === 0) {
                 if (selectedApplication !== application.namespace) {
+                    console.log(
+                        "Selecting: ",
+                        selectedApplication,
+                        application.namespace
+                    );
                     setTimeout(() => {
                         selectApplication();
                     });

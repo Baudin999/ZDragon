@@ -3,7 +3,6 @@
     import NavButton from "./NavButton.svelte";
     import { stateStore } from "./../Services/state";
     import { ROUTER } from "svelte-routing/src/contexts";
-    import eventbus from "../Services/eventbus";
     var { activeRoute } = getContext(ROUTER);
 
     export let url;

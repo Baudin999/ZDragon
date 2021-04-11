@@ -157,7 +157,7 @@ Failed to compile '{this.Namespace}':
             try {
                 var svgPath = Path.Combine(this.OutPath, "data.svg");
                 var puml = new ClassDiagramTranspiler(this.CompilationResult.Lexicon).Transpile();
-                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml, RenderLocal));
+                await File.WriteAllBytesAsync(svgPath, PlantUmlRenderer.Render(puml, RenderLocal));
             }
             catch (System.Exception) {
                 //
@@ -173,7 +173,7 @@ Failed to compile '{this.Namespace}':
             try {
                 var svgPath = Path.Combine(this.OutPath, "components.svg");
                 var puml = new ComponentTranspiler(this.CompilationResult.Lexicon).Transpile();
-                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml, RenderLocal));
+                await File.WriteAllBytesAsync(svgPath, PlantUmlRenderer.Render(puml, RenderLocal));
             }
             catch (System.Exception) {
                 //
@@ -185,7 +185,7 @@ Failed to compile '{this.Namespace}':
                 var svgPath = Path.Combine(this.OutPath, "roadmap.svg");
                 var lexicon = this.CompilationResult.Lexicon.Select(x => x.Value).OfType<IPlanningNode>().ToList();
                 var puml = new PlanningTranspiler(lexicon).Transpile();
-                await File.WriteAllBytesAsync(svgPath, await PlantUmlRenderer.Render(puml, RenderLocal));
+                await File.WriteAllBytesAsync(svgPath, PlantUmlRenderer.Render(puml, RenderLocal));
             }
             catch (System.Exception) {
                 //
@@ -213,14 +213,14 @@ Failed to compile '{this.Namespace}':
                 if (viewLexicon?.FirstOrDefault().Value is IArchitectureNode) {
                     var _puml = new ComponentTranspiler(viewLexicon).Transpile();
                     var path = Path.Combine(this.OutPath, view.Hash + ".svg");
-                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml, RenderLocal)));
+                    tasks.Add(File.WriteAllBytesAsync(path, PlantUmlRenderer.Render(_puml, RenderLocal)));
                     names.Add(view.Hash + ".svg");
                 }
                 else if (viewLexicon?.FirstOrDefault().Value is ILanguageNode)
                 {
                     var _puml = new ClassDiagramTranspiler(viewLexicon).Transpile();
                     var path = Path.Combine(this.OutPath, view.Hash + ".svg");
-                    tasks.Add(File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml, RenderLocal)));
+                    tasks.Add(File.WriteAllBytesAsync(path, PlantUmlRenderer.Render(_puml, RenderLocal)));
                     names.Add(view.Hash + ".svg");
                 }
             }

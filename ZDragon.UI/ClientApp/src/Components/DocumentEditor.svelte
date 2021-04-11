@@ -10,12 +10,6 @@
     let type = "carlang";
     let markers = writable([]);
 
-    // let onSave = async (event) => {
-    //     if (!module || !event) return;
-    //     let code = event.detail;
-    //     saveCode(module, code);
-    // };
-
     let mapErrorToken = (e) => {
         return {
             startLineNumber: e.sourceSegment.lineStart + 1,
@@ -51,14 +45,15 @@
 </script>
 
 <div class="container">
-    <div class="header">
-        {module ? module.namespace || module.path : "unknown file"}
-    </div>
+    {#if module}
+        <div class="header">
+            {module ? module.namespace || module.path : "unknown file"}
+        </div>
 
-    <div class="editor">
-        <Editor {context} {text} {markers} language={type} />
-        <!--on:save={onSave} -->
-    </div>
+        <div class="editor">
+            <Editor {context} {text} {markers} language={type} />
+        </div>
+    {/if}
 </div>
 
 <style type="less">

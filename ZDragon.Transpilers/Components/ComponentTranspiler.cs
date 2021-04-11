@@ -113,20 +113,15 @@ namespace ZDragon.Transpilers.Components {
                 ParseNode((AttributesNode)node);
             };
 
-
-            // && !nonRootNodes.Contains(kvp.Key)
             var validParts = types.Where(kvp => !containedComponents.Contains(kvp.Key)).Select(kvp => kvp.Value).ToList();
 
             return @"
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
-!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
-
+!include %get_variable_value(""RELATIVE_INCLUDE"")/C4_Container.puml
+!include %get_variable_value(""RELATIVE_INCLUDE"")/C4_Deployment.puml
 
 AddTagSupport(""deprecated"", $bgColor=""#7912F4"", $fontColor=""#FFFFFA"", $borderColor=""#026320"")
 AddTagSupport(""new"", $bgColor=""#ad6800"", $fontColor=""#fff"", $borderColor=""#002808"")
 AddTagSupport(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#593500"")
-AddTagSupport(""business"", $bgColor=""#22A652"", $fontColor=""#dfffea"", $borderColor=""#40721e"")
 
 
 " +
@@ -134,6 +129,7 @@ AddTagSupport(""business"", $bgColor=""#22A652"", $fontColor=""#dfffea"", $borde
                 "\r\n\r\n" +
                 string.Join("\r\n", relations.Select(r => r.Value)) +
                 "\r\n\r\nSHOW_DYNAMIC_LEGEND()";
+
         }
     }
 }

@@ -22,7 +22,140 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <Content Remove="wwwroot\favicon.ico" />
+    <Content Remove="wwwroot_old\favicon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="PlantUml\C4.puml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PlantUml\C4_Container.puml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PlantUml\C4_Context.puml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PlantUml\C4_Dynamic.puml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PlantUml\C4_Deployment.puml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wwwroot_old\bundle.css" />
+    <Content Include="wwwroot_old\bundle.css.map" />
+    <Content Include="wwwroot_old\bundle.js" />
+    <Content Include="wwwroot_old\bundle.js.map" />
+    <Content Include="wwwroot_old\fa\css\font-awesome.css" />
+    <Content Include="wwwroot_old\fa\css\font-awesome.min.css" />
+    <Content Include="wwwroot_old\fa\fonts\fontawesome-webfont.eot" />
+    <Content Include="wwwroot_old\fa\fonts\fontawesome-webfont.svg" />
+    <Content Include="wwwroot_old\fa\fonts\fontawesome-webfont.ttf" />
+    <Content Include="wwwroot_old\fa\fonts\fontawesome-webfont.woff" />
+    <Content Include="wwwroot_old\fa\fonts\fontawesome-webfont.woff2" />
+    <Content Include="wwwroot_old\fa\fonts\FontAwesome.otf" />
+    <Content Include="wwwroot_old\index.html" />
+    <Content Include="wwwroot_old\min-maps\vs\base\worker\workerMain.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.de.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.es.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.fr.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.it.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.ja.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.ko.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.ru.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.zh-cn.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\editor\editor.main.nls.zh-tw.js.map" />
+    <Content Include="wwwroot_old\min-maps\vs\loader.js.map" />
+    <Content Include="wwwroot_old\monaco\vs\base\browser\ui\codiconLabel\codicon\codicon.ttf" />
+    <Content Include="wwwroot_old\monaco\vs\base\worker\workerMain.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\abap\abap.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\apex\apex.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\azcli\azcli.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\bat\bat.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\cameligo\cameligo.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\clojure\clojure.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\coffee\coffee.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\cpp\cpp.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\csharp\csharp.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\csp\csp.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\css\css.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\dockerfile\dockerfile.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\fsharp\fsharp.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\go\go.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\graphql\graphql.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\handlebars\handlebars.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\html\html.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\ini\ini.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\javascript\javascript.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\java\java.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\kotlin\kotlin.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\less\less.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\lua\lua.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\markdown\markdown.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\mips\mips.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\msdax\msdax.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\mysql\mysql.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\objective-c\objective-c.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\pascaligo\pascaligo.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\pascal\pascal.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\perl\perl.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\pgsql\pgsql.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\php\php.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\postiats\postiats.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\powerquery\powerquery.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\powershell\powershell.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\pug\pug.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\python\python.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\razor\razor.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\redis\redis.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\redshift\redshift.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\restructuredtext\restructuredtext.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\ruby\ruby.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\rust\rust.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\r\r.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\sb\sb.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\scheme\scheme.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\scss\scss.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\shell\shell.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\solidity\solidity.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\sophia\sophia.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\sql\sql.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\st\st.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\swift\swift.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\tcl\tcl.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\twig\twig.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\typescript\typescript.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\vb\vb.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\xml\xml.js" />
+    <Content Include="wwwroot_old\monaco\vs\basic-languages\yaml\yaml.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.css" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.de.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.es.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.fr.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.it.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.ja.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.ko.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.ru.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.zh-cn.js" />
+    <Content Include="wwwroot_old\monaco\vs\editor\editor.main.nls.zh-tw.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\css\cssMode.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\css\cssWorker.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\html\htmlMode.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\html\htmlWorker.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\json\jsonMode.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\json\jsonWorker.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\typescript\tsMode.js" />
+    <Content Include="wwwroot_old\monaco\vs\language\typescript\tsWorker.js" />
+    <Content Include="wwwroot_old\monaco\vs\loader.js" />
+    <Content Include="wwwroot_old\page-styles.css" />
+    <Content Include="wwwroot_old\prism.css" />
+    <Content Include="wwwroot_old\prism.js" />
+    <Content Include="wwwroot_old\signalr.min.js" />
+    <Content Include="wwwroot_old\standalone-icon.png" />
+    <Content Include="wwwroot_old\styles.css" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
@@ -53,135 +186,52 @@
     </ItemGroup>
   </Target>
   <ItemGroup>
-    <None Include="wwwroot\bundle.css" />
-    <None Include="wwwroot\bundle.css.map" />
-    <None Include="wwwroot\bundle.js" />
-    <None Include="wwwroot\bundle.js.map" />
-    <None Include="wwwroot\fa\css\all.css" />
-    <None Include="wwwroot\fa\css\all.min.css" />
-    <None Include="wwwroot\fa\css\brands.css" />
-    <None Include="wwwroot\fa\css\brands.min.css" />
-    <None Include="wwwroot\fa\css\fontawesome.css" />
-    <None Include="wwwroot\fa\css\fontawesome.min.css" />
-    <None Include="wwwroot\fa\css\regular.css" />
-    <None Include="wwwroot\fa\css\regular.min.css" />
-    <None Include="wwwroot\fa\css\solid.css" />
-    <None Include="wwwroot\fa\css\solid.min.css" />
-    <None Include="wwwroot\fa\css\svg-with-js.css" />
-    <None Include="wwwroot\fa\css\svg-with-js.min.css" />
-    <None Include="wwwroot\fa\css\v4-shims.css" />
-    <None Include="wwwroot\fa\css\v4-shims.min.css" />
-    <None Include="wwwroot\fa\webfonts\fa-brands-400.eot" />
-    <None Include="wwwroot\fa\webfonts\fa-brands-400.svg" />
-    <None Include="wwwroot\fa\webfonts\fa-brands-400.ttf" />
-    <None Include="wwwroot\fa\webfonts\fa-brands-400.woff" />
-    <None Include="wwwroot\fa\webfonts\fa-brands-400.woff2" />
-    <None Include="wwwroot\fa\webfonts\fa-regular-400.eot" />
-    <None Include="wwwroot\fa\webfonts\fa-regular-400.svg" />
-    <None Include="wwwroot\fa\webfonts\fa-regular-400.ttf" />
-    <None Include="wwwroot\fa\webfonts\fa-regular-400.woff" />
-    <None Include="wwwroot\fa\webfonts\fa-regular-400.woff2" />
-    <None Include="wwwroot\fa\webfonts\fa-solid-900.eot" />
-    <None Include="wwwroot\fa\webfonts\fa-solid-900.svg" />
-    <None Include="wwwroot\fa\webfonts\fa-solid-900.ttf" />
-    <None Include="wwwroot\fa\webfonts\fa-solid-900.woff" />
-    <None Include="wwwroot\fa\webfonts\fa-solid-900.woff2" />
-    <None Include="wwwroot\index.html" />
-    <None Include="wwwroot\manifest.json" />
-    <None Include="wwwroot\monaco\vs\base\browser\ui\codiconLabel\codicon\codicon.ttf" />
-    <None Include="wwwroot\monaco\vs\base\worker\workerMain.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\abap\abap.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\apex\apex.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\azcli\azcli.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\bat\bat.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\cameligo\cameligo.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\clojure\clojure.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\coffee\coffee.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\cpp\cpp.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\csharp\csharp.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\csp\csp.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\css\css.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\dockerfile\dockerfile.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\fsharp\fsharp.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\go\go.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\graphql\graphql.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\handlebars\handlebars.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\html\html.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\ini\ini.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\javascript\javascript.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\java\java.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\kotlin\kotlin.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\less\less.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\lua\lua.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\markdown\markdown.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\mips\mips.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\msdax\msdax.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\mysql\mysql.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\objective-c\objective-c.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\pascaligo\pascaligo.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\pascal\pascal.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\perl\perl.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\pgsql\pgsql.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\php\php.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\postiats\postiats.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\powerquery\powerquery.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\powershell\powershell.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\pug\pug.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\python\python.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\razor\razor.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\redis\redis.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\redshift\redshift.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\restructuredtext\restructuredtext.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\ruby\ruby.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\rust\rust.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\r\r.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\sb\sb.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\scheme\scheme.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\scss\scss.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\shell\shell.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\solidity\solidity.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\sophia\sophia.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\sql\sql.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\st\st.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\swift\swift.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\tcl\tcl.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\twig\twig.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\typescript\typescript.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\vb\vb.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\xml\xml.js" />
-    <None Include="wwwroot\monaco\vs\basic-languages\yaml\yaml.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.css" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.de.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.es.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.fr.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.it.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.ja.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.ko.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.ru.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.zh-cn.js" />
-    <None Include="wwwroot\monaco\vs\editor\editor.main.nls.zh-tw.js" />
-    <None Include="wwwroot\monaco\vs\language\css\cssMode.js" />
-    <None Include="wwwroot\monaco\vs\language\css\cssWorker.js" />
-    <None Include="wwwroot\monaco\vs\language\html\htmlMode.js" />
-    <None Include="wwwroot\monaco\vs\language\html\htmlWorker.js" />
-    <None Include="wwwroot\monaco\vs\language\json\jsonMode.js" />
-    <None Include="wwwroot\monaco\vs\language\json\jsonWorker.js" />
-    <None Include="wwwroot\monaco\vs\language\typescript\tsMode.js" />
-    <None Include="wwwroot\monaco\vs\language\typescript\tsWorker.js" />
-    <None Include="wwwroot\monaco\vs\loader.js" />
-    <None Include="wwwroot\favicon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\standalone-icon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="wwwroot\styles.css" />
+    <None Include="wwwroot_old\fa\css\all.css" />
+    <None Include="wwwroot_old\fa\css\all.min.css" />
+    <None Include="wwwroot_old\fa\css\brands.css" />
+    <None Include="wwwroot_old\fa\css\brands.min.css" />
+    <None Include="wwwroot_old\fa\css\fontawesome.css" />
+    <None Include="wwwroot_old\fa\css\fontawesome.min.css" />
+    <None Include="wwwroot_old\fa\css\regular.css" />
+    <None Include="wwwroot_old\fa\css\regular.min.css" />
+    <None Include="wwwroot_old\fa\css\solid.css" />
+    <None Include="wwwroot_old\fa\css\solid.min.css" />
+    <None Include="wwwroot_old\fa\css\svg-with-js.css" />
+    <None Include="wwwroot_old\fa\css\svg-with-js.min.css" />
+    <None Include="wwwroot_old\fa\css\v4-shims.css" />
+    <None Include="wwwroot_old\fa\css\v4-shims.min.css" />
+    <None Include="wwwroot_old\fa\webfonts\fa-brands-400.eot" />
+    <None Include="wwwroot_old\fa\webfonts\fa-brands-400.svg" />
+    <None Include="wwwroot_old\fa\webfonts\fa-brands-400.ttf" />
+    <None Include="wwwroot_old\fa\webfonts\fa-brands-400.woff" />
+    <None Include="wwwroot_old\fa\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot_old\fa\webfonts\fa-regular-400.eot" />
+    <None Include="wwwroot_old\fa\webfonts\fa-regular-400.svg" />
+    <None Include="wwwroot_old\fa\webfonts\fa-regular-400.ttf" />
+    <None Include="wwwroot_old\fa\webfonts\fa-regular-400.woff" />
+    <None Include="wwwroot_old\fa\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot_old\fa\webfonts\fa-solid-900.eot" />
+    <None Include="wwwroot_old\fa\webfonts\fa-solid-900.svg" />
+    <None Include="wwwroot_old\fa\webfonts\fa-solid-900.ttf" />
+    <None Include="wwwroot_old\fa\webfonts\fa-solid-900.woff" />
+    <None Include="wwwroot_old\fa\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot_old\manifest.json" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="ClientApp2\public\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="PlantUml\plantuml.jar">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="wwwroot_old\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="wwwroot_old\standalone-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 </Project>

@@ -45,6 +45,15 @@ export const selectModuleByNamespace = async namespace => {
 
 };
 
+export const resetModule = async () => {
+    moduleStore.update(s => {
+        return {
+            ...s,
+            selectedModule: null
+        };
+    });
+};
+
 export const selectModule = async module => {
     if (!module || !module.namespace) return;
     let result = await getModuleText(module.namespace);

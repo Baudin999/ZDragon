@@ -24,7 +24,7 @@ namespace ZDragon.UI.Controllers {
             try {
                 var actualPath = path.Replace("__$__", Path.DirectorySeparatorChar.ToString());
                 _project.Reload(actualPath);
-                _ = ProjectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
+                _ = ProjectHub.ProjectChanged(_project.DirectoryInteractor);
                 return Ok();
             } catch (Exception ex) {
                 return Problem(
@@ -38,7 +38,7 @@ namespace ZDragon.UI.Controllers {
         public IActionResult Unload() {
             try {
                 _project.Unload();
-                _ = ProjectHub.ProjectChanged("", _project.DirectoryInteractor);
+                _ = ProjectHub.ProjectChanged(_project.DirectoryInteractor);
                 return Ok();
             }
             catch (Exception ex) {

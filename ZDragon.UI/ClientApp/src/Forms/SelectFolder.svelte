@@ -1,7 +1,7 @@
 <script>
     import { writable } from "svelte/store";
     import { post } from "../Services/http";
-    import { openApplication } from "../Services/state";
+    import { openProject } from "../Services/app";
 
     export let close;
 
@@ -18,7 +18,7 @@
 
             if (validateApp($app)) {
                 let path = $app.path;
-                openApplication(path);
+                openProject(path);
                 close();
             }
         } catch (err) {
@@ -34,8 +34,8 @@
         correct directory.
     </div>
     <div class="form--field">
-        <label for="folder_path_001">Folder Full Path</label>
-        <input id="folder_path_001" on:change={changeValue("path")} />
+        <label for="project_path_001">Project Full Path</label>
+        <input id="project_path_001" on:change={changeValue("path")} />
     </div>
 
     <button on:click={submitForm} type="button">Submit</button>

@@ -1,38 +1,30 @@
 <script>
     import { post } from "./../Services/http";
-    import {
-        stateStore,
-        selectApplication,
-        resetApplications,
-    } from "./../Services/state";
+    import { state, resetProjects, selectProject } from "./../Services/app";
 
-    let applications = [];
-    let selectedApp;
+    let projects = [];
+    let selectedProject = null;
 
-    const sa = async (app) => {
-        selectApplication(app);
-    };
-
-    stateStore.subscribe((s) => {
-        applications = s.applications || [];
-        selectedApp = s.application;
+    state.subscribe((s) => {
+        projects = s.projects || [];
+        selectedProject = s.project;
     });
 </script>
 
 <div class="home">
-    {#each applications as application}
+    {#each projects as project}
         <div
             class="application"
-            class:selected={selectedApp == application}
-            on:click={() => sa(application)}>
-            {#if selectedApp == application}
+            class:selected={selectedProject === project}
+            on:click={() => selectProject(project)}>
+            {#if selectedProject == project}
                 <i class="fa fa-check" />
             {/if}
-            <span>{application}</span>
+            <span>{project}</span>
         </div>
     {/each}
 </div>
-<div class="clear" on:click={resetApplications}>
+<div class="clear" on:click={resetProjects}>
     <i class="fa fa-times" />
 </div>
 

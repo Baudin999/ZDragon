@@ -96,6 +96,108 @@ body {
 .mermaid > svg {
   text-align: center;
 }
+/* Button Styling */
+
+button {
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.5rem 1em;
+  background: none;
+  border: 1px solid gray;
+  color: gray;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: rgb(238, 237, 237);
+  cursor: pointer;
+}
+
+button.color--primary {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+button.color--primary:hover {
+  background: var(--color-primary);
+  color: var(--color-primary--alt);
+}
+
+button.warning {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+button.warning:hover {
+  background: var(--color-primary);
+  color: var(--color-primary--alt);
+}
+table.table--glossary {
+  border-collapse: collapse;
+}
+table.table--glossary td,
+table.table--glossary th {
+  padding: 1rem;
+  text-align: left;
+}
+table.table--glossary td:last-child,
+table.table--glossary th:last-child {
+  padding-right: 4rem;
+}
+table.table--glossary td {
+  border-bottom: 1px solid lightgray;
+}
+table.table--glossary thead {
+  background: #fa6003;
+}
+table.table--glossary thead th {
+  font-weight: normal;
+  color: #ffffff;
+}
+
+
+.content table {
+  border: 1px solid green;
+}
+.file-explorer {
+    /* padding: 1rem; */
+}
+.file-explorer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.file-explorer ul.indent-0 li {
+    padding-left: 0;
+}
+.file-explorer ul.indent-1 li {
+    padding-left: 1rem;
+}
+.file-explorer ul.indent-2 li {
+    padding-left: 2rem;
+}
+.file-explorer ul.indent-3 li {
+    padding-left: 3rem;
+}
+.file-explorer ul.indent-4 li {
+    padding-left: 4rem;
+}
+.file-explorer ul.indent-5 li {
+    padding-left: 5rem;
+}
+
+.file-explorer ul li {
+    margin: 5px 0px;
+}
+.file-explorer ul li:hover {
+    cursor: pointer;
+}
+.file-explorer ul li.selected {
+    color: var(--color-secundary);
+    font-weight: bolder;
+    /* color: var(--color-secundary--alt); */
+}
 /* FOMRS */
 .form {
   width: 100%;
@@ -176,106 +278,4 @@ textarea:focus {
 
 textarea {
   height: 150px;
-}
-table.table--glossary {
-  border-collapse: collapse;
-}
-table.table--glossary td,
-table.table--glossary th {
-  padding: 1rem;
-  text-align: left;
-}
-table.table--glossary td:last-child,
-table.table--glossary th:last-child {
-  padding-right: 4rem;
-}
-table.table--glossary td {
-  border-bottom: 1px solid lightgray;
-}
-table.table--glossary thead {
-  background: #fa6003;
-}
-table.table--glossary thead th {
-  font-weight: normal;
-  color: #ffffff;
-}
-
-
-.content table {
-  border: 1px solid green;
-}/* Button Styling */
-
-button {
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0.5rem 1em;
-  background: none;
-  border: 1px solid gray;
-  color: gray;
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  background: rgb(238, 237, 237);
-  cursor: pointer;
-}
-
-button.color--primary {
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-}
-
-button.color--primary:hover {
-  background: var(--color-primary);
-  color: var(--color-primary--alt);
-}
-
-button.warning {
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-}
-
-button.warning:hover {
-  background: var(--color-primary);
-  color: var(--color-primary--alt);
-}
-
-.file-explorer {
-    /* padding: 1rem; */
-}
-.file-explorer ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.file-explorer ul.indent-0 li {
-    padding-left: 0;
-}
-.file-explorer ul.indent-1 li {
-    padding-left: 1rem;
-}
-.file-explorer ul.indent-2 li {
-    padding-left: 2rem;
-}
-.file-explorer ul.indent-3 li {
-    padding-left: 3rem;
-}
-.file-explorer ul.indent-4 li {
-    padding-left: 4rem;
-}
-.file-explorer ul.indent-5 li {
-    padding-left: 5rem;
-}
-
-.file-explorer ul li {
-    margin: 5px 0px;
-}
-.file-explorer ul li:hover {
-    cursor: pointer;
-}
-.file-explorer ul li.selected {
-    color: var(--color-secundary);
-    font-weight: bolder;
-    /* color: var(--color-secundary--alt); */
 }

@@ -1,15 +1,16 @@
 <script>
     import { getContext } from "svelte";
     import NavButton from "./NavButton.svelte";
-    import { stateStore } from "./../Services/state";
+    import { state } from "./../Services/app";
     import { ROUTER } from "svelte-routing/src/contexts";
     var { activeRoute } = getContext(ROUTER);
 
     export let url;
 
-    let selectedApp;
-    stateStore.subscribe((s) => {
-        selectedApp = s.application;
+    let selectedProject;
+    state.subscribe((s) => {
+        selectedProject = s.project;
+        // console.log(s);
     });
 
     $: {
@@ -23,7 +24,7 @@
         icon="fa fa-home"
         title="Home"
         selected={url == "/" || url == "/home"} />
-    {#if selectedApp}
+    {#if selectedProject}
         <NavButton
             href="/editor"
             icon="fa fa-file"
@@ -35,11 +36,7 @@
             title="Reader"
             selected={url.indexOf("/reader") == 0} />
     {/if}
-    <NavButton
-        href="/json-designer"
-        icon="fa fa-file-code-o"
-        title="Json"
-        selected={url.indexOf("/json-designer") == 0} />
+
     <NavButton
         href="/logs"
         icon="fa fa-tasks"

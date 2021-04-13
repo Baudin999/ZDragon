@@ -30,7 +30,9 @@ namespace ZDragon.UI.Controllers {
 
                     return Ok(new {
                         text,
-                        compilationResult = moduleInteractor.Compile(text)
+                        compilationResult = moduleInteractor.Compile(text),
+                        Namespace = moduleInteractor.Namespace,
+                        ApplicationName = moduleInteractor.ApplicationInteractor.Namespace
                     });
                 }
                 else {

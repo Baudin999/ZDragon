@@ -69,7 +69,7 @@ namespace ZDragon.UI.Controllers {
 
         private async Task RefreshProjectStructure() {
             await Task.Delay(1000);
-            _ = _projectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
+            _ = _projectHub.ProjectChanged(_project.DirectoryInteractor);
         }
 
     }

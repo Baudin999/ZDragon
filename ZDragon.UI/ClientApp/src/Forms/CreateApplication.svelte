@@ -1,7 +1,7 @@
 <script>
     import { writable } from "svelte/store";
     import { post } from "../Services/http";
-    import { toggleAddApplicationDialog } from "../Services/state";
+    import { toggleAddApplicationDialog } from "../Services/app";
 
     var app = writable();
     const changeValue = (name) => (e) => {

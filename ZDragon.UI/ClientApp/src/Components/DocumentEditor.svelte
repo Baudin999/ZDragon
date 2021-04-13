@@ -1,7 +1,7 @@
-<script type="ts">
+<script>
     import { writable } from "svelte/store";
+    import { state } from "../Services/app";
     import Editor from "./Editor.svelte";
-    import { moduleStore, saveCode, selectModule } from "../Services/module";
 
     export let context = [];
 
@@ -20,26 +20,15 @@
         };
     };
 
-    moduleStore.subscribe((value: any) => {
-        if (!value || !value.modules || !value.selectedModule) return;
-
-        module = value.modules[value.selectedModule];
-        if (!module) {
+    state.subscribe((s) => {
+        if (s.module) {
+            module = s.module;
+            text = module.text;
+            markers.set(module.compilationResult.errors.map(mapErrorToken));
+        } else {
+            module = null;
             text = "";
             markers.set([]);
-            return;
-        }
-        text = module.text;
-
-        var errors = module.compilationResult?.errors || [];
-        var mappedErrors = errors.map(mapErrorToken);
-        markers.set(mappedErrors);
-
-        if (module && module.path && module.path.endsWith(".json")) {
-            type = "json";
-            text = JSON.stringify(JSON.parse(text), null, 4);
-        } else {
-            type = "carlang";
         }
     });
 </script>
@@ -66,10 +55,8 @@
 
         .header,
         .footer {
-            // padding: 0.5rem;
             color: var(--color-1--font);
             background: var(--color-1);
-            // border-right: 1px solid var(--color-1--border);
             height: 2rem;
             line-height: 2rem;
             padding-left: 1rem;
@@ -85,7 +72,6 @@
         }
         .editor {
             grid-row: 2;
-            // border-right: 1px solid var(--color-1--border);
         }
 
         .sep {

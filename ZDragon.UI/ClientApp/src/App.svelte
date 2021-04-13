@@ -7,7 +7,6 @@
   import Menu from "./Components/Menu.svelte";
 
   import Toolbar from "./Components/Toolbar.svelte";
-  import JsonSchemaDesigner from "./Pages/JsonSchemaDesigner.svelte";
   import LogPage from "./Pages/LogPage.svelte";
   import ViewBuilder from "./Pages/ViewBuilder.svelte";
   import DocumentReader from "./Pages/DocumentReader.svelte";
@@ -40,14 +39,11 @@
           <EditorPage />
         </Route>
         <Route path="/editor/:namespace" let:params>
-          <EditorPage namespace={params.namespace} />
+          <EditorPage params />
         </Route>
         <Route path="/about" component={About} />
         <Route path="/">
           <Home />
-        </Route>
-        <Route path="/json-designer">
-          <JsonSchemaDesigner />
         </Route>
         <Route path="/home">
           <Home />

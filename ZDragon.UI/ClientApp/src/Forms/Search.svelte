@@ -44,7 +44,8 @@
         {#each queryResult as node}
             <div class="result-list--item" on:click={navigate(node)}>
                 <span class="item--id">{node.id}</span>
-                <span class="item--namespace">{node.namespace}</span>
+                <span class="item--namespace"
+                    >({node.score}) {node.namespace}</span>
                 <span class="item--fileName">node.fileName</span>
             </div>
         {/each}

@@ -1,7 +1,7 @@
 <script>
     import { writable } from "svelte/store";
     import { post } from "../Services/http";
-    import { toggleAddFileDialog } from "../Services/state";
+    import { toggleAddFileDialog } from "../Services/app";
 
     var file = writable({
         type: "Feature",

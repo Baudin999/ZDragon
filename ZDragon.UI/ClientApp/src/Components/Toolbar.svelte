@@ -3,14 +3,13 @@
     import {
         toggleAddApplicationDialog,
         toggleAddFileDialog,
-        toggleRefactorDialog,
-    } from "../Services/state";
+    } from "../Services/app";
 
     import CreateFile from "../Forms/CreateFile.svelte";
     import CreateApplication from "../Forms/CreateApplication.svelte";
     import Modal from "./Modal.svelte";
     import ToolbarItem from "./ToolbarItem.svelte";
-    import { stateStore } from "./../Services/state";
+    import { state } from "./../Services/app";
 
     let show = false;
     let selectDirectory = () => {
@@ -18,18 +17,13 @@
     };
 
     let selectedApp;
-    stateStore.subscribe((s) => {
-        selectedApp = s.application;
-    });
-
     let showAddApplicationDialog = false;
     let showAddFileDialog = false;
-    let showRefactorDialog = false;
 
-    stateStore.subscribe((s) => {
+    state.subscribe((s) => {
         showAddFileDialog = !!s.showAddFileDialog;
         showAddApplicationDialog = !!s.showAddApplicationDialog;
-        showRefactorDialog = !!s.showRefactorDialog;
+        selectedApp = s.application;
     });
 </script>
 

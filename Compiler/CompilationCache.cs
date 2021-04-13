@@ -15,6 +15,11 @@ namespace Compiler {
         public Index ArchitectureNodes => GenerateComponentIndex(Cache.Keys.ToArray());
         public Index LanguageNodes => GenerateLanguageIndex(Cache.Keys.ToArray());
 
+        /// <summary>
+        /// NEEDS TO BE REMOVED!!!
+        /// DEPRECATE ASAP!!!
+        /// </summary>
+        public List<CompilationResult> Values { get; }
 
         public CompilationCache(ErrorSink errorSink) {
             this.ErrorSink = errorSink;
@@ -92,12 +97,13 @@ namespace Compiler {
 
         public List<Fragment> Search(string query) {
             var aggregate = new List<Fragment>();
+            Console.WriteLine($"cache: {Cache.Values.Count()}");
             foreach (var cache in Cache.Values) {
                 var nodes = cache
                     .Ast
                     .OfType<IIdentifierExpressionNode>()
                     .Where(n => !n.Imported)
-                    .Where(n => !(n is OpenNode))
+                    .Where(n => n is not OpenNode)
                     .Where(n => n.Id.Contains(query, StringComparison.InvariantCultureIgnoreCase))
                     .Select(n => {
                         var isSame = query.Equals(n.Id, StringComparison.InvariantCultureIgnoreCase);

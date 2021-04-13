@@ -34,10 +34,10 @@ namespace ZDragon.UI.Controllers {
             }
         }
 
-        internal async Task ProjectChanged(string rootPath, IDirectoryInteractor dir) {
+        internal async Task ProjectChanged(IDirectoryInteractor dir) {
             try {
                 if (Clients != null) {
-                    await Clients.All.SendAsync("ProjectChanged", new { rootPath, dir });
+                    await Clients.All.SendAsync("ProjectChanged", dir);
                 }
             }
             catch (System.Exception) {

@@ -1,10 +1,10 @@
 <script>
-    import { stateStore } from "../Services/state";
+    import { state } from "../Services/app";
     import Panel from "../Components/Panel.svelte";
 
     let messages;
 
-    stateStore.subscribe((s) => {
+    state.subscribe((s) => {
         messages = s.messages || [];
     });
 </script>

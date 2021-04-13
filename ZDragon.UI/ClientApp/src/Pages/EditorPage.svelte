@@ -5,15 +5,9 @@
     import FileExplorer from "../Components/FileExplorer.svelte";
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
-    import {
-        moduleStore,
-        selectModuleByNamespace,
-    } from "../Services/module.js";
-    import { onMount, onDestroy } from "svelte";
+    import { log, selectModuleByNamespace, state } from "../Services/app.js";
 
-    export let namespace = "";
-    var oldNamespace = "";
-
+    let namespace;
     let iframe;
     let svgUrl;
     let componentUrl;
@@ -23,7 +17,8 @@
     let processing = false;
     let context = [];
 
-    const generateUrls = (event) => {
+    const generateUrls = (namespace) => {
+        log("Generating URLS");
         scrollY =
             iframe && iframe.contentWindow ? iframe.contentWindow.scrollY : 0;
 
@@ -34,37 +29,36 @@
         htmlUrl = `/documents/${namespace}/page.html?timestamp=${new Date().getMilliseconds()}`;
     };
 
-    onMount(() => {
-        window.addEventListener("module_changed", generateUrls, false);
-        generateUrls({});
-    });
-    onDestroy(() => {
-        window.removeEventListener("module_changed", generateUrls, false);
-    });
-
     let print = () => {
         iframe.contentWindow.focus();
         iframe.contentWindow.print();
     };
 
-    $: {
-        if (moduleStore && oldNamespace !== namespace) {
-            selectModuleByNamespace(namespace);
-            generateUrls(namespace);
-            oldNamespace = namespace;
-        }
-        if (iframe && !iframe.onload) {
-            iframe.onload = function () {
-                setTimeout(() => {
-                    if (iframe && iframe.contentWindow)
-                        iframe.contentWindow.scroll(0, scrollY);
-                });
-            };
-        }
-    }
+    state.subscribe((s) => {
+        if (s && s.module) {
+            if (processing && !s.processing) {
+                processing = s.processing;
+                if (iframe && !iframe.onload) {
+                    iframe.onload = function () {
+                        setTimeout(() => {
+                            if (iframe && iframe.contentWindow)
+                                iframe.contentWindow.scroll(0, scrollY);
+                        });
+                    };
+                }
 
-    moduleStore.subscribe((ms) => {
-        processing = ms.processing;
+                setTimeout(() => {
+                    generateUrls(s.module.namespace);
+                }, 200);
+            }
+
+            if (s.module.namespace && s.module.namespace !== namespace) {
+                namespace = s.module.namespace;
+                generateUrls(s.module.namespace);
+            }
+        }
+
+        if (!processing && s.processing) processing = true;
     });
 </script>
 
@@ -72,70 +66,72 @@
     <div class="file-explorer--container">
         <FileExplorer />
     </div>
-    <div class="document-editor">
-        <div>
-            <DocumentEditor {context} />
-        </div>
-    </div>
-    <div class="page-viewer">
-        {#if processing}
-            <div class="processing">
-                <i class="fa fa-spinner fa-spin fa-3x fa-fw" />
+    {#if namespace}
+        <div class="document-editor">
+            <div>
+                <DocumentEditor {context} />
             </div>
-        {/if}
-        <Tabs>
-            <TabList>
-                <Tab>Document</Tab>
-                <Tab>Architecture</Tab>
-                <Tab>Data Model</Tab>
-                <Tab>Planning</Tab>
-            </TabList>
-
-            <TabPanel>
-                {#if htmlUrl}
-                    <Panel
-                        style="background:var(--color-1); overflow:hidden!important; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
-                        <PageViewer>
-                            <!-- <PageViewer url={htmlUrl} /> -->
-                            <iframe
-                                bind:this={iframe}
-                                class="html-iframe"
-                                src={htmlUrl}
-                                title="Page" />
-                        </PageViewer>
-                    </Panel>
-                {/if}
-            </TabPanel>
-
-            <TabPanel>
-                <Panel style="height: calc(100% - 3rem); overflow:auto;">
-                    {#if componentUrl}
-                        <ImageViewer url={componentUrl} />
-                    {/if}
-                </Panel>
-            </TabPanel>
-
-            <TabPanel>
-                <Panel style="height: calc(100% - 3rem); overflow:auto;">
-                    {#if svgUrl}
-                        <ImageViewer url={svgUrl} />
-                    {/if}
-                </Panel>
-            </TabPanel>
-
-            <TabPanel>
-                <Panel style="height: calc(100% - 3rem); overflow:auto;">
-                    {#if planningSvgUrl}
-                        <ImageViewer url={planningSvgUrl} />
-                    {/if}
-                </Panel>
-            </TabPanel>
-        </Tabs>
-
-        <div class="print-button" on:click={print}>
-            <i class="fa fa-print" />
         </div>
-    </div>
+        <div class="page-viewer">
+            {#if processing}
+                <div class="processing">
+                    <i class="fa fa-spinner fa-spin fa-3x fa-fw" />
+                </div>
+            {/if}
+            <Tabs>
+                <TabList>
+                    <Tab>Document</Tab>
+                    <Tab>Architecture</Tab>
+                    <Tab>Data Model</Tab>
+                    <Tab>Planning</Tab>
+                </TabList>
+
+                <TabPanel>
+                    {#if htmlUrl}
+                        <Panel
+                            style="background:var(--color-1); overflow:hidden!important; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
+                            <PageViewer>
+                                <!-- <PageViewer url={htmlUrl} /> -->
+                                <iframe
+                                    bind:this={iframe}
+                                    class="html-iframe"
+                                    src={htmlUrl}
+                                    title="Page" />
+                            </PageViewer>
+                        </Panel>
+                    {/if}
+                </TabPanel>
+
+                <TabPanel>
+                    <Panel style="height: calc(100% - 3rem); overflow:auto;">
+                        {#if componentUrl}
+                            <ImageViewer url={componentUrl} />
+                        {/if}
+                    </Panel>
+                </TabPanel>
+
+                <TabPanel>
+                    <Panel style="height: calc(100% - 3rem); overflow:auto;">
+                        {#if svgUrl}
+                            <ImageViewer url={svgUrl} />
+                        {/if}
+                    </Panel>
+                </TabPanel>
+
+                <TabPanel>
+                    <Panel style="height: calc(100% - 3rem); overflow:auto;">
+                        {#if planningSvgUrl}
+                            <ImageViewer url={planningSvgUrl} />
+                        {/if}
+                    </Panel>
+                </TabPanel>
+            </Tabs>
+
+            <div class="print-button" on:click={print}>
+                <i class="fa fa-print" />
+            </div>
+        </div>
+    {/if}
 </div>
 
 <style type="less">

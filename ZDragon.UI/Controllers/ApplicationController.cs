@@ -26,7 +26,7 @@ namespace ZDragon.UI.Controllers {
 
             _project.CreateApplication(body.Name);
             _project.ResetDirectory();
-            _ = _projectHub.ProjectChanged(_project.RootPath, _project.DirectoryInteractor);
+            _ = _projectHub.ProjectChanged(_project.DirectoryInteractor);
             return Ok();
 
         }

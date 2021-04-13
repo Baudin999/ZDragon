@@ -1,20 +1,22 @@
 <script>
-    import { stateStore } from "../Services/state";
-    import Application from "./Application.svelte";
+    import { state } from "../Services/app";
+    import Application from "./FileExplorer_Application.svelte";
 
     var applications = [];
     var selectedApplication = null;
-    stateStore.subscribe((s) => {
-        let files = s.files || [];
-        if (applications.length !== (files.applications || []).length) {
-            applications = files.applications;
-        }
+    state.subscribe((s) => {
+        applications = s.applications || [];
+        selectedApplication = s.application || {};
+        // console.log(selectedApplication);
     });
 </script>
 
 <div class="file-explorer">
     {#each applications as application}
-        <Application {application} bind:selectedApplication />
+        <Application
+            {application}
+            selected={application.namespace ===
+                selectedApplication.namespace} />
     {/each}
 </div>
 

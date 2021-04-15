@@ -45,17 +45,6 @@ export const resetModule = async () => {
     });
 };
 
-// export const selectModule = async module => {
-//     if (!module || !module.namespace) return;
-//     let moduleResult = await getModuleFromServer(module.namespace);
-
-//     state.update(s => {
-//         return {
-//             ...s,
-//             module: { ...moduleResult }
-//         };
-//     });
-// };
 
 export const deleteModule = async module => {
     // not implemented yet
@@ -259,6 +248,8 @@ export const log = data => {
                 message: data
             });
         }
+
+        console.info(messages[0]);
 
         return ({
             ...s,

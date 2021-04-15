@@ -1,6 +1,11 @@
 <script>
   import { Router, Route } from "svelte-routing";
 
+  import SelectFolder from "./Forms/SelectFolder.svelte";
+  import CreateFile from "./Forms/CreateFile.svelte";
+  import CreateApplication from "./Forms/CreateApplication.svelte";
+  import Modal from "./Components/Modal.svelte";
+
   import EditorPage from "./Pages/EditorPage.svelte";
   import Home from "./Pages/Home.svelte";
   import About from "./Pages/About.svelte";
@@ -10,9 +15,14 @@
   import LogPage from "./Pages/LogPage.svelte";
   import ViewBuilder from "./Pages/ViewBuilder.svelte";
   import DocumentReader from "./Pages/DocumentReader.svelte";
-  import Modal from "./Components/Modal.svelte";
   import Search from "./Forms/Search.svelte";
   import eventbus from "./Services/eventbus";
+
+  import {
+    state,
+    toggleAddApplicationDialog,
+    toggleAddFileDialog,
+  } from "./Services/app";
 
   let url = "";
   let showSearch = false;
@@ -26,6 +36,14 @@
   });
   eventbus.subscribe("navigate", () => {
     showSearch = false;
+  });
+
+  let showAddApplicationDialog = false;
+  let showAddFileDialog = false;
+
+  state.subscribe((s) => {
+    showAddFileDialog = !!s.showAddFileDialog;
+    showAddApplicationDialog = !!s.showAddApplicationDialog;
   });
 </script>
 
@@ -64,6 +82,26 @@
 
 <Modal title="Search" show={showSearch} close={() => (showSearch = false)}>
   <Search show={showSearch} />
+</Modal>
+
+<Modal
+  title="Select Directory"
+  {showAddFileDialog}
+  close={() => (showAddFileDialog = false)}>
+  <SelectFolder close={() => (showAddFileDialog = false)} />
+</Modal>
+
+{#if showAddFileDialog}
+  <Modal title="Add File" show={showAddFileDialog} close={toggleAddFileDialog}>
+    <CreateFile />
+  </Modal>
+{/if}
+
+<Modal
+  title="Add Application"
+  show={showAddApplicationDialog}
+  close={toggleAddApplicationDialog}>
+  <CreateApplication />
 </Modal>
 
 <style type="less">

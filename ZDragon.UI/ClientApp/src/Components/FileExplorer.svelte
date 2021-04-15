@@ -12,7 +12,7 @@
 </script>
 
 <div class="file-explorer">
-    {#each applications as application}
+    {#each applications as application (application.namespace)}
         <Application
             {application}
             selected={application.namespace ===

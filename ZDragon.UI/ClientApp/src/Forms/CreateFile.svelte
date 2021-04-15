@@ -1,19 +1,16 @@
 <script>
     import { writable } from "svelte/store";
     import { post } from "../Services/http";
-    import { toggleAddFileDialog } from "../Services/app";
+    import { state, toggleAddFileDialog } from "../Services/app";
 
     var file = writable({
-        type: "Feature",
+        type: "Component",
     });
-    const changeValue = (name) => (e) => {
-        $file = { ...$file, [name]: e.target.value };
-    };
 
     const submitForm = async () => {
         try {
-            let validateFile = ({ name, type, appName, description }) => {
-                return name && type;
+            let validateFile = ({ name, type, appName }) => {
+                return name && type && appName;
             };
             let isValid = validateFile($file);
             if (isValid) {
@@ -24,17 +21,27 @@
             console.log(err);
         }
     };
+
+    state.subscribe((s) => {
+        if (!s.application) return;
+        file.update((f) => {
+            return {
+                ...f,
+                appName: s.application.name,
+            };
+        });
+    });
 </script>
 
 <form class="form">
     <div class="form--field">
         <label for="cf_001">File Name</label>
-        <input id="cf_001" on:change={changeValue("name")} />
+        <input id="cf_001" bind:value={$file.name} />
     </div>
 
     <div class="form--field">
         <label for="cf_002">Type</label>
-        <select id="cf_002" value={$file.type} on:change={changeValue("type")}>
+        <select id="cf_002" bind:value={$file.type}>
             <option />
             <option>Component</option>
             <option>Feature</option>
@@ -49,12 +56,8 @@
 
     <div class="form--field">
         <label for="cf_003">Application Name</label>
-        <input id="cf_003" on:change={changeValue("appName")} />
-    </div>
-
-    <div class="form--field">
-        <label for="cf_004">Description</label>
-        <textarea id="cf_004" on:change={changeValue("description")} />
+        <input id="cf_003" bind:value={$file.appName} />
+        <!-- on:change={changeValue("appName")} /> -->
     </div>
 
     <button on:click={submitForm} type="button">Submit</button>

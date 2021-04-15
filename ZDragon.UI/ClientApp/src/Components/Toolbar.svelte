@@ -1,15 +1,10 @@
 <script>
-    import SelectFolder from "../Forms/SelectFolder.svelte";
+    import ToolbarItem from "./ToolbarItem.svelte";
     import {
+        state,
         toggleAddApplicationDialog,
         toggleAddFileDialog,
     } from "../Services/app";
-
-    import CreateFile from "../Forms/CreateFile.svelte";
-    import CreateApplication from "../Forms/CreateApplication.svelte";
-    import Modal from "./Modal.svelte";
-    import ToolbarItem from "./ToolbarItem.svelte";
-    import { state } from "./../Services/app";
 
     let show = false;
     let selectDirectory = () => {
@@ -17,12 +12,8 @@
     };
 
     let selectedApp;
-    let showAddApplicationDialog = false;
-    let showAddFileDialog = false;
 
     state.subscribe((s) => {
-        showAddFileDialog = !!s.showAddFileDialog;
-        showAddApplicationDialog = !!s.showAddApplicationDialog;
         selectedApp = s.application;
     });
 </script>
@@ -49,19 +40,6 @@
         <i class="fa fa-times" />
     </div>
 </div>
-
-<Modal title="Select Directory" {show} close={() => (show = false)}>
-    <SelectFolder close={() => (show = false)} />
-</Modal>
-<Modal title="Add File" show={showAddFileDialog} close={toggleAddFileDialog}>
-    <CreateFile />
-</Modal>
-<Modal
-    title="Add Application"
-    show={showAddApplicationDialog}
-    close={toggleAddApplicationDialog}>
-    <CreateApplication />
-</Modal>
 
 <style type="less">
     .filler {

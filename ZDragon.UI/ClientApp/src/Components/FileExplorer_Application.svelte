@@ -7,19 +7,35 @@
     export let application = null;
     export let selected = false;
 
-    let f = (n) => (application.modules || []).filter((m) => m.fileType === n);
-    let features = f("Feature");
-    let databases = f("Database");
-    let endpoints = f("Endpoint");
-    let components = f("Component");
-    let models = f("Model");
-    let documents = f("Documentation");
+    let modules = [];
+
+    let f = (n) => (modules || []).filter((m) => m.fileType === n);
+
+    let features = [];
+    let databases = [];
+    let endpoints = [];
+    let components = [];
+    let models = [];
+    let documents = [];
+
+    $: {
+        if (application.modules.length !== modules.length) {
+            modules = application.modules;
+            features = f("Feature");
+            databases = f("Database");
+            endpoints = f("Endpoint");
+            components = f("Component");
+            models = f("Model");
+            documents = f("Documentation");
+        }
+    }
 </script>
 
 {#if application}
     <div class="application">
         <title on:click={() => setApplicationInterator(application)}
-            ><i class="fa fa-institution" />{application.name}</title>
+            ><i class="fa fa-institution" />{application.name}
+            {application.modules.length}</title>
         {#if selected}
             <div class="application--details">
                 <FileExplorerApplicationModule

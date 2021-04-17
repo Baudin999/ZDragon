@@ -119,7 +119,7 @@ namespace ZDragon.UI.Controllers {
                     return NotFound();
                 }
             }
-            catch (System.Exception) {
+            catch (System.Exception ex) {
                 return Problem(
                   title: $"Failed to get the fragment"
                   );

@@ -25,7 +25,8 @@
         height: 100%;
         border-right: 1px solid var(--color-1--border);
         background-color: var(--color-1--bg);
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding-top: 2rem;
     }
 </style>

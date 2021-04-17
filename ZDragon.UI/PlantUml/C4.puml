@@ -390,6 +390,9 @@ Rel_($from, $to, $label, "-DOWN->>")
 !unquoted procedure Rel_Down($from, $to, $label, $techn)
 Rel_($from, $to, $label, $techn, "-DOWN->>")
 !endprocedure
+!unquoted procedure Rel_D($from, $to, $label, $techn, $color)
+Rel_($from, $to, $label, $techn, $color)
+!endprocedure
 
 !unquoted procedure BiRel_D($from, $to, $label)
 Rel_($from, $to, $label, "<<-DOWN->>")
@@ -442,6 +445,7 @@ Rel_($from, $to, $label, "-LEFT->>")
 !unquoted procedure Rel_Left($from, $to, $label, $techn)
 Rel_($from, $to, $label, $techn, "-LEFT->>")
 !endprocedure
+
 
 !unquoted procedure BiRel_L($from, $to, $label)
 Rel_($from, $to, $label, "<<-LEFT->>")

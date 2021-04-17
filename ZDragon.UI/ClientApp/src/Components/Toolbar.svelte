@@ -4,17 +4,13 @@
         state,
         toggleAddApplicationDialog,
         toggleAddFileDialog,
+        toggleAddProjectDialog,
     } from "../Services/app";
 
-    let show = false;
-    let selectDirectory = () => {
-        show = !show;
-    };
-
-    let selectedApp;
+    let hasProjectSelected;
 
     state.subscribe((s) => {
-        selectedApp = s.application;
+        hasProjectSelected = !!s.project;
     });
 </script>
 
@@ -23,7 +19,7 @@
         <img style="height:1.5rem;" src="favicon.ico" alt="fav" />
         ZDragon
     </div>
-    {#if selectedApp}
+    {#if hasProjectSelected}
         <ToolbarItem
             icon="fa fa-plus"
             title="New App"
@@ -33,7 +29,10 @@
             title="New File"
             on:click={toggleAddFileDialog} />
     {/if}
-    <ToolbarItem icon="fa fa-folder" title="Open" on:click={selectDirectory} />
+    <ToolbarItem
+        icon="fa fa-folder"
+        title="Open"
+        on:click={toggleAddProjectDialog} />
     <!-- <ToolbarItem icon="fa fa-floppy-o" title="Save" /> -->
 
     <div class="app--toolbar--close">

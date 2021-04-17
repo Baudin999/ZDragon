@@ -1,7 +1,17 @@
 <script>
-    import { onDestroy, onMount } from "svelte";
+    import { state } from "../Services/app";
+    import eventbus from "../Services/eventbus";
+    import { get } from "../Services/http";
 
     export let url = null;
+    let oldUrl;
+
+    let namespace;
+    let imgContainer;
+    let content;
+    let parsed = false;
+
+    let svgDocument;
 
     let scale = 1;
     let draging = false;
@@ -37,23 +47,43 @@
         e.preventDefault();
     }
 
-    onMount(() => {});
+    $: {
+        if (url && url != oldUrl) {
+            oldUrl = url;
+            //
+            setTimeout(async () => {
+                var r = await get(url);
+                content.innerHTML = r;
+                setTimeout(() => {
+                    var text = [...content.getElementsByTagName("text")];
+                    text.forEach((item) => {
+                        item.addEventListener("click", async (event) => {
+                            var fragment = await get(
+                                `/document/find/${namespace}/${event.target.textContent}`
+                            );
+                            eventbus.broadcast("navigate", fragment);
+                        });
+                    });
+                });
+            });
+        }
+    }
 
-    onDestroy(() => {});
+    state.subscribe((s) => {
+        namespace = (s.module || {}).namespace;
+    });
 </script>
 
-<div
-    on:mousedown={startDrag}
-    on:mousemove={drag}
-    on:mouseup={stopDrag}
-    on:mouseleave={stopDrag}
-    on:mousewheel={zoom}>
-    {#if url}
-        <img
-            alt="svg"
-            src={url}
-            style={`transform: scale(${scale}) translate(${imgH}px, ${imgV}px);`} />
-    {/if}
+<div bind:this={imgContainer}>
+    <div
+        on:mousedown={startDrag}
+        on:mousemove={drag}
+        on:mouseup={stopDrag}
+        on:mouseleave={stopDrag}
+        on:mousewheel={zoom}
+        class="content"
+        bind:this={content}
+        style={`transform: scale(${scale}) translate(${imgH}px, ${imgV}px);z-index:-1;`} />
 
     <div class="popout">
         <a href={url} target="_blank"
@@ -65,19 +95,29 @@
     <div class="scale--dec" on:click={() => (scale -= 0.1)}>
         <i class="fa fa-minus" />
     </div>
+    <div class="overlay" />
 </div>
 
 <style type="less">
-    img:hover {
+    // .overlay {
+    //     position: relative;
+    //     z-index: 999;
+    // }
+    .content:hover {
         cursor: grab;
         cursor: -moz-grab;
         cursor: -webkit-grab;
     }
-    img:active {
+    .content:hover {
         cursor: grabbing;
         cursor: -moz-grabbing;
         cursor: -webkit-grabbing;
     }
+    // object {
+    //     position: relative;
+    //     z-index: 1;
+    //     pointer-events: auto;
+    // }
     .popout,
     .scale--inc,
     .scale--dec {

@@ -1,7 +1,7 @@
 <script>
   import { Router, Route } from "svelte-routing";
 
-  import SelectFolder from "./Forms/SelectFolder.svelte";
+  import SelectProject from "./Forms/SelectProject.svelte";
   import CreateFile from "./Forms/CreateFile.svelte";
   import CreateApplication from "./Forms/CreateApplication.svelte";
   import Modal from "./Components/Modal.svelte";
@@ -22,6 +22,7 @@
     state,
     toggleAddApplicationDialog,
     toggleAddFileDialog,
+    toggleAddProjectDialog,
   } from "./Services/app";
 
   let url = "";
@@ -40,10 +41,12 @@
 
   let showAddApplicationDialog = false;
   let showAddFileDialog = false;
+  let showAddProjectDialog = false;
 
   state.subscribe((s) => {
     showAddFileDialog = !!s.showAddFileDialog;
     showAddApplicationDialog = !!s.showAddApplicationDialog;
+    showAddProjectDialog = !!s.showAddProjectDialog;
   });
 </script>
 
@@ -86,9 +89,9 @@
 
 <Modal
   title="Select Directory"
-  {showAddFileDialog}
-  close={() => (showAddFileDialog = false)}>
-  <SelectFolder close={() => (showAddFileDialog = false)} />
+  show={showAddProjectDialog}
+  close={toggleAddProjectDialog}>
+  <SelectProject close={toggleAddProjectDialog} />
 </Modal>
 
 {#if showAddFileDialog}

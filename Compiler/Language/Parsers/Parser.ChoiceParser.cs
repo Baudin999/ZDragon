@@ -29,8 +29,8 @@ namespace Compiler.Language
                 AnnotationNode? annotation = null;
                 while (Current.Kind == SyntaxKind.AnnotationToken)
                 {
-                    if (annotation == null) annotation = new AnnotationNode(Take());
-                    else annotation.Add(Take());
+                    if (annotation == null) annotation = new AnnotationNode(TakeF());
+                    else annotation.Add(TakeF());
                 }
 
                 // take the pipe token
@@ -40,7 +40,7 @@ namespace Compiler.Language
 
                 // choices can be either of type String or Number
                 var value = Take();
-                if (value.Kind != SyntaxKind.StringLiteralToken && value.Kind != SyntaxKind.NumberLiteralToken)
+                if (value is not null && value.Kind != SyntaxKind.StringLiteralToken && value.Kind != SyntaxKind.NumberLiteralToken)
                 {
                     // error
                     ErrorSink.AddError(new Error(

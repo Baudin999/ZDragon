@@ -35,7 +35,7 @@
     <div class="application">
         <title on:click={() => setApplicationInterator(application)}
             ><i class="fa fa-institution" />{application.name}
-            {application.modules.length}</title>
+        </title>
         {#if selected}
             <div class="application--details">
                 <FileExplorerApplicationModule

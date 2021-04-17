@@ -44,5 +44,6 @@
 <style>
     .note {
         margin-bottom: 1rem;
+        color: var(--color-1--font);
     }
 </style>

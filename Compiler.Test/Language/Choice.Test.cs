@@ -50,6 +50,28 @@ choice Gender =
         }
 
 
+        [Fact(DisplayName = "Choice - Two Choices")]
+        public void Choice_TwoChoices() {
+            var code = @"
+choice Gender =
+    | ""Male""
+    | ""Female""
+    | ""Other""
+
+choice Age =
+    | ""Old""
+    | ""Young""
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            Assert.Equal(2, compilerResult.Tokens.Count());
+            Assert.Equal(2, compilerResult.Ast.Count());
+            Assert.Empty(compilerResult.ErrorSink.Errors);
+
+        }
+
+
         [Fact(DisplayName = "Choice - Mixed")]
         public void Choice_Mixed() {
             var code = @"

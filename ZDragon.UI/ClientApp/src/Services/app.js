@@ -109,6 +109,13 @@ export const toggleAddApplicationDialog = () => {
     }));
 };
 
+export const toggleAddProjectDialog = () => {
+    state.update((s) => ({
+        ...s,
+        showAddProjectDialog: !!!s.showAddProjectDialog
+    }));
+};
+
 export const toggleRefactorDialog = () => {
     state.update((s) => ({
         ...s,
@@ -120,6 +127,7 @@ export const toggleRefactorDialog = () => {
 
 export const resetProjects = () => {
     localStorage.removeItem("projects");
+    localStorage.removeItem("last opened project");
     state.update(s => ({
         ...s,
         projects: [],

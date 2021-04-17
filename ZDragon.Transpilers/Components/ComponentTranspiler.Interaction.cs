@@ -50,6 +50,10 @@ namespace ZDragon.Transpilers.Components {
                 if (from != null && to != null && d == "Rel_") {
                     relations.TryAdd($"{from}{to}", $"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech}, {_relColor})");
                 }
+                //else if (from != null && to != null && direction == "Down") {
+                //    var color = $"-[#de214c]DOWN-|>";
+                //    relations.TryAdd($"{from}{to}", $"Rel_D({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech}, {color})");
+                //}
                 else if (from != null && to != null) {
                     relations.TryAdd($"{from}{to}", $"{d}({from}, {to}, {title ?? name ?? description ?? node.Id}, {tech})");
                 }

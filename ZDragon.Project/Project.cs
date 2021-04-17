@@ -1,4 +1,5 @@
 ﻿using Compiler;
+using Compiler.Language.Nodes;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -126,12 +127,22 @@ namespace ZDragon.Project {
             throw new Exception("Not a valid file");
         }
 
-        public Fragment? FindFragment(string ns, string id) {
+       
+        public Fragment? FindFragment(string ns, string title) {
             if (Cache.Has(ns)) {
                 var cache = Cache.Get(ns);
-                var node = cache.Lexicon[id];
-                var _ns = node.Imported && node.ImportedFrom is not null ? node.ImportedFrom : cache.Namespace;
-                return new Fragment(id, _ns, node.IdToken, 1);
+
+                foreach (var node in cache.Lexicon.Values) {
+                    if (node is AttributesNode atsNode && atsNode.Title == title) {
+                        var _ns = node.Imported && node.ImportedFrom is not null ? node.ImportedFrom : cache.Namespace;
+                        if (atsNode.Title == title) return new Fragment(title, _ns, atsNode.IdToken, 1);
+                    }
+                    else if (node is IIdentifierExpressionNode idNode && idNode.Id == title) {
+                        var _ns = node.Imported && node.ImportedFrom is not null ? node.ImportedFrom : cache.Namespace;
+                        return new Fragment(title, _ns, idNode.IdToken, 1);
+                    }
+                };
+
             }
             return null;
         }

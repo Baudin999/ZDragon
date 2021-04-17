@@ -161,10 +161,10 @@ namespace ZDragon.Transpilers.Html {
             var directiveNodes = this.compilationresult.Ast.TakeWhile(node => node is DirectiveNode).OfType<DirectiveNode>().ToList();
             if (directiveNodes.Count > 0) {
                 tocIndex++;
-                var doc_title = directiveNodes.FirstOrDefault(d => d.Id == "Title")?.Literal ?? "No title";
-                var doc_author = directiveNodes.FirstOrDefault(d => d.Id == "Author")?.Literal ?? "No author";
-                var doc_date = directiveNodes.FirstOrDefault(d => d.Id == "Date")?.Literal ?? "No date";
-                var doc_image = directiveNodes.FirstOrDefault(d => d.Id == "Image")?.Literal ?? "/standalone-icon.png";
+                var doc_title = directiveNodes.FirstOrDefault(d => d.Id == "title")?.Literal ?? "No title";
+                var doc_author = directiveNodes.FirstOrDefault(d => d.Id == "author")?.Literal ?? "No author";
+                var doc_date = directiveNodes.FirstOrDefault(d => d.Id == "date")?.Literal ?? "No date";
+                var doc_image = directiveNodes.FirstOrDefault(d => d.Id == "image")?.Literal ?? "/standalone-icon.png";
 
                 parts.Add($@"
 <div class='title-page'>

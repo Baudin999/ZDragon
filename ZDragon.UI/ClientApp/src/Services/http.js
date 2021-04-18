@@ -10,6 +10,8 @@ let manageResult = async (response, isText = false) => {
         //push("/login");
     }
 
+    console.log(response.status);
+
     try {
         // just simply return the text
         if (isText) return await response.text();
@@ -20,6 +22,7 @@ let manageResult = async (response, isText = false) => {
         return clone.text();
     }
 };
+
 
 export const post = async (url, data) => {
     fetcher.set(true);

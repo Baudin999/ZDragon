@@ -342,17 +342,22 @@ export const init = () => {
         var namespace = (store.module || {}).namespace;
 
         if (namespace) {
-            var content = await get(`/document/lift/${namespace}/${term}`);
-
-            state.update(s => ({
-                ...s,
-                showRefactoringDialog: true,
-                refactoring: {
-                    title: term,
-                    namespace,
-                    content
-                }
-            }));
+            try {
+                var content = await get(`/document/lift/${namespace}/${term}`);
+                console.log(content);
+                state.update(s => ({
+                    ...s,
+                    showRefactoringDialog: true,
+                    refactoring: {
+                        title: term,
+                        namespace,
+                        content
+                    }
+                }));
+            }
+            catch (ex) {
+                // do nothing with the exception
+            }
         }
     });
 

@@ -1,5 +1,5 @@
 <script>
-    import { post } from "./../Services/http";
+    import { post } from "../Services/http";
     import { state, resetProjects, selectProject } from "./../Services/app";
 
     let projects = [];

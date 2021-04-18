@@ -1700,138 +1700,57 @@ var zdragon = (function () {
     	}
     }
 
-    /*! *****************************************************************************
-    Copyright (c) Microsoft Corporation. All rights reserved.
-    Licensed under the Apache License, Version 2.0 (the "License"); you may not use
-    this file except in compliance with the License. You may obtain a copy of the
-    License at http://www.apache.org/licenses/LICENSE-2.0
+    // import { push } from "svelte-spa-router";
 
-    THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
-    WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
-    MERCHANTABLITY OR NON-INFRINGEMENT.
+    let fetcher = writable(false);
 
-    See the Apache Version 2.0 License for specific language governing permissions
-    and limitations under the License.
-    ***************************************************************************** */
+    let manageResult = async (response, isText = false) => {
+        fetcher.set(false);
+        var clone = response.clone();
+        if (response.status === 401) ;
 
-    function __awaiter(thisArg, _arguments, P, generator) {
-        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-        return new (P || (P = Promise))(function (resolve, reject) {
-            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-            step((generator = generator.apply(thisArg, _arguments || [])).next());
-        });
-    }
+        console.log(response.status);
 
-    function __generator(thisArg, body) {
-        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-        function verb(n) { return function (v) { return step([n, v]); }; }
-        function step(op) {
-            if (f) throw new TypeError("Generator is already executing.");
-            while (_) try {
-                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-                if (y = 0, t) op = [op[0] & 2, t.value];
-                switch (op[0]) {
-                    case 0: case 1: t = op; break;
-                    case 4: _.label++; return { value: op[1], done: false };
-                    case 5: _.label++; y = op[1]; op = [0]; continue;
-                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                    default:
-                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                        if (t[2]) _.ops.pop();
-                        _.trys.pop(); continue;
-                }
-                op = body.call(thisArg, _);
-            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        try {
+            // just simply return the text
+            if (isText) return await response.text();
+
+            // try to parse the json result
+            return await response.json();
+        } catch (err) {
+            return clone.text();
         }
-    }
-
-    var fetcher = writable(false);
-    var manageResult = function (response, isText) {
-        if (isText === void 0) { isText = false; }
-        return __awaiter(void 0, void 0, void 0, function () {
-            var clone, err_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        fetcher.set(false);
-                        clone = response.clone();
-                        if (response.status === 401) ;
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 5, , 6]);
-                        if (!isText) return [3 /*break*/, 3];
-                        return [4 /*yield*/, response.text()];
-                    case 2: return [2 /*return*/, _a.sent()];
-                    case 3: return [4 /*yield*/, response.json()];
-                    case 4: 
-                    // try to parse the json result
-                    return [2 /*return*/, _a.sent()];
-                    case 5:
-                        err_1 = _a.sent();
-                        return [2 /*return*/, clone.text()];
-                    case 6: return [2 /*return*/];
-                }
-            });
-        });
     };
-    var post = function (url, data) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, err_2;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    fetcher.set(true);
-                    _b.label = 1;
-                case 1:
-                    _b.trys.push([1, 3, , 4]);
-                    _a = manageResult;
-                    return [4 /*yield*/, fetch(url, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: data ? JSON.stringify(data) : null
-                        })];
-                case 2: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
-                case 3:
-                    err_2 = _b.sent();
-                    fetcher.set(false);
-                    console.log("ERROR:");
-                    console.log(err_2);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
-            }
-        });
-    }); };
-    var get = function (url) { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, err_5;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0:
-                    fetcher.set(true);
-                    _b.label = 1;
-                case 1:
-                    _b.trys.push([1, 3, , 4]);
-                    _a = manageResult;
-                    return [4 /*yield*/, fetch(url)];
-                case 2: return [2 /*return*/, _a.apply(void 0, [_b.sent()])];
-                case 3:
-                    err_5 = _b.sent();
-                    fetcher.set(false);
-                    console.log(err_5);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
-            }
-        });
-    }); };
-    //# sourceMappingURL=http.js.map
+
+
+    const post = async (url, data) => {
+        fetcher.set(true);
+        try {
+            return manageResult(
+                await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: data ? JSON.stringify(data) : null
+                })
+            );
+        } catch (err) {
+            fetcher.set(false);
+            console.log("ERROR:");
+            console.log(err);
+        }
+    };
+
+    const get = async url => {
+        fetcher.set(true);
+        try {
+            return manageResult(await fetch(url));
+        } catch (err) {
+            fetcher.set(false);
+            console.log(err);
+        }
+    };
 
     class eventbus {
 
@@ -2173,17 +2092,22 @@ var zdragon = (function () {
             var namespace = (store.module || {}).namespace;
 
             if (namespace) {
-                var content = await get(`/document/lift/${namespace}/${term}`);
-
-                state.update(s => ({
-                    ...s,
-                    showRefactoringDialog: true,
-                    refactoring: {
-                        title: term,
-                        namespace,
-                        content
-                    }
-                }));
+                try {
+                    var content = await get(`/document/lift/${namespace}/${term}`);
+                    console.log(content);
+                    state.update(s => ({
+                        ...s,
+                        showRefactoringDialog: true,
+                        refactoring: {
+                            title: term,
+                            namespace,
+                            content
+                        }
+                    }));
+                }
+                catch (ex) {
+                    // do nothing with the exception
+                }
             }
         });
 
@@ -3720,26 +3644,26 @@ var zdragon = (function () {
     			div4 = element$1("div");
     			attr_dev(div0, "class", "content svelte-1t4l0am");
     			attr_dev(div0, "style", div0_style_value = `transform: scale(${/*scale*/ ctx[3]}) translate(${/*imgH*/ ctx[5]}px, ${/*imgV*/ ctx[6]}px);z-index:-1;`);
-    			add_location(div0, file$8, 77, 4, 1961);
+    			add_location(div0, file$8, 84, 4, 2302);
     			attr_dev(i0, "class", "fa fa-external-link");
-    			add_location(i0, file$8, 89, 13, 2352);
+    			add_location(i0, file$8, 96, 13, 2693);
     			attr_dev(a, "href", /*url*/ ctx[0]);
     			attr_dev(a, "target", "_blank");
     			attr_dev(a, "class", "svelte-1t4l0am");
-    			add_location(a, file$8, 88, 8, 2308);
+    			add_location(a, file$8, 95, 8, 2649);
     			attr_dev(div1, "class", "popout svelte-1t4l0am");
-    			add_location(div1, file$8, 87, 4, 2278);
+    			add_location(div1, file$8, 94, 4, 2619);
     			attr_dev(i1, "class", "fa fa-plus");
-    			add_location(i1, file$8, 92, 8, 2489);
+    			add_location(i1, file$8, 99, 8, 2830);
     			attr_dev(div2, "class", "scale--inc svelte-1t4l0am");
-    			add_location(div2, file$8, 91, 4, 2423);
+    			add_location(div2, file$8, 98, 4, 2764);
     			attr_dev(i2, "class", "fa fa-minus");
-    			add_location(i2, file$8, 95, 8, 2597);
+    			add_location(i2, file$8, 102, 8, 2938);
     			attr_dev(div3, "class", "scale--dec svelte-1t4l0am");
-    			add_location(div3, file$8, 94, 4, 2531);
+    			add_location(div3, file$8, 101, 4, 2872);
     			attr_dev(div4, "class", "overlay");
-    			add_location(div4, file$8, 97, 4, 2640);
-    			add_location(div5, file$8, 76, 0, 1925);
+    			add_location(div4, file$8, 104, 4, 2981);
+    			add_location(div5, file$8, 83, 0, 2266);
 
     			dispose = [
     				listen_dev(div0, "mousedown", /*startDrag*/ ctx[7], false, false, false),
@@ -3930,8 +3854,12 @@ var zdragon = (function () {
 
     							text.forEach(item => {
     								item.addEventListener("click", async event => {
-    									var fragment = await get(`/document/find/${namespace}/${event.target.textContent}`);
-    									eventbus$1.broadcast("navigate", fragment);
+    									if (event.ctrlKey) {
+    										var fragment = await get(`/document/find/${namespace}/${event.target.textContent}`);
+    										eventbus$1.broadcast("navigate", fragment);
+    									} else {
+    										eventbus$1.broadcast("start refactor", event.target.textContent);
+    									}
     								});
     							});
     						});
@@ -6877,7 +6805,7 @@ var zdragon = (function () {
     		c: function create() {
     			i = element$1("i");
     			attr_dev(i, "class", "fa fa-check svelte-1xz53c9");
-    			add_location(i, file$f, 20, 16, 599);
+    			add_location(i, file$f, 20, 16, 597);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -6922,10 +6850,10 @@ var zdragon = (function () {
     			t1 = text(t1_value);
     			t2 = space();
     			attr_dev(span, "class", "svelte-1xz53c9");
-    			add_location(span, file$f, 22, 12, 657);
+    			add_location(span, file$f, 22, 12, 655);
     			attr_dev(div, "class", "application svelte-1xz53c9");
     			toggle_class(div, "selected", /*selectedProject*/ ctx[1] === /*project*/ ctx[3]);
-    			add_location(div, file$f, 15, 8, 386);
+    			add_location(div, file$f, 15, 8, 384);
     			dispose = listen_dev(div, "click", click_handler, false, false, false);
     		},
     		m: function mount(target, anchor) {
@@ -6999,11 +6927,11 @@ var zdragon = (function () {
     			div1 = element$1("div");
     			i = element$1("i");
     			attr_dev(div0, "class", "home svelte-1xz53c9");
-    			add_location(div0, file$f, 13, 0, 325);
+    			add_location(div0, file$f, 13, 0, 323);
     			attr_dev(i, "class", "fa fa-times svelte-1xz53c9");
-    			add_location(i, file$f, 27, 4, 768);
+    			add_location(i, file$f, 27, 4, 766);
     			attr_dev(div1, "class", "clear svelte-1xz53c9");
-    			add_location(div1, file$f, 26, 0, 718);
+    			add_location(div1, file$f, 26, 0, 716);
     			dispose = listen_dev(div1, "click", resetProjects, false, false, false);
     		},
     		l: function claim(nodes) {

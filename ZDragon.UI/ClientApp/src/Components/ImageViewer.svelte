@@ -58,10 +58,17 @@
                     var text = [...content.getElementsByTagName("text")];
                     text.forEach((item) => {
                         item.addEventListener("click", async (event) => {
-                            var fragment = await get(
-                                `/document/find/${namespace}/${event.target.textContent}`
-                            );
-                            eventbus.broadcast("navigate", fragment);
+                            if (event.ctrlKey) {
+                                var fragment = await get(
+                                    `/document/find/${namespace}/${event.target.textContent}`
+                                );
+                                eventbus.broadcast("navigate", fragment);
+                            } else {
+                                eventbus.broadcast(
+                                    "start refactor",
+                                    event.target.textContent
+                                );
+                            }
                         });
                     });
                 });

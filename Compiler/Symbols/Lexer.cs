@@ -249,7 +249,7 @@ namespace Compiler.Symbols {
                 var token = t[i];
                 var next = i + 1 < max ? t[i + 1] : null;
 
-                if (!inContext && previous?.Kind == SyntaxKind.NewLineToken && (Mappings.Keywords.ContainsKey(token.Value) || token.Kind == SyntaxKind.PercentageToken || token.Kind == SyntaxKind.AmpersandToken)) {
+                if (!inContext && (previous?.Kind == SyntaxKind.NewLineToken || previous is null) && (Mappings.Keywords.ContainsKey(token.Value) || token.Kind == SyntaxKind.PercentageToken || token.Kind == SyntaxKind.AmpersandToken)) {
                     yield return new Token(SyntaxKind.StartBlock);
                     inContext = true;
                     yield return token;

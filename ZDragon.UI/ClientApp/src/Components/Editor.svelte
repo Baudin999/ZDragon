@@ -65,6 +65,14 @@
                 eventbus.broadcast("navigateTo", word.word);
             }
         });
+
+        window.getCurrentWord = () => {
+            var position = editor.getPosition();
+            if (position) {
+                var token = editor.getModel().getWordAtPosition(position);
+                if (token && token.word) return token.word;
+            }
+        };
     };
     onMount(() => {
         initEditor();

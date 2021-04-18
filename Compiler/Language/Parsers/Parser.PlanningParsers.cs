@@ -7,6 +7,14 @@ namespace Compiler.Language {
     public partial class Parser {
 
         internal ExpressionNode ParseRoadmap() {
+
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
             var start = Take(SyntaxKind.RoadmapDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
@@ -62,10 +70,17 @@ namespace Compiler.Language {
                 }
             }
 
-            return new RoadmapNode(Token.Range(start, end), name, extensions, attributes);
+            return new RoadmapNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
         }
 
         internal ExpressionNode ParseMilestone() {
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
             var start = Take(SyntaxKind.MilestoneDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
@@ -121,10 +136,17 @@ namespace Compiler.Language {
                 }
             }
 
-            return new MilestoneNode(Token.Range(start, end), name, extensions, attributes);
+            return new MilestoneNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
         }
 
         internal ExpressionNode ParseTask() {
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
             var start = Take(SyntaxKind.TaskDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
@@ -180,7 +202,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new TaskNode(Token.Range(start, end), name, extensions, attributes);
+            return new TaskNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
         }
     }
 }

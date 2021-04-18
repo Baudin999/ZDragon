@@ -4,15 +4,17 @@ using System.Linq;
 namespace Compiler.Symbols {
     internal partial class ContextualTokenizer {
         private TokenGroup TokenizeAttributesDefinition(List<Token> annotations, ContextType contextType) {
-            var tokens = new List<Token?>();
+            var tokens = new List<Token>();
             var definitionEnded = false;
             var fieldStarted = false;
+
+            tokens.AddRange(annotations);
 
             while (Current != null && Current?.Kind != SyntaxKind.EndBlock) {
 
                 // We'll want to end the definition phase of the token-grouper
                 if (Current?.Kind == SyntaxKind.EqualsToken) {
-                    tokens.Add(Take()); // take the equals
+                    tokens.Add(TakeF()); // take the equals
                     definitionEnded = true;
                 }
 
@@ -46,8 +48,8 @@ namespace Compiler.Symbols {
                     fieldStarted = true;
                     tokens.Add(new Token(SyntaxKind.AttributeFieldStarted));
 
-                    tokens.Add(Take()); // the identifier
-                    tokens.Add(Take()); // the colon
+                    tokens.Add(TakeF()); // the identifier
+                    tokens.Add(TakeF()); // the colon
                 }
 
                 else if (!fieldStarted && Current?.Kind == SyntaxKind.WhiteSpaceToken) Take();              // skip whitespaces, but only outside of field definitions
@@ -59,7 +61,7 @@ namespace Compiler.Symbols {
                 else if (
                     fieldStarted &&
                     Current?.Kind == SyntaxKind.NewLineToken &&
-                    Next?.Kind != SyntaxKind.ContextualIndent1) tokens.Add(Take());                         // include newlines in description fields.
+                    Next?.Kind != SyntaxKind.ContextualIndent1) tokens.Add(TakeF());                         // include newlines in description fields.
                 else if (Current?.Kind == SyntaxKind.ContextualIndent1) Take();                             // contextual tokens...
                 else if (Current?.Kind == SyntaxKind.ContextualIndent2) {
                     tokens.Add(new Token(System.Environment.NewLine, SyntaxKind.NewLineToken, Current));
@@ -82,7 +84,7 @@ namespace Compiler.Symbols {
                 }
 
                 else {
-                    tokens.Add(Take());
+                    tokens.Add(TakeF());
                 }
             }
 

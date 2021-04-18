@@ -23,7 +23,9 @@
     toggleAddApplicationDialog,
     toggleAddFileDialog,
     toggleAddProjectDialog,
+    toggleRefactoringDialog,
   } from "./Services/app";
+  import RefactorDialog from "./Forms/RefactorDialog.svelte";
 
   let url = "";
   let showSearch = false;
@@ -42,11 +44,13 @@
   let showAddApplicationDialog = false;
   let showAddFileDialog = false;
   let showAddProjectDialog = false;
+  let showRefactoringDialog = false;
 
   state.subscribe((s) => {
     showAddFileDialog = !!s.showAddFileDialog;
     showAddApplicationDialog = !!s.showAddApplicationDialog;
     showAddProjectDialog = !!s.showAddProjectDialog;
+    showRefactoringDialog = !!s.showRefactoringDialog;
   });
 </script>
 
@@ -106,6 +110,15 @@
   close={toggleAddApplicationDialog}>
   <CreateApplication />
 </Modal>
+
+{#if showRefactoringDialog}
+  <Modal
+    title="Refactoring"
+    show={showRefactoringDialog}
+    close={toggleRefactoringDialog}>
+    <RefactorDialog />
+  </Modal>
+{/if}
 
 <style type="less">
   .app--main {

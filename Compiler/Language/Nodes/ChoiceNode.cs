@@ -1,5 +1,7 @@
 ﻿using Compiler.Symbols;
+using Compiler.Language;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Compiler.Language.Nodes {
     public class ChoiceNode : ExpressionNode, ILanguageNode, IIdentifierExpressionNode {
@@ -13,6 +15,14 @@ namespace Compiler.Language.Nodes {
             this.Annotation = annotationNode;
             this.IdToken = id;
             this.Fields = fields;
+        }
+
+        public override string Hydrate() {
+            return $@"
+{this.Annotation.AnnotationTokens.Select(a => a.Value).PadAndJoin("", System.Environment.NewLine)}
+choice {Id} =
+{string.Join(System.Environment.NewLine, Fields.Select(f => f.Hydrate()))}
+".Trim();
         }
 
     }

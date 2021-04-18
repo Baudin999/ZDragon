@@ -99,10 +99,6 @@
 </div>
 
 <style type="less">
-    // .overlay {
-    //     position: relative;
-    //     z-index: 999;
-    // }
     .content:hover {
         cursor: grab;
         cursor: -moz-grab;
@@ -113,11 +109,7 @@
         cursor: -moz-grabbing;
         cursor: -webkit-grabbing;
     }
-    // object {
-    //     position: relative;
-    //     z-index: 1;
-    //     pointer-events: auto;
-    // }
+
     .popout,
     .scale--inc,
     .scale--dec {

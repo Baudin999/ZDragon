@@ -147,6 +147,48 @@ namespace ZDragon.Project {
             return null;
         }
 
+        public IEnumerable<object> GetRegionContent(string ns, string id) {
+            if (Cache.Has(ns)) {
+                var cache = Cache.Get(ns);
+
+                if (cache.Lexicon.ContainsKey(id)) {
+
+                    var lexiconNode = (AstNode)cache.Lexicon[id];
+                    yield return new {
+                        Id = id,
+                        Literal = lexiconNode.Hydrate()
+                    };
+
+
+                    var found = false;
+                    foreach (var node in cache.Ast) {
+                        if (node is DirectiveNode diStart && diStart.Key == "region" && diStart.Value == id) {
+                            found = true;
+                        }
+                        if (node is DirectiveNode diEnd && diEnd.Key == "endregion" && diEnd.Value == id) {
+                            found = false;
+                        }
+
+
+                        if (found) {
+                            if (node is ViewNode view) {
+                                var _ns = view.Imported ? view.ImportedFrom : ns;
+                                yield return new {
+                                    IsImage = true,
+                                    Url = $"/documents/{_ns}/{view.Hash}.svg",
+                                    Literal = view.Hydrate()
+                                };
+                            }
+                            else if (node is IDocumentNode) {
+                                yield return node;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
         public List<Fragment> Search(string query) {
             return this.Cache.Search(query);
         }

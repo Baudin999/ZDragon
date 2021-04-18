@@ -21,5 +21,9 @@ namespace Compiler.Language.Nodes {
         public virtual AstNode Copy() { 
             return this; 
         }
+
+        public virtual string Hydrate() {
+            return "not-implemented";
+        }
     }
 }

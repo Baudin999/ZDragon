@@ -8,6 +8,7 @@ namespace Compiler.Language.Nodes {
         public string Id => IdToken.Value.Trim();
         public List<AttributeNode> Attributes { get; }
         public List<Token> Extensions { get; }
+        public AnnotationNode AnnotationNode { get; }
 
         public string Title => GetAttribute("Title") ?? GetAttribute("Name") ?? Id;
         public string? Description => GetAttribute("Description");
@@ -34,14 +35,43 @@ namespace Compiler.Language.Nodes {
             return this.Attributes.FirstOrDefault(a => a.Key == name)?.Value ?? _default;
         }
 
-        public AttributesNode(ISourceSegment segment, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes, ExpressionKind kind) : base(segment, kind) {
+        public AttributesNode(ISourceSegment segment, AnnotationNode annotationNode, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes, ExpressionKind kind) : base(segment, kind) {
             this.IdToken = name;
             this.Attributes = attributes.ToList();
             this.Extensions = extensions;
+            this.AnnotationNode = annotationNode;
         }
 
         public override string ToString() {
             return Id;
+        }
+
+        public override string Hydrate() {
+
+            var t = this switch {
+                SystemNode s => "system",
+                ComponentNode s => "component",
+                PersonNode s => "person",
+                RequirementNode s => "requirement",
+                GuidelineNode s => "guideline",
+                _ => "component"
+            };
+
+
+            if (this.Attributes.Count == 0) {
+                return @$"
+{this.AnnotationNode.AnnotationTokens.Select(a => a.Value).PadAndJoin("", System.Environment.NewLine)}
+{t} {Id}
+".Trim();
+            }
+            else {
+                return @$"
+{this.AnnotationNode.AnnotationTokens.Select(a => a.Value).PadAndJoin("", System.Environment.NewLine)}
+{t} {Id} =
+{string.Join(System.Environment.NewLine, Attributes.Select(f => f.Hydrate()))}
+".Trim();
+            }
+
         }
     }
 

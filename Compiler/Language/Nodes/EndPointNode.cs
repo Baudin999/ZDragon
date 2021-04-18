@@ -10,7 +10,10 @@ namespace Compiler.Language.Nodes {
         public string Literal => "";
         public bool IsTemplate => false;
 
-        public EndpointNode(ISourceSegment segment, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes, ExpressionNode? typeDefinition) : base(segment, name, extensions, attributes, ExpressionKind.EndPointExpression) {
+        public EndpointNode(
+            ISourceSegment segment, AnnotationNode annotationNode, Token name, List<Token> extensions, IEnumerable<AttributeNode> attributes, ExpressionNode? typeDefinition) : 
+            base(segment, annotationNode, name, extensions, attributes, ExpressionKind.EndPointExpression) {
+            //
             this.TypeDefinition = typeDefinition;
         }
 

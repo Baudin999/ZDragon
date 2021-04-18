@@ -7,6 +7,14 @@ namespace Compiler.Language {
     public partial class Parser {
 
         internal ExpressionNode ParseSystem() {
+
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
             var start = TakeF(SyntaxKind.SystemDeclarationToken);
             var name = TakeF();
             if (name.Kind != SyntaxKind.IdentifierToken) {
@@ -59,7 +67,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new SystemNode(Token.Range(start, end), name, extensions, attributes);
+            return new SystemNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
         }
     }
 }

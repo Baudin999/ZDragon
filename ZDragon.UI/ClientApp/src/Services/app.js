@@ -116,10 +116,10 @@ export const toggleAddProjectDialog = () => {
     }));
 };
 
-export const toggleRefactorDialog = () => {
+export const toggleRefactoringDialog = () => {
     state.update((s) => ({
         ...s,
-        showRefactorDialog: !!!s.showRefactorDialog
+        showRefactoringDialog: !!!s.showRefactoringDialog
     }));
 };
 
@@ -330,6 +330,29 @@ export const init = () => {
             if (namespace !== store.selectedModule && namespace) {
                 navigate("/editor/" + namespace);
             }
+        }
+    });
+
+    eventbus.subscribe("start refactor", async (term) => {
+        // This is the refactoring of certain terms in our
+        // application landscape. Use this function to start
+        // the refactoring process.
+
+        var store = _get(state);
+        var namespace = (store.module || {}).namespace;
+
+        if (namespace) {
+            var content = await get(`/document/lift/${namespace}/${term}`);
+
+            state.update(s => ({
+                ...s,
+                showRefactoringDialog: true,
+                refactoring: {
+                    title: term,
+                    namespace,
+                    content
+                }
+            }));
         }
     });
 

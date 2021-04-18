@@ -7,6 +7,13 @@ namespace Compiler.Language {
     public partial class Parser {
 
         internal ExpressionNode ParseEndPoint() {
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
             var start = Take(SyntaxKind.EndPointDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
@@ -69,7 +76,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new EndpointNode(Token.Range(start, end), name, extensions, attributes, expression);
+            return new EndpointNode(Token.Range(start, end), annotationNode, name, extensions, attributes, expression);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Compiler {
@@ -36,7 +37,7 @@ namespace Compiler {
             return sha256.ComputeHash(StringToByteArray(s));
         }
 
-        public static string WordWrap(string text, int maxLineLength) {
+        public static string WordWrap(string text, int maxLineLength, string wrapString) {
             var list = new List<string>();
 
             int currentIndex;
@@ -50,7 +51,16 @@ namespace Compiler {
                 lastWrap = currentIndex;
             } while (currentIndex < text.Length);
 
-            return string.Join("\\n",list);
+            return string.Join(wrapString,list);
+        }
+        public static string WordWrap(string text, int maxLineLength) {
+            return WordWrap(text, maxLineLength, "\\n");
+            
+        }
+
+        public static string PadAndJoin(this IEnumerable<string> items, string leftPad, string join) {
+            var paddedItems = items.Select(i => leftPad + i);
+            return string.Join(join, paddedItems);
         }
     }
 }

@@ -7,12 +7,21 @@ namespace Compiler.Language {
     public partial class Parser {
 
         internal ExpressionNode ParseComponent() {
+
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
+
             var start = Take(SyntaxKind.ComponentDeclarationToken);
             var name = Take();
-            if (name.Kind != SyntaxKind.IdentifierToken) {
-                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name));
+            if (name?.Kind != SyntaxKind.IdentifierToken) {
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name ?? start ?? Token.DefaultSourceSegment()));
             }
-            Token end = name;
+            Token end = name ?? new Token();
 
             // extensions
             List<Token> extensions = new List<Token>();
@@ -60,7 +69,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new ComponentNode(Token.Range(start, end), name, extensions, attributes);
+            return new ComponentNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
         }
    
 

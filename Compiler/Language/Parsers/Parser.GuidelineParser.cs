@@ -7,6 +7,14 @@ namespace Compiler.Language {
     public partial class Parser {
 
         internal ExpressionNode ParseGuideline() {
+            // handle the annotations
+            var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
+            var annotationNode =
+                annotations.Count > 0 ?
+                new AnnotationNode(annotations) :
+                new AnnotationNode(Current ?? SourceSegment.Empty);
+
+
             var start = Take(SyntaxKind.GuidelineDeclarationToken);
             var name = Take();
             if (name.Kind != SyntaxKind.IdentifierToken) {
@@ -62,7 +70,7 @@ namespace Compiler.Language {
                 }
             }
 
-            return new GuidelineNode(Token.Range(start, end), name, extensions, attributes);
+            return new GuidelineNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
         }
     }
 }

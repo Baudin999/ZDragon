@@ -1,4 +1,5 @@
-﻿using Compiler.Symbols;
+﻿using Compiler;
+using Compiler.Symbols;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -35,6 +36,26 @@ namespace Compiler.Language.Nodes {
             }
             catch (NotSupportedException) {
                 return default(T);
+            }
+        }
+
+        public override string Hydrate() {
+
+            if (this.ItemsTokens.Count() == 0) {
+
+                return $"    {Key}:" + String.Join("", this.ValueToken.Select(t => {
+                    if (t.Kind == SyntaxKind.NewLineToken) {
+                        return Environment.NewLine + "        ";
+                    }
+                    else {
+                        return t.Value;
+                    }
+                }));
+            }
+            else {
+                return $@"    {Key}:
+{this.Items.PadAndJoin("        - ", Environment.NewLine)}";
+                
             }
         }
     }

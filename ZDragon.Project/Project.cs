@@ -172,7 +172,8 @@ namespace ZDragon.Project {
                     yield return new {
                         Id = id,
                         Literal = (astNode as AstNode)?.Hydrate() ?? "unknown",
-                        Namespace = astNode.Imported ? astNode.Namespace : ns
+                        Namespace = astNode.Imported ? astNode.Namespace : ns,
+                        Postition = astNode.IdToken
                     };
 
 
@@ -193,13 +194,15 @@ namespace ZDragon.Project {
                                     Url = $"/documents/{node.Namespace ?? cache.Namespace}/{view.Hash}.svg",
                                     Literal = view.Hydrate(),
                                     Namespace = node.Namespace ?? cache.Namespace,
-                                    Id = view.Id
+                                    Id = view.Id,
+                                    Position = view.IdToken
                                 };
                             }
                             else if (node is IDocumentNode dn) {
                                 yield return new {
                                     Literal = dn.Literal,
-                                    Namespace = node.Namespace ?? cache.Namespace
+                                    Namespace = node.Namespace ?? cache.Namespace,
+                                    Position = node.Segment
                                 };
                             }
                         }

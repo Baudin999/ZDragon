@@ -1,5 +1,6 @@
 <script>
-    import { state } from "../Services/app.js";
+    import { state, toggleRefactoringDialog } from "../Services/app.js";
+    import eventbus from "../Services/eventbus.js";
 
     let content = [];
     let namespace = "";
@@ -17,7 +18,14 @@
 <div class="refactor-content">
     <div class="items">
         {#each content as c}
-            <div class="item">
+            <div
+                class="item"
+                on:click={() => {
+                    // on click navigate to the correct item
+                    // in the other namespace
+                    toggleRefactoringDialog();
+                    eventbus.broadcast("navigate", c);
+                }}>
                 {#if c.isImage}
                     <img alt="svg" src={c.url} />
                 {:else}

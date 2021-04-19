@@ -128,23 +128,6 @@ namespace ZDragon.UI.Controllers {
         }
 
 
-        [HttpGet("/document/lift/{ns}/{id}")]
-        public IActionResult GetComponentRefactoring(string ns, string id) {
-            try {
-                var region = _project.GetRegionContent(ns, id).ToList();
-                if (region is not null && region.Count > 0) {
-                    return Ok(region);
-                }
-                else {
-                    return NotFound();
-                }
-            }
-            catch (System.Exception ex) {
-                return Problem(
-                  title: $"Failed to get the fragment"
-                  );
-            }
-        }
 
 
     }

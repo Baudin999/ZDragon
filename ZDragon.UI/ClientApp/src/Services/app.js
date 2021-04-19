@@ -343,8 +343,8 @@ export const init = () => {
 
         if (namespace) {
             try {
-                var content = await get(`/document/lift/${namespace}/${term}`);
-                console.log(content);
+                var content = await get(`/api/component/info/${namespace}/${term}`);
+                if (!Array.isArray(content)) return;
                 state.update(s => ({
                     ...s,
                     showRefactoringDialog: true,

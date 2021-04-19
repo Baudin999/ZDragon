@@ -127,19 +127,18 @@ namespace ZDragon.Project {
             throw new Exception("Not a valid file");
         }
 
-       
-        public Fragment? FindFragment(string ns, string title) {
+        private IIdentifierExpressionNode? FindByTitle(string ns, string title) {
             if (Cache.Has(ns)) {
                 var cache = Cache.Get(ns);
 
                 foreach (var node in cache.Lexicon.Values) {
                     if (node is AttributesNode atsNode && atsNode.Title == title) {
-                        var _ns = node.Imported && node.ImportedFrom is not null ? node.ImportedFrom : cache.Namespace;
-                        if (atsNode.Title == title) return new Fragment(title, _ns, atsNode.IdToken, 1);
+                        var _ns = node.Imported && node.Namespace is not null ? node.Namespace : cache.Namespace;
+                        if (atsNode.Title == title) return atsNode;
                     }
                     else if (node is IIdentifierExpressionNode idNode && idNode.Id == title) {
-                        var _ns = node.Imported && node.ImportedFrom is not null ? node.ImportedFrom : cache.Namespace;
-                        return new Fragment(title, _ns, idNode.IdToken, 1);
+                        var _ns = node.Imported && node.Namespace is not null ? node.Namespace : cache.Namespace;
+                        return node;
                     }
                 };
 
@@ -147,43 +146,63 @@ namespace ZDragon.Project {
             return null;
         }
 
-        public IEnumerable<object> GetRegionContent(string ns, string id) {
+       
+        public Fragment? FindFragment(string ns, string title) {
+            if (Cache.Has(ns)) {
+                var cache = Cache.Get(ns);
+                var node = FindByTitle(ns, title);
+                if (node is not null) {
+                    var _ns = node.Imported && node.Namespace is not null ? node.Namespace : cache.Namespace;
+                    return new Fragment(title, _ns, node.IdToken, 1);
+                }
+            }
+            return null;
+        }
+
+        public IEnumerable<object> GetComponentInformation(string ns, string id) {
             if (Cache.Has(ns)) {
                 var cache = Cache.Get(ns);
 
-                if (cache.Lexicon.ContainsKey(id)) {
+                var astNode = FindByTitle(ns, id);
+                if (astNode is not null && astNode?.Namespace != ns && Cache.Has(astNode?.Namespace ?? "NOTHING__&&&")) {
+                    cache = Cache.Get(astNode?.Namespace ?? ns);
+                }
+                if (astNode is not null) {
 
-                    var lexiconNode = (AstNode)cache.Lexicon[id];
                     yield return new {
                         Id = id,
-                        Literal = lexiconNode.Hydrate()
+                        Literal = (astNode as AstNode)?.Hydrate() ?? "unknown",
+                        Namespace = astNode.Imported ? astNode.Namespace : ns
                     };
 
 
                     var found = false;
                     foreach (var node in cache.Ast) {
-                        if (node is DirectiveNode diStart && diStart.Key == "region" && diStart.Value == id) {
+                        if (node is DirectiveNode diStart && diStart.Key == "region" && diStart.Value == astNode.Id) {
                             found = true;
                         }
-                        if (node is DirectiveNode diEnd && diEnd.Key == "endregion" && diEnd.Value == id) {
+                        if (node is DirectiveNode diEnd && diEnd.Key == "endregion" && diEnd.Value == astNode.Id) {
                             found = false;
                         }
 
 
                         if (found) {
                             if (node is ViewNode view) {
-                                var _ns = view.Imported ? view.ImportedFrom : ns;
                                 yield return new {
                                     IsImage = true,
-                                    Url = $"/documents/{_ns}/{view.Hash}.svg",
-                                    Literal = view.Hydrate()
+                                    Url = $"/documents/{node.Namespace ?? cache.Namespace}/{view.Hash}.svg",
+                                    Literal = view.Hydrate(),
+                                    Namespace = node.Namespace ?? cache.Namespace,
+                                    Id = view.Id
                                 };
                             }
-                            else if (node is IDocumentNode) {
-                                yield return node;
+                            else if (node is IDocumentNode dn) {
+                                yield return new {
+                                    Literal = dn.Literal,
+                                    Namespace = node.Namespace ?? cache.Namespace
+                                };
                             }
                         }
-
                     }
                 }
             }

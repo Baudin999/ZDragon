@@ -227,7 +227,7 @@ namespace ZDragon.Transpilers.Html {
                     parts.Add(FragmentTranspiler.RenderIncludeNode(includeNode));
                 }
                 else if (documentPart is ViewNode viewNode) {
-                    if (viewNode.Imported && viewNode.ImportedFrom != null) parts.Add(FragmentTranspiler.RenderViewNode(viewNode, viewNode.ImportedFrom));
+                    if (viewNode.Imported && viewNode.Namespace != null) parts.Add(FragmentTranspiler.RenderViewNode(viewNode, viewNode.Namespace));
                     else parts.Add(FragmentTranspiler.RenderViewNode(viewNode, compilationresult.Namespace));
                 }
                 else if (documentPart is GuidelineNode guidelineNode) {

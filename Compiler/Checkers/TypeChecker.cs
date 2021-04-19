@@ -206,7 +206,7 @@ type {root.Id} {typeName} = ...;
                     node = (IIdentifierExpressionNode)_cr.Lexicon[typeName].Copy();
                     if (_cr.Namespace != compilationResult.Namespace) {
                         node.Imported = true;
-                        node.ImportedFrom = _cr.Namespace;
+                        node.Namespace = _cr.Namespace;
                     }
                     else {
                         //

@@ -6,7 +6,7 @@ namespace Compiler.Language.Nodes {
         string Id { get; }
 
         bool Imported { get; set; }
-        string? ImportedFrom { get; set; }
+        string? Namespace { get; set; }
 
         AstNode Copy();
     }

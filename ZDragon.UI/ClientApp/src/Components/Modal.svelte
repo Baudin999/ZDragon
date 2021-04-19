@@ -3,11 +3,12 @@
     export let title = "Unknown Modal";
     export let show = false;
     export let close = () => {};
+    export let size = "normal";
 </script>
 
 <div class="background" class:show />
 
-<div class="modal" class:show>
+<div class="modal {size}" class:show>
     <div class="title">
         {title}
         <i on:click|stopPropagation={close} class="fa fa-times" />
@@ -45,6 +46,12 @@
         transform: translate(-50%, -50%);
         display: none;
         background: var(--color-1);
+    }
+    .modal.normal {
+        width: 600px;
+    }
+    .modal.wide {
+        width: 1200px;
     }
     .modal.show {
         display: block;

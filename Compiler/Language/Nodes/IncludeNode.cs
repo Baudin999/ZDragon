@@ -8,7 +8,6 @@ namespace Compiler.Language.Nodes {
         public Token IdToken { get; }
         public string Id => IdToken.Value;
         public List<Token> AllTokens { get; }
-        public string Namespace { get; }
         public string QualifiedName { get; }
 
         public string Content => this.ToString();

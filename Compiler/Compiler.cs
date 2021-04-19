@@ -62,7 +62,7 @@ namespace Compiler {
                             if (found && _node is IDocumentNode) {
                                 var result = _node.Copy();
                                 result.Imported = true;
-                                result.ImportedFrom = include.Namespace;
+                                result.Namespace = include.Namespace;
                                 yield return result;
                             }
                             if (_node is DirectiveNode dn) {

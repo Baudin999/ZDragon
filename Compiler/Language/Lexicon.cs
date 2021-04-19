@@ -106,7 +106,7 @@ namespace Compiler.Language {
                         extensions.Add(taRoot);
 
                         var newRecordNode = new RecordNode(
-                            recordNode.AnnotationNode.Clone(),
+                            recordNode.AnnotationNode?.Clone(),
                             node.IdToken.Clone(),
                             new List<Token>(),
                             extensions,
@@ -214,7 +214,10 @@ namespace Compiler.Language {
         }
 
         private IIdentifierExpressionNode? Get(string typeName) {
-            if (lexicon.ContainsKey(typeName)) return lexicon[typeName];
+            if (lexicon.ContainsKey(typeName)) {
+                if (lexicon[typeName].Namespace is null) lexicon[typeName].Namespace = this.Namespace;
+                return lexicon[typeName];
+            }
             IIdentifierExpressionNode? node = null;
             foreach (var openNode in refereces) {
                 var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
@@ -222,7 +225,7 @@ namespace Compiler.Language {
                     node = (IIdentifierExpressionNode)_cr.Lexicon[typeName].Copy();
                     if (_cr.Namespace != this.Namespace) {
                         node.Imported = true;
-                        node.ImportedFrom = openNode.Namespace;
+                        node.Namespace = openNode.Namespace;
                     }
                     break;
                 }
@@ -237,7 +240,7 @@ namespace Compiler.Language {
                 node = (IIdentifierExpressionNode)_cr.Lexicon[token.Id].Copy();
                 if (_cr.Namespace != token.Namespace) {
                     node.Imported = true;
-                    node.ImportedFrom = token.Namespace;
+                    node.Namespace = token.Namespace;
                 }
             }
             return node;

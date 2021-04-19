@@ -6,7 +6,6 @@ namespace Compiler.Language.Nodes {
         public string Description => Annotation.Annotation;
         public Token IdToken { get; }
         public string Id => IdToken.Value;
-        public string Namespace { get; }
 
         public OpenNode(AnnotationNode annotationNode, Token id) : base(id, ExpressionKind.OpenExpression) {
             this.Annotation = annotationNode;

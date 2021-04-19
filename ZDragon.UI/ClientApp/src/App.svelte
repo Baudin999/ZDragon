@@ -115,7 +115,8 @@
   <Modal
     title="Refactoring"
     show={showRefactoringDialog}
-    close={toggleRefactoringDialog}>
+    close={toggleRefactoringDialog}
+    size="wide">
     <RefactorDialog />
   </Modal>
 {/if}

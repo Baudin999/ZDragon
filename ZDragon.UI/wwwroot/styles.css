@@ -44,6 +44,42 @@
   --background: rgb(31, 31, 31);
   --color: rgb(243, 243, 243);
 }
+/* Button Styling */
+
+button {
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0.5rem 1em;
+  background: none;
+  border: 1px solid gray;
+  color: gray;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: rgb(238, 237, 237);
+  cursor: pointer;
+}
+
+button.color--primary {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+button.color--primary:hover {
+  background: var(--color-primary);
+  color: var(--color-primary--alt);
+}
+
+button.warning {
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+button.warning:hover {
+  background: var(--color-primary);
+  color: var(--color-primary--alt);
+}
 /* FOMRS */
 .form {
   width: 100%;
@@ -174,42 +210,6 @@ body {
 .fade-in {
   opacity: 1;
 }
-/* Button Styling */
-
-button {
-  border-radius: 0;
-  box-shadow: none;
-  padding: 0.5rem 1em;
-  background: none;
-  border: 1px solid gray;
-  color: gray;
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  background: rgb(238, 237, 237);
-  cursor: pointer;
-}
-
-button.color--primary {
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-}
-
-button.color--primary:hover {
-  background: var(--color-primary);
-  color: var(--color-primary--alt);
-}
-
-button.warning {
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-}
-
-button.warning:hover {
-  background: var(--color-primary);
-  color: var(--color-primary--alt);
-}
 table.table--glossary {
   border-collapse: collapse;
 }
@@ -236,7 +236,10 @@ table.table--glossary thead th {
 
 .content table {
   border: 1px solid green;
+}.mermaid > svg {
+  text-align: center;
 }
+
 .file-explorer {
     /* padding: 1rem; */
 }
@@ -275,7 +278,4 @@ table.table--glossary thead th {
     color: var(--color-secundary);
     font-weight: bolder;
     /* color: var(--color-secundary--alt); */
-}
-.mermaid > svg {
-  text-align: center;
 }

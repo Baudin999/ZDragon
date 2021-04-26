@@ -173,7 +173,7 @@ namespace ZDragon.Project {
                         Id = id,
                         Literal = (astNode as AstNode)?.Hydrate() ?? "unknown",
                         Namespace = astNode.Imported ? astNode.Namespace : ns,
-                        Postition = astNode.IdToken
+                        Position = astNode.IdToken
                     };
 
 
@@ -191,7 +191,7 @@ namespace ZDragon.Project {
                             if (node is ViewNode view) {
                                 yield return new {
                                     IsImage = true,
-                                    Url = $"/documents/{node.Namespace ?? cache.Namespace}/{view.Hash}.svg",
+                                    Url = $"/documents/{node.Namespace ?? cache.Namespace}/{view.HashString}.svg",
                                     Literal = view.Hydrate(),
                                     Namespace = node.Namespace ?? cache.Namespace,
                                     Id = view.Id,

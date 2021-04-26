@@ -16,7 +16,7 @@ namespace ZDragon.Project {
                 string javaPath = Path.Combine(javaHome, "bin", "java.exe");
 
                 if (File.Exists(javaPath) && File.Exists(plantUmlJarPath)) {
-                    var arguments = $" -jar \"{plantUmlJarPath}\" -DRELATIVE_INCLUDE=\"{plantUmlPath}\" -tsvg -pipe";
+                    var arguments = $" -jar \"{plantUmlJarPath}\" -DRELATIVE_INCLUDE=\"{plantUmlPath}\" -headless -tsvg -pipe";
 
                     var processStartInfo = GetProcessStartInfo(javaPath, arguments);
 

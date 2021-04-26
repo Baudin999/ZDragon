@@ -10,7 +10,8 @@ namespace Compiler.Language.Nodes {
         public AnnotationNode Annotation { get; }
         public List<Token> Nodes { get; }
 
-        public string Hash { get; }
+        public byte[] Hash { get; }
+        public string HashString { get; }
 
         public string Content => "";
 
@@ -23,7 +24,8 @@ namespace Compiler.Language.Nodes {
             this.Nodes = nodes;
 
             var s = Id + string.Join("", nodes.Select(n => n.Value));
-            this.Hash = Utilities.ByteArrayToString(Utilities.HashString(s));
+            this.Hash = Utilities.HashString(s);
+            this.HashString = Utilities.ByteArrayToString(this.Hash);
         }
     }
 }

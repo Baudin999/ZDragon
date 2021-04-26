@@ -27,7 +27,7 @@ namespace ZDragon.Transpilers.Html {
             if (mcn.Depth == 1) {
                 // close the keep-together parts
                 if (h1 > 1) parts.Add("</div>");
-                if (h2 > 0) parts.Add("</div>");
+                //if (h2 > 0) parts.Add("</div>");
 
                 h1 = h1 + 1;
                 h2 = 0;
@@ -40,13 +40,13 @@ namespace ZDragon.Transpilers.Html {
             }
             else if (mcn.Depth == 2) {
                 // close the keep-together parts
-                if (h2 > 0) parts.Add("</div>");
+                //if (h2 > 0) parts.Add("</div>");
                 h2 = h2 + 1;
                 h3 = 0;
                 h4 = 0;
                 h5 = 0;
 
-                parts.Add("<div class='keep-together'>");
+                //parts.Add("<div class='keep-together'>");
                 toc.Add($"<div class='toc-2'>{h1}.{h2} {content}</div>");
             }
             else if (mcn.Depth == 3) {
@@ -64,8 +64,6 @@ namespace ZDragon.Transpilers.Html {
                 h5 = h5 + 1;
                 toc.Add($"<div class='toc-5'>{h1}.{h2}.{h3}.{h4}.{h5} {content}</div>");
             }
-
-
 
             parts.Add($"<h{mcn.Depth}>{content}</h{mcn.Depth}>");
         }

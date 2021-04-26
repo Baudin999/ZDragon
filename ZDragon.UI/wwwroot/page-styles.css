@@ -71,7 +71,6 @@ body {
 h1 {
     counter-reset: sub-section;
     margin-top: 3rem;
-    page-break-before: always;
     font-size: 1.5rem;
 }
 

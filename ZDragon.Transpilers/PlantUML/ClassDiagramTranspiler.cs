@@ -133,7 +133,7 @@ enum {node.Id} {{
             };
 
             return "!define LIGHTBLUE\r\n" +
-                "!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml \r\n" +
+                "!include %get_variable_value(\"RELATIVE_INCLUDE\")/Colors.puml \r\n" +
                 String.Join("\r\n", types) + 
                 "\r\n\r\n" + 
                 string.Join("\r\n", relations);

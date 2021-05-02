@@ -304,7 +304,7 @@ namespace Compiler {
 
         EndDirective,
 
-        None,
+        None
     }
 
     public enum CharacterCodes {

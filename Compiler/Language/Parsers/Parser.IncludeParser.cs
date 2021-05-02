@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler.Language {
-    public partial class Parser
-    {
-        public ExpressionNode ParseOpenDefinition()
-        {
+    public partial class Parser {
+
+        public ExpressionNode ParseInclude() {
             // handle the annotations
             var annotations = TakeWhile(SyntaxKind.AnnotationToken).ToList();
             var annotationNode =
@@ -16,7 +15,7 @@ namespace Compiler.Language {
                 new AnnotationNode(Current ?? SourceSegment.Empty);
 
 
-            var openDeclaration = TakeF(SyntaxKind.OpenDeclarationToken);
+            var includeDeclaration = TakeF(SyntaxKind.IncludeDeclarationToken);
             var id = TakeF(SyntaxKind.IdentifierToken);
 
             Token end = id;
@@ -26,10 +25,9 @@ namespace Compiler.Language {
                 end = TakeF(SyntaxKind.EndBlock);
 
 
-            var fullToken = new Token(new List<Token> { openDeclaration, end }, SyntaxKind.None);
+            var fullToken = new Token(new List<Token> { includeDeclaration, end }, SyntaxKind.None);
 
-            return new OpenNode(annotationNode, id, fullToken);
+            return new IncludeNode(annotationNode, id, fullToken);
         }
-
     }
 }

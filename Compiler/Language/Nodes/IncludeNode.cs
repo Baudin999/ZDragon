@@ -16,7 +16,7 @@ namespace Compiler.Language.Nodes {
 
         public bool IsTemplate => false;
 
-        public IncludeNode(AnnotationNode annotationNode, Token id) : base(id, ExpressionKind.IncludeExpression) {
+        public IncludeNode(AnnotationNode annotationNode, Token id, Token fullBlock) : base(fullBlock, ExpressionKind.IncludeExpression) {
             this.Annotation = annotationNode;
 
             if (id is QualifiedToken qt) {

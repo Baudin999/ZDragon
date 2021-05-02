@@ -71,6 +71,9 @@ export const saveCode = async (code) => {
     // get the compilation result and fix the current module
     var compilationResult = await post("/document/" + module.namespace, { code: code.trim() });
     state.update(s => {
+
+        //
+
         return {
             ...s,
             processing: false,

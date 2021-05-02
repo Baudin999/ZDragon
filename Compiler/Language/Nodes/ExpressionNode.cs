@@ -9,6 +9,7 @@ namespace Compiler.Language.Nodes {
             this.ExpressionKind = expressionKind;
         }
 
+
         public ExpressionNode(ISourceSegment startSegment, ISourceSegment endSegment, ExpressionKind expressionKind) : base(startSegment, endSegment) {
             this.ExpressionKind = expressionKind;
         }

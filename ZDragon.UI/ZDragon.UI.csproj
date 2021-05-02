@@ -7,6 +7,13 @@
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     <UserSecretsId>cec811ee-e322-4792-a411-2d674de19c0e</UserSecretsId>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>zdragon_key.pfx</AssemblyOriginatorKeyFile>
+    <Version>0.0.13--alpha</Version>
+    <Authors>Carlos Kelkboom</Authors>
+    <Company>ZDragon</Company>
+    <Product>ZDragon</Product>
+    <Description>The ZDragon application</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="9.31.2" />

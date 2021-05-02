@@ -20,6 +20,7 @@
                 selectedModule.namespace === module.namespace}
             on:click={() => selectModuleByNamespace(module.namespace)}>
             <i class={icon} />{module.name}
+            <i class="edit-module fa fa-pencil" />
         </div>
     {/each}
 {/if}
@@ -34,11 +35,16 @@
     }
 
     .item {
+        position: relative;
         margin-left: -1rem;
         padding: 0.5rem 0.5rem 0.5rem 1.5rem;
         &:hover {
             cursor: pointer;
             color: var(--color-3);
+
+            .edit-module {
+                display: block;
+            }
         }
         .fa {
             display: inline-block;
@@ -48,6 +54,14 @@
         &.selected {
             background: var(--color-3);
             color: var(--color-3--text);
+        }
+
+        .edit-module {
+            display: block;
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
         }
     }
 </style>

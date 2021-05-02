@@ -51,8 +51,19 @@ namespace ZDragon.Transpilers.Components {
                     interactionParts.Add("");
                 }
 
+                var arrow = "-->>";
+                if (interactionParts.Count > 3) {
+                    arrow = interactionParts[3].ToLower() switch {
+                        "up" => "-UP->>",
+                        "left" => "-LEFT->>",
+                        "right" => "-RIGHT->>",
+                        "down" => "-DOWN->>",
+                        _ => "-->>"
+                    };
+                }
+
                 if (lexicon.ContainsKey(interactionParts[0])) {
-                    relations.TryAdd($"{node.Id}{interactionParts[0]}", $"Rel({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]})");
+                    relations.TryAdd($"{node.Id}{interactionParts[0]}", $"Rel_({node.Id}, {interactionParts[0]}, {interactionParts[1]}, {interactionParts[2]}, {arrow})");
                 }
             }
         }

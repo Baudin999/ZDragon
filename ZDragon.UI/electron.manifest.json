@@ -4,14 +4,14 @@
     "imageFile": "/wwwroot/standalone-icon.png"
   },
   "name": "ZDragon",
-  "author": "",
+  "author": "Baudin",
   "singleInstance": true,
   "environment": "Production",
   "build": {
     "appId": "com.ZDragon.app",
     "productName": "ZDragon",
     "copyright": "Copyright © 2020",
-    "buildVersion": "0.0.13--alpha",
+    "buildVersion": "0.0.14--alpha",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"

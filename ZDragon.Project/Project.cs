@@ -211,6 +211,10 @@ namespace ZDragon.Project {
             }
         }
 
+        public void SaveIndex() {
+            //
+        }
+
         public List<Fragment> Search(string query) {
             return this.Cache.Search(query);
         }

@@ -211,52 +211,69 @@ Failed to compile '{this.Namespace}':
 
         public async Task SaveViews() {
             List<Task> tasks = new List<Task>();
-            // Create the views
+
+            // the default names of the file which are for 
             var names = new List<string> {
                 "components.svg",
                 "data.svg",
                 "roadmap.svg",
                 "page.html"
             };
+
             foreach (var view in this.CompilationResult.Lexicon.Where(l => l.Value is ViewNode).Select(l => (ViewNode)l.Value)) {
-                var viewLexicon = new Dictionary<string, IIdentifierExpressionNode>();
-                foreach (var node in view.Nodes) {
-                    if (this.CompilationResult.Lexicon.ContainsKey(node.Value)) {
-                        viewLexicon.Add(node.Value, this.CompilationResult.Lexicon[node.Value]);
-                    }
-                }
-
-                string? _puml = null;
-                if (viewLexicon?.FirstOrDefault().Value is IArchitectureNode) {
-                    _puml = new ComponentTranspiler(viewLexicon).Transpile();
-                }
-                else if (viewLexicon?.FirstOrDefault().Value is ILanguageNode) {
-                    _puml = new ClassDiagramTranspiler(viewLexicon).Transpile();
-                }
-
-
-                if (_puml is not null) {
-                    var newHash = Compiler.Utilities.HashString(_puml);
-                    if (!ViewHashes.ContainsKey(view.HashString) || !Compiler.Utilities.HashCompare(ViewHashes[view.HashString], newHash)) {
-                        var path = Path.Combine(this.OutPath, view.HashString + ".svg");
-                        tasks.Add(File.WriteAllBytesAsync(path, PlantUmlRenderer.Render(_puml, RenderLocal)));
-                        names.Add(view.HashString + ".svg");
-                        ViewHashes[view.HashString] = newHash;
-                    }
-                    else {
-                        names.Add(view.HashString + ".svg");
-                    }
-                }
+                tasks.Add(SaveView(names, view));
             }
 
+            // delete all the views which are no longer applicable.
             foreach (var file in Directory.GetFiles(this.OutPath)) {
+
+                // names now contains all of the "default" names of the files
+                // and the view names based on the hash.
+                // we itterate all of the files on the directory, each file
+                // we can't match to a name in the names collection will be
+                // removed
                 if (!names.Contains(Path.GetFileName(file))) {
                     File.Delete(file);
                 }
-
             }
 
             await Task.WhenAll(tasks);
+        }
+
+        private Task SaveView(List<string> names, ViewNode view) {
+
+            Task task = Task.Delay(0);
+
+            var viewLexicon = new Dictionary<string, IIdentifierExpressionNode>();
+            foreach (var node in view.Nodes) {
+                if (this.CompilationResult.Lexicon.ContainsKey(node.Value)) {
+                    viewLexicon.Add(node.Value, this.CompilationResult.Lexicon[node.Value]);
+                }
+            }
+
+            string? _puml = null;
+            if (viewLexicon?.FirstOrDefault().Value is IArchitectureNode) {
+                _puml = new ComponentTranspiler(viewLexicon).Transpile();
+            }
+            else if (viewLexicon?.FirstOrDefault().Value is ILanguageNode) {
+                _puml = new ClassDiagramTranspiler(viewLexicon).Transpile();
+            }
+
+
+            if (_puml is not null) {
+                var newHash = Compiler.Utilities.HashString(_puml);
+                if (!ViewHashes.ContainsKey(view.HashString) || !Compiler.Utilities.HashCompare(ViewHashes[view.HashString], newHash)) {
+                    var path = Path.Combine(this.OutPath, view.HashString + ".svg");
+                    task = File.WriteAllBytesAsync(path, PlantUmlRenderer.Render(_puml, RenderLocal));
+                    names.Add(view.HashString + ".svg");
+                    ViewHashes[view.HashString] = newHash;
+                }
+                else {
+                    names.Add(view.HashString + ".svg");
+                }
+            }
+
+            return task;
         }
 
         public async Task<byte[]> GetComponentModelSvg() {
@@ -301,22 +318,22 @@ Failed to compile '{this.Namespace}':
 
         // IInteractor methods
 
-        public async Task<IModuleInteractor> AddFile(string name, string type, string? description) {
-            // Should be added to the application or directory of which this file is a part.
-            name = name.Replace(" ", "");
-            string fileName = name;
-            if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
-            var path = Path.Combine(this.DirectoryPath ?? this.RootPath, fileName);
+        //public async Task<IModuleInteractor> AddFile(string name, string type, string? description) {
+        //    // Should be added to the application or directory of which this file is a part.
+        //    name = name.Replace(" ", "");
+        //    string fileName = name;
+        //    if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
+        //    var path = Path.Combine(this.DirectoryPath ?? this.RootPath, fileName);
 
-            var template = "";
-            if (type == "Feature") {
-                template = FeatureTemplates.Default(name);
-            }
+        //    var template = "";
+        //    if (type == "Feature") {
+        //        template = FeatureTemplates.Default(name);
+        //    }
 
-            await File.WriteAllTextAsync(path, template);
-            return new FileModuleInteractor(this.RootPath, path, cache);
+        //    await File.WriteAllTextAsync(path, template);
+        //    return new FileModuleInteractor(this.RootPath, path, cache);
 
-        }
+        //}
 
     }
 }

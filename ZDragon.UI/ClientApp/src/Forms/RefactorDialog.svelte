@@ -1,17 +1,35 @@
 <script>
+    import { writable } from "svelte/store";
+
     import { state, toggleRefactoringDialog } from "../Services/app.js";
     import eventbus from "../Services/eventbus.js";
 
+    let file = writable({});
     let content = [];
     let namespace = "";
     let title = "";
 
+    const submitForm = () => {
+        console.log($file);
+    };
+
     state.subscribe((s) => {
-        if (s.refactoring) {
-            content = s.refactoring.content || [];
-            namespace = s.refactoring.namespace;
-            title = s.refactoring.title;
-        }
+        if (!s || !s.refactoring || !s.module || !s.module.namespace) return;
+
+        // do the magic
+        content = s.refactoring.content || [];
+        namespace = s.refactoring.namespace;
+        title = s.refactoring.title;
+        let [appName, _type, ...rest] = s.module.namespace.split(".");
+        let type = _type.slice(0, _type.length - 1);
+        file.update((f) => {
+            return {
+                ...f,
+                name: s.refactoring.title,
+                appName,
+                type,
+            };
+        });
     });
 </script>
 
@@ -38,7 +56,37 @@
         {/each}
     </div>
 
-    <div class="details">Content</div>
+    <div class="details">
+        <form class="form">
+            <div class="form--field">
+                <label for="cf_001">File Name</label>
+                <input id="cf_001" bind:value={$file.name} />
+            </div>
+
+            <div class="form--field">
+                <label for="cf_002">Type</label>
+                <select id="cf_002" bind:value={$file.type}>
+                    <option />
+                    <option>Component</option>
+                    <option>Feature</option>
+                    <option>Database</option>
+                    <option>Endpoint</option>
+                    <option>Model</option>
+                    <option>Story</option>
+                    <option>Documentation</option>
+                    <option>Empty</option>
+                </select>
+            </div>
+
+            <div class="form--field">
+                <label for="cf_003">Application Name</label>
+                <input id="cf_003" bind:value={$file.appName} />
+                <!-- on:change={changeValue("appName")} /> -->
+            </div>
+
+            <button on:click={submitForm} type="button">Submit</button>
+        </form>
+    </div>
 </div>
 
 <style type="less">

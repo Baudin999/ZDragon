@@ -50,6 +50,7 @@ namespace ZDragon.UI.Controllers {
             var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
             if (moduleInteractor != null) {
                 var result = await moduleInteractor.SaveModule(body.Code);
+                _project.SaveIndex();
                 _ = _projectHub.ModuleChanged(result.Namespace);
                 return Ok(result.CompilationResult);
             }
@@ -62,6 +63,7 @@ namespace ZDragon.UI.Controllers {
         public async Task<IActionResult> GetContentSvg(string ns, string file) {
             try {
                 var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
+                if (moduleInteractor is null) return Problem("Namespace not found");
 
                 if (file == "data") {
                     var bytes = await moduleInteractor.GetDataModelSvg();

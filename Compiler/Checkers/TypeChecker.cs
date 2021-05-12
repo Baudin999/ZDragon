@@ -253,6 +253,7 @@ type {root.Id} {typeName} = ...;
         }
 
         private void CheckNode(IIdentifierExpressionNode node) {
+
             switch (node) {
                 case TypeAliasNode n: CheckTypeAliasNode(n); break;
                 case RecordNode n: CheckRecordNode(n); break;

@@ -20,7 +20,10 @@
                 selectedModule.namespace === module.namespace}
             on:click={() => selectModuleByNamespace(module.namespace)}>
             <i class={icon} />{module.name}
-            <i class="edit-module fa fa-pencil" />
+
+            {#if selectedModule && selectedModule.namespace == module.namespace && false}
+                <i class="edit-module fa fa-pencil" />
+            {/if}
         </div>
     {/each}
 {/if}

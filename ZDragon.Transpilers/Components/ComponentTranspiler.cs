@@ -53,7 +53,7 @@ namespace ZDragon.Transpilers.Components {
 
                 var arrow = "-->>";
                 if (interactionParts.Count > 3) {
-                    arrow = interactionParts[3].ToLower() switch {
+                    arrow = interactionParts[3].Trim().ToLower() switch {
                         "up" => "-UP->>",
                         "left" => "-LEFT->>",
                         "right" => "-RIGHT->>",

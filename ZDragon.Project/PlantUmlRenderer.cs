@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 
 namespace ZDragon.Project {
     public class PlantUmlRenderer {
@@ -15,6 +16,10 @@ namespace ZDragon.Project {
                 string javaHome = Environment.GetEnvironmentVariable("JAVA_HOME")?.Trim('"') ?? "";
                 string javaPath = Path.Combine(javaHome, "bin", "java.exe");
 
+                if (!File.Exists(javaPath)) {
+                    javaPath = "/usr/bin/java";
+                }
+
                 if (File.Exists(javaPath) && File.Exists(plantUmlJarPath)) {
                     var arguments = $" -jar \"{plantUmlJarPath}\" -DRELATIVE_INCLUDE=\"{plantUmlPath}\" -headless -tsvg -pipe";
 
@@ -25,11 +30,11 @@ namespace ZDragon.Project {
 
                         var Output = process?.GetOutput() ?? new byte[0];
                         var Error = process?.GetError() ?? new byte[0];
-                        var ExitCode = process?.ExitCode ?? 1;
+                        //var ExitCode = process?.ExitCode ?? 1;
 
                         return Output;
-                    }
 
+                    }
                 }
 
                 return new byte[0];

@@ -441,6 +441,32 @@ bind::onChange peterPan.Age >> ...params =>
             Assert.True(compilerResult.Tokens.Count() > 1);
         }
 
+        [Fact(DisplayName = "Lex Empty Lines at Start")]
+        public void Lex_EmptyLinesAtStart() {
+            var code = @"
+
+
+
+# Chapter
+
+component Foo =
+    Interactions:
+        - Bar
+
+";
+            var compiler = new Compiler.Compiler(code);
+            var compilerResult = compiler.Compile().Check();
+
+            //verifyTokens(
+            //    compiler.SourceCode,
+            //    compilerResult.Tokens.ToList(),
+            //    false);
+            Assert.Single(compilerResult.Errors);
+            //Assert.Equal(8)
+            Assert.True(compilerResult.Tokens.Count() > 1);
+        }
+
         public Lexer(ITestOutputHelper output) : base(output) { }
     }
+
 }

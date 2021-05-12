@@ -30,7 +30,7 @@ flow GetPerson =
             var code = @"
 flow GetPerson =
     FrontEnd -> PersonSystem
-    PersonSystem -> Database
+    PersonSystem -> Database -> 42
 ";
 
             var result = new Compiler.Compiler(code).Compile().Check();

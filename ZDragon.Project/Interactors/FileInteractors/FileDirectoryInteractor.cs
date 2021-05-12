@@ -1,11 +1,8 @@
 ﻿using Compiler;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using ZDragon.Project.Templates;
 
 namespace ZDragon.Project.Interactors.FileInteractors {
     public class FileDirectoryInteractor : IDirectoryInteractor {
@@ -38,25 +35,25 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             }
         }
 
-        public async Task Verify() {
-            Console.Write("Verifying applications .");
-            foreach (var application in Applications) {
-                await application.Verify();
-                Console.Write(".");
-            }
+        //public async Task Verify() {
+        //    Console.Write("Verifying applications .");
+        //    foreach (var application in Applications) {
+        //        await application.Verify();
+        //        Console.Write(".");
+        //    }
 
-            Console.Write("Compiling applications .");
-            foreach (var application in Applications) {
-                await application.Compile();
-                Console.Write(".");
-            }
-        }
+        //    Console.Write("Compiling applications .");
+        //    foreach (var application in Applications) {
+        //        await application.Compile();
+        //        Console.Write(".");
+        //    }
+        //}
 
-        public FileDirectoryInteractor CreateApplication(string name) {
-            var appInteractor = FileApplicationInteractor.Create(this.RootPath, name, cache);
-            this.Applications.Add(appInteractor);
-            return this;
-        }
+        //public FileDirectoryInteractor CreateApplication(string name) {
+        //    var appInteractor = FileApplicationInteractor.Create(this.RootPath, name, cache);
+        //    this.Applications.Add(appInteractor);
+        //    return this;
+        //}
 
         public IInteractor? Find(string ns) {
             // Check if this directory is the interactor we need.
@@ -92,20 +89,20 @@ namespace ZDragon.Project.Interactors.FileInteractors {
 
         // IInteractor methods
 
-        public async Task<FileModuleInteractor> AddFile(string name, string type, string? description) {
-            // Should be added to the application or directory of which this file is a part.
-            string fileName = name;
-            if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
-            var path = Path.Combine(this.DirectoryPath ?? this.RootPath, fileName);
+        //public async Task<FileModuleInteractor> AddFile(string name, string type, string? description) {
+        //    // Should be added to the application or directory of which this file is a part.
+        //    string fileName = name;
+        //    if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
+        //    var path = Path.Combine(this.DirectoryPath ?? this.RootPath, fileName);
 
-            var template = "";
-            if (type == "Feature") {
-                template = FeatureTemplates.Default(name);
-            }
+        //    var template = "";
+        //    if (type == "Feature") {
+        //        template = FeatureTemplates.Default(name);
+        //    }
 
-            await File.WriteAllTextAsync(path, template);
-            return new FileModuleInteractor(this.RootPath, path, cache);
+        //    await File.WriteAllTextAsync(path, template);
+        //    return new FileModuleInteractor(this.RootPath, path, cache);
 
-        }
+        //}
     }
 }

@@ -39,7 +39,7 @@ namespace Compiler.Language {
 
             // generate record if they do not exist.
             foreach (var field in node.Fields) {
-                if (!lexicon.ContainsKey(field.Id)) {
+                if (!baseTypes.Contains(field.Id) && !lexicon.ContainsKey(field.Id)) {
                     var record = new RecordNode(
                                         field.AnnotationNode,
                                         field.IdToken,

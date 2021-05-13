@@ -126,6 +126,13 @@ export const toggleRefactoringDialog = () => {
     }));
 };
 
+export const toggleJsonSchemaDialog = () => {
+    state.update((s) => ({
+        ...s,
+        showJsonSchemaDialog: !!!s.showJsonSchemaDialog
+    }));
+};
+
 /** PROJECT FUNCTIONS */
 
 export const resetProjects = () => {
@@ -360,6 +367,32 @@ export const init = () => {
             }
             catch (ex) {
                 // do nothing with the exception
+            }
+        }
+    });
+
+    eventbus.subscribe("json_schema", async term => {
+        var store = _get(state);
+        var namespace = (store.module || {}).namespace;
+
+        if (namespace) {
+            try {
+                var body = {
+                    rootNode: term,
+                    namespace
+                };
+                var json = await post(`/json`, body);
+
+                if (json.status && json.status !== 200) return;
+
+                state.update(s => ({
+                    ...s,
+                    showJsonSchemaDialog: true,
+                    schema: json.schemaText
+                }));
+            }
+            catch (ex) {
+                console.log(ex);
             }
         }
     });

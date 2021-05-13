@@ -32,6 +32,13 @@ function init() {
                 eventbus.broadcast("start refactor", currentWord);
             }
         }
+        else if (e.code === "F4") {
+            console.log("asdasdasd");
+            var currentWord = window.getCurrentWord();
+            if (currentWord) {
+                eventbus.broadcast("json_schema", currentWord);
+            }
+        }
 
     }
 

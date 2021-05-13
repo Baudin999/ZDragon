@@ -15,7 +15,7 @@ namespace ZDragon.Transpilers.Components {
         private HashSet<string> nonRootNodes = new HashSet<string>();
         private readonly List<string> containedComponents = new List<string>();
         private readonly List<string> reservedAttributes = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
-        private readonly List<string> reservedDeploymentAttributes = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions" };
+        private readonly List<string> reservedDeploymentAttributes = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
 
         private string GetDescription(AttributesNode node) {
             return (node.GetAttribute("Description") ?? "").Replace(System.Environment.NewLine, " ");

@@ -124,6 +124,21 @@ namespace ZDragon.Transpilers.OpenAPI {
             return (required, schema);
         }
 
+        private (bool, JSchema) MapChoiceNode(ChoiceNode node) {
+            //
+            var required = true;
+            var schema = new JSchema();
+            schema.Title = node.Id;
+            schema.Description = node.Description;
+            schema.Type = JSchemaType.String;
+            
+            foreach (var element in node.Fields) {
+                schema.Enum.Add(element.Value.Replace("\"", ""));
+            }
+
+            return (required, schema);
+        }
+
         private void GetSchemaType(JSchema schema, List<RestrictionNode> restrictions, string type) {
             var min = restrictions.FirstOrDefault(r => r.Key == "min");
             var max = restrictions.FirstOrDefault(r => r.Key == "max");
@@ -209,6 +224,7 @@ namespace ZDragon.Transpilers.OpenAPI {
                 RecordNode n => MapRecordNode(n),
                 TypeAliasNode n => MapTypeAliasNode(n),
                 DataNode n => MapDataNode(n),
+                ChoiceNode n => MapChoiceNode(n),
                 _ => throw new System.NotImplementedException(),
             };
         }

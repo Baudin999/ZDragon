@@ -48,8 +48,9 @@ namespace ZDragon.UI.Controllers {
         public IActionResult GenerateJson([FromBody] GenerateJsonBody body) {
             try {
 
-                var compilationResult = new Compiler.Compiler(body.Code).Compile().Check();
-                var rootNode = compilationResult.Lexicon.Values.FirstOrDefault(n => n is ILanguageNode);
+                var moduleInteractor = (IModuleInteractor)_project.FindInteractorByNamespace(body.Namespace);
+                var compilationResult = moduleInteractor.CompilationResult;
+                var rootNode = compilationResult.Lexicon.Values.FirstOrDefault(n => n is IIdentifierExpressionNode && n.Id == body.RootNode);
                 var schema = new JsonSchemaTranspiler(rootNode, compilationResult.Lexicon).Transpile();
 
                 var result = new {
@@ -76,7 +77,8 @@ namespace ZDragon.UI.Controllers {
 
 
     public class GenerateJsonBody {
-        public string Code { get; set; }
+        public string RootNode { get; set; }
+        public string Namespace { get; set; }
     }
 
 }

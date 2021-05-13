@@ -34,6 +34,7 @@ namespace Compiler {
         }
 
         public void Add(string ns, CompilationResult result) {
+            
             if (Has(ns)) {
                 Cache[ns] = result;
             }
@@ -42,11 +43,13 @@ namespace Compiler {
             }
         }
 
-        public CompilationResult Get(string ns) {
+        public CompilationResult? Get(string? ns) {
+            if (ns is null) return null;
             return Cache[ns];
         }
 
-        public bool Has(string ns) {
+        public bool Has(string? ns) {
+            if (ns is null) return false;
             return Cache.ContainsKey(ns);
         }
 

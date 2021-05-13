@@ -23,9 +23,11 @@
     toggleAddApplicationDialog,
     toggleAddFileDialog,
     toggleAddProjectDialog,
+    toggleJsonSchemaDialog,
     toggleRefactoringDialog,
   } from "./Services/app";
   import RefactorDialog from "./Forms/RefactorDialog.svelte";
+  import JsonSchemaDialog from "./Forms/JsonSchemaDialog.svelte";
 
   let url = "";
   let showSearch = false;
@@ -45,12 +47,14 @@
   let showAddFileDialog = false;
   let showAddProjectDialog = false;
   let showRefactoringDialog = false;
+  let showJsonSchemaDialog = false;
 
   state.subscribe((s) => {
     showAddFileDialog = !!s.showAddFileDialog;
     showAddApplicationDialog = !!s.showAddApplicationDialog;
     showAddProjectDialog = !!s.showAddProjectDialog;
     showRefactoringDialog = !!s.showRefactoringDialog;
+    showJsonSchemaDialog = !!s.showJsonSchemaDialog;
   });
 </script>
 
@@ -118,6 +122,16 @@
     close={toggleRefactoringDialog}
     size="wide">
     <RefactorDialog />
+  </Modal>
+{/if}
+
+{#if showJsonSchemaDialog}
+  <Modal
+    title="JSON Schema"
+    show={showJsonSchemaDialog}
+    close={toggleJsonSchemaDialog}
+    size="wide">
+    <JsonSchemaDialog />
   </Modal>
 {/if}
 

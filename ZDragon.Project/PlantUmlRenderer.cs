@@ -2,7 +2,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 
 namespace ZDragon.Project {
     public class PlantUmlRenderer {

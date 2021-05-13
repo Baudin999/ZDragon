@@ -18,7 +18,7 @@ namespace Compiler.Checkers {
         private void CheckDataNode(DataNode node) {
             // generate record if they do not exist.
             foreach (var field in node.Fields) {
-                if (!lexicon.ContainsKey(field.Id)) {
+                if (!baseTypes.Contains(field.Id) && !lexicon.ContainsKey(field.Id)) {
                     var record = new RecordNode(
                                         field.AnnotationNode,
                                         field.IdToken,
@@ -67,7 +67,7 @@ namespace Compiler.Checkers {
             // include <Application>.Components.<First>.<RegionName>;
             //            app                  fileName   regionId
 
-            if (!cache.Has(include.Namespace)) {
+            if (!cache.Has(include?.Namespace)) {
                 errorSink.AddError(new Error(
                     $"Module '{include.Namespace}' does not seem to exist.",
                     include.IdToken
@@ -182,15 +182,17 @@ type {root.Id} {typeName} = ...;
                 ));
             }
             else {
-                var module = cache.Get(qt.Namespace).Lexicon;
-                if (!baseTypes.Contains(qt.Id) && !module.ContainsKey(qt.Id)) {
+                var module = cache.Get(qt.Namespace)?.Lexicon;
+                if (module is not null && !baseTypes.Contains(qt.Id) && !module.ContainsKey(qt.Id)) {
                     errors.Add(new Error(
                         @$"Could not find type '{qt.QualifiedName}' in module '{qt.Namespace}'.",
                         qt.IdToken
                     ));
                 }
                 else {
-                    Add(qt.QualifiedName, module[qt.Id]);
+                    if (module is not null) {
+                        Add(qt.QualifiedName, module[qt.Id]);
+                    }
                 }
             }
             return errors;
@@ -201,7 +203,7 @@ type {root.Id} {typeName} = ...;
 
             // run through the compilation results
             foreach (var openNode in compilationResult.References) {
-                var _cr = cache.Has(openNode.Namespace) ? cache.Get(openNode.Namespace) : null;
+                var _cr = cache.Has(openNode?.Namespace) ? cache.Get(openNode?.Namespace) : null;
                 if (_cr != null && _cr.Lexicon.ContainsKey(typeName)) {
                     node = (IIdentifierExpressionNode)_cr.Lexicon[typeName].Copy();
                     if (_cr.Namespace != compilationResult.Namespace) {

@@ -94,7 +94,7 @@ class {node.Id} << (R, #8AC0C0) record >> {{
         private void TranspileDataNode(DataNode node) {
             var fields = node.Fields.Select(f => $"{string.Join(" ", f.Types)}");
             types.Add($@"
-abstract class {node.Id} {{
+class {node.Id} << (D, #FF7700) data >> {{
     {string.Join("\r\n\t", fields)}
 }}
 ");

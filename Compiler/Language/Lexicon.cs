@@ -188,6 +188,14 @@ namespace Compiler.Language {
 
         private void CheckTypeToken(Token token, IIdentifierExpressionNode root, string errorQualifier) {
             //
+            if (!baseTypes.Contains(token.Value)) {
+                var link = Get(token.Value);
+                if (link != null && link is IIdentifierExpressionNode) {
+                    if (!lexicon.ContainsKey(token.Value)) {
+                        lexicon.Add(token.Value, link);
+                    }
+                }
+            }
         }
 
         private void addToLexicon<T>(T node) where T : AstNode, IIdentifierExpressionNode {

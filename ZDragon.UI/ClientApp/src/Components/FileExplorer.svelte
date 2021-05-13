@@ -7,12 +7,11 @@
     state.subscribe((s) => {
         applications = s.applications || [];
         selectedApplication = s.application || {};
-        // console.log(selectedApplication);
     });
 </script>
 
 <div class="file-explorer">
-    {#each applications as application (application.namespace)}
+    {#each applications as application (new Date())}
         <Application
             {application}
             selected={application.namespace ===

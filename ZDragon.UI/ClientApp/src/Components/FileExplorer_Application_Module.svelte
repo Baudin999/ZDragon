@@ -13,7 +13,7 @@
 
 {#if modules.length > 0}
     <h2>{title}</h2>
-    {#each modules as module}
+    {#each modules as module (module.name)}
         <div
             class="item item--node"
             class:selected={selectedModule &&

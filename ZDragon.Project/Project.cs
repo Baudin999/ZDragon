@@ -10,7 +10,7 @@ using ZDragon.Project.Interactors.FileInteractors;
 using ZDragon.Project.Interactors.MemoryInteractors;
 
 namespace ZDragon.Project {
-    public class Project {
+    public class Project: IDisposable {
 
         public static Project? CurrentProject;
 
@@ -24,6 +24,7 @@ namespace ZDragon.Project {
 
         public delegate void ProjectMessageHandler(object sender, MessageEventArgs args);
         public event ProjectMessageHandler? OnMessageSent;
+        private  FileWatcher? watcher;
 
 
         public Project(string root) {
@@ -33,6 +34,8 @@ namespace ZDragon.Project {
             lucenePath = Path.Combine(outpath, "index");
             imagesPath = Path.Combine(_root, "images");
 
+            watcher?.Dispose();
+            watcher = new FileWatcher(_root);
 
             if (!Directory.Exists(outpath))
                 Directory.CreateDirectory(outpath);
@@ -81,7 +84,8 @@ namespace ZDragon.Project {
                 imagesPath = Path.Combine(_root, "Images");
                 lucenePath = Path.Combine(outpath, "index");
                 DirectoryInteractor = new FileDirectoryInteractor(_root, _root, Cache);
-
+                watcher?.Dispose();
+                watcher = new FileWatcher(_root);
             }
         }
         public void Unload() {
@@ -92,6 +96,7 @@ namespace ZDragon.Project {
             lucenePath = invalidString;
             imagesPath = invalidString;
             this.DirectoryInteractor = new MemoryDirectoryInteractor();
+            watcher?.Dispose();
         }
 
         public async Task<string> GetTextByNamespace(string ns) {
@@ -130,6 +135,8 @@ namespace ZDragon.Project {
         private IIdentifierExpressionNode? FindByTitle(string ns, string title) {
             if (Cache.Has(ns)) {
                 var cache = Cache.Get(ns);
+
+                if (cache is null) return null;
 
                 foreach (var node in cache.Lexicon.Values) {
                     if (node is AttributesNode atsNode && atsNode.Title == title) {
@@ -217,6 +224,10 @@ namespace ZDragon.Project {
 
         public List<Fragment> Search(string query) {
             return this.Cache.Search(query);
+        }
+
+        public void Dispose() {
+            watcher?.Dispose();
         }
     }
 }

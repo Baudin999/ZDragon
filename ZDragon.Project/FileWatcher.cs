@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using ZDragon.Project.Interactors;
 
 namespace ZDragon.Project {
     public class FileWatcher : IDisposable {
         private readonly FileSystemWatcher watcher;
-        private Dictionary<string, string> code = new Dictionary<string, string>();
 
 
-        public FileWatcher() {
+        public FileWatcher(string dir) {
             watcher = new FileSystemWatcher {
-                Path = @"C:\temp",
+                Path = dir,
                 IncludeSubdirectories = true,
                 EnableRaisingEvents = true
             };
@@ -24,7 +24,8 @@ namespace ZDragon.Project {
 
 
             // Add event handlers.
-            watcher.Changed += OnChanged;
+            watcher.Changed += TextChanged;
+
             watcher.Created += OnChanged;
             watcher.Deleted += OnChanged;
             watcher.Renamed += OnRenamed;
@@ -32,18 +33,40 @@ namespace ZDragon.Project {
 
         public void Dispose() {
             watcher.Dispose();
-            code = new Dictionary<string, string>();
+        }
+
+        private async void TextChanged(object source, FileSystemEventArgs e) {
+
+            // TODO: FIX THIS, FILES ARE LOCKED AND CODE DOES NOT WORK!
+
+            //if (Project.CurrentProject is null) return;
+
+            //// the actual content has changed and now we will
+            //// render the document again...
+            //if (e.ChangeType == WatcherChangeTypes.Changed) {
+                
+            //    var ns = Utilities.GetNamespaceFromPath(Project.CurrentProject.RootPath, e.FullPath);
+            //    var moduleInteractor = Project.CurrentProject.FindInteractorByNamespace<IModuleInteractor>(ns);
+            //    if (moduleInteractor is not null) {
+            //        var text = await moduleInteractor.GetText();
+            //        _ = moduleInteractor.SaveModule(text);
+            //    }
+            //}
         }
 
         // Define the event handlers.
-        private async void OnChanged(object source, FileSystemEventArgs e) {
-            var text = await File.ReadAllTextAsync(e.FullPath, System.Text.Encoding.UTF8);
-            code[e.FullPath] = text;
+        private void OnChanged(object source, FileSystemEventArgs e) {
+            UpdateProjectStructure();
         }
 
         private void OnRenamed(object source, RenamedEventArgs e) {
-            code[e.FullPath] = code[e.OldFullPath];
-            code.Remove(e.OldFullPath);
+            UpdateProjectStructure();
+        }
+
+        private async void UpdateProjectStructure() {
+            Project.CurrentProject?.ResetDirectory();
+            await Task.Delay(1000);
+            Project.CurrentProject?.SendMessage("UpdateProjectStructure");
         }
     }
 }

@@ -1,6 +1,6 @@
 import App from "./App.svelte";
 import initKeyTrap from "./key_trap";
-import { init, log, loadProjects, setDirectoryInterator, loadLastProject } from "./Services/app";
+import { init, log, loadProjects, setDirectoryInterator, loadLastProject, loadLastModule } from "./Services/app";
 
 
 // import styling
@@ -31,11 +31,21 @@ connection.on("ReceiveMessage", function (data) {
 connection.on("ModuleChanged", function (ns) {
   log("Module Changed: " + ns);
 });
+
+let timeout;
 connection.on("ProjectChanged", function (directoryInterator) {
-  log("Project Changed, updating navigation pane");
-  setDirectoryInterator(directoryInterator);
+  if (timeout) clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    log("Project Changed, updating navigation pane");
+    setDirectoryInterator(directoryInterator);
+  }, 500);
 });
-connection.start();
+connection.start().then(() => {
+  // init application after connection to hub is established
+  loadProjects();
+  loadLastProject();
+});
+
 
 export default app;
 
@@ -43,9 +53,3 @@ export default app;
 initKeyTrap();
 init();
 
-
-// Initialize the application
-setTimeout(() => {
-  loadProjects();
-  loadLastProject();
-}, 500);

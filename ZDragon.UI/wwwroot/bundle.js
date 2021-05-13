@@ -302,6 +302,11 @@ var zdragon = (function () {
     }
 
     const globals = (typeof window !== 'undefined' ? window : global);
+
+    function destroy_block(block, lookup) {
+        block.d(1);
+        lookup.delete(block.key);
+    }
     function outro_and_destroy_block(block, lookup) {
         transition_out(block, 1, 1, () => {
             lookup.delete(block.key);
@@ -1704,28 +1709,41 @@ var zdragon = (function () {
 
     let fetcher = writable(false);
 
-    let manageResult = async (response, isText = false) => {
-        fetcher.set(false);
-        var clone = response.clone();
-        if (response.status === 401) ;
+    let manageResult = (response, isText = false) => {
+        // var clone = response.clone();
+        return new Promise(async (resolve, reject) => {
 
-        try {
-            // just simply return the text
-            if (isText) return await response.text();
+            fetcher.set(false);
 
-            // try to parse the json result
-            return await response.json();
-        } catch (err) {
-            return clone.text();
-        }
+            response.then(async r => {
+                var clone = r.clone();
+                if (r.ok) {
+                    try {
+                        // just simply return the text
+                        if (isText) resolve(await r.text());
+
+                        // try to parse the json result
+                        return resolve(await r.json());
+                    } catch (err) {
+                        return resolve(clone.text());
+                    }
+                }
+                else {
+                    reject();
+                }
+            }).catch(error => {
+                console.log(error);
+                reject();
+            });
+        });
     };
 
 
     const post = async (url, data) => {
         fetcher.set(true);
         try {
-            return manageResult(
-                await fetch(url, {
+            return await manageResult(
+                fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -1743,7 +1761,7 @@ var zdragon = (function () {
     const get = async url => {
         fetcher.set(true);
         try {
-            return manageResult(await fetch(url));
+            return await manageResult(fetch(url), false);
         } catch (err) {
             fetcher.set(false);
             console.log(err);
@@ -1781,22 +1799,33 @@ var zdragon = (function () {
     });
 
     const selectModuleByNamespace = async namespace => {
-        if (!namespace) return;
-        let moduleResult = await getModuleFromServer(namespace);
+        try {
+            if (!namespace) return;
+            let moduleResult = await getModuleFromServer(namespace);
 
-        // set the last module
-        localStorage.setItem("lastModule", JSON.stringify({
-            namespace: moduleResult.namespace,
-            application: moduleResult.applicationName
-        }));
+            // set the last module
+            localStorage.setItem("lastModule", JSON.stringify({
+                namespace: moduleResult.namespace,
+                application: moduleResult.applicationName
+            }));
 
-        state.update(s => {
-            return {
-                ...s,
-                module: { ...moduleResult },
-                application: s.applications.find(a => a.name == moduleResult.applicationName)
-            };
-        });
+            state.update(s => {
+                return {
+                    ...s,
+                    module: { ...moduleResult },
+                    application: (s.applications || []).find(a => a.name == moduleResult.applicationName)
+                };
+            });
+        } catch (ex) {
+
+            state.update(s => {
+                return {
+                    ...s,
+                    module: null,
+                    application: null
+                };
+            });
+        }
     };
 
     const saveCode = async (code) => {
@@ -1913,9 +1942,12 @@ var zdragon = (function () {
     const loadLastProject = () => {
         var lastProject = localStorage.getItem("last opened project");
         if (lastProject != null) {
+            console.log(lastProject);
             selectProject(lastProject);
         }
+    };
 
+    const loadLastModule = () => {
         var lastModule = localStorage.getItem("lastModule");
         if (lastModule != null) {
             let lm = JSON.parse(lastModule);
@@ -1976,6 +2008,10 @@ var zdragon = (function () {
 
     const setDirectoryInterator = (directoryInteractor) => {
         state.update(s => {
+            setTimeout(() => {
+                loadLastModule();
+            }, 200);
+
             delete directoryInteractor.namespace;
             return {
                 ...s,
@@ -2013,9 +2049,8 @@ var zdragon = (function () {
                     timestamp: new Date().toLocaleString(),
                     message: data
                 });
+                console.info(messages[0]);
             }
-
-            console.info(messages[0]);
 
             return ({
                 ...s,
@@ -3982,12 +4017,16 @@ var zdragon = (function () {
     	let h2;
     	let t0;
     	let t1;
+    	let each_blocks = [];
+    	let each_1_lookup = new Map();
     	let each_1_anchor;
     	let each_value = /*modules*/ ctx[0];
-    	let each_blocks = [];
+    	const get_key = ctx => /*module*/ ctx[5].name;
 
     	for (let i = 0; i < each_value.length; i += 1) {
-    		each_blocks[i] = create_each_block(get_each_context(ctx, each_value, i));
+    		let child_ctx = get_each_context(ctx, each_value, i);
+    		let key = get_key(child_ctx);
+    		each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
     	}
 
     	const block = {
@@ -4017,34 +4056,17 @@ var zdragon = (function () {
     		},
     		p: function update(ctx, dirty) {
     			if (dirty & /*title*/ 2) set_data_dev(t0, /*title*/ ctx[1]);
-
-    			if (dirty & /*selectedModule, modules, selectModuleByNamespace, icon*/ 13) {
-    				each_value = /*modules*/ ctx[0];
-    				let i;
-
-    				for (i = 0; i < each_value.length; i += 1) {
-    					const child_ctx = get_each_context(ctx, each_value, i);
-
-    					if (each_blocks[i]) {
-    						each_blocks[i].p(child_ctx, dirty);
-    					} else {
-    						each_blocks[i] = create_each_block(child_ctx);
-    						each_blocks[i].c();
-    						each_blocks[i].m(each_1_anchor.parentNode, each_1_anchor);
-    					}
-    				}
-
-    				for (; i < each_blocks.length; i += 1) {
-    					each_blocks[i].d(1);
-    				}
-
-    				each_blocks.length = each_value.length;
-    			}
+    			const each_value = /*modules*/ ctx[0];
+    			each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx, each_value, each_1_lookup, each_1_anchor.parentNode, destroy_block, create_each_block, each_1_anchor, get_each_context);
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(h2);
     			if (detaching) detach_dev(t1);
-    			destroy_each(each_blocks, detaching);
+
+    			for (let i = 0; i < each_blocks.length; i += 1) {
+    				each_blocks[i].d(detaching);
+    			}
+
     			if (detaching) detach_dev(each_1_anchor);
     		}
     	};
@@ -4068,7 +4090,7 @@ var zdragon = (function () {
     		c: function create() {
     			i = element$1("i");
     			attr_dev(i, "class", "edit-module fa fa-pencil svelte-36b3ta");
-    			add_location(i, file$9, 24, 16, 775);
+    			add_location(i, file$9, 24, 16, 789);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, i, anchor);
@@ -4089,8 +4111,8 @@ var zdragon = (function () {
     	return block;
     }
 
-    // (16:4) {#each modules as module}
-    function create_each_block(ctx) {
+    // (16:4) {#each modules as module (module.name)}
+    function create_each_block(key_1, ctx) {
     	let div;
     	let i;
     	let i_class_value;
@@ -4106,6 +4128,8 @@ var zdragon = (function () {
     	}
 
     	const block = {
+    		key: key_1,
+    		first: null,
     		c: function create() {
     			div = element$1("div");
     			i = element$1("i");
@@ -4114,11 +4138,12 @@ var zdragon = (function () {
     			if (if_block) if_block.c();
     			t2 = space();
     			attr_dev(i, "class", i_class_value = "" + (null_to_empty(/*icon*/ ctx[2]) + " svelte-36b3ta"));
-    			add_location(i, file$9, 21, 12, 633);
+    			add_location(i, file$9, 21, 12, 647);
     			attr_dev(div, "class", "item item--node svelte-36b3ta");
     			toggle_class(div, "selected", /*selectedModule*/ ctx[3] && /*selectedModule*/ ctx[3].namespace === /*module*/ ctx[5].namespace);
-    			add_location(div, file$9, 16, 8, 394);
+    			add_location(div, file$9, 16, 8, 408);
     			dispose = listen_dev(div, "click", click_handler, false, false, false);
+    			this.first = div;
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, div, anchor);
@@ -4163,7 +4188,7 @@ var zdragon = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(16:4) {#each modules as module}",
+    		source: "(16:4) {#each modules as module (module.name)}",
     		ctx
     	});
 
@@ -4729,7 +4754,7 @@ var zdragon = (function () {
     	return child_ctx;
     }
 
-    // (15:4) {#each applications as application (application.namespace)}
+    // (14:4) {#each applications as application (new Date())}
     function create_each_block$1(key_1, ctx) {
     	let first;
     	let current;
@@ -4780,7 +4805,7 @@ var zdragon = (function () {
     		block,
     		id: create_each_block$1.name,
     		type: "each",
-    		source: "(15:4) {#each applications as application (application.namespace)}",
+    		source: "(14:4) {#each applications as application (new Date())}",
     		ctx
     	});
 
@@ -4793,11 +4818,11 @@ var zdragon = (function () {
     	let each_1_lookup = new Map();
     	let current;
     	let each_value = /*applications*/ ctx[0];
-    	const get_key = ctx => /*application*/ ctx[2].namespace;
+    	const get_key = ctx => new Date();
 
     	for (let i = 0; i < each_value.length; i += 1) {
     		let child_ctx = get_each_context$1(ctx, each_value, i);
-    		let key = get_key(child_ctx);
+    		let key = get_key();
     		each_1_lookup.set(key, each_blocks[i] = create_each_block$1(key, child_ctx));
     	}
 
@@ -4810,7 +4835,7 @@ var zdragon = (function () {
     			}
 
     			attr_dev(div, "class", "file-explorer svelte-8ayjsy");
-    			add_location(div, file$b, 13, 0, 385);
+    			add_location(div, file$b, 12, 0, 339);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -11277,22 +11302,24 @@ var zdragon = (function () {
     connection.on("ModuleChanged", function (ns) {
       log("Module Changed: " + ns);
     });
+
+    let timeout;
     connection.on("ProjectChanged", function (directoryInterator) {
-      log("Project Changed, updating navigation pane");
-      setDirectoryInterator(directoryInterator);
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        log("Project Changed, updating navigation pane");
+        setDirectoryInterator(directoryInterator);
+      }, 500);
     });
-    connection.start();
+    connection.start().then(() => {
+      // init application after connection to hub is established
+      loadProjects();
+      loadLastProject();
+    });
 
     // init the key trapping
     init$2();
     init$1();
-
-
-    // Initialize the application
-    setTimeout(() => {
-      loadProjects();
-      loadLastProject();
-    }, 500);
 
     return app;
 

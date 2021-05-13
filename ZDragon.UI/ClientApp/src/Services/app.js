@@ -18,22 +18,33 @@ export const reset = () => {
 };
 
 export const selectModuleByNamespace = async namespace => {
-    if (!namespace) return;
-    let moduleResult = await getModuleFromServer(namespace);
+    try {
+        if (!namespace) return;
+        let moduleResult = await getModuleFromServer(namespace);
 
-    // set the last module
-    localStorage.setItem("lastModule", JSON.stringify({
-        namespace: moduleResult.namespace,
-        application: moduleResult.applicationName
-    }));
+        // set the last module
+        localStorage.setItem("lastModule", JSON.stringify({
+            namespace: moduleResult.namespace,
+            application: moduleResult.applicationName
+        }));
 
-    state.update(s => {
-        return {
-            ...s,
-            module: { ...moduleResult },
-            application: s.applications.find(a => a.name == moduleResult.applicationName)
-        };
-    });
+        state.update(s => {
+            return {
+                ...s,
+                module: { ...moduleResult },
+                application: (s.applications || []).find(a => a.name == moduleResult.applicationName)
+            };
+        });
+    } catch (ex) {
+
+        state.update(s => {
+            return {
+                ...s,
+                module: null,
+                application: null
+            };
+        });
+    }
 };
 
 export const resetModule = async () => {
@@ -165,9 +176,12 @@ export const loadProjects = () => {
 export const loadLastProject = () => {
     var lastProject = localStorage.getItem("last opened project");
     if (lastProject != null) {
+        console.log(lastProject);
         selectProject(lastProject);
     }
+};
 
+export const loadLastModule = () => {
     var lastModule = localStorage.getItem("lastModule");
     if (lastModule != null) {
         let lm = JSON.parse(lastModule);
@@ -228,6 +242,10 @@ export const selectProject = projectPath => {
 
 export const setDirectoryInterator = (directoryInteractor) => {
     state.update(s => {
+        setTimeout(() => {
+            loadLastModule();
+        }, 200);
+
         delete directoryInteractor.namespace;
         return {
             ...s,
@@ -265,9 +283,8 @@ export const log = data => {
                 timestamp: new Date().toLocaleString(),
                 message: data
             });
+            console.info(messages[0]);
         }
-
-        console.info(messages[0]);
 
         return ({
             ...s,

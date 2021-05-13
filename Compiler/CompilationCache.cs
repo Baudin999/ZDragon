@@ -102,6 +102,16 @@ namespace Compiler {
             var aggregate = new List<Fragment>();
             Console.WriteLine($"cache: {Cache.Values.Count()}");
             foreach (var cache in Cache.Values) {
+
+                if (cache.Namespace.Contains(query, StringComparison.OrdinalIgnoreCase)) {
+                    aggregate.Add(new Fragment(
+                        cache.Namespace,
+                        cache.Namespace,
+                        cache.Ast.FirstOrDefault()?.Segment ?? Token.DefaultSourceSegment(),
+                        1
+                        ));
+                }
+
                 var nodes = cache
                     .Ast
                     .OfType<IIdentifierExpressionNode>()
@@ -124,6 +134,7 @@ namespace Compiler {
                     });
                 aggregate.AddRange(nodes);
             }
+            
             return aggregate.OrderByDescending(n => n.Score).ThenBy(n => n.Id).ToList();
         }
     }

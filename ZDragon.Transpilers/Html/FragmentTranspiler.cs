@@ -10,7 +10,11 @@ namespace ZDragon.Transpilers.Html {
 
         }
         internal static string RenderIncludeNode(IncludeNode include) {
-            return $"<img style='max-width:100%;' src=\"/documents/{include.Namespace}/{include.Id}.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />";
+
+            var parts = include.QualifiedName.Split(".");
+            var ns = $"{parts[0]}.{parts[1]}.{parts[2]}";
+
+            return $"<img style='max-width:100%;' src=\"/documents/{ns}/{parts[3]}.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />";
         }
 
         internal static string RenderGuidelineNode(GuidelineNode node) {

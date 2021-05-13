@@ -18,6 +18,8 @@ namespace Compiler.Language.Nodes {
         public string Literal => "";
         public bool IsTemplate => false;
 
+        public string UrlNamespace { get; set; } = "";
+
         public ViewNode(AnnotationNode annotationNode, Token id, List<Token>nodes) : base(id, ExpressionKind.ViewExpression) {
             this.Annotation = annotationNode;
             this.IdToken = id;

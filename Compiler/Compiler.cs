@@ -54,20 +54,49 @@ namespace Compiler {
     internal static class NodeHelpers {
         internal static IEnumerable<AstNode> ParseIncludeNodes(this IEnumerable<AstNode> ast, CompilationCache cache) {
             foreach (var node in ast) {
-                if (node is IncludeNode include && include.Id != "components") {
-                    if (include is not null && include.Namespace is not null && cache.Has(include.Namespace)) {
+                if (node is IncludeNode include && include.Id != "components" && include.Id != "data") {
+
+                    // If the Qualified Name of the include node is the namespace of a document, 
+                    // load the entire document into the current AST.
+                    if (cache.Has(include.QualifiedName)) {
+                        var module = cache.Get(include.QualifiedName);
+                        foreach (var _node in module?.Ast ?? new List<AstNode>()) {
+                            if (_node is IDocumentNode) {
+                                var result = _node.Copy();
+                                result.Imported = true;
+                                result.OriginalNamespace = result.OriginalNamespace ?? result.Namespace;
+                                result.Namespace = include.QualifiedName;
+                                
+                                yield return result;
+                            }
+                        }
+                    }
+
+
+                    // if the include node is a namespace appended with a type
+                    else if (include is not null && include.Namespace is not null && cache.Has(include.Namespace)) {
                         var found = false;
                         var module = cache.Get(include.Namespace);
-                        foreach (var _node in module.Ast) {
+                        foreach (var _node in module?.Ast ?? new List<AstNode>()) {
                             if (found && _node is IDocumentNode) {
                                 var result = _node.Copy();
                                 result.Imported = true;
-                                result.Namespace = include.Namespace;
+                                if (_node is not ViewNode) {
+                                    result.OriginalNamespace = result.OriginalNamespace ?? result.Namespace;
+                                    result.Namespace = include.Namespace;
+                                }
                                 yield return result;
                             }
                             if (_node is DirectiveNode dn) {
                                 if (dn.Key == "region" && dn.Value == include.Id) found = true;
                                 if (dn.Key == "endregion" && dn.Value == include.Id) found = false;
+                            }
+                            if (!found && _node is ViewNode view && view.Id == include.Id) {
+                                var result = _node.Copy();
+                                result.Imported = true;
+                                result.OriginalNamespace = result.OriginalNamespace ?? result.Namespace;
+                                result.Namespace = include.Namespace;
+                                yield return result;
                             }
                         }
                     }

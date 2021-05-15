@@ -17,7 +17,7 @@ namespace ZDragon.Transpilers.Components {
         private readonly List<string> reservedAttributes = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
         private readonly List<string> reservedDeploymentAttributes = new List<string> { "Name", "Version", "Status", "Title", "Description", "Contains", "Interactions", "Type" };
 
-        private string GetDescription(AttributesNode node) {
+        private static string GetDescription(AttributesNode node) {
             return (node.GetAttribute("Description") ?? "").Replace(System.Environment.NewLine, " ");
         }        
 
@@ -70,9 +70,9 @@ namespace ZDragon.Transpilers.Components {
 
        
 
-        private string ParseTags(AttributesNode node) {
+        private static string ParseTags(AttributesNode node) {
             var _status = node.GetAttribute("Status", "").ToLower();
-            var _type = node.GetAttribute("Type", "").ToLower();
+            //var _type = node.GetAttribute("Type", "").ToLower();
 
             var _newTags = _status switch {
                 "new" => $", $tags=\"new\"",

@@ -16,12 +16,12 @@ namespace Compiler.Language {
                 new AnnotationNode(Current ?? SourceSegment.Empty);
 
 
-            var start = Take(SyntaxKind.ComponentDeclarationToken);
-            var name = Take();
-            if (name?.Kind != SyntaxKind.IdentifierToken) {
-                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name ?? start ?? Token.DefaultSourceSegment()));
+            var start = TakeF(SyntaxKind.ComponentDeclarationToken);
+            var name = TakeF();
+            if (name.Kind != SyntaxKind.IdentifierToken) {
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name));
             }
-            Token end = name ?? new Token();
+            Token end = name;
 
             // extensions
             List<Token> extensions = new List<Token>();
@@ -36,10 +36,10 @@ namespace Compiler.Language {
                 Take(SyntaxKind.EqualsToken);
 
                 while (Current?.Kind == SyntaxKind.AttributeFieldStarted) {
-                    Take(); // attribute field started
+                    TakeF(); // attribute field started
 
-                    var fieldName = Take();
-                    Take(SyntaxKind.ColonToken);
+                    var fieldName = TakeF();
+                    _ = Take(SyntaxKind.ColonToken);
                     var fieldDescription = 
                             TakeWhile(t => t.Kind != SyntaxKind.AttributeFieldEnded)
                                 .OfType<Token>()
@@ -65,7 +65,7 @@ namespace Compiler.Language {
 
                     attributes.Add(new AttributeNode(fieldName, fieldDescription, items));
 
-                    end = Take(); // attribute field ended
+                    end = Take() ?? end; // attribute field ended
                 }
             }
 

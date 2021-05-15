@@ -15,12 +15,12 @@ namespace Compiler.Language {
                 new AnnotationNode(Current ?? SourceSegment.Empty);
 
 
-            var start = Take(SyntaxKind.GuidelineDeclarationToken);
+            var start = TakeF(SyntaxKind.GuidelineDeclarationToken);
             var name = Take();
-            if (name.Kind != SyntaxKind.IdentifierToken) {
-                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name));
+            if (name?.Kind != SyntaxKind.IdentifierToken) {
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", start));
             }
-            Token end = name;
+            Token end = name ?? start;
 
             // extensions
             List<Token> extensions = new List<Token>();
@@ -39,8 +39,8 @@ namespace Compiler.Language {
                 while (Current?.Kind == SyntaxKind.AttributeFieldStarted) {
                     Take(); // attribute field started
 
-                    var fieldName = Take();
-                    Take(SyntaxKind.ColonToken);
+                    var fieldName = TakeF();
+                    _ = TakeF(SyntaxKind.ColonToken);
                     var fieldDescription = 
                             TakeWhile(t => t.Kind != SyntaxKind.AttributeFieldEnded)
                                 .OfType<Token>()
@@ -66,11 +66,11 @@ namespace Compiler.Language {
 
                     attributes.Add(new AttributeNode(fieldName, fieldDescription, items));
 
-                    end = Take(); // attribute field ended
+                    end = Take() ?? end; // attribute field ended
                 }
             }
 
-            return new GuidelineNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
+            return new GuidelineNode(Token.Range(start, end), annotationNode, name ?? start, extensions, attributes);
         }
     }
 }

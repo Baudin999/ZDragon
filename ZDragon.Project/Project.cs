@@ -158,7 +158,7 @@ namespace ZDragon.Project {
             if (Cache.Has(ns)) {
                 var cache = Cache.Get(ns);
                 var node = FindByTitle(ns, title);
-                if (node is not null) {
+                if (node is not null && cache is not null) {
                     var _ns = node.Imported && node.Namespace is not null ? node.Namespace : cache.Namespace;
                     return new Fragment(title, _ns, node.IdToken, 1);
                 }

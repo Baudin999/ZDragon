@@ -69,8 +69,8 @@ namespace Compiler.Checkers {
 
             if (!cache.Has(include?.Namespace)) {
                 errorSink.AddError(new Error(
-                    $"Module '{include.Namespace}' does not seem to exist.",
-                    include.IdToken
+                    $"Module '{include?.Namespace}' does not seem to exist.",
+                    include?.IdToken ?? Token.DefaultSourceSegment()
                 ));
             }
         }

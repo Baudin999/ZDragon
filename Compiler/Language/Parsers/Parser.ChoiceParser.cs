@@ -19,37 +19,38 @@ namespace Compiler.Language
 
 
             var choiceDeclaration = Take(SyntaxKind.ChoiceDeclarationToken);
-            var id = Take(SyntaxKind.IdentifierToken);
+            var id = TakeF(SyntaxKind.IdentifierToken);
             var equals = Take(SyntaxKind.EqualsToken);
 
             var fields = new List<ChoiceFieldNode>();
-            while (Current != null && Current.Kind != SyntaxKind.EndBlock)
-            {
+            if (equals is not null) {
+                while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
 
-                AnnotationNode? annotation = null;
-                while (Current.Kind == SyntaxKind.AnnotationToken)
-                {
-                    if (annotation == null) annotation = new AnnotationNode(TakeF());
-                    else annotation.Add(TakeF());
+                    AnnotationNode? annotation = null;
+                    while (Current.Kind == SyntaxKind.AnnotationToken) {
+                        if (annotation == null) annotation = new AnnotationNode(TakeF());
+                        else annotation.Add(TakeF());
+                    }
+
+                    // take the pipe token
+                    // | "Female"
+                    Take(SyntaxKind.PipeToken);
+
+
+                    // choices can be either of type String or Number
+                    var value = Take();
+                    if (value is not null && value.Kind != SyntaxKind.StringLiteralToken && value.Kind != SyntaxKind.NumberLiteralToken) {
+                        // error
+                        ErrorSink.AddError(new Error(
+                            message: $"Expected either a String or a Number but found a {value.Kind}",
+                            sourceSegment: value
+                        ));
+                    }
+
+                    if (value is not null) {
+                        fields.Add(new ChoiceFieldNode(annotation, value));
+                    }
                 }
-
-                // take the pipe token
-                // | "Female"
-                Take(SyntaxKind.PipeToken);
-
-
-                // choices can be either of type String or Number
-                var value = Take();
-                if (value is not null && value.Kind != SyntaxKind.StringLiteralToken && value.Kind != SyntaxKind.NumberLiteralToken)
-                {
-                    // error
-                    ErrorSink.AddError(new Error(
-                        message: $"Expected either a String or a Number but found a {value.Kind}",
-                        sourceSegment: value
-                    ));
-                }
-
-                fields.Add(new ChoiceFieldNode(annotation, value));
             }
 
 

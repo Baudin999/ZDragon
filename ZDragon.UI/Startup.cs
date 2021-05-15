@@ -96,7 +96,7 @@ namespace ZDragon.UI {
             Project.PlantUmlRenderer.StopServer();
         }
 
-        private async Task BootstrapElectron(IHostApplicationLifetime lifetime) {
+        private static async Task BootstrapElectron(IHostApplicationLifetime lifetime) {
             try {
                 var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions {
                     Width = 1600,

@@ -7,7 +7,7 @@ namespace Compiler.Language {
 
         public AstNode ParseMarkup() {
             var start = Take(SyntaxKind.LessThenToken);
-            var id = Take(SyntaxKind.IdentifierToken);
+            var id = TakeF(SyntaxKind.IdentifierToken);
 
             return new MarkupNode(id);
         }

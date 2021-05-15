@@ -19,7 +19,7 @@ namespace Compiler {
         /// NEEDS TO BE REMOVED!!!
         /// DEPRECATE ASAP!!!
         /// </summary>
-        public List<CompilationResult> Values { get; }
+        public List<CompilationResult> Values { get; } = new List<CompilationResult>();
 
         public CompilationCache(ErrorSink errorSink) {
             this.ErrorSink = errorSink;
@@ -43,8 +43,8 @@ namespace Compiler {
             }
         }
 
-        public CompilationResult? Get(string? ns) {
-            if (ns is null) return null;
+        public CompilationResult Get(string? ns) {
+            if (ns is null) throw new Exception("Cache does not exists");
             return Cache[ns];
         }
 
@@ -59,7 +59,7 @@ namespace Compiler {
 
         public void TypeCheck() {
             ErrorSink.Reset();
-            foreach (var (key, compilationResult) in Cache) {
+            foreach (var (_, compilationResult) in Cache) {
                 new TypeChecker(this, compilationResult).Check();
             }
         }
@@ -100,7 +100,7 @@ namespace Compiler {
 
         public List<Fragment> Search(string query) {
             var aggregate = new List<Fragment>();
-            Console.WriteLine($"cache: {Cache.Values.Count()}");
+            Console.WriteLine($"cache: {Cache.Values.Count}");
             foreach (var cache in Cache.Values) {
 
                 if (cache.Namespace.Contains(query, StringComparison.OrdinalIgnoreCase)) {

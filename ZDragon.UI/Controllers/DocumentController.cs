@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using ZDragon.Project.Interactors;
@@ -11,11 +11,9 @@ namespace ZDragon.UI.Controllers {
     public class DocumentController : ControllerBase {
 
         private readonly Project.Project _project;
-        private readonly ILogger<DocumentController> _logger;
         private readonly ProjectHub _projectHub;
 
-        public DocumentController(ILogger<DocumentController> logger, Project.Project project, ProjectHub projectHub) {
-            _logger = logger;
+        public DocumentController(Project.Project project, ProjectHub projectHub) {
             _project = project;
             _projectHub = projectHub;
         }
@@ -32,7 +30,7 @@ namespace ZDragon.UI.Controllers {
                     return Ok(new {
                         text,
                         compilationResult = moduleInteractor.Compile(text),
-                        Namespace = moduleInteractor.Namespace,
+                        moduleInteractor.Namespace,
                         ApplicationName = moduleInteractor.ApplicationInteractor.Namespace
                     });
                 }
@@ -123,6 +121,7 @@ namespace ZDragon.UI.Controllers {
                 }
             }
             catch (System.Exception ex) {
+                Console.WriteLine(ex.Message);
                 return Problem(
                   title: $"Failed to get the fragment"
                   );

@@ -4,16 +4,10 @@ using System.Linq;
 
 namespace ZDragon.UI.Controllers {
     public class ComponentController : Controller {
-        private readonly ILogger<DocumentController> _logger;
         private readonly Project.Project _project;
-        private readonly ProjectHub ProjectHub;
 
-
-        public ComponentController(ILogger<DocumentController> logger, Project.Project project, ProjectHub hub) {
-            _logger = logger;
+        public ComponentController(Project.Project project) {
             _project = project;
-
-            this.ProjectHub = hub;
         }
 
         [HttpGet("/api/component/info/{ns}/{id}")]
@@ -28,6 +22,7 @@ namespace ZDragon.UI.Controllers {
                 }
             }
             catch (System.Exception ex) {
+                System.Console.WriteLine(ex.Message);
                 return Problem(
                   title: $"Failed to get the fragment"
                   );

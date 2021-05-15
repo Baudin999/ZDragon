@@ -12,8 +12,9 @@ namespace ZDragon.Project {
             if (localRendering) return RenderLocal(puml);
             else {
                 var factory = new RendererFactory();
-                var settings = new PlantUmlSettings();
-                settings.RemoteUrl = "http://localhost:8001/"; // <-- training slash is important, breaks without
+                var settings = new PlantUmlSettings {
+                    RemoteUrl = "http://localhost:8001/" // <-- training slash is important, breaks without
+                };
                 var renderer = factory.CreateRenderer(settings);
 
                 var bytes = renderer.Render(puml, OutputFormat.Svg);
@@ -42,19 +43,16 @@ namespace ZDragon.Project {
 
                     var processStartInfo = GetProcessStartInfo(javaPath, arguments);
 
-                    using (Process? process = Process.Start(processStartInfo)) {
-                        process?.WriteInput(puml);
+                    using Process? process = Process.Start(processStartInfo);
+                    process?.WriteInput(puml);
 
-                        var Output = process?.GetOutput() ?? new byte[0];
-                        var Error = process?.GetError() ?? new byte[0];
-                        //var ExitCode = process?.ExitCode ?? 1;
-
-                        return Output;
-
-                    }
+                    var Output = process?.GetOutput() ?? Array.Empty<byte>();
+                    var Error = process?.GetError() ?? Array.Empty<byte>();
+                    
+                    return Output;
                 }
 
-                return new byte[0];
+                return Array.Empty<byte>();
             }
             catch (Exception ex) {
 
@@ -86,7 +84,7 @@ Failed to generate PlantUML diagram:
             var plantUmlPath = Path.Combine(currentPath, "PlantUml");
             var plantUmlJarPath = Path.Combine(plantUmlPath, "plantuml.jar");
 
-            var variables = Environment.GetEnvironmentVariables();
+            //var variables = Environment.GetEnvironmentVariables();
             string javaHome = Environment.GetEnvironmentVariable("JAVA_HOME")?.Trim('"') ?? "";
             string javaPath = Path.Combine(javaHome, "bin", "java.exe");
 
@@ -109,11 +107,10 @@ Failed to generate PlantUML diagram:
 
     public static class ProcessExtensions {
         public static void WriteInput(this Process process, string input) {
-            using (StreamWriter stdIn = process.StandardInput) {
-                stdIn.AutoFlush = true;
-                stdIn.Write(input);
-                stdIn.Close();
-            }
+            using StreamWriter stdIn = process.StandardInput;
+            stdIn.AutoFlush = true;
+            stdIn.Write(input);
+            stdIn.Close();
         }
 
         public static byte[] GetOutput(this Process process) {
@@ -125,10 +122,9 @@ Failed to generate PlantUML diagram:
         }
 
         private static byte[] ExtractBytes(Stream stream) {
-            using (var memoryStream = new MemoryStream()) {
-                stream.CopyTo(memoryStream);
-                return memoryStream.ToArray();
-            }
+            using var memoryStream = new MemoryStream();
+            stream.CopyTo(memoryStream);
+            return memoryStream.ToArray();
         }
     }
 }

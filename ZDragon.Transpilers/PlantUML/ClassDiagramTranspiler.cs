@@ -133,7 +133,7 @@ enum {node.Id} {{
             };
 
             return "!define LIGHTBLUE\r\n" +
-                "!include %get_variable_value(\"RELATIVE_INCLUDE\")/Colors.puml \r\n" +
+                "!include https://raw.githubusercontent.com/baudin999/C4-PlantUML/master/Colors.puml \r\n" +
                 String.Join("\r\n", types) + 
                 "\r\n\r\n" + 
                 string.Join("\r\n", relations);

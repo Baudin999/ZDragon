@@ -7,9 +7,6 @@ using System.Linq;
 namespace ZDragon.Transpilers.Components {
     public partial class ComponentTranspiler {
         private readonly Dictionary<string, IIdentifierExpressionNode> lexicon;
-        private readonly List<string> baseTypes = new List<string> {
-            "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either"
-        };
         private readonly Dictionary<string, string> types = new Dictionary<string, string>();
         private readonly Dictionary<string, string> relations = new Dictionary<string, string>();
         private HashSet<string> nonRootNodes = new HashSet<string>();

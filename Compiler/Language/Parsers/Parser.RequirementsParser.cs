@@ -14,11 +14,14 @@ namespace Compiler.Language {
                 new AnnotationNode(annotations) :
                 new AnnotationNode(Current ?? SourceSegment.Empty);
 
-            var start = Take(SyntaxKind.RequirementDeclarationToken);
+            var start = TakeF(SyntaxKind.RequirementDeclarationToken);
             var name = Take();
-            if (name.Kind != SyntaxKind.IdentifierToken) {
-                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name));
+            if (name?.Kind != SyntaxKind.IdentifierToken || name is null) {
+                ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name ?? start));
             }
+
+            if (name is null) name = new Token();
+
             Token end = name;
 
             // extensions
@@ -33,13 +36,13 @@ namespace Compiler.Language {
 
             var attributes = new List<AttributeNode>();
             if (Current?.Kind == SyntaxKind.EqualsToken) {
-                Take(SyntaxKind.EqualsToken);
+                _ = TakeF(SyntaxKind.EqualsToken);
 
                 while (Current?.Kind == SyntaxKind.AttributeFieldStarted) {
-                    Take(); // attribute field started
+                    var startField = TakeF(); // attribute field started
 
-                    var fieldName = Take();
-                    Take(SyntaxKind.ColonToken);
+                    var fieldName = TakeF(SyntaxKind.IdentifierToken);
+                    TakeF(SyntaxKind.ColonToken);
                     var fieldDescription = 
                             TakeWhile(t => t.Kind != SyntaxKind.AttributeFieldEnded)
                                 .OfType<Token>()
@@ -65,11 +68,12 @@ namespace Compiler.Language {
 
                     attributes.Add(new AttributeNode(fieldName, fieldDescription, items));
 
-                    end = Take(); // attribute field ended
+                    end = TakeF(); // attribute field ended
                 }
             }
 
-            return new RequirementNode(Token.Range(start, end), annotationNode, name, extensions, attributes);
+            
+            return new RequirementNode(Token.Range(start, end ?? Token.DefaultSourceSegment()), annotationNode, name, extensions, attributes);
         }
     }
 }

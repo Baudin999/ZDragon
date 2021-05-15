@@ -67,7 +67,7 @@ record Person =
             cache.TypeCheck();
 
             Assert.Equal(3, cache.Count());
-            Assert.Equal(2, compilerResult.Ast.Count);
+            Assert.Equal(2, compilerResult?.Ast.Count);
             Assert.Empty(errorSink.Errors);
         }
 

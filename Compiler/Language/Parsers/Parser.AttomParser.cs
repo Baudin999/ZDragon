@@ -17,7 +17,7 @@ namespace Compiler.Language {
                 return ParseIdentifier();
             }
             else if (Current.Kind == SyntaxKind.GenericParameterToken) {
-                var parameter = Take(SyntaxKind.GenericParameterToken);
+                var parameter = TakeF(SyntaxKind.GenericParameterToken);
                 return new GenericParameterNode(parameter);
             }
             else if (Current.Kind == SyntaxKind.AmpersandToken) {
@@ -32,13 +32,13 @@ namespace Compiler.Language {
                 return expression;
             }
             else {
-                var token = Take();
+                var token = TakeF();
                 return new ExpressionNode(token, ExpressionKind.None);
             }
         }
 
         private IdentifierNode ParseIdentifier() {
-            var id = Take(SyntaxKind.IdentifierToken);
+            var id = TakeF(SyntaxKind.IdentifierToken);
             return new IdentifierNode(id, id);
         }
 

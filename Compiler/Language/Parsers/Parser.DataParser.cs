@@ -16,25 +16,28 @@ namespace Compiler.Language {
 
 
             var dataDeclaration = Take(SyntaxKind.DataDeclarationToken);
-            var id = Take(SyntaxKind.IdentifierToken);
+            var id = TakeF(SyntaxKind.IdentifierToken);
             var genericParameters = TakeWhile(SyntaxKind.GenericParameterToken).ToList();
 
             var equals = Take(SyntaxKind.EqualsToken);
 
             var fields = new List<DataFieldNode>();
-            while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
-                                               
-                AnnotationNode? annotation = null;
-                while (Current.Kind == SyntaxKind.AnnotationToken) {
-                    if (annotation == null) annotation = new AnnotationNode(Take());
-                    else annotation.Add(Take());
+
+            if (equals is not null) {
+                while (Current != null && Current.Kind != SyntaxKind.EndBlock) {
+
+                    AnnotationNode? annotation = null;
+                    while (Current?.Kind == SyntaxKind.AnnotationToken) {
+                        if (annotation == null) annotation = new AnnotationNode(TakeF());
+                        else annotation.Add(TakeF());
+                    }
+
+                    // | Some 'a
+                    Take(SyntaxKind.PipeToken);
+
+                    var parameters = TakeWhile(t => t.Kind == SyntaxKind.IdentifierToken || t.Kind == SyntaxKind.GenericParameterToken).ToList();
+                    fields.Add(new DataFieldNode(annotation, parameters.First(), parameters));
                 }
-
-                // | Some 'a
-                Take(SyntaxKind.PipeToken);
-
-                var parameters = TakeWhile(t => t.Kind == SyntaxKind.IdentifierToken || t.Kind == SyntaxKind.GenericParameterToken).ToList();
-                fields.Add(new DataFieldNode(annotation, parameters.First(), parameters));
             }
 
 

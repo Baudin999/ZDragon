@@ -35,7 +35,7 @@ namespace ZDragon.Project {
             watcher.Dispose();
         }
 
-        private async void TextChanged(object source, FileSystemEventArgs e) {
+        private void TextChanged(object source, FileSystemEventArgs e) {
 
             // TODO: FIX THIS, FILES ARE LOCKED AND CODE DOES NOT WORK!
 

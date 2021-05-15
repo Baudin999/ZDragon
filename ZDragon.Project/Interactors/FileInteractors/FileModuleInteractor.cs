@@ -170,7 +170,7 @@ Failed to compile '{this.Namespace}':
                 }
             }
             catch (System.Exception ex) {
-                //
+                System.Console.WriteLine(ex);
             }
         }
         public async Task<byte[]> GetDataModelSvg() {
@@ -190,7 +190,7 @@ Failed to compile '{this.Namespace}':
                 }
             }
             catch (System.Exception ex) {
-                //
+                System.Console.WriteLine(ex);
             }
         }
 

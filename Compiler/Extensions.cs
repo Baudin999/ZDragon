@@ -11,7 +11,7 @@ namespace Compiler {
             do {
                 hasRemainingItems = it.MoveNext();
                 if (hasRemainingItems) {
-                    if (!isFirst) {
+                    if (!isFirst && item is not null) {
                         yield return item;
                     }
                     item = it.Current;

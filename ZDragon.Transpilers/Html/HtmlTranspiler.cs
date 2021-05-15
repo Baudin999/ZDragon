@@ -29,7 +29,7 @@ namespace ZDragon.Transpilers.Html {
                 if (h1 > 1) parts.Add("</div>");
                 //if (h2 > 0) parts.Add("</div>");
 
-                h1 = h1 + 1;
+                h1 += 1;
                 h2 = 0;
                 h3 = 0;
                 h4 = 0;
@@ -41,7 +41,7 @@ namespace ZDragon.Transpilers.Html {
             else if (mcn.Depth == 2) {
                 // close the keep-together parts
                 //if (h2 > 0) parts.Add("</div>");
-                h2 = h2 + 1;
+                h2 += 1;
                 h3 = 0;
                 h4 = 0;
                 h5 = 0;
@@ -50,18 +50,18 @@ namespace ZDragon.Transpilers.Html {
                 toc.Add($"<div class='toc-2'>{h1}.{h2} {content}</div>");
             }
             else if (mcn.Depth == 3) {
-                h3 = h3 + 1;
+                h3 += 1;
                 h4 = 0;
                 h5 = 0;
                 toc.Add($"<div class='toc-3'>{h1}.{h2}.{h3} {content}</div>");
             }
             else if (mcn.Depth == 4) {
-                h4 = h4 + 1;
+                h4 += 1;
                 h5 = 0;
                 toc.Add($"<div class='toc-4'>{h1}.{h2}.{h3}.{h4} {content}</div>");
             }
             else if (mcn.Depth == 5) {
-                h5 = h5 + 1;
+                h5 += 1;
                 toc.Add($"<div class='toc-5'>{h1}.{h2}.{h3}.{h4}.{h5} {content}</div>");
             }
 
@@ -180,11 +180,11 @@ namespace ZDragon.Transpilers.Html {
         public string Transpile() {
             var renderRoadmap = bool.Parse(compilationresult.Ast.OfType<DirectiveNode>().FirstOrDefault(d => d.Key == "roadmap")?.Value.ToLower() ?? "true");
 
-            var hasArchitectureNodes = compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Count() > 0;
+            var hasArchitectureNodes = compilationresult.Lexicon.Values.OfType<IArchitectureNode>().Any();
             var renderComponents = compilationresult.ParseBooleanDirective("components") ?? true && hasArchitectureNodes;
             var renderComponentDetails = compilationresult.ParseBooleanDirective("component details") ?? false;
             
-            var hasLanguageNodes = compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Count() > 0;
+            var hasLanguageNodes = compilationresult.Lexicon.Values.OfType<ILanguageNode>().Where(ln => !(ln is ViewNode)).Any();
             var renderClasses = compilationresult.ParseBooleanDirective("classes") ?? true && hasLanguageNodes;
             var renderClassDetails = compilationresult.ParseBooleanDirective("class details") ?? false;
 
@@ -207,7 +207,7 @@ namespace ZDragon.Transpilers.Html {
             var tocIndex = 1;
             tocIndex = RenderTitlePage(tocIndex);
 
-            if (renderClasses && compilationresult.Lexicon.Values.OfType<IPlanningNode>().Count() > 0) {
+            if (renderClasses && compilationresult.Lexicon.Values.OfType<IPlanningNode>().Any()) {
 
                 toc.Add($"<div class='toc-1'>{++h1} Roadmap</div>");
 
@@ -270,7 +270,7 @@ namespace ZDragon.Transpilers.Html {
                     toc.Add($"<div class='toc-1'>{++h1} Component Diagram</div>");
 
                     if (renderComponentDetails) {
-                        validAttributesNodes().ToList().ForEach(n => {
+                        ValidAttributesNodes().ToList().ForEach(n => {
                             toc.Add($"<div class='toc-2'>{h1}.{++h2} {n.Id}</div>");
                         });
                     }
@@ -308,7 +308,7 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/components.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />");
 
                 if (renderComponentDetails) {
-                    foreach (var node in validAttributesNodes()) {
+                    foreach (var node in ValidAttributesNodes()) {
                         parts.Add(FragmentTranspiler.RenderAttributesTable(node));
                     }
                 }
@@ -325,7 +325,7 @@ namespace ZDragon.Transpilers.Html {
             return string.Join("\n\n", parts);
         }
 
-        private IEnumerable<AttributesNode> validAttributesNodes() {
+        private IEnumerable<AttributesNode> ValidAttributesNodes() {
             return this.compilationresult.Ast.OfType<AttributesNode>().Where(a => a.GetAttribute("Hidden", "False").ToLower() == "false").OrderBy(n => n.Id);
         }
 

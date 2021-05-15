@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Compiler.Language {
     public partial class Parser {
-        public FlowNode? ParseFlow() {
+        public FlowNode ParseFlow() {
             var openDirective = Take(SyntaxKind.FlowDeclarationToken);
             var id = TakeF(SyntaxKind.IdentifierToken);
             _ = TakeF(SyntaxKind.EqualsToken);

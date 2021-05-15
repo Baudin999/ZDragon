@@ -6,11 +6,11 @@ namespace Compiler.Language {
     public partial class Parser {
         private AstNode ParseMarkdown() {
             var markdown = new List<string>();
-            var start = Take(SyntaxKind.MarkdownStartBlockToken); // take the start token
+            var start = TakeF(SyntaxKind.MarkdownStartBlockToken); // take the start token
             while (Current?.Kind != SyntaxKind.MarkdownEndBlockToken) {
-                markdown.Add(Take().Value);
+                markdown.Add(TakeF().Value);
             }
-            var end = Take(SyntaxKind.MarkdownEndBlockToken); // take the end token
+            var end = TakeF(SyntaxKind.MarkdownEndBlockToken); // take the end token
             return new MarkdownNode(string.Join("", markdown), Token.Range(start, end));
         }
     }

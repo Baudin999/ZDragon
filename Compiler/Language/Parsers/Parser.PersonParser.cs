@@ -14,8 +14,8 @@ namespace Compiler.Language {
                 new AnnotationNode(annotations) :
                 new AnnotationNode(Current ?? SourceSegment.Empty);
 
-            var start = Take(SyntaxKind.PersonDeclarationToken);
-            var name = Take();
+            var start = TakeF(SyntaxKind.PersonDeclarationToken);
+            var name = TakeF();
             if (name.Kind != SyntaxKind.IdentifierToken) {
                 ErrorSink.AddError(new Error(ErrorKind.InvalidIdentifier, "Invalid Identifier", name));
             }
@@ -25,20 +25,19 @@ namespace Compiler.Language {
             List<Token> extensions = new List<Token>();
             if (Current?.Kind == SyntaxKind.ExtendsToken) {
                 var extends = Take(SyntaxKind.ExtendsToken);
-
                 extensions = TakeWhile(SyntaxKind.IdentifierToken).OfType<Token>().ToList();
             }
 
 
             var attributes = new List<AttributeNode>();
             if (Current?.Kind == SyntaxKind.EqualsToken) {
-                Take(SyntaxKind.EqualsToken);
+                _ = Take(SyntaxKind.EqualsToken);
 
                 while (Current?.Kind == SyntaxKind.AttributeFieldStarted) {
-                    Take(); // attribute field started
+                    _ = Take(); // attribute field started
 
-                    var fieldName = Take();
-                    Take(SyntaxKind.ColonToken);
+                    var fieldName = TakeF();
+                    _ = Take(SyntaxKind.ColonToken);
                     var fieldDescription = 
                             TakeWhile(t => t.Kind != SyntaxKind.AttributeFieldEnded)
                                 .OfType<Token>()
@@ -64,7 +63,7 @@ namespace Compiler.Language {
 
                     attributes.Add(new AttributeNode(fieldName, fieldDescription, items));
 
-                    end = Take(); // attribute field ended
+                    end = Take() ?? end; // attribute field ended
                 }
             }
 

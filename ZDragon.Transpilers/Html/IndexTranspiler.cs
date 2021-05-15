@@ -55,7 +55,7 @@ namespace ZDragon.Transpilers.Html {
     }
 
     public class Link {
-        public string Title { get; set; }
-        public string Href { get; set; }
+        public string Title { get; set; } = default!;
+        public string Href { get; set; } = default!;
     }
 }

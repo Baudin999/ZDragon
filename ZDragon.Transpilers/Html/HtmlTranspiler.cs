@@ -23,7 +23,7 @@ namespace ZDragon.Transpilers.Html {
         private int h5 = 0;
 
         private void RenderChapterNode(MarkdownChapterNode mcn) {
-            var content = Interpolate(mcn.Content);
+            var content = mcn.InterpolatedContent ?? mcn.Content;
             if (mcn.Depth == 1) {
                 // close the keep-together parts
                 if (h1 > 1) parts.Add("</div>");
@@ -71,26 +71,17 @@ namespace ZDragon.Transpilers.Html {
         private string ToHtml(string content) {
             return Markdown.ToHtml(content, pipeline);
         }
-        private string Interpolate(string content) {
-            return CarTemplating.FormatTemplate(content, this.compilationresult.Lexicon);
-        }
+        //private string Interpolate(string content) {
+        //    return CarTemplating.FormatTemplate(content, this.compilationresult.Lexicon);
+        //}
 
         private void RenderParagraphNode(IDocumentNode node) {
-            if (node.IsTemplate) {
-                parts.Add($"<p>{Interpolate(node.Content)}</p>");
-            }
-            else {
-                parts.Add($"<p>{node.Content}</p>");
-            }
+            parts.Add($"<p>{node.InterpolatedContent ?? node.Content}</p>");
         }
 
         private void RenderMarkdownNode(MarkdownNode node) {
-            if (node.IsTemplate) {
-                parts.Add(ToHtml(Interpolate(node.Content)));
-            }
-            else {
-                parts.Add(ToHtml(node.Content));
-            }
+            var content = node.IsTemplate ? node.InterpolatedContent : node.Content;
+            parts.Add(ToHtml(node.InterpolatedContent ?? node.Content));
         }
 
 

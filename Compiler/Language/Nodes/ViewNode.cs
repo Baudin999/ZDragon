@@ -13,6 +13,7 @@ namespace Compiler.Language.Nodes {
         public byte[] Hash { get; }
         public string HashString { get; }
 
+        public string? InterpolatedContent { get; set; } = null;
         public string Content => "";
 
         public string Literal => "";

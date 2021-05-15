@@ -81,10 +81,10 @@ namespace Compiler {
                             if (found && _node is IDocumentNode) {
                                 var result = _node.Copy();
                                 result.Imported = true;
-                                if (_node is not ViewNode) {
+                                //if (_node is not ViewNode) {
                                     result.OriginalNamespace = result.OriginalNamespace ?? result.Namespace;
                                     result.Namespace = include.Namespace;
-                                }
+                                //}
                                 yield return result;
                             }
                             if (_node is DirectiveNode dn) {

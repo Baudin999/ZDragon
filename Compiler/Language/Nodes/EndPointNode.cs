@@ -5,6 +5,7 @@ namespace Compiler.Language.Nodes {
     public class EndpointNode : AttributesNode, IArchitectureNode, IDocumentNode {
         public ExpressionNode? TypeDefinition { get; }
 
+        public string? InterpolatedContent { get; set; } = null;
         public string Content => "";
 
         public string Literal => "";

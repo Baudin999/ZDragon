@@ -1,48 +1,43 @@
+import { keypress } from "./Services/keypress";
 import eventbus from "./Services/eventbus";
 
 function init() {
-    function keytrap(e) {
+    var listener = new keypress.Listener();
+    listener.simple_combo("meta s", function (e) {
+        eventbus.broadcast("save", {});
+        e.preventDefault();
+        return false;
+    });
 
-        if ((e.ctrlKey || e.metaKey) && 46 < e.which && e.which < 91) {
+    listener.simple_combo("meta p", function (e) {
+        eventbus.broadcast("ctrl-p", {});
+        e.preventDefault();
+        return false;
+    });
 
-            if (e.code === "KeyS") {
-                eventbus.broadcast("save", {});
-                e.preventDefault();
-                return false;
-            }
-            else if (e.code === "KeyP") {
-                eventbus.broadcast("ctrl-p", {});
-                e.preventDefault();
-                return false;
-            }
-            else if (e.code === "KeyB") {
-                eventbus.broadcast("back", {});
-                e.preventDefault();
-                return false;
-            }
-            else {
-                console.log(e);
-                // do nothing
-            }
+    listener.simple_combo("meta /", function (e) {
+        eventbus.broadcast("comment", {});
+        e.preventDefault();
+        return false;
+    });
+
+    listener.simple_combo("f2", function (e) {
+        var currentWord = window.getCurrentWord();
+        if (currentWord) {
+            eventbus.broadcast("start refactor", currentWord);
         }
+        e.preventDefault();
+        return false;
+    });
 
-        else if (e.code === "F2") {
-            var currentWord = window.getCurrentWord();
-            if (currentWord) {
-                eventbus.broadcast("start refactor", currentWord);
-            }
+    listener.simple_combo("f4", function (e) {
+        var currentWord = window.getCurrentWord();
+        if (currentWord) {
+            eventbus.broadcast("json_schema", currentWord);
         }
-        else if (e.code === "F4") {
-            console.log("asdasdasd");
-            var currentWord = window.getCurrentWord();
-            if (currentWord) {
-                eventbus.broadcast("json_schema", currentWord);
-            }
-        }
-
-    }
-
-    window.document.addEventListener("keydown", keytrap, false);
+        e.preventDefault();
+        return false;
+    });
 }
 
 export default init;

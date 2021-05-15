@@ -101,6 +101,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
 
                 // also compile on save
                 this.CompilationResult = Compile(s);
+
                 tasks.Add(SaveDataModelSvg());
                 tasks.Add(SaveComponentModelSvg());
                 tasks.Add(SaveRoadmapSvg());
@@ -127,6 +128,8 @@ namespace ZDragon.Project.Interactors.FileInteractors {
 
                 var text = await GetText();
                 this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile().Check();
+                InterpolateDocumentNodes();
+
                 Project.CurrentProject?.SendMessage($"Successfully compiled '{this.Namespace}' with {this.CompilationResult.Errors.Count} errors.");
                 return this.CompilationResult;
             }
@@ -146,6 +149,8 @@ Failed to compile '{this.Namespace}':
                 // reset the previous Compiltation Errors
                 this.cache.Reset();
                 this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile().Check();
+                InterpolateDocumentNodes();
+
                 return this.CompilationResult;
             }
             catch (System.Exception ex) {
@@ -155,6 +160,21 @@ Failed to compile '{this.Namespace}':
 {ex.Message}
 ");
                 return this.CompilationResult;
+            }
+        }
+
+        private void InterpolateDocumentNodes() {
+            // format the document nodes
+            foreach (var documentNode in this.CompilationResult.Document) {
+                if (documentNode.IsTemplate) {
+                    var _compilationResult = (documentNode.OriginalNamespace is not null && cache.Has(documentNode.OriginalNamespace))
+                        ? cache.Get(documentNode.OriginalNamespace)
+                        : this.CompilationResult;
+
+                    var lexicon = _compilationResult.Lexicon;
+
+                    documentNode.InterpolatedContent = CarTemplating.FormatTemplate(documentNode.Content, lexicon);
+                }
             }
         }
 

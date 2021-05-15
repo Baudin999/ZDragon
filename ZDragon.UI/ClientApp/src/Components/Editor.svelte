@@ -120,6 +120,10 @@
             eventbus.broadcast("saving", editor.getValue());
         }
     });
+    eventbus.subscribe("comment", () => {
+        editor.getSelection();
+        console.log("COMMENTING");
+    });
     eventbus.subscribe("navigateToToken", (position) => {
         editor.focus();
         editor.setPosition(position);

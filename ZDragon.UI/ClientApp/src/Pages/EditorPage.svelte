@@ -43,9 +43,6 @@
                         setTimeout(() => {
                             if (iframe && iframe.contentWindow)
                                 iframe.contentWindow.scroll(0, scrollY);
-                            setTimeout(() => {
-                                processing = s.processing;
-                            }, 100);
                         });
                     };
                 }
@@ -66,6 +63,11 @@
 
         if (!processing && s.processing) {
             processing = true;
+        }
+        if (processing && !s.processing) {
+            setTimeout(() => {
+                processing = s.processing;
+            }, 300);
         }
     });
 </script>

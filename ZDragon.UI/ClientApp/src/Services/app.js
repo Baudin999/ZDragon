@@ -408,6 +408,8 @@ export const init = () => {
         var store = _get(state);
         var namespace = (store.module || {}).namespace;
 
+        console.log(term);
+
         if (namespace) {
             try {
                 var content = await get(`/api/component/info/${namespace}/${term}`);

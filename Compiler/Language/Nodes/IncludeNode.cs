@@ -10,6 +10,7 @@ namespace Compiler.Language.Nodes {
         public List<Token> AllTokens { get; }
         public string QualifiedName { get; }
 
+        public string? InterpolatedContent { get; set; } = null;
         public string Content => this.ToString();
 
         public string Literal => "";

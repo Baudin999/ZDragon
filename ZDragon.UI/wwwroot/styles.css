@@ -93,6 +93,9 @@ body {
 .fade-in {
   opacity: 1;
 }
+.mermaid > svg {
+  text-align: center;
+}
 /* FOMRS */
 .form {
   width: 100%;
@@ -209,9 +212,6 @@ button.warning {
 button.warning:hover {
   background: var(--color-primary);
   color: var(--color-primary--alt);
-}
-.mermaid > svg {
-  text-align: center;
 }
 table.table--glossary {
   border-collapse: collapse;

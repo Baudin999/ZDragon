@@ -77,6 +77,11 @@ namespace ZDragon.Project {
         }
 
         public void Reload(string path) {
+
+            if (!Directory.Exists(path)) {
+                Directory.CreateDirectory(path);
+            }
+
             if (path != this.RootPath) {
                 Cache = new CompilationCache(new ErrorSink());
                 _root = path;

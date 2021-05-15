@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Compiler.Language.Nodes {
     public class MarkdownNode : AstNode, IDocumentNode {
+        public string? InterpolatedContent { get; set; } = null;
         public string Content { get; }
         public string Literal { get; }
         public bool IsTemplate { get; }

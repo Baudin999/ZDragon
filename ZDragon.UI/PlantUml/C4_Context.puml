@@ -2,7 +2,8 @@
 !if %variable_exists("RELATIVE_INCLUDE")
   !include %get_variable_value("RELATIVE_INCLUDE")/C4.puml
 !else
-  !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
+  !include /C4/C4.puml
+  ' !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
 !endif
 
 ' Scope: A single software system.

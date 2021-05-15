@@ -54,7 +54,8 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             if (cache is null) throw new System.Exception("Compilation Cache cannot be null");
             this.FileType = fileType;
             this.ApplicationInteractor = app;
-            this.RenderLocal = this.ApplicationInteractor?.ApplicationSettings.RenderLocal ?? true;
+            // this.RenderLocal = this.ApplicationInteractor?.ApplicationSettings.RenderLocal ?? false;
+            this.RenderLocal = false;
         }
 
         public FileModuleInteractor(string rootPath, string file, CompilationCache cache) {
@@ -168,7 +169,7 @@ Failed to compile '{this.Namespace}':
                     dataHash = newHash;
                 }
             }
-            catch (System.Exception) {
+            catch (System.Exception ex) {
                 //
             }
         }
@@ -188,7 +189,7 @@ Failed to compile '{this.Namespace}':
                     componentsHash = newHash;
                 }
             }
-            catch (System.Exception) {
+            catch (System.Exception ex) {
                 //
             }
         }
@@ -264,7 +265,10 @@ Failed to compile '{this.Namespace}':
                 var newHash = Compiler.Utilities.HashString(_puml);
                 if (!ViewHashes.ContainsKey(view.HashString) || !Compiler.Utilities.HashCompare(ViewHashes[view.HashString], newHash)) {
                     var path = Path.Combine(this.OutPath, view.HashString + ".svg");
-                    task = File.WriteAllBytesAsync(path, PlantUmlRenderer.Render(_puml, RenderLocal));
+                    task = Task.Run(async () => {
+                        await File.WriteAllBytesAsync(path, PlantUmlRenderer.Render(_puml, RenderLocal));
+                    });
+                    //task = File.WriteAllBytesAsync(path, await PlantUmlRenderer.Render(_puml, RenderLocal));
                     names.Add(view.HashString + ".svg");
                     ViewHashes[view.HashString] = newHash;
                 }

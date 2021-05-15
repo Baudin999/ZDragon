@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ZDragon.UI {
@@ -47,9 +49,11 @@ namespace ZDragon.UI {
                 app.UseHsts();
             }
 
+            lifetime.ApplicationStarted.Register(OnStartup);
+            lifetime.ApplicationStopping.Register(OnShutdown);
 
-            app.Use(async (context, next) =>
-            {
+
+            app.Use(async (context, next) => {
                 var url = context.Request.Path.Value;
 
 
@@ -84,12 +88,20 @@ namespace ZDragon.UI {
             });
         }
 
+        private void OnStartup() {
+            Project.PlantUmlRenderer.StartServer();
+        }
+
+        private void OnShutdown() {
+            Project.PlantUmlRenderer.StopServer();
+        }
+
         private async Task BootstrapElectron(IHostApplicationLifetime lifetime) {
             try {
                 var browserWindow = await Electron.WindowManager.CreateWindowAsync(new BrowserWindowOptions {
                     Width = 1600,
                     Height = 940,
-                    AutoHideMenuBar= true,
+                    AutoHideMenuBar = true,
                     Show = true,
                     //Frame = false,
                     TitleBarStyle = TitleBarStyle.hiddenInset
@@ -98,13 +110,14 @@ namespace ZDragon.UI {
                 await browserWindow.WebContents.Session.ClearCacheAsync();
 
                 browserWindow.RemoveMenu();
-                
+
                 browserWindow.OnReadyToShow += () => browserWindow.Show();
                 browserWindow.SetTitle("ZDragon");
                 //browserWindow.WebContents.OpenDevTools();
                 browserWindow.OnClosed += lifetime.StopApplication;
 
-            } catch(System.Exception ex) {
+            }
+            catch (System.Exception ex) {
                 System.Console.WriteLine(ex.Message);
             }
         }

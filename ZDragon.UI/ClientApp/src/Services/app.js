@@ -80,17 +80,57 @@ export const saveCode = async (code) => {
     }));
 
     // get the compilation result and fix the current module
-    var compilationResult = await post("/document/" + module.namespace, { code: code.trim() });
+    var compilationResult = await post("/document/" + module.namespace, { code: code });
+    state.update(s => {
+        return {
+            ...s,
+            processing: false,
+            runId: getTicks(),
+            module: {
+                ...s.module,
+                //text: code,
+                compilationResult: compilationResult
+            }
+        };
+    });
+};
+
+const getTicks = () => {
+    var yourDate = new Date();  // for example
+
+    // the number of .net ticks at the unix epoch
+    var epochTicks = 621355968000000000;
+
+    // there are 10000 .net ticks per millisecond
+    var ticksPerMillisecond = 10000;
+
+    // calculate the total number of .net ticks for your date
+    var yourTicks = epochTicks + (yourDate.getTime() * ticksPerMillisecond);
+
+    return yourTicks;
+};
+
+export const compile = async (code) => {
+    if (code == "") code = " ";
+
+    var ms = _get(state);
+    var module = ms.module;
+
+    if (!module || !module.namespace || !code) {
+        console.log("Invalid \"Parse Code\"", module, code);
+        return;
+    }
+
+    // get the compilation result and fix the current module
+    var compilationResult = await post("/document/compile/" + module.namespace, { code: code });
     state.update(s => {
 
         //
 
         return {
             ...s,
-            processing: false,
             module: {
                 ...s.module,
-                text: code,
                 compilationResult: compilationResult
             }
         };

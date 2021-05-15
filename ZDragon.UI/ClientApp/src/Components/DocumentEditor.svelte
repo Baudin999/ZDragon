@@ -1,6 +1,6 @@
 <script>
     import { writable } from "svelte/store";
-    import { state } from "../Services/app";
+    import { compile, state } from "../Services/app";
     import Editor from "./Editor.svelte";
 
     export let context = [];
@@ -31,6 +31,14 @@
             markers.set([]);
         }
     });
+
+    let timeout;
+    let textChanged = (event) => {
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            compile(event.detail);
+        }, 1000);
+    };
 </script>
 
 <div class="container">
@@ -40,7 +48,12 @@
         </div>
 
         <div class="editor">
-            <Editor {context} {text} {markers} language={type} />
+            <Editor
+                {context}
+                {text}
+                {markers}
+                language={type}
+                on:change={textChanged} />
         </div>
     {/if}
 </div>

@@ -36,6 +36,7 @@ namespace Compiler.Language.Nodes {
             return this;
         }
 
+        
         internal AnnotationNode Clone() {
             return new AnnotationNode(this.AnnotationTokens);
         }

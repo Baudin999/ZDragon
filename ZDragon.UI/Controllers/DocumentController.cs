@@ -57,6 +57,13 @@ namespace ZDragon.UI.Controllers {
             }
         }
 
+        [HttpPost("/document/compile/{ns}")]
+        public IActionResult CompileModule([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
+            var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
+            return Ok(moduleInteractor.Compile(body.Code));
+        }
+
+
         [HttpGet("/documents/{ns}/{file}.svg")]
         public async Task<IActionResult> GetContentSvg(string ns, string file) {
             try {

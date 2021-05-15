@@ -34,22 +34,28 @@
         iframe.contentWindow.print();
     };
 
+    let runId;
     state.subscribe((s) => {
         if (s && s.module) {
             if (processing && !s.processing) {
-                processing = s.processing;
                 if (iframe && !iframe.onload) {
                     iframe.onload = function () {
                         setTimeout(() => {
                             if (iframe && iframe.contentWindow)
                                 iframe.contentWindow.scroll(0, scrollY);
+                            setTimeout(() => {
+                                processing = s.processing;
+                            }, 100);
                         });
                     };
                 }
 
                 setTimeout(() => {
-                    generateUrls(s.module.namespace);
-                }, 200);
+                    if (runId !== s.runId) {
+                        generateUrls(s.module.namespace);
+                        runId = s.runId;
+                    }
+                });
             }
 
             if (s.module.namespace && s.module.namespace !== namespace) {
@@ -58,7 +64,9 @@
             }
         }
 
-        if (!processing && s.processing) processing = true;
+        if (!processing && s.processing) {
+            processing = true;
+        }
     });
 </script>
 
@@ -87,19 +95,17 @@
                 </TabList>
 
                 <TabPanel>
-                    {#if htmlUrl}
-                        <Panel
-                            style="background:var(--color-1); overflow:hidden!important; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
-                            <PageViewer>
-                                <!-- <PageViewer url={htmlUrl} /> -->
-                                <iframe
-                                    bind:this={iframe}
-                                    class="html-iframe"
-                                    src={htmlUrl}
-                                    title="Page" />
-                            </PageViewer>
-                        </Panel>
-                    {/if}
+                    <Panel
+                        style="background:var(--color-1); overflow:hidden!important; height: calc(100% - 3rem); margin-top: 2.5rem; padding: 2rem 0 2rem 0;">
+                        <PageViewer>
+                            <!-- <PageViewer url={htmlUrl} /> -->
+                            <iframe
+                                bind:this={iframe}
+                                class="html-iframe"
+                                src={htmlUrl}
+                                title="Page" />
+                        </PageViewer>
+                    </Panel>
                 </TabPanel>
 
                 <TabPanel>

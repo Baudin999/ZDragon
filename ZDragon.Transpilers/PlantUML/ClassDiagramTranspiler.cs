@@ -8,7 +8,7 @@ using System.Linq;
 namespace ZDragon.Transpilers.PlantUML {
     public class ClassDiagramTranspiler {
         //private readonly CompilationResult compilationresult;
-        private readonly List<string> baseTypes = new List<string> {
+        internal static readonly List<string> baseTypes = new List<string> {
             "String", "Number", "Decimal", "Boolean", "Date", "Time", "DateTime", "Maybe", "List", "Either", "Guid"
         };
         private readonly List<string> types = new List<string>();

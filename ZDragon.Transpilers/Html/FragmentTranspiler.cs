@@ -1,5 +1,6 @@
 ﻿using Compiler.Language.Nodes;
 using System.Linq;
+using ZDragon.Transpilers.PlantUML;
 
 namespace ZDragon.Transpilers.Html {
     public class FragmentTranspiler {
@@ -59,18 +60,69 @@ namespace ZDragon.Transpilers.Html {
 
             var body = node.Fields.Select(field => {
                 var optional = field.Types.FirstOrDefault() == "Maybe";
-                return $"<tr><td>{field.Id}</td><td>{field.Description}</td><td>{!optional}</td></tr>";
+                var links = field.Types.Select(t => {
+                    if (!ClassDiagramTranspiler.baseTypes.Contains(t)) return $"<a href='#{t}-link'>{t}</a>";
+                    else return t;
+                });
+                return $"<tr><td>{field.Id}</td><td>{string.Join(" ", links)}</td><td>{field.Description}</td><td>{!optional}</td></tr>";
             });
 
             return $@"
 <div class='keep-together language-table'>
-    <h2>{node.Id}</h2>
+    <h2 id='{node.Id}-link'>{node.Id}</h2>
+    <div class='language-table--description'><p>{node.Description}</p></div>
+    <table>
+        <thead><tr>
+    <th>Name</th>
+    <th>Types</th>
+    <th>Description</th>
+    <th>Required</th>
+</tr></thead>
+        <tbody>
+            {string.Join("", body)}
+        </tbody>
+    </table>
+</div>
+";
+        }
+
+        internal static string RenderChoiceTable(ChoiceNode node) {
+
+            var body = node.Fields.Select(field => {
+                return $"<tr><td>{field.Value}</td><td>{field.Description}</td></tr>";
+            });
+
+            return $@"
+<div class='keep-together language-table'>
+    <h2 id='{node.Id}-link'>{node.Id}</h2>
     <div class='language-table--description'><p>{node.Description}</p></div>
     <table>
         <thead><tr>
     <th>Name</th>
     <th>Description</th>
-    <th>Required</th>
+</tr></thead>
+        <tbody>
+            {string.Join("", body)}
+        </tbody>
+    </table>
+</div>
+";
+        }
+
+        internal static string RenderDataTable(DataNode node) {
+
+            var body = node.Fields.Select(field => {
+                return $"<tr><td><a href='#{field.Id}-link'>{field.Id}</a></td><td>{field.Description}</td></tr>";
+            });
+
+            return $@"
+<div class='keep-together language-table'>
+    <h2 id='{node.Id}-link'>{node.Id}</h2>
+    <div class='language-table--description'><p>{node.Description}</p></div>
+    <table>
+        <thead><tr>
+    <th>Name</th>
+    <th>Description</th>
 </tr></thead>
         <tbody>
             {string.Join("", body)}

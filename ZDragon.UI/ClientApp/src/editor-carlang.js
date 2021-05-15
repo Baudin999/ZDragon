@@ -83,10 +83,12 @@ export const tokenizer = {
         ],
         choice: [
             [/(|)\w*(")/, ["number", { token: 'string.quote', bracket: '@open', next: '@string' }]],
+            { include: "root" },
             { include: "lang" }
         ],
         data: [
             [/'[a-z]/, "generic-parameter"], // generic types
+            { include: "root" },
             { include: "lang" }
         ],
         field: [

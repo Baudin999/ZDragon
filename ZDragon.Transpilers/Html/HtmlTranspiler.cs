@@ -294,8 +294,16 @@ namespace ZDragon.Transpilers.Html {
                 parts.Add($"<img style='max-width:100%;' src=\"/documents/{compilationresult.Namespace}/data.svg?{System.DateTime.Now.Ticks}\" alt=\"data\" />");
 
                 if (renderClassDetails) {
-                    foreach (var node in this.compilationresult.Ast.OfType<RecordNode>().OrderBy(n => n.Id)) {
-                        parts.Add(FragmentTranspiler.RenderRecordTable(node));
+                    foreach (var node in this.compilationresult.Ast.OfType<ILanguageNode>().OrderBy(n => n.Id)) {
+                        if (node is RecordNode rn) {
+                            parts.Add(FragmentTranspiler.RenderRecordTable(rn));
+                        }
+                        else if (node is ChoiceNode cn) {
+                            parts.Add(FragmentTranspiler.RenderChoiceTable(cn));
+                        }
+                        else if (node is DataNode dn) {
+                            parts.Add(FragmentTranspiler.RenderDataTable(dn));
+                        }
                     }
                 }
 

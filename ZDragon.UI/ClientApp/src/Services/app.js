@@ -456,4 +456,12 @@ export const init = () => {
         }
     });
 
+    eventbus.subscribe("publish", async (module) => {
+        console.log(module);
+        if (!module || !module.namespace) return;
+
+        var result = await post(`/document/publish/${module.namespace}`, {});
+
+    });
+
 };

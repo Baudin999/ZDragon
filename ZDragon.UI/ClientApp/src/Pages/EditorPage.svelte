@@ -6,6 +6,8 @@
     import DocumentEditor from "../Components/DocumentEditor.svelte";
     import Panel from "../Components/Panel.svelte";
     import { log, selectModuleByNamespace, state } from "../Services/app.js";
+    import eventbus from "../Services/eventbus.js";
+    import { get } from "../Services/http.js";
 
     let namespace;
     let iframe;
@@ -16,6 +18,8 @@
     let scrollY = 0;
     let processing = false;
     let context = [];
+    let module;
+    let versionUrls = [];
 
     const generateUrls = (namespace) => {
         log("Generating URLS");
@@ -34,9 +38,31 @@
         iframe.contentWindow.print();
     };
 
+    let publish = () => {
+        if (module) eventbus.broadcast("publish", module);
+        setTimeout(async () => {
+            versionUrls = await get(`/document/versions/${module.namespace}`);
+        }, 1000);
+    };
+
+    let changeVersion = (url) => {
+        console.log(url);
+        if (!url)
+            componentUrl = `/documents/${namespace}/components.svg?timestamp=${new Date().getMilliseconds()}`;
+        else componentUrl = `/file?name=${url}`;
+    };
+
     let runId;
     state.subscribe((s) => {
         if (s && s.module) {
+            if (!module || module.namespace !== s.module.namespace) {
+                module = s.module;
+                (async () => {
+                    versionUrls = await get(
+                        `/document/versions/${module.namespace}`
+                    );
+                })();
+            }
             if (processing && !s.processing) {
                 if (iframe && !iframe.onload) {
                     iframe.onload = function () {
@@ -115,6 +141,16 @@
                         {#if componentUrl}
                             <ImageViewer url={componentUrl} />
                         {/if}
+                        <div class="version-container">
+                            <div on:click={() => changeVersion()}>current</div>
+                            {#each versionUrls as versionUrl (versionUrl.version)}
+                                <div
+                                    on:click={() =>
+                                        changeVersion(versionUrl.componentUrl)}>
+                                    {versionUrl.version}
+                                </div>
+                            {/each}
+                        </div>
                     </Panel>
                 </TabPanel>
 
@@ -137,6 +173,9 @@
 
             <div class="print-button" on:click={print}>
                 <i class="fa fa-print" />
+            </div>
+            <div class="publish-button" on:click={publish}>
+                <i class="fa fa-cloud" />
             </div>
         </div>
     {/if}
@@ -222,6 +261,7 @@
     }
 
     .print-button,
+    .publish-button,
     .popout,
     .scale--inc,
     .scale--dec {
@@ -235,6 +275,9 @@
     .print-button {
         right: 1rem;
     }
+    .publish-button {
+        right: 3rem;
+    }
     .popout {
         right: 3rem;
         a {
@@ -247,5 +290,13 @@
     }
     .scale--dec {
         right: 7rem;
+    }
+
+    .version-container {
+        color: var(--color-1);
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 99999;
     }
 </style>

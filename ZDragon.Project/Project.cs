@@ -107,7 +107,7 @@ namespace ZDragon.Project {
         public async Task<string> GetTextByNamespace(string ns) {
             var moduleInteractor = DirectoryInteractor.Find(ns);
             if (moduleInteractor is FileModuleInteractor mi)
-                return await mi.GetText();
+                return await mi.GetTextAsync();
 
             throw new Exception("Cannot get the text of a non module interactor");
         }

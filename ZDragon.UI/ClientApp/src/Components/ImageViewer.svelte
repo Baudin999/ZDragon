@@ -127,16 +127,16 @@
         width: 32px;
     }
     .popout {
-        right: 3rem;
+        right: 5rem;
         a {
             color: inherit;
             text-decoration: inherit;
         }
     }
     .scale--inc {
-        right: 5rem;
+        right: 7rem;
     }
     .scale--dec {
-        right: 7rem;
+        right: 9rem;
     }
 </style>

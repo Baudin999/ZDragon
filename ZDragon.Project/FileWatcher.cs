@@ -24,10 +24,10 @@ namespace ZDragon.Project {
 
 
             // Add event handlers.
-            watcher.Changed += TextChanged;
+            //watcher.Changed += TextChanged;
 
-            watcher.Created += OnChanged;
-            watcher.Deleted += OnChanged;
+            //watcher.Created += OnChanged;
+            //watcher.Deleted += OnChanged;
             watcher.Renamed += OnRenamed;
         }
 

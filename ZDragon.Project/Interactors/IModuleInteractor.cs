@@ -1,4 +1,5 @@
 ﻿using Compiler;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZDragon.Project.Interactors.FileInteractors;
 
@@ -12,11 +13,13 @@ namespace ZDragon.Project.Interactors {
 
         Task<CompilationResult> Compile();
         CompilationResult Compile(string s);
+        void Publish();
+        List<VersionUrl> GetVersionUrls();
         Task<byte[]> GetComponentModelSvg();
         Task<byte[]> GetDataModelSvg();
         Task<byte[]> GetHtml();
         Task<byte[]?> GetSvg(string file);
-        Task<string> GetText();
+        Task<string> GetTextAsync();
         Task<IModuleInteractor> SaveModule(string s);
         Task Verify();
     }

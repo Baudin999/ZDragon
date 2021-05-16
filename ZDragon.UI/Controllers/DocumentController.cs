@@ -25,7 +25,7 @@ namespace ZDragon.UI.Controllers {
             if (ZDragon.Project.Project.CurrentProject.IsValidProjectPath(realPath)) {
                 var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
                 if (moduleInteractor != null) {
-                    var text = await moduleInteractor.GetText();
+                    var text = await moduleInteractor.GetTextAsync();
 
                     return Ok(new {
                         text,
@@ -61,6 +61,21 @@ namespace ZDragon.UI.Controllers {
         public IActionResult CompileModule([FromRoute] string ns, [FromBody] DocumentSubmitBody body) {
             var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
             return Ok(moduleInteractor.Compile(body.Code));
+        }
+
+        [HttpPost("/document/publish/{ns}")]
+        public IActionResult PublishModule([FromRoute] string ns) {
+            var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
+            moduleInteractor.Publish();
+
+            return Ok();
+        }
+
+        [HttpGet("/document/versions/{ns}")]
+        public IActionResult GetVersions([FromRoute] string ns) {
+            var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(ns);
+            var versionUrls = moduleInteractor.GetVersionUrls();
+            return Ok(versionUrls);
         }
 
 

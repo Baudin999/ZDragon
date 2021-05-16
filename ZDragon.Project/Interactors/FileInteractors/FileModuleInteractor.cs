@@ -86,9 +86,22 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile();
         }
 
-        public async Task<string> GetText() {
-            var text = await File.ReadAllTextAsync(this.FullName);
-            return text;
+        public async Task<string> GetTextAsync() {
+            if (File.Exists(this.FullName)) {
+                var text = await File.ReadAllTextAsync(this.FullName);
+                return text;
+            }
+            else {
+                return "";
+            }
+        }
+        public string GetText() {
+            if (File.Exists(this.FullName)) {
+                return File.ReadAllText(this.FullName);
+            }
+            else {
+                return "";
+            }
         }
 
         public async Task<IModuleInteractor> SaveModule(string s) {
@@ -126,7 +139,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
                 // reset the previous Compiltation Errors
                 this.cache.Reset();
 
-                var text = await GetText();
+                var text = await GetTextAsync();
                 this.CompilationResult = new Compiler.Compiler(text, this.Namespace, cache).Compile().Check();
                 InterpolateDocumentNodes();
 
@@ -150,6 +163,7 @@ Failed to compile '{this.Namespace}':
                 this.cache.Reset();
                 this.CompilationResult = new Compiler.Compiler(s, this.Namespace, cache).Compile().Check();
                 InterpolateDocumentNodes();
+                CopyViewSvgs();
 
                 return this.CompilationResult;
             }
@@ -176,6 +190,95 @@ Failed to compile '{this.Namespace}':
                     documentNode.InterpolatedContent = CarTemplating.FormatTemplate(documentNode.Content, lexicon);
                 }
             }
+        }
+
+        private void CopyViewSvgs() {
+            foreach (var documentNode in this.CompilationResult.Document.OfType<ViewNode>().Where(v => v.Imported)) {
+                if (documentNode.OriginalNamespace is not null) {
+                    var publish_directory = Path.Combine(this.RootPath, "out", this.Namespace);
+                    var origin_publish_directory = Path.Combine(this.RootPath, "out", documentNode.OriginalNamespace);
+                    var svg_path = Path.Combine(origin_publish_directory, documentNode.HashString + ".svg");
+                    var new_svg_path = Path.Combine(publish_directory, documentNode.HashString + ".svg");
+                    if (File.Exists(svg_path)) {
+                        File.Copy(svg_path, new_svg_path, true);
+                    }
+                }
+                
+            }
+        }
+
+        public void Publish() {
+            //
+            if (this.DirectoryPath is null) return;
+
+            var our_directory = Path.Combine(this.RootPath, "out", this.Namespace);
+            
+            // GET THE RIGHT VERSION NUMBER
+            var directories = new DirectoryInfo(our_directory)
+                .GetDirectories()
+                .Where(dir => {
+                    return dir.Name.StartsWith("v");
+                });
+
+            var version_number = 0;
+            var last_version = directories.OrderByDescending(f => f.Name).FirstOrDefault();
+            if (last_version is not null) {
+
+                // we do not want duplicate versions in our version store. This is why we will
+                // check the contents to see if it's the same...
+                var previous_text = File.ReadAllText(Path.Combine(last_version.FullName, this.Name + ".car"));
+                var previous_hash = Compiler.Utilities.HashString(previous_text);
+                var is_equal = Compiler.Utilities.HashCompare(previous_hash, this.DocumentHash);
+
+                if (!is_equal) {
+                    if (int.TryParse(last_version.Name.Replace("v", ""), out version_number)) {
+                        version_number++;
+                    }
+
+                    var publish_directory = Path.Combine(our_directory, $"v{version_number}");
+                    if (!Directory.Exists(publish_directory)) Directory.CreateDirectory(publish_directory);
+
+                    File.WriteAllText(Path.Combine(publish_directory, this.Name + ".car"), this.GetText());
+                    foreach (var file in new DirectoryInfo(our_directory).GetFiles()) {
+                        File.Copy(file.FullName, Path.Combine(publish_directory, file.Name));
+                    }
+                }
+            }
+            else {
+                var publish_directory = Path.Combine(our_directory, $"v{version_number}");
+                if (!Directory.Exists(publish_directory)) Directory.CreateDirectory(publish_directory);
+
+                File.WriteAllText(Path.Combine(publish_directory, this.Name + ".car"), this.GetText());
+                foreach (var file in new DirectoryInfo(our_directory).GetFiles()) {
+                    File.Copy(file.FullName, Path.Combine(publish_directory, file.Name));
+                }
+            }
+        }
+
+        public List<VersionUrl> GetVersionUrls() {
+            if (this.DirectoryPath is null) return new List<VersionUrl>();
+
+            var our_directory = Path.Combine(this.RootPath, "out", this.Namespace);
+
+            // GET THE RIGHT VERSION NUMBER
+            var directories = new DirectoryInfo(our_directory)
+                .GetDirectories()
+                .Where(dir => {
+                    return dir.Name.StartsWith("v");
+                })
+                .Select(dInfo => {
+                    var version_root_url = dInfo.FullName;
+                    return new VersionUrl {
+                        Version = dInfo.Name,
+                        CodeUrl = Path.Combine(version_root_url, this.Name + ".car"),
+                        ComponentUrl = Path.Combine(version_root_url, "components.svg"),
+                        DataUrl = Path.Combine(version_root_url, "data.svg"),
+                        HtmlUrl = Path.Combine(version_root_url, "index.html")
+                    };
+                })
+                .ToList();
+
+            return directories;
         }
 
         public async Task SaveDataModelSvg() {
@@ -241,6 +344,7 @@ Failed to compile '{this.Namespace}':
             };
 
             foreach (var view in this.CompilationResult.Lexicon.Where(l => l.Value is ViewNode).Select(l => (ViewNode)l.Value)) {
+                names.Add(view.HashString + ".svg");
                 tasks.Add(SaveView(names, view));
             }
 
@@ -252,7 +356,7 @@ Failed to compile '{this.Namespace}':
                 // we itterate all of the files on the directory, each file
                 // we can't match to a name in the names collection will be
                 // removed
-                if (!names.Contains(Path.GetFileName(file))) {
+                if (!names.Contains(Path.GetFileName(file)) && !file.Contains(this.Name + "_v")) {
                     File.Delete(file);
                 }
             }

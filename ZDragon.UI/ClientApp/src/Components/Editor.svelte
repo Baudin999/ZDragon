@@ -3,7 +3,6 @@
     import { onMount, onDestroy } from "svelte";
     import { writable } from "svelte/store";
     import eventbus from "../Services/eventbus";
-    import { get } from "../Services/http";
 
     const dispatch = createEventDispatcher();
 

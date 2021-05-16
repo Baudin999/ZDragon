@@ -68,6 +68,27 @@ namespace ZDragon.UI.Controllers {
             }
         }
 
+
+        [HttpGet("/file")]
+        public IActionResult GetFile() {
+            var name = Request.Query["name"][0];
+            if (System.IO.File.Exists(name)) {
+                var bytes = System.IO.File.ReadAllBytes(name);
+                if (name.EndsWith(".svg")) {
+                    return File(bytes, "image/svg+xml");
+                }
+                else if (name.EndsWith(".html")) {
+                    return File(bytes, "text/html");
+                }
+                else {
+                    return File(bytes, "text/text");
+                }
+            }
+            else {
+                return NotFound();
+            }
+        }
+
         private async Task RefreshProjectStructure() {
             await Task.Delay(1000);
             _ = _projectHub.ProjectChanged(_project.DirectoryInteractor);

@@ -124,5 +124,26 @@ record Address
             Assert.Single(personView.Nodes);
         }
 
+        [Fact(DisplayName = "Views - Change Title")]
+        public void Views_ChangeTitle() {
+            var codeFirst = @"
+view PersonView = 
+    Foo:
+        Title: Bar
+        
+
+component Foo
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+
+            Assert.Empty(result.Errors);
+            Assert.True(result.Lexicon.ContainsKey("PersonView"));
+            Assert.IsType<ViewNode>(result.Lexicon["PersonView"]);
+            var personView = (ViewNode)result.Lexicon["PersonView"];
+            Assert.Equal("PersonView", personView.Id);
+            Assert.Single(personView.Nodes);
+        }
+
     }
 }

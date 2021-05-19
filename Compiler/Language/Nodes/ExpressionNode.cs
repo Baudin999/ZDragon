@@ -45,6 +45,7 @@ namespace Compiler.Language.Nodes {
         ChoiceFieldExpression,
 
         ViewExpression,
+        ViewItemExpression,
         GuidelineExpression,
 
         OpenExpression,

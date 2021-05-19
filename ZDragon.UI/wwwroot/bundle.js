@@ -12464,29 +12464,29 @@ var zdragon = (function () {
 
         tokenizer: {
             root: [
+                { include: 'whitespace' },
+                { include: "code_block" },
                 { include: "chapter" },
                 { include: "annotation" },
                 { include: "directive" },
                 { include: "lang" },
-                { include: 'whitespace' },
             ],
             whitespace: [
-                [/[ \t\r\n]+/, 'white'],
-                [/\{\*/, 'comment', '@comment'],
-                [/\/\/.*$/, 'comment'],
+                [/[ \t\r\n]+/, 'white']
             ],
             chapter: [[/#.*/, "chapter"]],
             annotation: [[/@.*/, "annotation"]],
-            directive: [
-                [/(%)([^:]*)(:)/, ["number", "type.identifier", "number"], "@directive_inner.$1"],
-                [/(%)([^:]*)/, ["number", "type.identifier"]],
+            code_block: [
+                [/^`{3}/, { token: "nothing", next: "@code_block_internal" }]
             ],
-            directive_inner: [
-                [/.+/, "number", "@pop"],
-                [/([\t\s{4}])([^:]*)(:)([^:]*)/, ["word", "annotation", "number", "word"]]
+            code_block_internal: [
+                [/^`{3}/, { token: "nothing", next: "@pop" }]
+            ],
+            directive: [
+                [/(%)([^:]+)/, ["number", "type.identifier"]]
             ],
             lang: [
-                [/({)([a-zA-Z0-9]+)(\.)([a-zA-Z0-9]+)(})/, ["chapter", "type.identifier", "chapter", "annotation.field", "chapter"]],
+                // [/({)([a-zA-Z0-9]+)(\.)([a-zA-Z0-9]+)(})/, ["chapter", "type.identifier", "chapter", "annotation.field", "chapter"]],
                 [/^([a-z][^ ]*)/, [
                     {
                         cases: {
@@ -12508,6 +12508,9 @@ var zdragon = (function () {
                             "task": { token: "keyword", next: "@attributes" },
                             "milestone": { token: "keyword", next: "@attributes" },
 
+
+                            // flows 
+                            "flow": { token: "keyword", next: "@attributes" },
 
                             // architecture
                             "component": { token: "keyword", next: "@attributes" },

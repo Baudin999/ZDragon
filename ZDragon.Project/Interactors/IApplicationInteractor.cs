@@ -8,6 +8,15 @@ namespace ZDragon.Project.Interactors {
         List<IModuleInteractor> Modules { get; }
         string Namespace { get; }
         ApplicationSettings ApplicationSettings { get; }
+        string FullPath { get; }
+        string ComponentsPath { get; }
+        string EndpointsPath { get; }
+        string DatabasesPath { get; }
+        string ModelsPath { get; }
+        string FeaturesPath { get; }
+        string StoriesPath { get; }
+        string DocumentationPath { get; }
+        string SettingsPath { get; }
 
         Task<FileModuleInteractor> AddFile(string name, string type, string? description);
         Task Compile();

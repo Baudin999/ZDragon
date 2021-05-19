@@ -26,6 +26,7 @@ namespace ZDragon.Project {
         public event ProjectMessageHandler? OnMessageSent;
         private  FileWatcher? watcher;
 
+        public string OutPath => this.outpath;
 
         public Project(string root) {
             Cache = new CompilationCache(new ErrorSink());
@@ -33,6 +34,9 @@ namespace ZDragon.Project {
             outpath = Path.Combine(_root, "out");
             lucenePath = Path.Combine(outpath, "index");
             imagesPath = Path.Combine(_root, "images");
+
+
+            if (!Directory.Exists(_root)) Directory.CreateDirectory(_root);
 
             watcher?.Dispose();
             watcher = new FileWatcher(_root);
@@ -76,6 +80,10 @@ namespace ZDragon.Project {
             return true;
         }
 
+        public void Reload() {
+            Reload(this.RootPath);
+        }
+
         public void Reload(string path) {
 
             if (!Directory.Exists(path)) {
@@ -112,9 +120,10 @@ namespace ZDragon.Project {
             throw new Exception("Cannot get the text of a non module interactor");
         }
 
-        public bool CreateApplication(string name) {
+        public IApplicationInteractor CreateApplication(string name) {
             var appInteractor = FileApplicationInteractor.Create(this._root, name, this.Cache);
-            return appInteractor != null;
+            this.DirectoryInteractor.Applications.Add(appInteractor);
+            return appInteractor;
         }
 
         public T? FindInteractorByNamespace<T>(string ns) where T: IInteractor {

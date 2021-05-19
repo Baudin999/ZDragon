@@ -10,6 +10,7 @@ namespace ZDragon.Project.Interactors {
         FileTypes FileType { get; }
         string Namespace { get; }
         CompilationResult CompilationResult { get; }
+        string FullName { get; }
 
         Task<CompilationResult> Compile();
         CompilationResult Compile(string s);

@@ -35,26 +35,6 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             }
         }
 
-        //public async Task Verify() {
-        //    Console.Write("Verifying applications .");
-        //    foreach (var application in Applications) {
-        //        await application.Verify();
-        //        Console.Write(".");
-        //    }
-
-        //    Console.Write("Compiling applications .");
-        //    foreach (var application in Applications) {
-        //        await application.Compile();
-        //        Console.Write(".");
-        //    }
-        //}
-
-        //public FileDirectoryInteractor CreateApplication(string name) {
-        //    var appInteractor = FileApplicationInteractor.Create(this.RootPath, name, cache);
-        //    this.Applications.Add(appInteractor);
-        //    return this;
-        //}
-
         public IInteractor? Find(string ns) {
             // Check if this directory is the interactor we need.
             if (this.Namespace == ns || ns is null) return this;
@@ -86,23 +66,5 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             return new FileDirectoryInteractor(root, name, cache);
         }
 
-
-        // IInteractor methods
-
-        //public async Task<FileModuleInteractor> AddFile(string name, string type, string? description) {
-        //    // Should be added to the application or directory of which this file is a part.
-        //    string fileName = name;
-        //    if (!fileName.EndsWith(".car")) fileName = fileName + ".car";
-        //    var path = Path.Combine(this.DirectoryPath ?? this.RootPath, fileName);
-
-        //    var template = "";
-        //    if (type == "Feature") {
-        //        template = FeatureTemplates.Default(name);
-        //    }
-
-        //    await File.WriteAllTextAsync(path, template);
-        //    return new FileModuleInteractor(this.RootPath, path, cache);
-
-        //}
     }
 }

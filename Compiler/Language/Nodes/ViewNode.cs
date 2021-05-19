@@ -31,4 +31,13 @@ namespace Compiler.Language.Nodes {
             this.HashString = Utilities.ByteArrayToString(this.Hash);
         }
     }
+
+    public class ViewNodeItem: AttributesNode {
+
+        public ViewNodeItem(AnnotationNode annotationNode, Token id, List<AttributeNode> attributes) :
+            base(id, annotationNode, id, new List<Token>(), attributes, ExpressionKind.ViewItemExpression) {
+
+            // nothing to implement
+        }
+    }
 }

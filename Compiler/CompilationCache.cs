@@ -87,6 +87,7 @@ namespace Compiler {
             var result = new Index();
 
             foreach (string ns in namespaces) {
+                if (ns is null) continue;
                 if (Cache.ContainsKey(ns)) {
                     foreach (var (key, value) in Cache[ns].Lexicon) {
                         if (value is ILanguageNode && !value.Imported) {

@@ -9,6 +9,7 @@ namespace Compiler.Symbols {
     /// </summary>
     internal partial class ContextualTokenizer {
         private TokenGroup TokenizeViewDefinition(List<Token> annotations) {
+            var fieldStarted = false;
             var tokens = new List<Token?>();
             tokens.AddRange(annotations);
             while (index < max && Current != null && Current?.Kind != SyntaxKind.EndKeywordToken) {
@@ -34,6 +35,16 @@ namespace Compiler.Symbols {
                 }
                 else if (Current?.Kind == SyntaxKind.AmpersandToken) {
                     tokens.Add(ParseAnnotation());
+                }
+                else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.ColonToken && Previous?.Kind == SyntaxKind.ContextualIndent2) {
+                    if (fieldStarted) {
+                        tokens.Add(new Token(SyntaxKind.AttributeFieldEnded));
+                    }
+                    fieldStarted = true;
+                    tokens.Add(new Token(SyntaxKind.AttributeFieldStarted));
+
+                    tokens.Add(TakeF()); // the identifier
+                    tokens.Add(TakeF()); // the colon
                 }
                 else if (Current?.Kind == SyntaxKind.IndentToken) {
                     Take();
@@ -68,6 +79,11 @@ namespace Compiler.Symbols {
                 else {
                     tokens.Add(Take());
                 }
+            }
+
+            if (fieldStarted) {
+                tokens.Add(new Token(SyntaxKind.AttributeFieldEnded));
+                fieldStarted = false;
             }
 
             if (Current?.Kind == SyntaxKind.SemiColonToken) {

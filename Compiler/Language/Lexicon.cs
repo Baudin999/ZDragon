@@ -121,7 +121,7 @@ namespace Compiler.Language {
 
         private void AddViewNodeToLexicon(ViewNode n) {
             foreach (var node in n.Nodes) {
-                var link = Get(node.Value);
+                var link = Get(node.Id);
                 if (link != null && !lexicon.ContainsKey(link.Id)) {
                     lexicon.Add(link.Id, link);
                 }

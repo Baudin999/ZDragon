@@ -1,6 +1,7 @@
 ﻿using Compiler.Language.Nodes;
 using Compiler.Symbols;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Compiler.Language {
@@ -16,7 +17,7 @@ namespace Compiler.Language {
                     new AnnotationNode(Current ?? SourceSegment.Empty);
 
                 var viewDeclaration = TakeF(SyntaxKind.ViewDeclarationToken);
-                
+
                 // Id's of a view can be null, this is because we do not want to force everyone
                 // to have to name a view.
                 var id = TryTake(SyntaxKind.IdentifierToken);
@@ -37,13 +38,34 @@ We seem to have detected a missing '=' sign after '{id?.Value ?? "view"}'");
                     id = new Token(Guid.NewGuid().ToString(), SyntaxKind.IdentifierToken, viewDeclaration);
                 }
 
+                List<ViewNodeItem> items = new List<ViewNodeItem>();
+
                 // Nodes are required, but the length of the nodes will be checked in the type
                 // checker, not the parser.
-                var nodes = TakeWhile(SyntaxKind.IdentifierToken).OfType<Token>().ToList();
+                while (Current?.Kind == SyntaxKind.IdentifierToken) {
+                    var itemId = TakeF();   // ID
 
-                return new ViewNode(annotationNode, id, nodes);
+                    List<AttributeNode> attributes = new List<AttributeNode>();
+                    while (Current?.Kind == SyntaxKind.AttributeFieldStarted) {
+                        _ = TakeF();
+
+                        var key = TakeF();
+                        var colon = TakeF();
+                        var values = TakeWhile(t => t.Kind != SyntaxKind.AttributeFieldEnded).ToList();
+                        var new_values = new List<Token>();
+                        foreach (var v in values) {
+                            new_values.Add(v);
+                            new_values.Add(new Token(" ", SyntaxKind.WhiteSpaceToken, v));
+                        }
+                        attributes.Add(new AttributeNode(key, new_values, new List<List<Token>>()));
+                        if (Current?.Kind == SyntaxKind.AttributeFieldEnded) _ = TakeF();
+                    }
+                    items.Add(new ViewNodeItem(itemId, attributes));
+                }
+
+                return new ViewNode(annotationNode, id, items);
             }
-            catch (Exception) {
+            catch (Exception ex) {
                 return null;
             }
         }

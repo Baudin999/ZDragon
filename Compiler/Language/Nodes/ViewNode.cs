@@ -8,7 +8,7 @@ namespace Compiler.Language.Nodes {
         public string Id => IdToken.Value;
 
         public AnnotationNode Annotation { get; }
-        public List<Token> Nodes { get; }
+        public List<ViewNodeItem> Nodes { get; }
 
         public byte[] Hash { get; }
         public string HashString { get; }
@@ -21,23 +21,15 @@ namespace Compiler.Language.Nodes {
 
         public string UrlNamespace { get; set; } = "";
 
-        public ViewNode(AnnotationNode annotationNode, Token id, List<Token>nodes) : base(id, ExpressionKind.ViewExpression) {
+
+        public ViewNode(AnnotationNode annotationNode, Token id, List<ViewNodeItem> nodes) : base(id, ExpressionKind.ViewExpression) {
             this.Annotation = annotationNode;
             this.IdToken = id;
             this.Nodes = nodes;
 
-            var s = Id + string.Join("", nodes.Select(n => n.Value));
+            var s = Id + string.Join("", nodes.Select(n => n.Id));
             this.Hash = Utilities.HashString(s);
             this.HashString = Utilities.ByteArrayToString(this.Hash);
-        }
-    }
-
-    public class ViewNodeItem: AttributesNode {
-
-        public ViewNodeItem(AnnotationNode annotationNode, Token id, List<AttributeNode> attributes) :
-            base(id, annotationNode, id, new List<Token>(), attributes, ExpressionKind.ViewItemExpression) {
-
-            // nothing to implement
         }
     }
 }

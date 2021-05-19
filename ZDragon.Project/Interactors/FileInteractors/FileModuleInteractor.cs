@@ -370,8 +370,14 @@ Failed to compile '{this.Namespace}':
 
             var viewLexicon = new Dictionary<string, IIdentifierExpressionNode>();
             foreach (var node in view.Nodes) {
-                if (this.CompilationResult.Lexicon.ContainsKey(node.Value)) {
-                    viewLexicon.Add(node.Value, this.CompilationResult.Lexicon[node.Value]);
+                if (this.CompilationResult.Lexicon.ContainsKey(node.Id)) {
+                    var copy = this.CompilationResult.Lexicon[node.Id].Copy();
+                    if (copy is AttributesNode _node) {
+                        foreach (var attrib in node.Attributes) {
+                            _node.SetAttribute(attrib);
+                        }
+                    }
+                    viewLexicon.Add(node.Id, (IIdentifierExpressionNode)copy);
                 }
             }
 

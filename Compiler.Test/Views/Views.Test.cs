@@ -128,8 +128,9 @@ record Address
         public void Views_ChangeTitle() {
             var codeFirst = @"
 view PersonView = 
-    Foo:
+    Foo
         Title: Bar
+        Render: False
         
 
 component Foo
@@ -143,6 +144,15 @@ component Foo
             var personView = (ViewNode)result.Lexicon["PersonView"];
             Assert.Equal("PersonView", personView.Id);
             Assert.Single(personView.Nodes);
+            Assert.Equal(2, personView.Nodes[0].Attributes.Count);
+
+            var title = personView.Nodes[0].GetAttribute("Title");
+            Assert.NotNull(title);
+            Assert.Equal("Bar", title);
+
+            var render = personView.Nodes[0].GetAttribute("Render");
+            Assert.NotNull(render);
+            Assert.Equal("False", render);
         }
 
     }

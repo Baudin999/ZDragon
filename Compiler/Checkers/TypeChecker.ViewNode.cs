@@ -19,7 +19,7 @@ Views need fields. This view '{view.Id}' does not seem to contain any fields.
 
                 // foreach node check if that node exists in the dictionary
                 foreach (var node in view.Nodes) {
-                    var errors = CheckToken(view, null, node);
+                    var errors = CheckToken(view, null, node.IdToken);
                     foreach (var error in errors) {
                         error.ErrorType = ErrorKind.View_UnknownField;
                         errorSink.AddError(error);
@@ -32,7 +32,7 @@ Views need fields. This view '{view.Id}' does not seem to contain any fields.
                 // node is an IArchitecture node and the same for the 
                 // ILanguageNode nodes.
 
-                var key = view.Nodes.FirstOrDefault(n => lexicon.ContainsKey(n.Value))?.Value ?? null;
+                var key = view.Nodes.FirstOrDefault(n => lexicon.ContainsKey(n.Id))?.Id ?? null;
                 var t = key == null ? null : lexicon[key];
 
                 Type? nodeType = null;
@@ -48,7 +48,7 @@ Views need fields. This view '{view.Id}' does not seem to contain any fields.
 
                 if (nodeType != null) {
                     foreach (var node in view.Nodes) {
-                        lexicon.TryGetValue(node.Value, out IIdentifierExpressionNode? element);
+                        lexicon.TryGetValue(node.Id, out IIdentifierExpressionNode? element);
 
                         if (element != null && !nodeType.IsAssignableFrom(element?.GetType())) {
                             // error
@@ -59,11 +59,11 @@ Views need fields. This view '{view.Id}' does not seem to contain any fields.
                                 ErrorKind.View_WrongFieldType,
                                 @$"Fields in a view should be of the same type.
 The first element of the view list is a {td} but
-the '{node.Value}' is a {tp}. 
+the '{node.Id}' is a {tp}. 
 
 You are not allowed to mix types in a view declaration.
 ",
-                                node
+                                node.IdToken
                                 ));
                         }
                     }

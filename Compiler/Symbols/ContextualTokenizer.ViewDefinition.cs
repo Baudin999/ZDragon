@@ -9,6 +9,7 @@ namespace Compiler.Symbols {
     /// </summary>
     internal partial class ContextualTokenizer {
         private TokenGroup TokenizeViewDefinition(List<Token> annotations) {
+            var viewItemStarted = false;
             var fieldStarted = false;
             var tokens = new List<Token?>();
             tokens.AddRange(annotations);
@@ -36,8 +37,23 @@ namespace Compiler.Symbols {
                 else if (Current?.Kind == SyntaxKind.AmpersandToken) {
                     tokens.Add(ParseAnnotation());
                 }
+                else if (Current?.Kind == SyntaxKind.IdentifierToken && Previous?.Kind == SyntaxKind.ContextualIndent1) {
+                    if (fieldStarted) {
+                        fieldStarted = false;
+                        tokens.Add(new Token(SyntaxKind.AttributeFieldEnded));
+                    }
+                    // new view item
+                    if (viewItemStarted) {
+                        tokens.Add(new Token(SyntaxKind.ViewItemEnded));
+                    }
+                    viewItemStarted = true;
+                    tokens.Add(new Token(SyntaxKind.ViewItemStarted));
+
+                    tokens.Add(TakeF()); // the identifier
+                }
                 else if (Current?.Kind == SyntaxKind.IdentifierToken && Next?.Kind == SyntaxKind.ColonToken && Previous?.Kind == SyntaxKind.ContextualIndent2) {
                     if (fieldStarted) {
+                        fieldStarted = false;
                         tokens.Add(new Token(SyntaxKind.AttributeFieldEnded));
                     }
                     fieldStarted = true;

@@ -127,9 +127,9 @@ namespace ZDragon.Transpilers.Components {
 !include https://raw.githubusercontent.com/baudin999/C4-PlantUML/master/C4_Container.puml
 !include https://raw.githubusercontent.com/baudin999/C4-PlantUML/master/C4_Deployment.puml
 
-AddElementTag(""deprecated"", $bgColor=""#7912F4"", $fontColor=""#FFFFFA"", $borderColor=""#026320"")
-AddElementTag(""new"", $bgColor=""#ad6800"", $fontColor=""#fff"", $borderColor=""#002808"")
-AddElementTag(""change"", $bgColor=""#990096"", $fontColor=""#fff"", $borderColor=""#593500"")
+AddElementTag(""deprecated"", $bgColor=""#cc0000"", $fontColor=""#fff"", $borderColor=""#006700"")
+AddElementTag(""new"", $bgColor=""#008000"", $fontColor=""#fff"", $borderColor=""#004d00"")
+AddElementTag(""change"", $bgColor=""#e69500"", $fontColor=""#fff"", $borderColor=""#b37300"")
 
 
 " +

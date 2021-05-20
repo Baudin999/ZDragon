@@ -287,6 +287,8 @@ namespace Compiler {
         AttributeFieldStarted,
         AttributeFieldEnded,
         InteractionDeclarationToken,
+        ViewItemStarted,
+        ViewItemEnded,
 
         // planning definitions
         RoadmapDeclarationToken,

@@ -155,5 +155,48 @@ component Foo
             Assert.Equal("False", render);
         }
 
+        [Fact(DisplayName = "Views - Change Interactions")]
+        public void Views_ChangeInteractions() {
+            var codeFirst = @"
+view PersonView = 
+    Foo
+        Interactions:
+            - Bar
+        Title: Small Foo
+    Bar
+        Status: New
+       
+        
+
+component Foo
+component Bar
+";
+
+            var result = new Compiler.Compiler(codeFirst).Compile().Check();
+
+            Assert.Empty(result.Errors);
+            Assert.True(result.Lexicon.ContainsKey("PersonView"));
+            Assert.IsType<ViewNode>(result.Lexicon["PersonView"]);
+            var personView = (ViewNode)result.Lexicon["PersonView"];
+            Assert.Equal("PersonView", personView.Id);
+            Assert.Equal(2, personView.Nodes.Count);
+            Assert.Equal(2, personView.Nodes[0].Attributes.Count);
+
+            // test the Foo node
+            var fooNode = personView.Nodes[0];
+            var interactions = fooNode.GetAttributeItems("Interactions");
+            Assert.NotNull(interactions);
+            Assert.Single(interactions);
+
+            var title = fooNode.GetAttribute("Title");
+            Assert.Equal("Small Foo", title);
+
+
+            // test the Bar node
+            var barNode = personView.Nodes[1];
+            var status = barNode.GetAttribute("Status");
+            Assert.Equal("New", status);
+        }
+
     }
 }

@@ -42,7 +42,8 @@ We seem to have detected a missing '=' sign after '{id?.Value ?? "view"}'");
 
                 // Nodes are required, but the length of the nodes will be checked in the type
                 // checker, not the parser.
-                while (Current?.Kind == SyntaxKind.IdentifierToken) {
+                while (Current?.Kind == SyntaxKind.ViewItemStarted) {
+                    _ = TakeF();            // View Item Started
                     var itemId = TakeF();   // ID
 
                     List<AttributeNode> attributes = new List<AttributeNode>();
@@ -57,10 +58,30 @@ We seem to have detected a missing '=' sign after '{id?.Value ?? "view"}'");
                             new_values.Add(v);
                             new_values.Add(new Token(" ", SyntaxKind.WhiteSpaceToken, v));
                         }
-                        attributes.Add(new AttributeNode(key, new_values, new List<List<Token>>()));
+
+                        // test and parse a list item
+                        List<List<Token>> listItems = new List<List<Token>>();
+                        if (values.FirstOrDefault()?.Kind == SyntaxKind.MinusToken) {
+                            List<Token>? currentItem = null;
+                            foreach (var item in values) {
+                                if (item.Kind == SyntaxKind.MinusToken) {
+                                    if (currentItem != null) listItems.Add(currentItem);
+                                    currentItem = new List<Token>();
+                                }
+                                else {
+                                    if (currentItem != null) currentItem.Add(item);
+                                }
+                            }
+                            if (currentItem != null) listItems.Add(currentItem);
+                        }
+
+                        // add the attribute to the attributes
+                        attributes.Add(new AttributeNode(key, new_values, listItems));
+
                         if (Current?.Kind == SyntaxKind.AttributeFieldEnded) _ = TakeF();
                     }
                     items.Add(new ViewNodeItem(itemId, attributes));
+                    if (Current?.Kind == SyntaxKind.ViewItemEnded) _ = TakeF();
                 }
 
                 return new ViewNode(annotationNode, id, items);

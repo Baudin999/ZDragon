@@ -133,7 +133,7 @@ namespace ZDragon.Project.Interactors.FileInteractors {
             return applications;
         }
 
-        public static FileApplicationInteractor Create(string root, string name, CompilationCache cache) {
+        public async static Task<FileApplicationInteractor> Create(string root, string name, CompilationCache cache) {
             name = name.Replace(" ", "");
             var fullPath = Path.Combine(Utilities.GetFullPath(root), name);
 
@@ -148,7 +148,12 @@ namespace ZDragon.Project.Interactors.FileInteractors {
                 File.WriteAllText(configPath, "");
             }
 
-            return new FileApplicationInteractor(root, dirInfo, cache);
+
+            var interactor =  new FileApplicationInteractor(root, dirInfo, cache);
+            _ = await interactor.AddFile("General", "Component", "");
+            _ = await interactor.AddFile("Index", "Documentation", "");
+
+            return interactor;
         }
 
         public static bool IsApplication(string root, string name) {

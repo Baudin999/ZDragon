@@ -53,7 +53,7 @@ namespace Project {
 
         [Fact(DisplayName = "Project - Create Component"), Priority(10)]
         public async void Project_CreateComponent() {
-            var app = _project.CreateApplication(appName);
+            var app = await _project.CreateApplication(appName);
             moduleInteractor = await app.AddFile(componentFileName, "Component", null);
             Assert.NotNull(moduleInteractor);
             Assert.True(File.Exists(moduleInteractor.FullName));
@@ -61,7 +61,7 @@ namespace Project {
 
         [Fact(DisplayName = "Project - Compile Code"), Priority(20)]
         public async void Project_CompileCode() {
-            var app = _project.CreateApplication(appName);
+            var app = await _project.CreateApplication(appName);
             await app.AddFile(componentFileName, "Component", null);
             
             // test to see if we can get the module interactor
@@ -95,11 +95,11 @@ component Foo =
 
         }
 
-        private IApplicationInteractor createApp() {
+        private async Task<IApplicationInteractor> createApp() {
             var app = _project.FindInteractorByNamespace<IApplicationInteractor>(appName);
             if (app is not null) return app;
             else {
-                return _project.CreateApplication(appName);
+                return await _project.CreateApplication(appName);
             }
         }
     }

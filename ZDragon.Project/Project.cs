@@ -1,4 +1,4 @@
-﻿using Compiler;
+using Compiler;
 using Compiler.Language.Nodes;
 using System;
 using System.Collections.Generic;
@@ -10,17 +10,17 @@ using ZDragon.Project.Interactors.FileInteractors;
 using ZDragon.Project.Interactors.MemoryInteractors;
 
 namespace ZDragon.Project {
-    public class Project: IDisposable {
+    public class Project : IDisposable {
 
         public static Project? CurrentProject;
 
-        public CompilationCache Cache { get; private set;}
+        public CompilationCache Cache { get; private set; }
         private string _root { get; set; }
         private string outpath { get; set; }
         private string lucenePath { get; set; }
         private string imagesPath { get; set; }
         public string RootPath => _root;
-        public IDirectoryInteractor DirectoryInteractor { get; private set;  }
+        public IDirectoryInteractor DirectoryInteractor { get; private set; }
 
         public delegate void ProjectMessageHandler(object sender, MessageEventArgs args);
         public event ProjectMessageHandler? OnMessageSent;
@@ -90,16 +90,25 @@ namespace ZDragon.Project {
                 Directory.CreateDirectory(path);
             }
 
-            if (path != this.RootPath) {
-                Cache = new CompilationCache(new ErrorSink());
-                _root = path;
-                outpath = Path.Combine(_root, "out");
-                imagesPath = Path.Combine(_root, "Images");
-                lucenePath = Path.Combine(outpath, "index");
-                DirectoryInteractor = new FileDirectoryInteractor(_root, _root, Cache);
+            Cache = new CompilationCache(new ErrorSink());
+            _root = path;
+            outpath = Path.Combine(_root, "out");
+            imagesPath = Path.Combine(_root, "Images");
+
+            if (!Directory.Exists(outpath))
+                Directory.CreateDirectory(outpath);
+
+            if (!Directory.Exists(imagesPath)) {
+                Directory.CreateDirectory(imagesPath);
+                var img = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "standalone-icon.png");
+                if (File.Exists(img)) {
+                    File.Copy(img, imagesPath);
+                }
+            }
+
+            DirectoryInteractor = new FileDirectoryInteractor(_root, _root, Cache);
                 watcher?.Dispose();
                 watcher = new FileWatcher(_root);
-            }
         }
         public void Unload() {
             Cache = new CompilationCache(new ErrorSink());
@@ -109,7 +118,7 @@ namespace ZDragon.Project {
             lucenePath = invalidString;
             imagesPath = invalidString;
             this.DirectoryInteractor = new MemoryDirectoryInteractor();
-            watcher?.Dispose();
+            //watcher?.Dispose();
         }
 
         public async Task<string> GetTextByNamespace(string ns) {
@@ -120,14 +129,14 @@ namespace ZDragon.Project {
             throw new Exception("Cannot get the text of a non module interactor");
         }
 
-        public IApplicationInteractor CreateApplication(string name) {
-            var appInteractor = FileApplicationInteractor.Create(this._root, name, this.Cache);
+        public async Task<IApplicationInteractor> CreateApplication(string name) {
+            var appInteractor = await FileApplicationInteractor.Create(this._root, name, this.Cache);
             this.DirectoryInteractor.Applications.Add(appInteractor);
             return appInteractor;
         }
 
-        public T? FindInteractorByNamespace<T>(string ns) where T: IInteractor {
-            var interactor =  DirectoryInteractor.Find(ns);
+        public T? FindInteractorByNamespace<T>(string ns) where T : IInteractor {
+            var interactor = DirectoryInteractor.Find(ns);
             return (T)interactor;
         }
         public IInteractor? FindInteractorByNamespace(string ns) {
@@ -167,7 +176,7 @@ namespace ZDragon.Project {
             return null;
         }
 
-       
+
         public Fragment? FindFragment(string ns, string title) {
             if (Cache.Has(ns)) {
                 var cache = Cache.Get(ns);

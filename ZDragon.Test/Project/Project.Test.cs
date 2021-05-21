@@ -97,7 +97,7 @@ component Foo =
         }
 
         [Fact(DisplayName = "Download Image")]
-        public async void Project_DownloadImage() {
+        public void Project_DownloadImage() {
             Exception? foo = null;
             try {
                 var url = "https://www.moneycrashers.com/wp-content/uploads/2018/12/college-students-studying-on-lawn-classmates-university.jpg";

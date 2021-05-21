@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Priority;
@@ -35,7 +36,7 @@ namespace Project {
             Assert.Empty(_project.DirectoryInteractor.Applications);
             var result = _project.CreateApplication(appName);
             Assert.NotNull(result);
-            
+
             await Task.Delay(200);
             Assert.Single(_project.DirectoryInteractor.Applications);
 
@@ -63,7 +64,7 @@ namespace Project {
         public async void Project_CompileCode() {
             var app = await _project.CreateApplication(appName);
             await app.AddFile(componentFileName, "Component", null);
-            
+
             // test to see if we can get the module interactor
             var moduleInteractor = _project.FindInteractorByNamespace<IModuleInteractor>(componentNamespace);
             Assert.NotNull(moduleInteractor);
@@ -93,6 +94,22 @@ component Foo =
             Assert.Single(moduleInteractor2.CompilationResult.Lexicon);
             Assert.Single(moduleInteractor2.CompilationResult.Document);
 
+        }
+
+        [Fact(DisplayName = "Download Image")]
+        public async void Project_DownloadImage() {
+            Exception? foo = null;
+            try {
+                var url = "https://www.moneycrashers.com/wp-content/uploads/2018/12/college-students-studying-on-lawn-classmates-university.jpg";
+                var localFileName = Path.Combine(_project.ImagesPath, "temp.jpg");
+                using (WebClient client = new WebClient()) {
+                    client.DownloadFile(url, localFileName);
+                }
+            }
+            catch (Exception ex) {
+                foo = ex;
+            }
+            Assert.Null(foo);
         }
 
         private async Task<IApplicationInteractor> createApp() {

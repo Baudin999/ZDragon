@@ -20,6 +20,8 @@ namespace ZDragon.Project {
         private string lucenePath { get; set; }
         private string imagesPath { get; set; }
         public string RootPath => _root;
+        public string ImagesPath => imagesPath;
+
         public IDirectoryInteractor DirectoryInteractor { get; private set; }
 
         public delegate void ProjectMessageHandler(object sender, MessageEventArgs args);
@@ -102,7 +104,10 @@ namespace ZDragon.Project {
                 Directory.CreateDirectory(imagesPath);
                 var img = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "standalone-icon.png");
                 if (File.Exists(img)) {
-                    File.Copy(img, imagesPath);
+                    try {
+                        File.Copy(img, imagesPath, true);
+                    }
+                    catch (Exception) { }
                 }
             }
 

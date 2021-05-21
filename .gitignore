@@ -341,3 +341,7 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+
+# Do not check in the certificates
+*.pfx

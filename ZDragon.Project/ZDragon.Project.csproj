@@ -7,14 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1-beta1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Npgsql" Version="5.0.3" />
     <PackageReference Include="PlantUml.Net" Version="1.2.53" />
+    <PackageReference Include="RavenDB.Client" Version="5.1.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Compiler\Compiler.csproj" />
     <ProjectReference Include="..\ZDragon.Transpilers\ZDragon.Transpilers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interactors\PostgresInteractors\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

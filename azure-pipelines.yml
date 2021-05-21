@@ -1,0 +1,17 @@
+# ASP.NET Core (.NET Framework)
+
+trigger:
+  - master
+  - features/*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  buildConfiguration: "Release"
+
+steps:
+
+  - script: dotnet test --configuration $(buildConfiguration)
+    displayName: dotnet test
+

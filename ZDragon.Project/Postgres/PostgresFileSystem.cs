@@ -23,6 +23,17 @@ namespace ZDragon.Project.Postgres {
             }
         }
 
+        public async Task<bool> TestConnection(NpgsqlConnection conn) {
+            try {
+                await conn.OpenAsync();
+                return true;
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
         public async Task<List<FileResult>> Test() {
             var result = new List<FileResult>();
 
@@ -72,6 +83,7 @@ SELECT EXISTS (
                 var clmns = string.Join(Environment.NewLine, columns.Select(kvp => $"{kvp.Key} {kvp.Value}"));
                 // quite complex sql statement
                 string sql = @$"CREATE TABLE {tableName.ToLower()} (
+Id  SERIAL PRIMARY KEY,
 {clmns}
 );";
                 var command = new NpgsqlCommand(sql, conn);
@@ -89,6 +101,22 @@ SELECT EXISTS (
                 var command = new NpgsqlCommand(sql, conn);
                 var dataReader = await command.ExecuteNonQueryAsync();
                 conn.Close();
+            }
+        }
+
+
+        public async Task Init(NpgsqlConnection conn) {
+            // test if we can make a connection
+            if (await TestConnection(conn)) {
+
+                // create the "Files" table
+                var columns = new Dictionary<string, string> {
+                    { "App", "varchar(50)" },
+                    { "Namespace", "varchar(250)" },
+                    { "Content", "text" },
+                    { "Version", "integer DEFAULT 0" }
+                };
+
             }
         }
     }

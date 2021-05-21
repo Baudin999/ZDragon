@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZDragon.Project\ZDragon.Project.csproj" />
+    <ProjectReference Include="..\ZDragon.Server\ZDragon.Server.csproj" />
     <ProjectReference Include="..\ZDragon.Transpilers\ZDragon.Transpilers.csproj" />
   </ItemGroup>
 

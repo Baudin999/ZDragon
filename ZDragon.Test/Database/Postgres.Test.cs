@@ -6,13 +6,13 @@ using ZDragon.Project.Postgres;
 namespace Database {
     public class Postgres {
 
-        [Fact(Skip = "Running local", DisplayName = "Database - Open Connection")]
+        [Fact(Skip="Not used", DisplayName = "Database - Open Connection")]
         public async void Database_OpenConnection() {
             var result = await new PostgresFileSystem().Test();
             Assert.True(result.Count() > 0);
         }
 
-        [Fact(Skip = "Running local", DisplayName = "Database - Create Table")]
+        [Fact(Skip = "Not used", DisplayName = "Database - Create Table")]
         public async void Database_CreateTable() {
             var tableName = "Test001";
             var system = new PostgresFileSystem();

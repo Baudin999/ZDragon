@@ -149,41 +149,12 @@ public class Lexer
         return _t;
     }
 
-    private void BeginContext()
-    {
-        if (_inContext) return;
-        
-        _inContext = true;
-        _add(
-            new Token(
-                _line, 
-                _line, 
-                _lineIndex, 
-                _lineIndex + 1, 
-                TokenType.BeginContext, 
-                "")
-        );
-    }
-    private void EndContext()
-    {
-        if (!_inContext) return;
-        
-        _inContext = false;
-        _add(
-            new Token(
-                _line, 
-                _line, 
-                _lineIndex, 
-                _lineIndex + 1, 
-                TokenType.EndContext, 
-                "")
-        );
-    }
+    
 
     private Token TakeKeyword()
     {
         Take();
-        while (char.IsLower(Current))
+        while (char.IsLetterOrDigit(Current) || Current == '_')
         {
             Take();
         }
@@ -239,6 +210,37 @@ public class Lexer
         }
 
         return _t;
+    }
+    
+    private void BeginContext()
+    {
+        if (_inContext) return;
+        
+        _inContext = true;
+        _add(
+            new Token(
+                _line, 
+                _line, 
+                _lineIndex, 
+                _lineIndex + 1, 
+                TokenType.BeginContext, 
+                "")
+        );
+    }
+    private void EndContext()
+    {
+        if (!_inContext) return;
+        
+        _inContext = false;
+        _add(
+            new Token(
+                _line, 
+                _line, 
+                _lineIndex, 
+                _lineIndex + 1, 
+                TokenType.EndContext, 
+                "")
+        );
     }
 
     public Lexer(ErrorSink errorSink)

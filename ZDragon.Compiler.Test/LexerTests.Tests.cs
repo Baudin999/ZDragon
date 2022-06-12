@@ -66,7 +66,11 @@ component View
 
 ";
 
-        var lines = code.Split(Environment.NewLine);
+        var lines = 
+            code
+                .Split(Environment.NewLine)
+                .Select(l => l + Environment.NewLine)
+                .ToList();
         var errorSink = new ErrorSink();
         var result = new Lexer(errorSink).Lex(code).ToList();
         
@@ -74,12 +78,10 @@ component View
 
         foreach (var token in result)
         {
-            // new lines mess up the check because the split has removed the newlines.
-            // also, do not check the BeginContext and EndContext
-            if (token == TokenType.NewLine ||
-                token == TokenType.BeginContext ||
+            // do not check the BeginContext and EndContext
+            if (token == TokenType.BeginContext ||
                 token == TokenType.EndContext) continue;
-            
+
             var line = lines[token.LineStart];
             var value = line.Substring(token.WordStart, token.Text.Length);
             

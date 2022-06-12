@@ -59,7 +59,7 @@ public sealed record Token : ISourceSegment, IEquatable<TokenType>, IEquatable<s
     {
         return TokenType == tokenType;
     }
-    public bool Equals(string value)
+    public bool Equals(string? value)
     {
         return Text == value;
     }

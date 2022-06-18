@@ -8,6 +8,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.Compiler.Test", "ZD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.CLI", "ZDragon.CLI\ZDragon.CLI.csproj", "{A061FDCD-3D4D-4047-8C32-D55B2E85652D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "files", "files", "{C9BA05FF-4BB9-42FD-9F6C-AF0A983519C6}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

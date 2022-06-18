@@ -9,6 +9,9 @@ public sealed record Token : ISourceSegment, IEquatable<TokenType>, IEquatable<s
     public int WordEnd { get; }
     public TokenType TokenType { get; private set; }
     public string Text { get; }
+    public static Token Default => new (
+        0, 0, 0, 0, Compiler.TokenType.Unknown, ""
+        );
 
     public Token(int lineStart, int lineEnd, int wordStart, int wordEnd, TokenType tokenType, string text)
     {
@@ -107,5 +110,11 @@ public enum TokenType
     AnnotationLine,
     Chapter,
     BeginContext,
-    EndContext
+    EndContext,
+    Parameter,
+    Slash,
+    BackSlash,
+    Quote,
+    DoubleQuote,
+    Unknown
 }

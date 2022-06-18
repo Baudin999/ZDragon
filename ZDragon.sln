@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.Compiler", "ZDragon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.Compiler.Test", "ZDragon.Compiler.Test\ZDragon.Compiler.Test.csproj", "{2AB3603C-2DB5-4885-AC50-8751E771E6E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.CLI", "ZDragon.CLI\ZDragon.CLI.csproj", "{A061FDCD-3D4D-4047-8C32-D55B2E85652D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{2AB3603C-2DB5-4885-AC50-8751E771E6E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2AB3603C-2DB5-4885-AC50-8751E771E6E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2AB3603C-2DB5-4885-AC50-8751E771E6E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A061FDCD-3D4D-4047-8C32-D55B2E85652D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A061FDCD-3D4D-4047-8C32-D55B2E85652D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A061FDCD-3D4D-4047-8C32-D55B2E85652D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A061FDCD-3D4D-4047-8C32-D55B2E85652D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

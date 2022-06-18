@@ -16,6 +16,7 @@ public record Error
 
 public enum ErrorType
 {
-    Unknown
+    Unknown,
+    InvalidIdentifier
 }
 

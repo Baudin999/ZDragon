@@ -10,9 +10,6 @@ public class Lexer
     private int _lineIndex = 0;
     private int _max = 0;
 
-    // We are in a context when we 
-    private bool _inContext = false;
-
     private Token? _t = null;
     private readonly List<Token> _result = new();
 
@@ -20,8 +17,8 @@ public class Lexer
     private char At(int index) => (_offset + index) < _max ? _code[_offset + index] : char.MaxValue;
     private Token Previous => _result.Last();
 
-
     private Token? _last = null;
+
 
     private void _add(Token token)
     {
@@ -60,7 +57,19 @@ public class Lexer
         _lineIndex += 1;
     }
 
-    private Token TakeNewLine()
+    private Token? TakeLine(bool includeNewLine = true)
+    {
+        while (!_isNewLine())
+        {
+            Take();
+        }
+
+        TakeNewLine();
+
+        return _t;
+    }
+
+    private Token? TakeNewLine()
     {
         if (Current == '\n') Take(TokenType.NewLine);
         if (Current == '\r') Take();
@@ -68,15 +77,10 @@ public class Lexer
         _line += 1;
         _lineIndex = 0;
         
-        // this exception cannot happen, because the "take()" function creates a
-        // token if it is null, but the compiler complains if I do not add this
-        // check.
-        if (_t is null) throw new Exception("Token cannot be null");
-
         return _t;
     }
 
-    private Token TakeTabOrWhitespace()
+    private Token? TakeTabOrWhitespace()
     {
         if (Current == ' ')
         {
@@ -90,47 +94,23 @@ public class Lexer
             Take();
         }
 
-        // this exception cannot happen, because the "take()" function creates a
-        // token if it is null, but the compiler complains if I do not add this
-        // check.
-        if (_t is null) throw new Exception("Token cannot be null");
-
         return _t;
     }
 
-    private Token TakeIdentifier()
+    private Token? TakeIdentifier()
     {
-        // if we are not in a context, just call the token a word and be done with it.
-        if (_inContext && Previous != TokenType.NewLine)
+        Take(TokenType.Identifier);
+    
+        while (char.IsLetterOrDigit(Current) || Current == '_')
         {
-            Take(TokenType.Identifier);
-        
-            while (char.IsLetterOrDigit(Current) || Current == '_')
-            {
-                Take();
-            }    
-        }
-        else
-        {
-            Take(TokenType.Word);
-        
-            while (!_isNewLine())
-            {
-                Take();
-            }
-            EndContext();
-        }
-        
-        
-        // this exception cannot happen, because the "take()" function creates a
-        // token if it is null, but the compiler complains if I do not add this
-        // check.
-        if (_t is null) throw new Exception("Token cannot be null");
-
+            Take();
+        }    
+    
         return _t;
     }
 
-    private Token TakeNumber()
+
+    private Token? TakeNumber()
     {
         var foundDot = false;
         // var foundExp = false;
@@ -141,31 +121,20 @@ public class Lexer
             Take();
         }
         
-        // this exception cannot happen, because the "take()" function creates a
-        // token if it is null, but the compiler complains if I do not add this
-        // check.
-        if (_t is null) throw new Exception("Token cannot be null");
-
         return _t;
     }
 
     
 
-    private Token TakeKeyword()
+    private Token? TakeKeyword()
     {
         Take();
         while (char.IsLetterOrDigit(Current) || Current == '_')
         {
             Take();
         }
-        
-        // this exception cannot happen, because the "take()" function creates a
-        // token if it is null, but the compiler complains if I do not add this
-        // check.
-        if (_t is null) throw new Exception("Token cannot be null");
 
-        
-        switch (_t.Text)
+        switch (_t?.Text)
         {
             case "record":
                 _t.ChangeType(TokenType.KwRecord);
@@ -195,57 +164,16 @@ public class Lexer
                 _t.ChangeType(TokenType.KwFlow);
                 break;
             default:
-                _t.ChangeType(TokenType.Word);
-                // if it is just a word we'll pull everything until the new line.
-                while (!_isNewLine()) Take();
-                EndContext();
+                _t?.ChangeType(TokenType.Word);
                 break;
-        }
-
-        if (_t != TokenType.Word)
-        {
-            if (_last != TokenType.AnnotationLine) 
-                EndContext();
-            BeginContext();
         }
 
         return _t;
     }
-    
-    private void BeginContext()
-    {
-        if (_inContext) return;
-        
-        _inContext = true;
-        _add(
-            new Token(
-                _line, 
-                _line, 
-                _lineIndex, 
-                _lineIndex + 1, 
-                TokenType.BeginContext, 
-                "")
-        );
-    }
-    private void EndContext()
-    {
-        if (!_inContext) return;
-        
-        _inContext = false;
-        _add(
-            new Token(
-                _line, 
-                _line, 
-                _lineIndex, 
-                _lineIndex + 1, 
-                TokenType.EndContext, 
-                "")
-        );
-    }
 
-    public Lexer(ErrorSink errorSink)
+    public Lexer(ErrorSink? errorSink = null)
     {
-        this.ErrorSink = errorSink;
+        this.ErrorSink = errorSink ?? new ErrorSink();
     }
 
     private void YieldCurrent()
@@ -267,7 +195,7 @@ public class Lexer
         for (; _offset < _max;)
         {
             YieldCurrent();
-            
+
             if (_isTabOrWhitespace())
             {
                 // this is a TAB or a whitespace
@@ -301,38 +229,25 @@ public class Lexer
             {
                 Take(TokenType.Comma);
             }
+            else if (Current == '\'')
+            {
+                Take(TokenType.Quote);
+            }
+            else if (Current == '"')
+            {
+                Take(TokenType.DoubleQuote);
+            }
             else if (Current == '!')
             {
                 Take(TokenType.Exclamation);
             }
             else if (Current == '@')
             {
-                if (Previous == TokenType.NewLine)
-                {
-                    if (_last != TokenType.AnnotationLine)
-                        EndContext();
-                    
-                    BeginContext();
-                    Take(TokenType.AnnotationLine);
-                    while (!_isNewLine()) Take();
-                }
-                else
-                {
-                    Take(TokenType.At);
-                }
+                Take(TokenType.At);
             }
             else if (Current == '#')
             {
-                if (Previous == TokenType.NewLine)
-                {
-                    Take(TokenType.Chapter);
-                    while (!_isNewLine()) Take();
-                    EndContext();
-                }
-                else
-                {
-                    Take(TokenType.Hash);
-                }
+                Take(TokenType.Chapter);
             }
             else if (Current == '$')
             {
@@ -366,10 +281,17 @@ public class Lexer
             {
                 Take(TokenType.Plus);
             }
+            else if (Current == '/')
+            {
+                Take(TokenType.Slash);
+            }
+            else if (Current == '\\')
+            {
+                Take(TokenType.BackSlash);
+            }
             else if (_isWhiteSpace())
             {
-                if (_inContext) Skip();
-                else Take(TokenType.WhiteSpace);
+                Take(TokenType.WhiteSpace);
             }
             else if (_isNewLine())
             {
@@ -389,16 +311,17 @@ public class Lexer
             }
             else
             {
-                Take(TokenType.Character);
+                //Take(TokenType.Character);
+                throw new Exception($"Cannot parse: '{Current}'");
             }
         }
         
-        EndContext();
-
+        if (_t is not null) YieldCurrent();
+        
         return _result;
     }
 
-    private bool _isWhiteSpace() => Current == ' ';
+    private  bool _isWhiteSpace() => Current == ' ';
 
     private bool _isNewLine()
     {

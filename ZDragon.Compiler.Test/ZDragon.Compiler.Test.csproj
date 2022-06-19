@@ -22,6 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\ZDragon.CLI\ZDragon.CLI.csproj" />
       <ProjectReference Include="..\ZDragon.Compiler\ZDragon.Compiler.csproj" />
     </ItemGroup>
 

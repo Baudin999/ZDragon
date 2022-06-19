@@ -40,6 +40,7 @@ record Person
         Assert.Single(nodes);
         Assert.NotNull(person);
         Assert.Equal("Person", person.Id);
+        Assert.Empty(person.Fields);
     }
     
     [Fact(DisplayName = "Identifier does not start with capital letter")]
@@ -73,5 +74,6 @@ record
 
         Assert.Single(errorSink.Errors);
     }
+    
 
 }

@@ -82,16 +82,13 @@ for us instead of us working on the code!
                 .Select(l => l + Environment.NewLine)
                 .ToList();
         var errorSink = new ErrorSink();
-        var result = new Lexer(errorSink).Lex(code).ToList();
+        var lexer = new Lexer(errorSink);
+        var result = lexer.Lex(code).ToList();
         
         Assert.NotNull(result);
 
         foreach (var token in result)
         {
-            // do not check the BeginContext and EndContext
-            if (token == TokenType.BeginContext ||
-                token == TokenType.EndContext) continue;
-
             var line = lines[token.LineStart];
             var value = line.Substring(token.WordStart, token.Text.Length);
             
@@ -99,6 +96,7 @@ for us instead of us working on the code!
             Assert.Equal(token.Text.Length, token.WordEnd - token.WordStart);
         }
         
+        Assert.Empty(lexer.Errors);
     }
 
 
@@ -179,5 +177,77 @@ component Foo =
         Assert.Single(result);
         Assert.NotNull(indentToken);
         Assert.Equal("\t", indentToken.Text);
+    }
+
+    [Fact(DisplayName = "Lex all operators")]
+    public void LexCharacters()
+    {
+        var code = @"!@#$%^&*()_+-=,.<>;:'""[]{}/\";
+        var errorSink = new ErrorSink();
+        var result = new Lexer(errorSink).Lex(code).ToList();
+        Assert.Equal(28, result.Count);
+        
+    }
+    
+    [Fact(DisplayName = "Lex integer")]
+    public void LexInteger()
+    {
+        var code = @"110";
+        var errorSink = new ErrorSink();
+        var result = new Lexer(errorSink).Lex(code).ToList();
+        Assert.Single(result);
+        Assert.Equal("110", result[0].Text);
+        Assert.Equal(TokenType.Number, result[0].TokenType);
+    }
+    
+    [Fact(DisplayName = "Lex decimal")]
+    public void LexDecimal()
+    {
+        var code = @"110.99";
+        var errorSink = new ErrorSink();
+        var result = new Lexer(errorSink).Lex(code).ToList();
+        Assert.Single(result);
+        Assert.Equal("110.99", result[0].Text);
+        Assert.Equal(TokenType.Number, result[0].TokenType);
+    }
+    
+    [Fact(DisplayName = "Lex keywords")]
+    public void LexKeywords()
+    {
+        var code = @"
+component
+system
+endpoint
+flow
+view
+record
+choice
+data
+type
+extends
+";
+        var errorSink = new ErrorSink();
+        var result = new Lexer(errorSink).Lex(code);
+        var resultWithoutNewlines = result.Where(r => r != TokenType.NewLine).ToList();
+        
+        Assert.Equal(TokenType.KwComponent, resultWithoutNewlines[0].TokenType);
+        Assert.Equal(TokenType.KwSystem, resultWithoutNewlines[1].TokenType);
+        Assert.Equal(TokenType.KwEndpoint, resultWithoutNewlines[2].TokenType);
+        Assert.Equal(TokenType.KwFlow, resultWithoutNewlines[3].TokenType);
+        Assert.Equal(TokenType.KwView, resultWithoutNewlines[4].TokenType);
+        Assert.Equal(TokenType.KwRecord, resultWithoutNewlines[5].TokenType);
+        Assert.Equal(TokenType.KwChoice, resultWithoutNewlines[6].TokenType);
+        Assert.Equal(TokenType.KwData, resultWithoutNewlines[7].TokenType);
+        Assert.Equal(TokenType.KwType, resultWithoutNewlines[8].TokenType);
+        Assert.Equal(TokenType.KwExtends, resultWithoutNewlines[9].TokenType);
+    }
+    
+    [Fact(DisplayName = "Unknown character")]
+    public void LexUnknownCharacter()
+    {
+        var code = $"{char.ConvertFromUtf32(0x0000008a)}";
+        var errorSink = new ErrorSink();
+        var result = new Lexer(errorSink).Lex(code).ToList();
+        Assert.Single(errorSink.Errors);
     }
 }

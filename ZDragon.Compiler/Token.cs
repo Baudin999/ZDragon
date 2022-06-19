@@ -28,6 +28,20 @@ public sealed record Token : ISourceSegment, IEquatable<TokenType>, IEquatable<s
         return new Token(LineStart, LineEnd, WordStart, WordEnd + 1, TokenType,Text + character);
     }
 
+    public Token Append(Token? other)
+    {
+        if (other is null) return this;
+
+        var length = WordEnd - WordStart + (other.WordEnd - other.WordStart);
+        return new Token(
+            LineStart, 
+            other.LineEnd, 
+            WordStart, 
+            WordStart + length, 
+            TokenType, 
+            Text + other.Text);
+    }
+
     public override string ToString()
     {
         return $"{TokenType} - '{Text}'";
@@ -105,16 +119,17 @@ public enum TokenType
     BracketClose,
     Plus,
     Minus,
-    Character,
     WhiteSpace,
-    AnnotationLine,
-    Chapter,
-    BeginContext,
-    EndContext,
-    Parameter,
     Slash,
     BackSlash,
     Quote,
     DoubleQuote,
-    Unknown
+    Unknown,
+    Percentage,
+    Carret,
+    Ampassant,
+    Underscore,
+    BraceClose,
+    BraceOpen,
+    KwEndpoint
 }

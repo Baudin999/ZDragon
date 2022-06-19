@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.UI", "ZDragon.UI\ZDragon.UI.csproj", "{A797E585-9C03-40FD-AA16-64A4ADF1D76B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.Compiler", "ZDragon.Compiler\ZDragon.Compiler.csproj", "{9AA59804-939A-434C-8B5C-2B9F722EAC31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZDragon.Compiler.Test", "ZDragon.Compiler.Test\ZDragon.Compiler.Test.csproj", "{2AB3603C-2DB5-4885-AC50-8751E771E6E8}"
@@ -19,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A797E585-9C03-40FD-AA16-64A4ADF1D76B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A797E585-9C03-40FD-AA16-64A4ADF1D76B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A797E585-9C03-40FD-AA16-64A4ADF1D76B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A797E585-9C03-40FD-AA16-64A4ADF1D76B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9AA59804-939A-434C-8B5C-2B9F722EAC31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9AA59804-939A-434C-8B5C-2B9F722EAC31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AA59804-939A-434C-8B5C-2B9F722EAC31}.Release|Any CPU.ActiveCfg = Release|Any CPU

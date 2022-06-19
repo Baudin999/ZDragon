@@ -9,18 +9,54 @@ public class ComponentParser : BaseParser
         
     }
 
-    internal override IAstNode? Parse()
+    internal override ComponentNode? Parse()
     {
         var keyWordComponent = Take(TokenType.KwComponent);
-        var id = Take(TokenType.Identifier);
+        var id = ParserIdentifier();
+        if (id is null) return null;
+        var fields = new List<ArchitectureField>();
+        
+        var equals = TakeWithoutSpace(TokenType.Equals);
+        if (equals is null) return new ComponentNode(id, fields);
 
-        if (id is not null)
+        while (_hasField())
         {
-            return new ComponentNode(id);
+            Take(TokenType.NewLine);
+            Take(TokenType.Indent);
+            var fieldId = Take(TokenType.Identifier);
+            if (fieldId is null)
+            {
+                ErrorSink.AddError(Current ?? Token.Default, ErrorType.InvalidIdentifier,
+                    $"A field should have an Identifier.");
+                continue;
+            }
+            
+            TakeWithoutSpace(TokenType.Colon);
+
+            var root = Take() ?? Token.Default;
+            while (_stillInFieldDefinition())
+            {
+                if (Current == TokenType.Indent) Take();
+                else root = root.Append(Take());
+            }
+            
+            fields.Add(new ArchitectureField(fieldId, root));
         }
-        else
-        {
-            return null;
-        }
+
+        return new ComponentNode(id, fields);
+    }
+
+    private bool _hasField()
+    {
+        return Current == TokenType.NewLine && At(1) == TokenType.Indent && At(2) != TokenType.Unknown;
+    }
+
+    private bool _stillInFieldDefinition()
+    {
+        // if (Current is null) return false;
+        if (Current != TokenType.NewLine) return true;
+        return Current == TokenType.NewLine && 
+               At(1) == TokenType.Indent && 
+               At(2) == TokenType.Indent;
     }
 }

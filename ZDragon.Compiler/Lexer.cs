@@ -3,6 +3,7 @@
 public class Lexer 
 {
     private ErrorSink ErrorSink { get; }
+    public List<Error> Errors => ErrorSink.Errors;
     
     private string _code = "";
     private int _offset = 0;
@@ -14,17 +15,12 @@ public class Lexer
     private readonly List<Token> _result = new();
 
     private char Current => _offset < _max ? _code[_offset] : char.MaxValue;
+
     private char At(int index) => (_offset + index) < _max ? _code[_offset + index] : char.MaxValue;
-    private Token Previous => _result.Last();
-
-    private Token? _last = null;
-
 
     private void _add(Token token)
     {
         _result.Add(token);
-        if (token != TokenType.NewLine)
-            _last = token;
     }
 
     private bool IsPattern(string pattern)
@@ -51,23 +47,23 @@ public class Lexer
         return _t;
     }
 
-    private void Skip()
-    {
-        _offset += 1;
-        _lineIndex += 1;
-    }
+    // private void Skip()
+    // {
+    //     _offset += 1;
+    //     _lineIndex += 1;
+    // }
 
-    private Token? TakeLine(bool includeNewLine = true)
-    {
-        while (!_isNewLine())
-        {
-            Take();
-        }
-
-        TakeNewLine();
-
-        return _t;
-    }
+    // private Token? TakeLine(bool includeNewLine = true)
+    // {
+    //     while (!_isNewLine())
+    //     {
+    //         Take();
+    //     }
+    //
+    //     TakeNewLine();
+    //
+    //     return _t;
+    // }
 
     private Token? TakeNewLine()
     {
@@ -153,6 +149,9 @@ public class Lexer
                 break;
             case "system":
                 _t.ChangeType(TokenType.KwSystem);
+                break;
+            case "endpoint":
+                _t.ChangeType(TokenType.KwEndpoint);
                 break;
             case "extends":
                 _t.ChangeType(TokenType.KwExtends);
@@ -247,7 +246,7 @@ public class Lexer
             }
             else if (Current == '#')
             {
-                Take(TokenType.Chapter);
+                Take(TokenType.Hash);
             }
             else if (Current == '$')
             {
@@ -273,6 +272,14 @@ public class Lexer
             {
                 Take(TokenType.BracketClose);
             }
+            else if (Current == '{')
+            {
+                Take(TokenType.BraceOpen);
+            }
+            else if (Current == '}')
+            {
+                Take(TokenType.BraceClose);
+            }
             else if (Current == '-')
             {
                 Take(TokenType.Minus);
@@ -284,6 +291,22 @@ public class Lexer
             else if (Current == '/')
             {
                 Take(TokenType.Slash);
+            }
+            else if (Current == '%')
+            {
+                Take(TokenType.Percentage);
+            }
+            else if (Current == '^')
+            {
+                Take(TokenType.Carret);
+            }
+            else if (Current == '&')
+            {
+                Take(TokenType.Ampassant);
+            }
+            else if (Current == '_')
+            {
+                Take(TokenType.Underscore);
             }
             else if (Current == '\\')
             {
@@ -311,8 +334,10 @@ public class Lexer
             }
             else
             {
-                //Take(TokenType.Character);
-                throw new Exception($"Cannot parse: '{Current}'");
+                // take the unknown character
+                Take();
+                this.ErrorSink.AddError(_t ?? Token.Default, ErrorType.UnknownCharacter, $@"Unknown character '{_t?.Text}'.");
+                _t = null;
             }
         }
         
